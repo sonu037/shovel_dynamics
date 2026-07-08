@@ -52,11 +52,11 @@ getv = @(name) local_col(out, name);   % robust extractor (array/timeseries)
 t    = out.tout(:);
 q    = getv('q_3');       q_d = getv('q_3_dot');
 d    = getv('d_4');       d_d = getv('d_4_dot');
-tau  = getv('tau_hoist'); % NOTE: this is the SADDLE JOINT torque tau_3.
+tau  = getv('tau_3'); % NOTE: this is the SADDLE JOINT torque tau_3.
                           % Rename the To Workspace block to tau_3 before
                           % the hoist-rope actuation map is added, or the
                           % name will collide with the real hoist force.
-F4   = getv('f_crowd');   % prismatic actuator force (crowd equation RHS)
+F4   = getv('f_4');   % prismatic actuator force (crowd equation RHS)
 
 %% 2. Accelerations: sensed if wired, else central differences   [G2]
 if haveVar('q_3_ddot')
@@ -240,3 +240,4 @@ end
 function s = local_tern(cond_, a, b)
 if cond_, s = a; else, s = b; end
 end
+
