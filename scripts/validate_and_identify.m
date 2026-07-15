@@ -1,50 +1,81 @@
-%% VALIDATE_AND_IDENTIFY_4.M
+%% VALIDATE_AND_IDENTIFY.M   (v5.1 - function form)
 %  Stage-1 Protocol: forward validation (BOTH equations) + linear-in-
 %  parameters identification with uncertainty reporting.
-%  Model: ShovelSimulator_v4.slx (Revolute q_3 + Prismatic d_4)
+%  Model: ShovelSimulator.slx (Revolute q_3 + Prismatic d_4)
 %
-%  FIXES vs validate_and_identify_3.m:
-%   [G1] Parameters come from shovel_params.m (single source of truth).
-%        v3 comments contradicted the .slx (Izz "839,000" vs actual 287,900;
-%        fv3 "340" vs actual 3,800). Fixed by construction.
-%   [G2] Logged-signal detection uses out.who. isfield/isprop on a
-%        Simulink.SimulationOutput object silently return false, so v3
-%        ALWAYS fell back to gradient() even with sensed accelerations.
-%   [G3] Forward validation now includes the viscous term fv3*q_d
-%        (3,800 N*m*s/rad genuinely exists in the joint; the sensed
-%        actuator torque includes work done against it).
-%   [G4] d_dd is now trimmed with everything else (v3 omitted it -> the
-%        exact mismatched-length landmine its own header warned about).
-%   [G5] Section 7 validates the PRISMATIC (crowd) equation against the
-%        already-logged f_crowd. Previously logged but never used.
-%   [G6] Identification reports cond(Y) (raw + column-scaled) and
-%        parameter standard errors / 95% CIs via the LS covariance,
-%        with delta-method propagation to the physical parameters.
-%   [G7] fv3 printout fixed: theta(4) is ALREADY in N*m*s/rad (the
-%        regressor uses rad/s). v3 multiplied by 180/pi -> nonsense value.
-%   [G8] Unverified "Rasuli R^2 = 0.942" citation removed. The paper
-%        reports payload errors and std devs (e.g. 8402 vs 8420 kg,
-%        sigma = 104 kg, swing), not an R^2 for this comparison.
-%   [G9] Results struct saved to stage1_results.mat for the thesis record.
+%  FIXES vs validate_and_identify_4.m (this revision, H-series):
+%   [H1] Declared run configuration block (T_TRIM, FORCE_GRADIENT),
+%        printed at start of every run. Experimental modes are now
+%        switches, not code edits.
+%   [H2] TRIM BUG FIXED: v4 shipped with keep = true(size(t)) left over
+%        from the 2026-07-14 ablation session -> the [G4] trim was
+%        silently OFF in every run since. Comment claimed one thing,
+%        code did another (the same disease [G1] fixed for parameters).
+%   [H3] FORCE_GRADIENT switch: reproduces the C1 differentiation study
+%        (Izz bias ~ -56%) on demand without touching the model. Both
+%        acceleration branches honour it.
+%   [H4] Run configuration (T_TRIM, FORCE_GRADIENT, script version) is
+%        saved inside stage1_results.mat: every result now self-describes
+%        the settings that produced it.
+%   [H5] datestr(now) -> char(datetime("now")) (datestr is deprecated).
+%   [H6] Covariance via (Y'*Y)\eye(p) instead of inv() (numerically
+%        preferred idiom; identical result at cond(Y)~82).
+%   [H7] Post-trim sanity guards: error if the trim empties the record
+%        or if N <= p (covariance undefined).
+%   [H8] (v5.1) Converted to a FUNCTION with name-value options via an
+%        arguments block. No file edits needed to switch modes:
+%        validate_and_identify(out, ForceGradient=true, T_TRIM=0).
+%        Functions get a private workspace (clearvars obsolete) and the
+%        signature enforces that out exists.
 %
-%  MODEL-SIDE PREREQUISITES (10 minutes, do once):
-%   - Revolute joint: sensing already ON; wire port "b" -> PS-Simulink
-%     -> To Workspace, VariableName q_3_ddot.
-%   - Prismatic joint: enable "Sense Acceleration"; wire port "a"
-%     -> PS-Simulink -> To Workspace, VariableName d_4_ddot.
-%   Until then this script falls back to gradient() and SAYS SO.
+%  FIXES inherited from v4 (G-series):
+%   [G1] Parameters from shovel_params.m (single source of truth).
+%   [G2] Logged-signal detection uses out.who (isfield silently fails).
+%   [G3] Forward validation includes the viscous term fv3*q_d.
+%   [G4] All signals trimmed together (no mismatched lengths).
+%   [G5] Section 7 validates the PRISMATIC (crowd) equation.
+%   [G6] cond(Y) raw+scaled; standard errors / 95% CIs; delta method.
+%   [G7] fv3 printout in native N*m*s/rad.
+%   [G8] Unverified "Rasuli R^2 = 0.942" citation removed.
+%   [G9] Results struct saved to stage1_results.mat.
+%
+%  DOCUMENTED SCOPE (deliberate, not an oversight):
+%   - Identification uses the REVOLUTE equation only; the crowd equation
+%     is validated forward but contributes no rows to Y. The revolute
+%     carries all five Stage-1 parameters. Stacking both equations into
+%     one regression is the planned upgrade when M6 multiplies the
+%     parameter count.
+%
+%  MODEL-SIDE PREREQUISITES (done 2026-07-15, kept for provenance):
+%   - Revolute joint: sensing ON; port "b" -> PS-Simulink -> To Workspace,
+%     VariableName q_3_ddot.
+%   - Prismatic joint: "Sense Acceleration" ON; port "a" -> PS-Simulink
+%     -> To Workspace, VariableName d_4_ddot.
+%   Without them this script falls back to gradient() and SAYS SO.
 
-%% 0. Clean slate
-clearvars -except out
+function results = validate_and_identify(out, opts)
+%  USAGE:
+%    validate_and_identify(out)                               % sensed, trim 0.5 s
+%    validate_and_identify(out, ForceGradient=true)           % C1 reproduction
+%    validate_and_identify(out, T_TRIM=0)                     % ablation run
+%    r = validate_and_identify(out, T_TRIM=0, ForceGradient=true)  % 2x2 corner
+arguments
+    out                                     % Simulink.SimulationOutput
+    opts.T_TRIM        (1,1) double  = 0.5  % s; 10*tau_filter startup trim
+    opts.ForceGradient (1,1) logical = false % true = differentiate velocities
+end
+SCRIPT_VERSION = 'v5.1 (2026-07-15)';
 close all
 P = shovel_params();                                    % [G1]
 
-%% 1. Grab data from workspace (real solver time)
-if ~exist('out','var')
-    error(['Run the sim with "Single simulation output" enabled ' ...
-           'so out (SimulationOutput) exists.']);
-end
-logged = out.who;                                       % [G2]
+%% 0b. Run configuration - declared, printed, saved with results   [H1]
+T_TRIM         = opts.T_TRIM;
+FORCE_GRADIENT = opts.ForceGradient;
+fprintf('[i] %s | Config: T_TRIM = %.2f s | FORCE_GRADIENT = %d\n', ...
+        SCRIPT_VERSION, T_TRIM, FORCE_GRADIENT);
+
+%% 1. Grab data from the SimulationOutput (real solver time)
+logged  = out.who;                                      % [G2]
 haveVar = @(name) any(strcmp(logged, name));
 
 getv = @(name) local_col(out, name);   % robust extractor (array/timeseries)
@@ -53,35 +84,45 @@ t    = out.tout(:);
 q    = getv('q_3');       q_d = getv('q_3_dot');
 d    = getv('d_4');       d_d = getv('d_4_dot');
 tau  = getv('tau_3'); % NOTE: this is the SADDLE JOINT torque tau_3.
-                          % Rename the To Workspace block to tau_3 before
-                          % the hoist-rope actuation map is added, or the
-                          % name will collide with the real hoist force.
+                          % Rename before the hoist-rope actuation map is
+                          % added (M5), or the name will collide with the
+                          % real hoist force.
 F4   = getv('f_4');   % prismatic actuator force (crowd equation RHS)
 
-%% 2. Accelerations: sensed if wired, else central differences   [G2]
-if haveVar('q_3_ddot')
+%% 2. Accelerations: sensed if wired (and allowed), else gradient  [G2][H3]
+if ~FORCE_GRADIENT && haveVar('q_3_ddot')
     q_dd = getv('q_3_ddot');
     accel_src_q = 'SENSED (Simscape b port)';
+elseif FORCE_GRADIENT
+    q_dd = gradient(q_d, t);
+    accel_src_q = 'gradient() FORCED (C1 reproduction mode)';
 else
     q_dd = gradient(q_d, t);
     accel_src_q = 'gradient() FALLBACK - wire the b port!';
 end
-if haveVar('d_4_ddot')
+if ~FORCE_GRADIENT && haveVar('d_4_ddot')
     d_dd = getv('d_4_ddot');
     accel_src_d = 'SENSED (Simscape a port)';
+elseif FORCE_GRADIENT
+    d_dd = gradient(d_d, t);
+    accel_src_d = 'gradient() FORCED (C1 reproduction mode)';
 else
     d_dd = gradient(d_d, t);
     accel_src_d = 'gradient() FALLBACK - enable prismatic accel sensing!';
 end
 fprintf('[i] q_3_ddot: %s\n[i] d_4_ddot: %s\n', accel_src_q, accel_src_d);
 
-%% 3. Trim the input-filter startup transient (ALL signals)   [G4]
-keep = t > 0.5;
+%% 3. Trim the input-filter startup transient (ALL signals)   [G4][H2]
+keep = t > T_TRIM;
+if ~any(keep)
+    error('T_TRIM = %.2f s removed every sample. Check the time base.', T_TRIM);
+end
 t    = t(keep);
 q    = q(keep);   q_d  = q_d(keep);   q_dd = q_dd(keep);
 d    = d(keep);   d_d  = d_d(keep);   d_dd = d_dd(keep);
 tau  = tau(keep); F4   = F4(keep);
 N    = numel(t);
+fprintf('[i] Trim: kept %d of %d samples (t > %.2f s)\n', N, numel(keep), T_TRIM);
 
 %% 4. FORWARD VALIDATION - revolute (saddle) equation
 %  tau_3 = (Izz + m r^2) qdd + 2 m r rdot qd + m g r cos(q) + fv3 qd
@@ -119,6 +160,9 @@ Y = [ d.^2.*q_dd + 2*d.*d_d.*q_d + P.g*d.*cos(q), ...  % m
       q_d,  ...                                        % fv3 (viscous)
       sign(q_d) ];                                     % fc3 (Coulomb)
 p = size(Y,2);
+if N <= p                                              % [H7]
+    error('N = %d samples <= p = %d parameters: covariance undefined.', N, p);
+end
 
 theta  = Y \ tau;
 tau_id = Y*theta;
@@ -132,7 +176,7 @@ condY_scaled = cond(Y ./ colnorm);
 
 % --- LS covariance and standard errors ---------------------------------
 s2    = sum(res2.^2)/(N - p);          % residual variance estimate
-CovT  = s2 * inv(Y'*Y);                %#ok<MINV> parameter covariance
+CovT  = s2 * ((Y'*Y) \ eye(p));        % [H6] solve, not inv()
 seT   = sqrt(diag(CovT));
 ci95  = 1.96*seT;
 
@@ -163,8 +207,8 @@ fprintf(['\n  Read the CIs, not the point estimates: a CI spanning the truth\n' 
          '  AND a CI comparable to the estimate itself both mean "this\n' ...
          '  trajectory cannot identify that parameter". Expect m and c to be\n' ...
          '  tight (gravity ~2.5 MNm excites them) and Izz/fv3 to be loose\n' ...
-         '  until (a) sensed accelerations are wired and (b) the two sine\n' ...
-         '  inputs are decorrelated (different frequency AND phase).\n']);
+         '  under FORCE_GRADIENT or correlated excitation (same frequency\n' ...
+         '  AND phase on both joints).\n']);
 
 %% 6. Identification residual - the future home of tau_load(t)
 figure('Name','Identification Residual','Color','w');
@@ -182,8 +226,7 @@ if P.model_has_coulomb
     F4_pred = F4_pred + P.fc4*sign(d_d);
 end
 
-% Sign-convention check: v4 planar geometry needed a sign fix on tau;
-% f_crowd may carry one too. Detect it explicitly rather than silently.
+% Sign-convention check: detect a flipped sensing convention explicitly.
 cc = corrcoef(F4, F4_pred);              % base MATLAB, no toolbox needed
 if cc(1,2) < 0
     warning(['f_crowd anti-correlates with the prediction: the prismatic ' ...
@@ -207,9 +250,11 @@ xlabel('Time (s)'); ylabel('Residual (kN)');
 fprintf('\n=== FORWARD VALIDATION: PRISMATIC (crowd) equation ===\n');
 fprintf('  R^2 = %.6f   RMSE = %.0f N   NRMSE = %.2f %%\n', R2_c, RMSE_c, NRMSE_c);
 
-%% 8. Save the run record for the thesis   [G9]
-results = struct('date',datestr(now), 'accel_source_q',accel_src_q, ...
-    'accel_source_d',accel_src_d, 'N',N, ...
+%% 8. Save the run record for the thesis   [G9][H4][H5]
+results = struct('date',char(datetime("now")), ...
+    'script_version',SCRIPT_VERSION, ...
+    'T_TRIM',T_TRIM, 'FORCE_GRADIENT',FORCE_GRADIENT, ...
+    'accel_source_q',accel_src_q, 'accel_source_d',accel_src_d, 'N',N, ...
     'fwd_revolute',struct('R2',R2_f,'RMSE',RMSE_f,'NRMSE_pct',NRMSE_f), ...
     'fwd_prismatic',struct('R2',R2_c,'RMSE',RMSE_c,'NRMSE_pct',NRMSE_c), ...
     'ident',struct('theta',theta,'se_theta',seT,'CovT',CovT, ...
@@ -218,7 +263,9 @@ results = struct('date',datestr(now), 'accel_source_q',accel_src_q, ...
         'condY_raw',condY_raw,'condY_scaled',condY_scaled), ...
     'params_used',P);
 save('stage1_results.mat','results');
-fprintf('\n[i] Run record saved to stage1_results.mat\n');
+fprintf('\n[i] Run record saved to stage1_results.mat (%s | T_TRIM=%.2f | FG=%d)\n', ...
+        SCRIPT_VERSION, T_TRIM, FORCE_GRADIENT);
+end   % ===== closes function validate_and_identify =====
 
 %% ----------------------------------------------------------------------
 function v = local_col(out, name)
@@ -240,4 +287,3 @@ end
 function s = local_tern(cond_, a, b)
 if cond_, s = a; else, s = b; end
 end
-

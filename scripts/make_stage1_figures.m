@@ -20,8 +20,9 @@ clearvars -except out
 close all
 P = shovel_params();
 
-outdir = fullfile('..','experiments','2026-07-07_stage1_final','figures');
-if ~exist(outdir,'dir'), mkdir(outdir); end
+here   = fileparts(mfilename('fullpath'));          % folder of THIS script
+outdir = fullfile(here, '..', 'experiments', '2026-07-07_stage1_final', 'figures');
+if ~exist(outdir, 'dir'), mkdir(outdir); end
 
 %% ---- SHARED THESIS STYLE (reuse this block in every future figure script)
 S.font      = 'Liberation Serif';   % metrically = Times New Roman

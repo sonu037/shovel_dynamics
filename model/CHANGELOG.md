@@ -1,9 +1,26 @@
 # CHANGELOG — ShovelSimulator.slx
 
-One entry per model version. The .slx in this folder is always the CURRENT one;
-old versions live in git history, not as _v1/_v2/_(1) filename copies.
+One entry per model version. The authoritative .slx is the one flagged
+(AUTHORITATIVE); old versions live in git history. Deviation 2026-07-15:
+superseded file copies are temporarily kept in the working tree under a
+no-delete policy; archive pass deferred.
 
-## v4 — 2026-07-06 — planar geometry made consistent (CURRENT)
+## v5 — 2026-07-15 — sensed-acceleration wiring restored (AUTHORITATIVE: ShovelSimulatorr2025b.slx)
+- AUTHORITATIVE MODEL = ShovelSimulatorr2025b.slx (name kept per no-delete
+  policy; canonical rename to ShovelSimulator.slx deferred — MUST happen
+  before any M2 edit begins).
+- Defect found and fixed this date: To Workspace block was named q_3ddot
+  (missing underscore) → script silently fell back to gradient() on the
+  revolute. Renamed to q_3_ddot.
+- Wiring verified: q_3_ddot + d_4_ddot SENSED, R² = 1.000000 both equations,
+  blind ID exact (validate_and_identify v5.1, self-describing results).
+- ShovelSimulator.slx in this folder = PRE-WIRING version, kept unchanged.
+- Stray copies preserved per no-delete policy: scripts/ShovelSimulator_1_.slx
+  (typo-era Downloads copy), model/FourDOFShovelSimulator.slx (+.slx.r2024a
+  autosave; origin to be documented by owner — see research log 2026-07-15
+  open questions).
+
+## v4 — 2026-07-06 — planar geometry made consistent
 - Rigid Transform1 rotation: reverted to None (superseded by gravity tilt).
 - Middle Rigid Transform (the 1.5 m one): rotation StandardAxis +Y 90°
   → prismatic slide axis made RADIAL (was axial along the spin axis).

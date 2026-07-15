@@ -147,6 +147,126 @@ dipper in Simscape (unknown to the analytical model); demonstrate
 
 ---
 
+## 2026-07-13/14 — Communication pipeline built; PI docs generated from repo
+
+**What was done:** Built the comms/ infrastructure (committed 92073ab):
+equations_master.tex (10 macros E1–E10) + render_equations.py (Computer Modern,
+600 dpi, navy+black PNG pairs); LaTeX report skeleton (thesis-time use);
+deck content_map.md (19-slide control table); figure_register.md (FIG-001…010);
+fig_architecture (5-layer research architecture, FIG-001); export_for_pi.py
+(generates Progress_Note.docx, Revision_History.docx, Figure_Register.xlsx
+FROM the repo). Proposal deck Shovel_Health_Proposal_v2.pptx QA'd slide-by-slide
+(timeline overflow, valign, contents alignment fixed). PhD strategy session:
+paper map P1 (~mo 12–15, M1–M4 sim-only) / P2 (~mo 24–30, field) / P3 (M9);
+writing order §5→§2–4→§1→§6→abstract; report-section-before-slide rule.
+
+**Decisions & why:** PI documents are GENERATED from repo truth, never
+hand-maintained (export_for_pi.py) — duplicated documents drift like duplicated
+constants. External "PhD_Research_Master" pack REJECTED as a parallel system;
+absorbed two ideas only (figure register concept, architecture-figure design).
+Report to PI written in Word (equations as _black.png) for compatibility;
+LaTeX skeleton retained for thesis. Assumption ledger A1–A9 finalized with
+removal milestones. LSTM rejected at Stage 1 with recorded rationale (no
+training data; attribution required for diagnosis; OOD failure = fault regime;
+Fu 2022 used LSTM only for unmodelable media–dipper residue under energy
+constraint — that is the M9 slot, not the M1 slot).
+
+**Next step:** Stage-1 case-study report generation; slide-by-slide deck
+rebuild with mentoring loop.
+
+---
+
+## 2026-07-14 — Stage-1 report drafted; accidental trim ablation; repo audit
+
+**What was done:** Generated Stage1_Report.docx (first full draft). Learning
+curriculum LEARNING.md created (10 modules keyed to M1–M9). Full walkthrough
+of validate_and_identify internals (trim rationale, inertia-axis bookkeeping,
+oracle independence). GitHub audit from a fresh clone found the committed
+ShovelSimulator.slx had NO acceleration wiring (6 logged vars only) — the
+machine-precision model was never committed (data-loss incident, since
+resolved 07-15). Ran validation with trim set to 0: revolute (gradient
+fallback due to a block-name typo, see 07-15) collapsed to R²=0.933 /
+NRMSE 2.58% with uninformative identification (Izz 79,336±143,359;
+fv3 −68,447±242,596), while prismatic (sensed) held R²=1.000000 through the
+startup spike.
+
+**Key result:** Accidental controlled ablation: the startup transient is
+genuine rigid-body dynamics (sensed equation exact through it); what the
+spike breaks is numerical differentiation, not physics. Startup-spike
+physics established: commanded sine has non-zero velocity at t=0 vs joint
+at rest → impulse demand; input filter (τ=0.05 s) converts it to a finite
+~MN·m catch-up transient; trim = 10τ = 0.5 s.
+
+**Next step:** Rebuild report to the approved skeleton; restore wiring and
+commit the true model.
+
+---
+
+## 2026-07-15 — v5.1 instrument; C1 reproduced bit-exact; doubt register; two provenance strikes
+
+**What was done:**
+- Compared two stray .slx files: ShovelSimulatorr2025b.slx = live model
+  (8 logged vars, sensed ON, ±2 m excitation, v4 geometry) with ONE defect —
+  To Workspace name q_3ddot (missing underscore) → silent gradient fallback
+  on the revolute. Fixed, verified: SENSED ×2, R²=1.000000 ×2, blind ID exact.
+  ShovelSim.slx identified as a pre-v4 relic (no logging, ±0.25 m, no 1.5 m
+  offset) — superseded.
+- Figure factory rerun (all 5 PDFs regenerated). Two lessons: Windows locks
+  files open in a PDF viewer ("Permission denied" = file held by Acrobat);
+  make_stage1_figures.m patched to anchor outdir to mfilename('fullpath')
+  instead of the current folder.
+- Stage-1 report REBUILT to the approved skeleton (Stage1_Report_M1.docx):
+  exact title/sections/nomenclature/appendices; Appendix A full derivation
+  (9 steps, CM-rendered); Appendix B decision ledger + full parameter table +
+  provenance; inline symbols upgraded to true math runs (italic + subscripts).
+- Doubt register created from 11 handwritten pages: Doubt_Register_Stage1.docx,
+  39 doubts verbatim, numbered D1–D39. D1–D10 resolved in discussion.
+- TWO provenance strikes from the doubt review (claims.md entries required):
+  (1) Rasuli's field machine is a P&H 2100 (verified via literature search),
+  NOT the 4100XPB named in our report title — title/§2.3 fix approved,
+  regeneration pending. (2) The "US$100,000/hr downtime" figure has NO
+  receipt-grade source (best available: industry press, "losses exceeding
+  US$300,000" per outage, basis unstated) — to be softened or cited as such.
+- Script upgraded v4 → v5 → v5.1 (function form). H-series fixes:
+  [H1] declared config block (T_TRIM, FORCE_GRADIENT), printed every run;
+  [H2] TRIM BUG: v4 shipped with keep=true(size(t)) — the trim was silently
+  OFF in every run since the 07-14 ablation edit (comment-vs-code drift,
+  same disease as G1); [H3] FORCE_GRADIENT switch; [H4] results struct
+  self-describes config+version; [H5] datetime; [H6] covariance by solve;
+  [H7] loud guards; [H8] function form with arguments block —
+  validate_and_identify(out, ForceGradient=true, T_TRIM=0).
+
+**Key result:** C1 reproduced BIT-EXACT on demand with
+validate_and_identify(out, ForceGradient=true): Izz = 125,804 ± 53,945
+(truth 287,900, −56%); fv3 = 6,476 ± 5,114; m and c tight (54,306.4 ± 98.4;
+−1.3178 ± 0.0130); forward NRMSE 0.79%. Identical numbers to the original
+study — reproducibility demonstrated, not asserted.
+
+**Residual-shape law (new diagnostic skill, record it):** white noise at the
+numerical floor = model complete, only arithmetic left; smooth signal-locked
+waveform = deterministic error present (here: differentiation truncation,
+absorbed partly into biased parameters); a shape matching a known input =
+the signal itself (what M2's injected force will look like rising from the
+~1e−12 kNm floor — the residual figure is the channel's zero-point
+calibration).
+
+**Decisions & why:** No-delete policy adopted for file copies (owner's call);
+authority declared by CHANGELOG instead of renaming — model/CHANGELOG.md v5
+entry flags ShovelSimulatorr2025b.slx as AUTHORITATIVE; canonical rename
+deferred but REQUIRED before any M2 model edit. MATLAB access interim:
+colleague's campus account for license only; institute email + campus
+license requested via PI (SRIC route); own accounts for Drive and GitHub.
+
+**Next step:** Push this commit; verify on GitHub; regenerate report with the
+three approved edits (machine provenance, K_H/K_C annotation, downtime
+figure); resume doubt register at Page 3 (D11–D14); then M2.
+
+**Open questions:** Origin/purpose of model/FourDOFShovelSimulator.slx
+(+.slx.r2024a autosave) — found untracked 07-15, committed per no-delete
+policy, undocumented. Owner to state provenance before it is used or archived.
+
+---
+
 ## TEMPLATE — copy for each new session
 
 ## YYYY-MM-DD — <one-line title>
@@ -158,5 +278,3 @@ dipper in Simscape (unknown to the analytical model); demonstrate
 **Decisions & why:**
 
 **Next step:**
-
-**Open questions:**
