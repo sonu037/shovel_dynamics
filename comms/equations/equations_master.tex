@@ -1,0 +1,46 @@
+% ======================================================================
+% EQUATIONS MASTER - single source of truth for every project equation.
+% Used by: (1) render_equations.py  -> slide PNGs (Computer Modern)
+%          (2) \input into report/thesis LaTeX -> native journal math
+% Rule: an equation exists HERE or it does not exist. Edit here only.
+% ======================================================================
+
+% --- E1: the core residual idea ---------------------------------------
+\newcommand{\eqCore}{%
+\tau_{\mathrm{load}}(t) \;=\; \tau_{\mathrm{measured}}(t) \;-\; \tau_{\mathrm{model}}(t)}
+
+% --- E2: Euler-Lagrange operator ---------------------------------------
+\newcommand{\eqEL}{%
+\frac{d}{dt}\left(\frac{\partial L}{\partial \dot{q}_i}\right) - \frac{\partial L}{\partial q_i} \;=\; \tau_i}
+
+% --- E3: manipulator form ----------------------------------------------
+\newcommand{\eqManip}{%
+D(q)\,\ddot{q} \;+\; C(q,\dot{q})\,\dot{q} \;+\; f_v\,\dot{q} \;+\; f_c\,\mathrm{sgn}(\dot{q}) \;+\; G(q) \;=\; \tau}
+
+% --- E4: saddle (revolute) equation ------------------------------------
+\newcommand{\eqSaddle}{%
+\tau_3 \;=\; (I_{zz} + M_d r^2)\ddot{q}_3 \;+\; 2 M_d r\,\dot{d}_4\,\dot{q}_3 \;+\; M_d\,g\,r\cos q_3 \;+\; f_{v3}\,\dot{q}_3}
+
+% --- E5: crowd (prismatic) equation ------------------------------------
+\newcommand{\eqCrowd}{%
+F_4 \;=\; M_d\,\ddot{d}_4 \;-\; M_d r\,\dot{q}_3^{\,2} \;+\; M_d\,g\sin q_3 \;+\; f_{v4}\,\dot{d}_4}
+
+% --- E6: time-varying lever arm ----------------------------------------
+\newcommand{\eqLever}{%
+r(t) \;=\; d_4(t) + c, \qquad c = x_{\mathrm{ref}} - L_{\mathrm{COG}} = -1.32\ \mathrm{m}}
+
+% --- E7: linear-in-parameters regressor --------------------------------
+\newcommand{\eqRegressor}{%
+\tau \;=\; Y(q,\dot{q},\ddot{q})\,\theta, \qquad \theta = [\,m,\; mc,\; mc^2+I_{zz},\; f_v,\; f_c\,]^{\top}}
+
+% --- E8: least squares + covariance ------------------------------------
+\newcommand{\eqLS}{%
+\hat{\theta} = (Y^{\top}Y)^{-1} Y^{\top}\tau, \qquad \mathrm{Cov}(\hat{\theta}) = \hat{\sigma}^2 (Y^{\top}Y)^{-1}}
+
+% --- E9: goodness-of-fit metrics (Fu 2022 Eq. 18 convention) -----------
+\newcommand{\eqMetrics}{%
+R^2 = 1 - \frac{\sum_k (\tau_k - \hat{\tau}_k)^2}{\sum_k (\tau_k - \bar{\tau})^2}, \qquad \mathrm{RMSE} = \sqrt{\frac{1}{N}\sum_k (\tau_k - \hat{\tau}_k)^2}}
+
+% --- E10: HPINN hybrid loss (Fu 2022, Eqs. 11-15) ----------------------
+\newcommand{\eqHPINN}{%
+J \;=\; \alpha\, J_{\mathrm{dynamics}} \;+\; \eta\, J_{\mathrm{energy}}}

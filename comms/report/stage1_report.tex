@@ -1,0 +1,109 @@
+% ======================================================================
+% STAGE-1 REPORT  — parallel deliverable and thesis Chapter-3 seed.
+% Compile: pdflatex stage1_report.tex  (Overleaf: just upload folder)
+% Equations come from ../equations/equations_master.tex — edit THERE.
+% Figures come from the repo experiment folder — regenerable, never pasted.
+% ======================================================================
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,graphicx,booktabs,siunitx,hyperref}
+\usepackage{times}                       % Times text; CM math = IEEE look
+\graphicspath{{../../experiments/2026-07-07_stage1_final/figures/}{../../thesis/figures/}}
+\input{../equations/equations_master}    % SINGLE SOURCE of every equation
+
+\title{Dynamic Modelling and Verified Identification of a 2-DOF Cable-Shovel
+       Subsystem:\\ Stage-1 Report}
+\author{Suhail Majeed Sheikh \\ \small JRF, Dept.\ of Mining Engineering, IIT Kharagpur
+        \\ \small Project IIT/SRIC/R/AEH/2026/104 (CMPDI) \quad Supervisor: Dr.\ Sunita Das Mishra}
+\date{July 2026}
+
+\begin{document}\maketitle
+
+\begin{abstract}
+This report documents Stage 1 of the load-torque--estimation programme:
+derivation of the two-degree-of-freedom dynamics of the shovel saddle--crowd
+subsystem, verification against an independent multibody simulation to machine
+precision, and exact blind recovery of all physical parameters. The validated
+model constitutes the subtraction reference required for instantaneous
+load-torque estimation, the enabling quantity for drive health management.
+\end{abstract}
+
+% ----------------------------------------------------------------------
+\section{Problem statement and approach}          % <- WU1
+Health monitoring of shovel drives from motor signatures requires separating
+three contributions to motor torque: rigid-body motion, external load, and
+machine condition. The programme's central quantity is therefore
+\begin{equation}\eqCore\label{eq:core}\end{equation}
+which demands a motion model exact enough that its residual contains only
+load and condition effects. Payload estimation follows as a byproduct of the
+same channel.
+% TODO(WU1): expand health-first motivation, cite downtime economics.
+
+% ----------------------------------------------------------------------
+\section{Dynamic model}                            % <- WU3, WU4
+\subsection{Kinematic abstraction}
+% TODO(WU3): 2-DOF abstraction figure + frames; refer anatomy figure.
+The lever arm from pivot to the body's centre of mass is time-varying:
+\begin{equation}\eqLever\label{eq:lever}\end{equation}
+
+\subsection{Equations of motion}
+Applying the Euler--Lagrange operator
+\begin{equation}\eqEL\label{eq:el}\end{equation}
+to the kinetic and potential energies of the dipper--handle body, and
+appending non-conservative friction, yields the manipulator form
+\begin{equation}\eqManip\label{eq:manip}\end{equation}
+whose two scalar components are the saddle equation
+\begin{equation}\eqSaddle\label{eq:saddle}\end{equation}
+and the crowd equation
+\begin{equation}\eqCrowd\label{eq:crowd}\end{equation}
+% TODO(WU4): full derivation steps (thesis version); term-by-term physical
+% reading (inertia / Coriolis / gravity leverage / friction).
+
+% ----------------------------------------------------------------------
+\section{Verification methodology}                 % <- WU5, WU6
+% TODO(WU5): Simscape oracle description; non-circularity argument.
+% TODO(WU6): isolation protocol - g=0 test, frequency-doubling signature,
+%            perfect-fit-wrong-parameters deduction. (research_log 2026-07-06)
+
+% ----------------------------------------------------------------------
+\section{Parameter identification}                 % <- WU7, WU8
+All parameters are the published values of Rasuli \emph{et al.}\ Table II.
+Identification uses the linear-in-parameters regrouping
+\begin{equation}\eqRegressor\label{eq:regressor}\end{equation}
+solved by ordinary least squares with covariance-based confidence intervals:
+\begin{equation}\eqLS\label{eq:ls}\end{equation}
+Goodness of fit is reported by the field-standard metrics
+\begin{equation}\eqMetrics\label{eq:metrics}\end{equation}
+% TODO(WU8): identifiability analysis (gravity 2.5 MNm vs inertia 10 kNm),
+%            conditioning story (d4 amplitude), CI reading rules.
+
+% ----------------------------------------------------------------------
+\section{Results}                                  % <- WU9
+\begin{figure}[t]\centering
+\includegraphics[width=\textwidth]{fig_B1_revolute_validation.pdf}
+\caption{Forward validation of the saddle equation against the independent
+multibody solution: $R^2 = 1.000000$, residual at the $10^{-13}$
+floating-point floor.}\label{fig:b1}
+\end{figure}
+% TODO(WU9): results table (all five parameters exact, CIs ~0);
+%            crowd-equation first validation; gradient-vs-sensed study (fig_C1)
+%            and the 56% Izz bias finding -> instrumentation requirement.
+
+\section{Scope and outlook}                        % <- WU10 + roadmap
+% TODO: honest-scope statements (machine precision = mathematical correctness;
+%       zero-width CIs are simulation-only), M2 design + acceptance criterion.
+
+\begin{thebibliography}{9}\small
+\bibitem{rasuli2014} A.~Rasuli, S.~Tafazoli, W.~G.~Dunford,
+``Dynamic modeling, parameter identification, and payload estimation of
+mining cable shovels,'' \emph{IEEE Trans.\ Ind.\ Appl.}, 50(3), 2014.
+\bibitem{fu2022} T.~Fu \emph{et al.}, ``Dig-load prediction of electric cable
+shovel based on hybrid physics-informed neural network,''
+\emph{Chin.\ J.\ Mech.\ Eng.}, 35, 2022.
+\bibitem{tafazoli1999} S.~Tafazoli, P.~D.~Lawrence, S.~E.~Salcudean,
+``Identification of inertial and friction parameters for excavator arms,''
+\emph{IEEE Trans.\ Robot.\ Autom.}, 15(5), 1999.
+\bibitem{frimpong2008} S.~Frimpong, Y.~Hu, ``Cable shovel digging dynamics
+and simulation in oil sands excavation,'' 2008.
+\end{thebibliography}
+\end{document}

@@ -1,0 +1,54 @@
+<svg width="820" height="640" viewBox="0 0 820 640" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    text { font-family: "Liberation Serif", "Times New Roman", serif; fill: #000; }
+    .layer { font-size: 17px; font-weight: bold; fill: #FFFFFF; }
+    .item  { font-size: 13.5px; fill: #FFFFFF; }
+    .tag   { font-size: 13px; font-style: italic; fill: #444; }
+  </style>
+  <rect width="820" height="640" fill="#FFFFFF"/>
+  <defs>
+    <marker id="up" viewBox="0 0 10 10" refX="5" refY="2" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 9 L5 1 L9 9 z" fill="#333"/>
+    </marker>
+  </defs>
+
+  <!-- layers bottom-up -->
+  <g>
+    <rect x="120" y="530" width="480" height="86" rx="8" fill="#5F6B7A"/>
+    <text class="layer" x="145" y="565">PHYSICAL SYSTEM</text>
+    <text class="item"  x="145" y="592">Electric rope shovel · drives · gearboxes · ropes · dipper</text>
+
+    <rect x="120" y="418" width="480" height="86" rx="8" fill="#3F5C8A"/>
+    <text class="layer" x="145" y="453">MEASUREMENT LAYER</text>
+    <text class="item"  x="145" y="480">Motor currents · voltages · speeds  (30 Hz, non-intrusive)</text>
+
+    <rect x="120" y="306" width="480" height="86" rx="8" fill="#1F3864"/>
+    <text class="layer" x="145" y="341">PHYSICS LAYER</text>
+    <text class="item"  x="145" y="368">Validated dynamic twin · instantaneous load torque  τ_load(t)</text>
+
+    <rect x="120" y="194" width="480" height="86" rx="8" fill="#7A4A12"/>
+    <text class="layer" x="145" y="229">INTELLIGENCE LAYER</text>
+    <text class="item"  x="145" y="256">Parameter-drift tracking (RLS) · physics-informed residual (PINN)</text>
+
+    <rect x="120" y="82" width="480" height="86" rx="8" fill="#C55A11"/>
+    <text class="layer" x="145" y="117">APPLICATION LAYER</text>
+    <text class="item"  x="145" y="144">Diagnosis · prognosis · health management · payload accounting</text>
+  </g>
+
+  <!-- up arrows between layers -->
+  <line x1="360" y1="530" x2="360" y2="506" stroke="#333" stroke-width="2.5" marker-end="url(#up)"/>
+  <line x1="360" y1="418" x2="360" y2="394" stroke="#333" stroke-width="2.5" marker-end="url(#up)"/>
+  <line x1="360" y1="306" x2="360" y2="282" stroke="#333" stroke-width="2.5" marker-end="url(#up)"/>
+  <line x1="360" y1="194" x2="360" y2="170" stroke="#333" stroke-width="2.5" marker-end="url(#up)"/>
+
+  <!-- milestone tags right side -->
+  <text class="tag" x="622" y="470">M5  current→torque map</text>
+  <text class="tag" x="622" y="345">M1 done · M2–M4 · M6–M7</text>
+  <text class="tag" x="622" y="358" font-size="11"> </text>
+  <text class="tag" x="622" y="233">M9</text>
+  <text class="tag" x="622" y="121">project deliverables</text>
+  <text class="tag" x="622" y="582">CMPDI machine (M8 gate)</text>
+
+  <!-- caption line -->
+  <text class="tag" x="120" y="40" font-size="15">FIG-001 · Research architecture — every milestone lives in one layer; value flows upward.</text>
+</svg>
