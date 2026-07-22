@@ -3,4 +3,6 @@ slprj/
 *.asv
 *.autosave
 page-*.jpg
-.MATLABDriveTag*.slx.original
+*.slx.original
+.MATLABDriveTag
+**/.MATLABDriveTag
