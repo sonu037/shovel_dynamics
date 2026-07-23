@@ -15,3 +15,4 @@ Status: final | draft | planned.   Source = the script/file that regenerates it.
 | FIG-008 | Differentiation-noise comparison | Ch 3 | P1 | — | final | scripts/make_stage1_figures.m (C1) | experiments/.../fig_C1_gradient_vs_sensed.pdf |
 | FIG-009 | Simulink/Simscape model diagram | Ch 3 | P1 | — | planned | export from ShovelSimulator.slx (print -dpdf) | model/ |
 | FIG-010 | M2 load recovery: injected vs recovered | Ch 4 | P1 | — | planned | M2 experiment script (to be written) | experiments/M2_* |
+| FIG-B4 | Identification residual — the tau_load channel, empty at Stage 1 (structure at 1e-12 is signal-correlated rounding, not physics) | NOT in report v2 by ruling; reserved as M2 before/after centerpiece (left panel: channel empty; right: injected force recovered) | validate_and_identify.m (plot output); saved: experiments/2026-07-07_stage1_final/figures/fig_B4_residual_channel.pdf

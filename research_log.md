@@ -264,7 +264,30 @@ figure); resume doubt register at Page 3 (D11–D14); then M2.
 **Open questions:** Origin/purpose of model/FourDOFShovelSimulator.slx
 (+.slx.r2024a autosave) — found untracked 07-15, committed per no-delete
 policy, undocumented. Owner to state provenance before it is used or archived.
+## 2026-07-23 — Report v2, Rasuli verification, residual channel ruling
 
+- Report v2 built: 11 surgical edits (P&H-class title + P&H 2100 provenance; downtime
+  reinstated with thesis receipt [2]; datum-convention para (our d4 = his d4 - 1.5 m,
+  a3 = 0); L_COG_Offset symbol fidelity + eq. 56 note; K_H = 1940 / K_C = 3950 N/A
+  banked for M5; frame-convention clause (Izz = local-x slot, 90deg/+y); residual-channel
+  reading in 5.1; trim-ablation addendum in 5.4 (cond 82.2 -> 13.4 untrimmed);
+  theta/Phi nomenclature note; Konig citation [3]; section-symbol spelled out; new
+  assumption row A10 (slide-through-pivot, inherited from [1], sin q3 detection
+  signature at M8). Results untouched. claims.md: downtime line reinstated + 9 new
+  verified lines (thesis source, eq. 56, a3 = 0 quote, static-table discrepancy
+  56,900 vs 56,960, m_Load-at-d4 rule, payload-exclusion structural proof,
+  effective-parameter caveat, M8 field constraints).
+- Rasuli 2012 UBC thesis adopted as reference [2] (open access); to be filed in
+  papers_library/.
+- Figure factory verified against v5.1 output: Figures 2-6 reproduce bit-identical;
+  identification-residual plot confirmed as the tau_load channel display.
+- tau_load standalone figure DEFERRED to M2 — v2 carries the framing in 5.1 text;
+  residual structure at 1e-12 understood as signal-correlated rounding (ulp
+  territory), not physics. Registered as FIG-B4, reserved for the M2 before/after
+  pair.
+- Figure 1 defect noted (boom drawn to lower corner, should be upper); FIG-001-v2
+  rebuild queued, code-first with collision audit. Internet figures ruled out
+  (copyright + unverifiable geometry).
 ---
 
 ## TEMPLATE — copy for each new session
