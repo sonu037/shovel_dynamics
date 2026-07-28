@@ -7,3 +7,4 @@ page-*.jpg
 .MATLABDriveTag
 **/.MATLABDriveTag
 ~$*
+__pycache__/
