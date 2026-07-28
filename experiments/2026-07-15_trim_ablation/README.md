@@ -3,3 +3,10 @@ Varied: T_TRIM = 0 vs 0.5 s; same simulation output, same script v5.1, all else 
 Verdict: No effect at Stage 1 - both conditions recover all parameters exactly (R2=1.000000, RMSE=0 both equations). No-trim keeps 373/374 and improves conditioning (13.4 vs 82.2): startup accelerations enrich excitation. Trim retained as hygiene for noisy/differentiated data (field phase).
 Date: 2026-07-22 (rerun of the 2026-07-14 observation)
 Script: validate_and_identify v5.1 (2026-07-15)
+
+Files:
+  fig_A.png      - crowd (prismatic) validation, trim run
+  fig_B.png      - saddle load-torque (revolute) validation, trim run
+  fig_C.pdf      - saddle (revolute) validation, no-trim run (added 2026-07-28)
+  run_trim05.mat - identification record, T_TRIM = 0.5 s
+  run_notrim.mat - identification record, T_TRIM = 0
