@@ -521,3 +521,120 @@
      <summary> Abstract </summary>
      It is proposed to conduct fault diagnostic test on electric drives of mining shovels based on the results of monitoring the current values of electromagnetic and mechanical parameters and variables of electric drives obtained in the course of their operation using the modern computer technology. The structure of the developed system of functional diagnostics, allowing to monitor the status of the drive and identify emerging fault is shown in the paper. To determine in real time the current parameters and variables of DC motor which can’t be measured during their operation, the dynamic identification was used based on the measured current and voltage of the motor windings, and mathematical estimation methods. Parameters of the mechanical subsystem of electric drive are identified by a mobile measuring system. The authors also give the structure and characteristics of the one-step neural network predictor of current, used to predict the current values in the armature and field windings of motor. The analysis of the technical state of the electric drive by a set of attributes is performed in a special analyzer, built on the basis of pre-trained artificial neural network. The results of these studies support the possibility of creating a diagnostic system for the main electric drives of mining shovels using the estimation methods and apparatus of artificial neural networks.
   </details>
+## Estimation-theory additions (2026-07-30)
+
+*Rationale: the 58-paper mining library contained zero observer/estimation papers.
+M2, M3 and M9 are estimation problems whose foundations live in the robotics
+literature. These eleven close that gap.*
+
+- **Robot Collisions: A Survey on Detection, Isolation, and Identification**
+   Sami Haddadin, Alessandro De Luca, Alin Albu-Schäffer
+   IEEE Transactions on Robotics 2017, 33(6), 1292–1312
+   [open paper page](https://doi.org/10.1109/TRO.2017.2723903)
+   <details>
+     <summary> Why it matters here </summary>
+     Field-defining survey of residual-based external-torque estimation. Gives the
+     detection / isolation / identification pipeline, the standard metrics, and the
+     vocabulary a robotics reviewer expects. Read this before anything else in this group.
+  </details>
+
+- **Actuator Failure Detection and Isolation Using Generalized Momenta**
+   Alessandro De Luca, Raffaella Mattone
+   IEEE ICRA 2003, 634–639
+   [open paper page](https://doi.org/10.1109/ROBOT.2003.1241665)
+   <details>
+     <summary> Why it matters here </summary>
+     The foundational momentum-observer paper and the direct blueprint for M3.
+     Estimates external/fault torque WITHOUT joint acceleration, which is exactly the
+     problem M1 exposed when differentiated velocities biased Izz by 56%.
+  </details>
+
+- **Sensorless Robot Collision Detection and Hybrid Force/Motion Control**
+   Alessandro De Luca, Raffaella Mattone
+   IEEE ICRA 2005, 999–1004
+   <details>
+     <summary> Why it matters here </summary>
+     Extends the momentum residual from actuator faults to external contact forces.
+     Structurally identical to our tau_load channel.
+  </details>
+
+- **Optimal Robot Excitation and Identification**
+   Jan Swevers, Chris Ganseman, D. Bilgin Tükel, Joris De Schutter, Hendrik Van Brussel
+   IEEE Transactions on Robotics and Automation 1997, 13(5), 730–740
+   <details>
+     <summary> Why it matters here </summary>
+     The excitation-design standard. Finite Fourier series guarantees periodic
+     excitation, which permits time-domain averaging, noise characterisation, and
+     analytic velocity and acceleration. Converts our excitation from a judgement
+     call into a designed input with a stated optimality criterion.
+  </details>
+
+- **On Finding Exciting Trajectories for Identification Experiments Involving Systems with Nonlinear Dynamics**
+   Brian Armstrong
+   The International Journal of Robotics Research 1989, 8(6), 28–48
+   <details>
+     <summary> Why it matters here </summary>
+     Shows that convergence rate and noise immunity depend directly on the condition
+     number of the persistent-excitation matrix, and that intuitively chosen
+     trajectories are often badly conditioned. Direct commentary on our cond(Y) = 82.2.
+  </details>
+
+- **Sliding Mode Momentum Observers for Estimation of External Torques and Joint Acceleration**
+   Gianluca Garofalo, Nico Mansfeld, Julian Jankowski, Christian Ott
+   IEEE ICRA 2019, 6117–6123
+   <details>
+     <summary> Why it matters here </summary>
+     Sliding-mode variant of the momentum observer that also recovers joint
+     acceleration as a by-product. Directly interesting for M3, where acceleration is
+     the quantity we are trying to avoid measuring.
+  </details>
+
+- **Contact Force Estimation for Robot Manipulator Using Semiparametric Model and Disturbance Kalman Filter**
+   Jianbin Hu, Rong Xiong
+   IEEE Transactions on Industrial Electronics 2017, 65(4), 3365–3375
+   [open paper page](https://doi.org/10.1109/TIE.2017.2748056)
+   <details>
+     <summary> Why it matters here </summary>
+     Semiparametric = rigid-body physics plus a learned residual. Structurally the
+     same idea as M9's physics-informed layer, but using a Kalman filter rather than a
+     network. Useful as the classical baseline M9 must beat.
+  </details>
+
+- **Cartesian Contact Force Estimation for Robotic Manipulators Using Kalman Filters and the Generalized Momentum**
+   Arne Wahrburg, Elena Morara, Gianluca Cesari, Björn Matthias, Hao Ding
+   IEEE CASE 2015, 1230–1235
+   <details>
+     <summary> Why it matters here </summary>
+     Momentum observer combined with a Kalman filter, adding uncertainty
+     quantification. Relevant to putting error bars on tau_load rather than a point estimate.
+  </details>
+
+- **Collision Detection and Identification for Robot Manipulators Based on Extended State Observer**
+   S. Chen et al.
+   Control Engineering Practice 2018, 79, 144–153
+   [open paper page](https://doi.org/10.1016/j.conengprac.2018.07.004)
+   <details>
+     <summary> Why it matters here </summary>
+     Extended-state-observer alternative to the momentum observer. Useful as a
+     comparison baseline at M3.
+  </details>
+
+- **Collision Detection and Safe Reaction with the DLR-III Lightweight Manipulator Arm**
+   Alessandro De Luca, Alin Albu-Schäffer, Sami Haddadin, Gerd Hirzinger
+   IEEE/RSJ IROS 2006, 1623–1630
+   [open paper page](https://doi.org/10.1109/IROS.2006.282053)
+   <details>
+     <summary> Why it matters here </summary>
+     Hardware validation of the momentum observer. Evidence that the method survives
+     real sensors and real model error, which is the M8 question.
+  </details>
+
+- **DIDIM: A New Method for the Dynamic Identification of Robots from Only Torque Data**
+   Maxime Gautier, Alexandre Janot, Pierre-Olivier Vandanjon
+   IEEE Transactions on Automatic Control 2013
+   <details>
+     <summary> Why it matters here </summary>
+     Identification from torque data alone, avoiding noisy differentiation entirely.
+     An alternative route to the same goal as M3. Volume and pages need verifying
+     before citation.
+  </details>
