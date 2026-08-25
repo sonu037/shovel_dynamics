@@ -422,7 +422,7 @@ fit         = polyval(pf, Qpred);
 ssRes       = sum((resid - fit).^2);
 ssTot       = sum((resid - mean(resid)).^2);
 m.R2        = 1 - ssRes/ssTot;
-
+m.oneMinusR2 = ssRes/ssTot;
 err         = resid - ref;
 m.maxAbsErr = max(abs(err));
 m.rmsErr    = sqrt(mean(err.^2));
@@ -503,6 +503,8 @@ else
     fprintf('%-22s %14.3f %14.3f\n','intercept', ...
         R.q3.intercept, R.d4.intercept);
     fprintf('%-22s %14.6f %14.6f\n','R^2', R.q3.R2, R.d4.R2);
+    fprintf('%-22s %14.6e %14.6e\n','1 - R^2 (direct)', ...
+        R.q3.oneMinusR2, R.d4.oneMinusR2);
     fprintf('%-22s %14.4f %14.4f\n','NRMSE (%)', ...
         R.q3.NRMSE_pct, R.d4.NRMSE_pct);
     fprintf('%-22s %14.3e %14.3e\n','max err / peak ref', ...
