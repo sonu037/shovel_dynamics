@@ -242,5 +242,49 @@ You're already practicing it; keep the habits deliberate: claims ledger for ever
 | Alongside P1 writing | Module 9 | M9, P3 |
 
 ---
+## Simulink-PS Converters: filtering belongs on motion inputs only
 
+Motion inputs must be differentiated by Simscape, so they need the second-order
+filter. **Force inputs are never differentiated and must not be filtered.**
+A leftover filter (τ = 0.05 s, order 2) introduces a group delay of ≈ 2τ and
+appears in results as a pure phase error. Set `FilteringAndDerivatives` to
+`zero` on every force-input converter. Options are `provide` / `filter` / `zero`.
+
+## Amplitude agreement plus poor NRMSE means a timing error
+
+If peak-magnitude error is small (<0.5%) while NRMSE is large (>1%), the fault
+is a time offset, not an amplitude or gain error. Recover the offset from the
+correlation: Δt = arccos(√R²)/ω.
+
+If two independent channels imply the *same* offset, the fault lies in something
+they share — the input path — and cannot be a geometry, station, or Jacobian
+error, since those corrupt channels differently.
+
+## Never inherit an acceptance criterion from another milestone
+
+A target carried over from earlier documentation was approximately the size of
+an artifact in the new milestone. Meeting it would have certified a filter delay
+as physics. Establish each milestone's numerical floor first (zero-input gate),
+then set the criterion, then run.
+
+Corollary: relative floors are channel-specific. Torque and force channels here
+differ by three orders of magnitude in relative floor purely because their
+signal scales differ. Do not freeze a single universal tolerance.
+
+## Ground truth must come from the model, not from a reconstruction
+
+Comparing against a signal recomputed in MATLAB from the *commanded* input
+hides everything the input path does to it. Log the applied signal from the
+model itself.
+
+## Run the gate before the experiment
+
+Zero-input runs establish the floor and attribute any constant offset. Running
+the loaded case first leaves offsets unattributable and forces a re-run.
+
+## Analysis parameters are not model parameters
+
+Changing a station offset in an analysis script alters the *assumption*, not the
+physics. Moving a force application point requires a Rigid Transform in the
+model. Name such parameters so the distinction is unmistakable.
 *Standing offer: for any module, say "start module N" in chat — I run it as a tutoring session: I probe, you derive, I correct, we quiz. The self-tests above are exactly what I'll ask.*

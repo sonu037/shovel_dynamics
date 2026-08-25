@@ -289,7 +289,164 @@ policy, undocumented. Owner to state provenance before it is used or archived.
   rebuild queued, code-first with collision audit. Internet figures ruled out
   (copyright + unverifiable geometry).
 ---
+## 2026-08-25 — M2 modules 01, 02 closed; first identifiability result
 
+Commits: 43f08bf → ac4f460 → 04328fd → 33fb3bf
+Script: `M2/scripts/recover_load.m` (new — replaces command-window analysis)
+Model:  `M2/model/M2_LoadInjection.slx`
+
+### Model defects found and corrected
+
+1. **Sine Wave2 held literal values** (Amplitude `100000`, Frequency `2*pi/9`).
+   Force amplitude could not be set from a script, so no valid zero-force run
+   was possible. Now reads `F0_y` / `omega_F`, set via `Simulink.SimulationInput`.
+2. **Simulink-PS Converter2 had input filtering enabled.**
+   Mask read `FilteringAndDerivatives = filter`, `SimscapeFilterOrder = 2`,
+   `InputFilterTimeConstant = 0.05` → group delay ≈ 2τ = 0.1 s.
+   Force inputs require no derivatives (unlike motion inputs), so the filter
+   served no purpose. Set to `zero`.
+3. **Applied force was not logged.** Analysis compared the residual against a
+   MATLAB reconstruction of the *commanded* force while the mechanism received
+   the *filtered* force. Added To Workspace block `outF`, sample time 0.01 s.
+4. **Time base mismatch.** `tout` followed solver steps (10000 points at tight
+   tolerance) while To Workspace blocks logged 3001. Fixed via
+   `OutputOption = SpecifiedOutputTimes`, `OutputTimes = 0:0.01:30`.
+   To Workspace sample times pinned to 0.01 s.
+
+### The filter defect — diagnostic chain
+
+Worth recording as a worked example: the residual statistics located the fault
+before the block was opened.
+
+- Case 01 gave NRMSE 2.1032% / 1.9903% but peak-magnitude error of only
+  0.1081% / 0.0789%. Amplitudes agreeing while the whole curve disagrees can
+  only mean a timing error.
+- Implied lag from ρ = √R²:  φ = arccos ρ, Δt = φ/ω.
+  q₃: R² 0.996742 → Δt 0.0818 s.  d₄: R² 0.996759 → Δt 0.0816 s.
+- The two channels agreed to 0.2%. A *common* lag cannot arise from geometry,
+  station, or Jacobian errors — those corrupt the channels differently.
+  Therefore the fault lay in the shared force input path.
+- Predicted NRMSE for a pure lag φ: 2·sin(φ/2)/2 ≈ 2.02%. Measured 2.10% / 1.99%.
+  The lag accounted for essentially the entire error.
+- Block mask then confirmed 2τ = 0.1 s independently.
+
+**Consequence for the inherited target.** The "2–3% NRMSE" figure carried over
+from M1 documentation was never an acceptance criterion for M2 — it was
+approximately the size of this artifact. Had it been treated as a pass mark,
+a filter delay would have been certified as physics. Acceptance criteria must
+be derived from the milestone's own floor, not inherited.
+
+### Module 01 — zero-force gate  (`M2/experiments/01_zero_force/M2_null.mat`)
+
+| channel | max abs | rms | relative |
+|---|---|---|---|
+| q₃ | 1.999550e-06 N·m | 1.407555e-06 N·m | 7.037e-13 |
+| d₄ | 2.910383e-10 N | 7.837256e-11 N | 6.461e-16 |
+
+The two channels differ by roughly three orders of magnitude in *relative*
+floor, because the torque scale is ~10⁶ N·m and the force scale ~10⁵ N. The
+specification's refusal to freeze 1e-12 as a universal constant was correct:
+a single threshold would have been meaningless across the two channels.
+
+This floor also resolved the unexplained intercept from the original Case 01
+(β₃ = 2679.874 N·m, β₄ = 321.179 N). No counterpart exists at zero force, so
+the offset was an artifact of the filtered force path, not model–plant mismatch.
+
+### Module 02 — known load, correct station
+(`M2/experiments/02_known_load/M2_100kN_0p1111Hz_sp1p50.mat`)
+
+F_y = 100 kN sin(2π/9 · t), bail station s = d₄ + 1.5 m, trim t ≥ 5 s.
+
+| metric | q₃ | d₄ |
+|---|---|---|
+| slope (expect −1) | −1.000000 | −1.000000 |
+| intercept | −0.000 | 0.000 |
+| R² | 1.000000 | 1.000000 |
+| max err / peak ref | 2.724e-12 | 3.868e-15 |
+| implied lag | 0.000000 s | 0.000000 s |
+
+Recovery error sits at the module-01 floor, which is the correct ceiling on
+the claim.
+
+**Scope of the claim.** This verifies the force→generalised-force mapping, the
+application station, the sign convention, and the subtraction identity. It does
+*not* establish load identifiability: the residual contained exactly one
+unmodelled term, placed there by construction. Under motion-prescribed joints
+the result is an algebraic identity, and the oracle shares assumptions A1–A3
+with the analytical model, so M2 is structurally blind to errors in those.
+
+### Sign convention (now confirmed empirically, not only algebraically)
+
+D q̈ + C q̇ + G + f = τ_actuator + Q_ext, hence τ_actuator = τ_model − Q_ext, so
+
+    residual = τ_measured − τ_model = −JᵀF
+
+Regression slope of residual on Q_pred is therefore −1, measured as −1.000000.
+
+### Module 06 — first identifiability result (unplanned)
+
+A run with `Station = -1.32` was made in the mistaken belief that it moved the
+force to the COG. It does not — `Station` alters the *analysis assumption* only;
+the force remains physically applied at the bail. The run is retained because
+it measures something more useful: how distinguishable two stations 2.82 m
+apart actually are.
+
+| | wide stroke (d₄ = 8.75 ± 2 m) | narrow stroke (d₄ = 8.75 ± 0.27 m) |
+|---|---|---|
+| slope | −1.378454 | −1.380943 |
+| intercept | −1662.762 N·m | −220.037 N·m |
+| R² | 0.997308 | 0.999953 |
+| NRMSE | 13.7187% | 11.7131% |
+| peak magnitude error | 39.7425% | 39.3560% |
+| d₄ channel | −1.000000, R² 1.000000 | −1.000000, R² 1.000000 |
+
+Files: `M2/experiments/02_known_load/M2_100kN_0p1111Hz_s-1p32.mat`,
+       `M2/experiments/06_identifiability/M2_wrongstation_narrowband.mat`
+
+**Reading.**
+
+1. The d₄ channel is unaffected in both cases because Q_d₄ = F_y sin q₃ carries
+   no lever arm. Only q₃ can distinguish stations. Consistent with module 05's
+   note that observability redistributes between coordinates.
+
+2. The slope measures ρ(d₄) = (d₄+1.5)/(d₄−1.32) empirically, weighted across
+   the trajectory. Wide stroke: ρ ∈ [1.2990, 1.5193], measured 1.378454.
+   Narrow stroke: ρ ∈ [1.3662, 1.3939], measured 1.380943 — near the midpoint.
+   Derivation and measurement agree; the algebra of module 06 is confirmed.
+
+3. **The result.** Assuming a station 2.82 m wrong still gave R² = 0.9973 over
+   the wide stroke and R² = 0.99995 over the narrow one. Discriminating
+   information fell from 0.2692% to 0.0047% — a factor of 57 — for a sevenfold
+   reduction in stroke. In a noise-free simulation with exact sensing.
+
+4. Detectability and identifiability separate cleanly here: peak-magnitude
+   error stayed near 39% in both runs, so the load remains obviously present
+   and obviously mis-scaled. What collapses is the ability to determine *which
+   model* produced it.
+
+**Caveats.**
+- The narrow band has the right *width* (0.54 m, matching Bi 2020's operational
+  extension band) but the wrong *centring* (8.75 m rather than ~9.77 m). Since
+  |dρ/dd₄| = 2.82/(d₄−1.32)² is larger at short extension, correct centring
+  should worsen the confounding further. To be tested, not assumed.
+- This is station-versus-station confounding, not load-versus-parameter-error
+  confounding. Related but distinct; the latter requires the sensitivity matrix.
+
+### Crowd excitation
+
+Sine Wave1 amplitude temporarily set to 0.27 for the narrow-band run, then
+restored to 2 and the model saved. Verified by `get_param`.
+
+### Open items carried forward
+
+- **Izz ambiguity** (already flagged in `shovel_params.m`): whether Rasuli
+  Table II's 287,900 kg·m² is about the COM or grouped about the pivot. The
+  inertia column is the whole basis of the load-versus-mass separability
+  argument, so this must be resolved *before* κ(S) is computed.
+- Modules 01 and 02 were run with blank acceptance criteria. Fill and freeze
+  retroactively, using the measured floor.
+- Next: centred narrow band; then sensitivity matrix S = [∂r/∂F | ∂r/∂δm] and
+  κ(S) computed with and without the inertia and Coriolis terms.
 ## TEMPLATE — copy for each new session
 
 ## YYYY-MM-DD — <one-line title>
