@@ -61,12 +61,32 @@ and ours differ by this constant. Feng et al. 2022 use the same construction
 
 ## Analysis symbols
 
-| symbol | meaning |
-|---|---|
-| rho(d4) | separability ratio, (d4+1.5)/(d4-1.32) |
-| s_load | the load's signature in the residual over time |
-| s_dm | a mass error's signature in the residual over time |
-| dm, dIzz, dc, dfv | small deliberate errors in the identified parameters |
-| phi_I, phi_m, phi_c, phi_f | sensitivity functions — what multiplies each parameter |
-| kappa(S) | condition number of the sensitivity matrix |
-| NRMSE | normalised root-mean-square error |
+| symbol | meaning | units |
+|---|---|---|
+| rho_station(d4) | force-application-station ratio, (d4+1.5)/(d4-1.32) | dimensionless |
+| rho_LM(t) | load-vs-mass sensitivity ratio, s_load / s_dm | s^2/m |
+| s_load | load signature in the saddle residual, (d4+1.5) cos q3 | m |
+| s_dm | mass-error signature, r^2 q3ddot + 2 r d4dot q3dot + g r cos q3 | m^2/s^2 |
+| dm, dIzz, dc, dfv | small deliberate errors in the identified parameters | — |
+| phi_I, phi_m, phi_c, phi_f | sensitivity functions — what multiplies each parameter | — |
+| S | sensitivity matrix; columns are parameter-error signatures | mixed |
+| kappa(S) | condition number of the sensitivity matrix | dimensionless |
+| NRMSE | normalised root-mean-square error | % |
+
+Notes on rho_station and rho_LM (rev 24). These are two different quantities and
+were previously both called rho.
+
+  rho_station is the ratio of the same load's signature evaluated at two candidate
+  application stations. It is a pure geometry ratio and is what the wrong-station
+  experiment measures. Verified: the regression slope of a wrong-station fit
+  equals the x^2-weighted mean of rho_station over the trajectory, to 7e-06 (wide
+  stroke) and 6e-06 (narrow stroke).
+
+  rho_LM compares two different physical causes — an external load and a mass
+  error. It carries units of s^2/m because s_load is torque per newton (m) while
+  s_dm is torque per kilogram (m^2/s^2). It is TRAJECTORY-DEPENDENT in general,
+  not a function of d4 alone. Only under the quasi-static approximation, where
+  s_dm reduces to g r cos q3, does it collapse to (1/g) rho_station(d4).
+
+s_dm is the full derivative d(tau3)/d(M_d). M_d appears in the inertia, Coriolis
+and gravity terms of the saddle equation, so all three contribute. See module 06.

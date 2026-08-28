@@ -288,3 +288,45 @@ Changing a station offset in an analysis script alters the *assumption*, not the
 physics. Moving a force application point requires a Rigid Transform in the
 model. Name such parameters so the distinction is unmistakable.
 *Standing offer: for any module, say "start module N" in chat — I run it as a tutoring session: I probe, you derive, I correct, we quiz. The self-tests above are exactly what I'll ask.*
+## A good fit with wrong geometry is worse than a bad fit
+
+A wrong force-application station 2.82 m off still produced R^2 = 0.99997 inside
+the operational band, because the geometric error appeared as a near-constant
+scaling that the free regression slope absorbed. The fit looked excellent and
+the physical answer was wrong.
+
+Where a free parameter can absorb a systematic error, goodness-of-fit stops
+being evidence of correctness. Ask what the fitted coefficients are allowed to
+hide before trusting an R^2.
+
+## Restricting an operating range destroys geometric information quadratically
+
+Discrimination between two hypotheses that differ by a geometric ratio scales
+roughly with the square of how much that ratio varies across the trajectory.
+Halving the range of the driving variable costs far more than half the
+information. Measured here: 89.8-fold loss between a wide stroke and the real
+operational band.
+
+## Right width is not the same as right position
+
+A narrow-band test was run with the correct 0.54 m stroke width but centred
+~1 m below the real operating band. Every conclusion drawn about "the
+operational band" was an extrapolation until the window was moved. When
+reproducing a published envelope, match both the width and the position, and
+verify the achieved range from the simulation output rather than from the
+block settings.
+
+## Predict the number before running the experiment
+
+The Bi-band result was predicted at ~1.6x from the rho_station spreads alone and
+measured at 1.566. A prediction that meets a measurement is stronger evidence
+than the measurement by itself, because it demonstrates the mechanism is
+understood rather than merely observed. It costs nothing and it is the only way
+to find out whether you understand the system or are just recording it.
+
+## "Small relative to X" is meaningless without specifying X
+
+A discriminating term at 0.4% of the total signal was repeatedly dismissed as
+too small by comparing it to the dominant gravity term. That is the wrong
+comparison. Practical usability is set by size relative to the measurement and
+model UNCERTAINTY, not relative to the largest term present.

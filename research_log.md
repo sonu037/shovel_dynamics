@@ -447,6 +447,147 @@ restored to 2 and the model saved. Verified by `get_param`.
   retroactively, using the measured floor.
 - Next: centred narrow band; then sensitivity matrix S = [∂r/∂F | ∂r/∂δm] and
   κ(S) computed with and without the inertia and Coriolis terms.
+## 2026-08-28 — Rev 24 corrections; station confounding measured inside the Bi operational band
+
+Commit: (fill in after committing)
+
+### Specification corrections (rev 24)
+
+Two defects found in `M2_Experiment_Design_Specification.md` module 06 and
+`M2_nomenclature.md`, corrected today.
+
+**1. s_dm was incomplete.** The spec gave the mass-error sensitivity as
+gravity only:
+
+    s_dm = g (d4 - 1.32) cos q3
+
+The full derivative is
+
+    s_dm = d(tau3)/d(M_d) = r^2 q3ddot + 2 r d4dot q3dot + g r cos q3,  r = d4 - 1.32
+
+because M_d appears in the inertia, Coriolis AND gravity terms of the saddle
+equation. Derivation verified independently in three separate sessions.
+
+Consequence: the spec's conclusion that "separability comes from d4 variation
+alone; q3 variation contributes nothing" is an artifact of the truncation. The
+inertia and Coriolis terms carry no cos q3 factor, so the cancellation that
+produced that conclusion does not occur. With the full s_dm the load/mass ratio
+depends on q3, q3dot, q3ddot, d4 and d4dot.
+
+This matters because a vertical load produces NO inertial and NO Coriolis
+signature, while a mass error produces both. These are terms the load cannot
+imitate, and they do not require d4 spread — a second candidate separation
+mechanism (now labelled Mechanism B, against Mechanism A for geometric
+separation through d4).
+
+The gravity-only form is retained in the spec as the QUASI-STATIC
+APPROXIMATION, with the condition stated explicitly and flagged as
+trajectory-dependent rather than a property of the machine.
+
+**2. rho was used for two different quantities.** Split into:
+
+    rho_station(d4) = (d4+1.5)/(d4-1.32)        dimensionless
+    rho_LM(t)       = s_load / s_dm             s^2/m, trajectory-dependent
+
+They differ by a factor of g and by dimension. rho_LM reduces to
+(1/g) rho_station only under the quasi-static approximation.
+
+**Correction to earlier reasoning (mine and Claude's).** The 250:1
+gravity-to-inertia ratio was being quoted as though it settled whether
+Mechanism B is viable. It does not. The dynamic terms do not need to be large
+relative to gravity; they need to be large relative to the residual
+UNCERTAINTY. A term at 0.4% of total torque is usable if the torque estimate is
+accurate to 0.01% and useless if it is accurate to 2%. That comparison arrives
+at M5 with the motor-current-to-torque map. Also noted: 250:1 is a property of
+the current sine trajectory, not of the machine.
+
+### New experiment — station confounding inside the Bi operational band
+
+**Motivation.** The earlier narrow-band run (8.75 +/- 0.27 m) had the correct
+stroke WIDTH (0.54 m, matching Bi et al. 2020) but the wrong CENTRING. Bi's
+measured operational extension band for the WK-55 at Anjialing is 9.50-10.04 m.
+All prior statements about "the operational band" were therefore extrapolations
+from a window positioned ~1 m below it.
+
+**Setup.** Sine Wave1 set to Bias 9.77, Amplitude 0.27. Verified trajectory:
+d4 in [9.5001, 10.0399] m. Force 100 kN at 2*pi/9 rad/s, wrong station assumed
+(Station = -1.32 against a true station of d4 + 1.5).
+File: `M2/experiments/06_identifiability/M2_wrongstation_bi_band.mat`
+
+**Prediction made before running.** rho_station spans 1.3447 to 1.3234 over the
+Bi band (1.6% spread) against roughly 1.3939 to 1.3662 over the 8.75-centred
+window (2.0% spread). Since discrimination scales roughly with the square of the
+available spread, 1-R^2 was predicted at approximately 3e-05, i.e. a ratio near
+1.6 relative to the 8.75-centred case.
+
+**Result.**
+
+| trajectory | d4 range | slope | 1 - R^2 |
+|---|---|---|---|
+| wide | 6.75 - 10.75 m | -1.378454 | 2.691764e-03 |
+| narrow, off-band | 8.48 - 9.02 m | -1.380943 | 4.695204e-05 |
+| Bi operational band | 9.50 - 10.04 m | -1.334832 | 2.998519e-05 |
+
+Measured ratio (off-band / Bi-band) = 1.566 against 1.6 predicted, within 3%.
+
+Wide to operational band: **89.8-fold collapse** in discriminating information.
+
+**Independent corroboration.** The measured slope of 1.334832 matches the
+midpoint of rho_station over the Bi band (1.3447 to 1.3234, midpoint ~1.334).
+Two separate quantities agreeing.
+
+**Defensible claim.** In a noise-free simulation with exact sensing, two
+candidate force-application stations separated by 2.82 m become nearly
+indistinguishable when the crowd stroke is confined to the operational envelope
+of a working cable shovel. Only 3.0e-05 of the residual variance carries
+information distinguishing them.
+
+**Mechanism.** A wrong station produces Q_wrong = rho_station(d4) * Q_true. When
+d4 is confined, rho_station is nearly constant, and a constant is exactly what a
+free regression slope absorbs. The fit is excellent and the physical answer is
+wrong. This is confounding, not a fitting failure.
+
+**Limits of the claim.**
+- This is STATION versus STATION, not LOAD versus MASS ERROR. The mechanism
+  looks analogous but has not been measured for the load/mass case.
+- Noise-free with exact sensing, so this is a LOWER BOUND on the difficulty.
+  Real measurement error can only worsen discrimination.
+- The Bi-band and 8.75-centred runs differ in window position; the stroke width
+  is the same (0.54 m) but the whole trajectory shape changes because d4 enters
+  the lever arm throughout. Not a clean single-variable comparison.
+- Bi's limits are for a WK-55 at Anjialing, not a P&H 2100. The gate still
+  requires P&H-specific stroke and velocity limits.
+
+**Significance for the programme.** Mechanism A (geometric separation through
+d4 variation) is close to exhausted inside the real operating envelope —
+measured, not argued. This is why the s_dm correction is consequential: if
+Mechanism A is dead in the band where machines work, Mechanism B is the only
+remaining route, and there is now a numerical reason to look there.
+
+### Housekeeping
+
+- `M2_case01_100kN.mat` (pre-filter-fix, no provenance) moved via `git mv` to
+  `M2/experiments/00_archive/M2_case01_100kN_SUPERSEDED.mat` with a README
+  marking it as evidence for the filter diagnosis and not to be cited.
+- F0_x, F0_y, omega_F assigned as defaults in the model workspace, so the model
+  opens self-contained rather than depending on base-workspace variables.
+  recover_load still overrides them via setVariable.
+- Stray files at repo root deleted (untitled*.fig, CM2_Acceleration.fig);
+  *.slxc and slprj/ added to .gitignore.
+- Crowd excitation restored to Bias 8.75, Amplitude 2 and verified.
+
+### Open
+
+- Crowd excitation has now been hand-edited and restored three times. Add
+  'CrowdBias' and 'CrowdAmplitude' options to recover_load. It is currently the
+  only experimental variable with no provenance in the saved .mat.
+- Next: load-vs-mass signature correlation on the existing trajectory, using the
+  FULL s_dm. Sequence: magnitude -> shape/correlation -> conditioning ->
+  uncertainty.
+- Izz ambiguity in shovel_params.m still unresolved and is now blocking, since
+  the inertia column is the basis of Mechanism B.
+- Modules 01 and 02 acceptance criteria still blank.
+- Trim window t >= 5 s still unjustified since the filter removal.
 ## TEMPLATE — copy for each new session
 
 ## YYYY-MM-DD — <one-line title>

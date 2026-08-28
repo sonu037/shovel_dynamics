@@ -1,0 +1,1 @@
+﻿Pre-filter-fix result from the original command-window session. Contains the 0.082 s force-path lag (NRMSE 2.1032%, slope -0.996490). Retained as evidence for the Converter2 filter diagnosis. Superseded by M2/experiments/02_known_load/. Do not cite.
