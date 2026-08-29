@@ -131,12 +131,17 @@ returns and the analysis must be redone.
 Distinguish structural identifiability (d4 must take at least two distinct values)
 from practical identifiability (d4 must vary enough for acceptable conditioning).
 
-Note also that practical identifiability is set by the size of the discriminating
-signal relative to the residual UNCERTAINTY, not relative to the gravity term. A
-contribution at 0.4% of total torque is usable if the torque estimate is accurate
-to 0.01% and useless if it is accurate to 2%. The relevant comparison arrives at
-M5 with the motor-current-to-torque map.
+MAGNITUDE. Practical identifiability is set by the size of the discriminating
+signal relative to the residual UNCERTAINTY, not relative to the gravity term.
+Measured: RMS(s_dyn)/RMS(s_grav) = 0.024843 (wide trajectory) and 0.023414
+(Bi band), i.e. 40.25:1 and 42.71:1. TRAJECTORY-DEPENDENT; re-evaluate for any
+new excitation. An earlier figure of ~250:1 was an unmeasured estimate and must
+not be used. An RMS sensitivity ratio is not equivalent to a torque-accuracy
+requirement; exploitability depends on noise, model uncertainty and conditioning.
 
+STATUS (2026-08-28): r(load, full s_dm) = 0.9999919 on the Bi-band trajectory and
+0.8222 on the wide trajectory (mean-removed Pearson). Mechanism B not demonstrated
+on either. See research_log.
 Assessment sequence: magnitude -> shape/correlation -> conditioning -> uncertainty.
 Do not stop at the magnitude ratio; it is not an identifiability measure.
 

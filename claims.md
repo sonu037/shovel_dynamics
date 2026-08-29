@@ -67,3 +67,12 @@ Status: V = verified against the source document by me · U = unverified/inherit
 | WK-55 operational crowd extension band 9.50-10.04 m; crowd velocity <= 0.76 m/s; crowd acceleration <= 0.5 m/s^2, Anjialing mine | Bi et al. 2020 | **Verify against the PDF** | Used directly to define the Bi-band trajectory. These numbers now carry a result, so confirm them verbatim from the source. Also record that they are WK-55, not P&H 2100. |
 | s_dm = d(tau3)/d(M_d) has three terms (inertia, Coriolis, gravity) | Own derivation from the M1 saddle equation | **Verified 2026-08-28** | Derived independently three times. Supersedes the gravity-only form previously in the spec. |
 | Wrong-station regression slope = x^2-weighted mean of rho_station over the trajectory | Own derivation + measurement | **Verified** | 7e-06 (wide), 6e-06 (narrow), and slope 1.334832 vs rho_station midpoint 1.334 (Bi band). |
+| Bi et al. 2020 WK-55 envelope: d4 in 9.50-10.04 m, |d4dot| <= 0.76 m/s, |d4ddot| <= 0.5 m/s^2, Anjialing | Bi et al. 2020 | UNVERIFIED — not yet read from the PDF | Now carries a result (the Bi-band station run). Verify verbatim. Record that this is a WK-55, not a P&H 2100; the gate asks for P&H-specific limits. |
+| Claim | Value | Source | Status | Note |
+|---|---|---|---|---|
+| Bi-band r(load, full s_dm) | 0.9999919261 | sensitivity_diagnostic.m | **D — diagnostic** | Correlation only. Confounded with 7.4x lower crowd velocity. Two trajectories, one frequency. Not a validated identifiability claim. |
+| Bi-band r(load, gravity-only) | 0.9999729034 | same | D | |
+| Wide r(load, full s_dm) | 0.8222157044 | same | D | Greater shape separation than Bi band. Consistent with geometric separation through d4, but excitation differences NOT isolated. |
+| Bi-band RMS(s_co)/RMS(s_grav) | 0.127604 % | same | D | Only column substantially decorrelated from load (r = 0.161). Practical usefulness requires assessment against measurement and model uncertainty. |
+| Gravity:dynamic RMS ratio | 40.25:1 wide, 42.71:1 Bi band | same | **Measured 2026-08-28** | Supersedes the unmeasured ~250:1 estimate. Trajectory-dependent. |
+| Bi et al. 2020 WK-55 envelope: d4 9.50-10.04 m, abs(d4dot) <= 0.76 m/s, abs(d4ddot) <= 0.5 m/s^2, Anjialing | | Bi et al. 2020 | **UNVERIFIED — not read from PDF** | Now carries results. Verify verbatim. WK-55, not P&H 2100. |

@@ -330,3 +330,120 @@ A discriminating term at 0.4% of the total signal was repeatedly dismissed as
 too small by comparing it to the dominant gravity term. That is the wrong
 comparison. Practical usability is set by size relative to the measurement and
 model UNCERTAINTY, not relative to the largest term present.
+## A nuisance intercept changes the geometry of the identifiability problem
+
+Where the estimator fits a free constant, that constant is a parameter like any
+other, and the question becomes whether a signature has a component outside the
+span of {constant, other parameter columns}. Mean-removal is exactly the
+projection that removes the constant direction.
+
+This is why the metric choice was not a matter of taste. Cosine similarity on raw
+vectors answers a question about a model WITHOUT an intercept, which was not the
+model being fitted.
+
+## Cosine similarity on raw signals conflates offset with shape
+
+Comparing a mostly-positive signal against a zero-crossing one gives a
+correlation dominated by the means, not the shapes. Two signals whose variations
+correlate at +0.96 returned -0.41 under raw cosine similarity, and that -0.41 was
+read for several hours as evidence of a physical mechanism.
+
+Diagnostic: print the mean and std of every signal before interpreting any
+correlation between them. If the means are large relative to the stds, raw cosine
+similarity is meaningless. State which metric was used and why — the RANKING of
+components reversed completely between the two choices.
+
+## A ratio quoted from memory becomes a fact by repetition
+
+"250:1" was an unmeasured magnitude estimate. It was repeated through a physics
+explanation, an argument about mechanism viability, and into a frozen
+specification before anyone computed it. Measured value: 40.25:1, and
+trajectory-dependent rather than a property of the machine.
+
+Any number entering an argument should carry the line of code that produced it.
+If it cannot, mark it as an estimate every time it is used.
+
+## Read plots against the numbers, not instead of them
+
+A component curve dipping below zero was interpreted on screen as visual
+confirmation of a mechanism. It was the mean offset. The plot was consistent with
+a metric that was itself misleading, so the figure appeared to corroborate the
+number when both shared the same defect.
+
+## Distinguish a correlation observation from an estimation conclusion
+
+A correlation moving from 0.54 to 0.82 is an observation about two columns.
+Whether that degrades IDENTIFIABILITY is a claim about parameter estimation and
+requires the conditioning analysis. Conflating the two is the same class of error
+as reading a metric artifact as a physical mechanism.
+
+## Compute the question directly rather than proposing mechanisms to test
+
+Two hypothesised separation mechanisms were reasoned forward from the equations
+and one was refuted by a metric artifact before any conditioning was computed.
+The angle between the load column and the span of the full sensitivity matrix
+answers the identifiability question directly, for any trajectory, without
+requiring a mechanism to be guessed first.
+## A nuisance intercept changes the geometry of the identifiability problem
+
+Where the estimator fits a free constant, that constant is a parameter like any
+other, and the question becomes whether a signature has a component outside the
+span of {constant, other parameter columns}. Mean-removal is exactly the
+projection removing the constant direction.
+
+The metric choice is structural, not stylistic. Measured on the same two signals:
+raw cosine -0.0558 versus Pearson 0.9986. The raw metric indicates
+near-orthogonality where the signals are almost identical in shape.
+
+Diagnostic: print mean and std of every signal before interpreting any
+correlation. If the means are large relative to the stds, raw cosine similarity
+is meaningless.
+
+## "X cannot produce Y" does not imply "Y separates X from Z"
+
+A vertical load produces no inertial signature. It was inferred that the inertial
+column therefore separates load from mass error. Measured correlation between the
+two columns: 0.9613 and 0.9986 on two trajectories. A column the load cannot
+produce may still closely resemble the load.
+
+## Magnitude is not identifiability
+
+A component at 2.34% of the dominant term is not negligible and still contributed
+essentially nothing to separation. Size and direction are independent properties;
+only direction determines whether a component carries distinguishing information.
+
+An RMS sensitivity ratio is also not a measurement-accuracy requirement. Whether
+a small component is exploitable depends on noise, model uncertainty and
+conditioning.
+
+## A ratio quoted from memory becomes a fact by repetition
+
+"250:1" was an unmeasured estimate, repeated through a physics explanation, an
+argument about mechanism viability, and into a frozen specification before anyone
+computed it. Measured: 40.25:1 and 42.71:1, trajectory-dependent. Any number
+entering an argument should carry the line of code that produced it.
+
+## A result that exists only in a workspace or a chat window is not a result
+
+Closing MATLAB destroyed every variable behind an hour of analysis. Regenerate
+from committed data via a script before recording anything.
+
+## Sign conventions are free until they aren't
+
+Correlation is invariant under a sign flip applied to both columns, so an
+inconsistent convention is invisible during shape analysis. It becomes visible at
+the estimation step, where the signs of the estimates depend on it. Define the
+convention once, write it in the script header, and state its relationship to the
+residual convention.
+
+## Read plots against the numbers, not instead of them
+
+A component curve dipping below zero was read on screen as visual confirmation of
+a mechanism. It was the mean offset. The figure appeared to corroborate the number
+because both shared the same defect.
+
+## Distinguish a correlation observation from an estimation conclusion
+
+A correlation moving from 0.54 to 0.82 is an observation about two columns.
+Whether that degrades identifiability is a claim about parameter estimation and
+requires conditioning analysis.

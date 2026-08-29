@@ -588,6 +588,299 @@ remaining route, and there is now a numerical reason to look there.
   the inertia column is the basis of Mechanism B.
 - Modules 01 and 02 acceptance criteria still blank.
 - Trim window t >= 5 s still unjustified since the filter removal.
+## 2026-08-28 (continued) — Load-vs-mass sensitivity diagnostic; Mechanism B not demonstrated
+
+Trajectory: the existing M2 known-load run (q3 = 45 +/- 15 deg, d4 = 8.75 +/- 2 m,
+both coordinates at omega = pi/10).
+File: `M2/experiments/06_identifiability/M2_sensitivity_diagnostic.mat`
+
+### Metric correction — and why it is not a matter of taste
+
+The diagnostic was first run using cosine similarity on raw sensitivity vectors:
+
+    corr(load, gravity-only) = 0.998605
+    corr(load, full)         = 0.999361
+    corr(load, inertia)      = -0.411699
+    corr(load, coriolis)     = +0.828721
+
+The -0.4117 was read as evidence that the inertial component has a temporal
+structure the load cannot produce, i.e. support for a dynamic separation
+mechanism. That reading is WRONG.
+
+s_load has mean 6.872 and std 0.430 — a large positive offset with a small
+variation. s_in has mean -0.583 and std 1.109. Cosine similarity between a
+mostly-positive vector and a zero-crossing one is dragged negative by the offsets
+regardless of shape. Mean-removed, corr(load, inertia) = 0.9613.
+
+The justification for Pearson is structural, not stylistic. The estimator is
+
+    y(t) = beta0 + s_load(t) F + s_full(t) dM_d + eps(t)
+
+so beta0 is a nuisance parameter, and removing means is exactly PROJECTING OUT
+THE INTERCEPT DIRECTION. Cosine similarity on raw vectors answers a question
+about a model WITHOUT an intercept, which is not the model being fitted. The
+ranking of components reverses entirely between the two choices.
+
+Formal identifiability must include the intercept explicitly or project it out.
+
+### Pearson correlation matrix (mean-removed)
+
+|          | load   | gravity | inertia | coriolis |
+|----------|--------|---------|---------|----------|
+| load     | 1      | 0.5389  | 0.9613  | 0.4688   |
+| gravity  | 0.5389 | 1       | 0.2863  | 0.9919   |
+| inertia  | 0.9613 | 0.2863  | 1       | 0.2106   |
+| coriolis | 0.4688 | 0.9919  | 0.2106  | 1        |
+
+corr(load, full mass) = 0.8222
+
+RMS relative to gravity: inertia 2.563%, Coriolis 0.980%, total dynamic 2.484%.
+
+### Result — Mechanism B is NOT DEMONSTRATED on this trajectory
+
+The inertial component correlates 0.9613 with the load in shape. It is nearly
+parallel to the load and therefore cannot separate load from mass error on this
+trajectory.
+
+Including the dynamic terms increases the load-mass sensitivity correlation from
+0.5389 (gravity only) to 0.8222 (full), so NO SEPARATION BENEFIT IS OBSERVED in
+this experiment. Whether this constitutes a degradation of identifiability is a
+question for the conditioning analysis, not for a pairwise correlation.
+
+Scope: ONE trajectory, with omega_q3 = omega_d4 = pi/10. This does not disprove
+the mechanism generally; it tests one instance of it.
+
+The earlier "sign test" (corr with grav-dyn = 0.9972 versus grav+dyn = 0.9993) is
+explained by the same fact: subtracting a load-parallel component moves the sum
+away from the load. It was not evidence of a hidden separating direction.
+
+### Structure of the correlation matrix
+
+Two strongly correlated pairs on the tested trajectory: {gravity, Coriolis} at
+0.9919 and {load, inertia} at 0.9613, with the pairs largely independent of each
+other (gravity-inertia 0.2863).
+
+HYPOTHESIS (untested): this pairing arises from SINGLE-FREQUENCY excitation
+rather than being intrinsic to the shovel dynamics. Both coordinates are driven
+at omega = pi/10, so the available signals may collapse into a small number of
+independent shapes. Different frequencies on the two coordinates would test this.
+
+The term "near-degenerate" is reserved for the singular-value structure of the
+actual sensitivity matrix and is not used here.
+
+### The 250:1 figure was wrong
+
+Preliminary unmeasured estimate used throughout the session, including in the
+rev 24 spec text: ~250:1 gravity-to-dynamic.
+
+Measured for this trajectory: RMS(s_dyn)/RMS(s_grav) = 0.024843, i.e. 40.25:1.
+Six times more favourable than quoted, and trajectory-dependent rather than a
+machine property. Both values retained here for the audit trail; only the
+measured value should appear in any interpretation.
+
+### Status changes
+
+- Rev 24's mathematical correction to s_dm STANDS (three terms, verified
+  independently three times).
+- Rev 24's JUSTIFICATION — that the dynamic terms constitute a second separation
+  mechanism — is not demonstrated on this trajectory. The Mechanism A /
+  Mechanism B framing in the trilemma section should NOT be declared dead on the
+  basis of one trajectory, and should not be treated as settled either way.
+- The three station-experiment results are unaffected. Different computation
+  (regression on simulation output), different question (station vs station,
+  physical cause held fixed). 1-R^2 = 2.998519e-05 and the 57.3x collapse remain
+  valid within their stated scope.
+
+### Unreconciled
+
+Load-vs-gravity Pearson is 0.5389, meaning their variations differ substantially.
+Yet the station experiment gives 1-R^2 = 3.0e-05 inside the Bi band, meaning
+d4-based geometric discrimination is nearly exhausted. Both concern d4 weighting.
+These have NOT been reconciled. Likely they are different questions —
+station-vs-station holds the physical cause fixed while load-vs-mass compares
+different causes — but that is a hypothesis, not an answer.
+
+### Next
+
+- **Izz ambiguity is now BLOCKING.** The sensitivity matrix requires the inertia
+  column, and whether Rasuli Table II's 287,900 kg m^2 is about the COM or
+  grouped about the pivot is still unresolved in shovel_params.m. Resolve before
+  the SVD or the result inherits the ambiguity.
+- Verify Bi et al. 2020 numbers (9.50-10.04 m, 0.76 m/s, 0.5 m/s^2) verbatim
+  from the PDF into claims.md. Record that these are for a WK-55 at Anjialing,
+  not a P&H 2100. Wording for any write-up: "literature-derived reference
+  envelope used to constrain the numerical experiment", NOT "actual shovel data".
+- Build S with all parameter columns plus the constant, and compute the angle
+  between the load column and span(S), plus the singular values. This answers the
+  identifiability question directly for any trajectory, without needing a
+  mechanism to be proposed first. It also settles whether the correlation pairing
+  above reflects genuine rank deficiency.
+- Reconcile the station result against the Pearson result.
+## 2026-08-28 (session 2) — Load-vs-mass sensitivity diagnostic, wide and Bi-band
+
+Script: `M2/scripts/sensitivity_diagnostic.m`
+Artifact: `M2/experiments/06_identifiability/M2_sensitivity_diagnostic.mat`
+Sources: `02_known_load/M2_100kN_0p1111Hz_sp1p50.mat`,
+         `06_identifiability/M2_wrongstation_bi_band.mat`
+Trim: t >= 5 s via R.trimIdx, 2501 of 3001 samples in both cases.
+
+### Sign convention
+
+Columns are defined WITHOUT negation: s_load = d(tau3)/d(Fy) and
+s_dm = d(tau3)/d(M_d). The residual carries the minus sign separately
+(residual = tau_measured - tau_model = -J'F). Pearson correlation is invariant
+under a sign flip applied to both columns; verified numerically to exactly zero
+difference. The convention matters at the CONDITIONING step, where estimate signs
+depend on it, not at the correlation step.
+
+### Metric — the choice is structural, not stylistic
+
+Mean-removed Pearson. The estimator fits a free intercept,
+y = beta0 + s_load*F + s_dm*dM_d + eps, so beta0 is a nuisance parameter and
+mean-removal is exactly the projection removing the constant direction. Cosine
+similarity on raw vectors answers a question about a model WITHOUT an intercept.
+
+Same two signals, both cases:
+
+| case | raw cosine(load, inertia) | Pearson(load, inertia) |
+|---|---|---|
+| wide | -0.411699 | 0.961309 |
+| Bi band | -0.055816 | 0.998613 |
+
+Offsets responsible: wide, s_load mean 6.8725 std 0.4297 against s_in mean
+-0.5834 std 1.1089. Bi band, s_load mean 7.5597 std 1.3285 against s_in mean
+-0.3020 std 1.2926.
+
+On the Bi-band case the raw metric would have indicated near-orthogonality
+(-0.056) in exactly the case where the two columns are 0.9986 aligned — the
+strongest possible false support for Mechanism B.
+
+### Results
+
+| quantity | wide | Bi operational band |
+|---|---|---|
+| d4 range | 6.7505 - 10.7495 m | 9.5001 - 10.0399 m |
+| d4 span | 3.9990 m | 0.5399 m |
+| max abs(d4dot) | 0.628164 m/s | 0.084802 m/s |
+| max abs(q3ddot) | 0.025832 rad/s^2 | 0.025832 rad/s^2 |
+| r(load, gravity-only) | 0.5388857718 | 0.9999729034 |
+| r(load, FULL mass) | 0.8222157044 | 0.9999919261 |
+| 1 - r(load, full) | 1.777843e-01 | **8.073857e-06** |
+| inertia / gravity RMS | 2.563048 % | 2.353814 % |
+| Coriolis / gravity RMS | 0.979654 % | 0.127604 % |
+| dynamic / gravity RMS | 2.484269 % | 2.341438 % |
+| gravity : dynamic | 40.25 : 1 | 42.71 : 1 |
+
+Pearson matrix, wide:
+
+|          | load    | gravity | inertia | coriolis |
+|----------|---------|---------|---------|----------|
+| load     | 1       | 0.53889 | 0.96131 | 0.46882  |
+| gravity  | 0.53889 | 1       | 0.28627 | 0.99189  |
+| inertia  | 0.96131 | 0.28627 | 1       | 0.21061  |
+| coriolis | 0.46882 | 0.99189 | 0.21061 | 1        |
+
+Pearson matrix, Bi band:
+
+|          | load    | gravity | inertia | coriolis |
+|----------|---------|---------|---------|----------|
+| load     | 1       | 0.99997 | 0.99861 | 0.16100  |
+| gravity  | 0.99997 | 1       | 0.99820 | 0.16826  |
+| inertia  | 0.99861 | 0.99820 | 1       | 0.10892  |
+| coriolis | 0.16100 | 0.16826 | 0.10892 | 1        |
+
+### Reading
+
+**Wide trajectory.** The four columns fall into two groups, {load, inertia} at
+0.9613 and {gravity, Coriolis} at 0.9919, with the groups largely independent
+(gravity-inertia 0.2863). Including the dynamic terms moves load-vs-mass from
+0.5389 to 0.8222: no separation benefit observed, because the inertia column is
+nearly parallel to the load.
+
+**Bi operational band.** The structure collapses. Load, gravity and inertia are
+mutually correlated above 0.998. Only Coriolis retains independence (0.109-0.168),
+and it falls from 0.980% to 0.128% of gravity by RMS.
+
+**Finding.** The one column retaining an independent direction is the one the
+operating envelope suppresses most. Coriolis depends on d4dot, and confining the
+crowd to a 0.54 m stroke at the same frequency necessarily reduces d4dot by 7.4x
+(0.628 -> 0.085 m/s). This is a concrete statement of the excitation trilemma.
+
+**Headline.** 1 - r(load, full) = 8.07e-06 in the Bi band against 1.78e-01 wide.
+Load and mass error are close to indistinguishable in shape once the crowd is
+confined to a realistic envelope.
+
+### Mechanism B — NOT DEMONSTRATED on either trajectory
+
+The inference "a load produces no inertial signature, therefore the inertial
+column separates load from mass error" does not follow. A column the load cannot
+produce may nonetheless resemble the load. Measured: 0.9613 (wide), 0.9986 (Bi
+band).
+
+Dynamic MAGNITUDE and dynamic IDENTIFIABILITY are distinct. The dynamic
+contribution is 2.34% of gravity in the Bi band — not negligible — yet contributes
+essentially nothing to separation.
+
+Scope: two trajectories, both with omega_q3 = omega_d4 = pi/10. This does not
+settle the mechanism generally, and the gate should NOT be rewritten to declare
+it dead.
+
+### Confound — stated explicitly
+
+The Bi-band case differs from the wide case in TWO ways: narrower d4 window AND
+7.4x slower crowd. The coupling is imposed by the physical constraint, not by
+careless design, but the collapse cannot yet be attributed to the window alone.
+
+Note max abs(q3ddot) is IDENTICAL in both cases (0.025832 rad/s^2), since only
+the crowd excitation was changed. The inertia/gravity ratio is accordingly
+similar (2.56% vs 2.35%), while the Coriolis ratio falls by 7.7x.
+
+Attribution of the wide-vs-Bi difference to d4 spread alone is therefore NOT
+established. Excitation differences have not been isolated.
+
+### The 250:1 figure was wrong
+
+Quoted repeatedly and written into the rev 24 spec text as a machine property.
+Never measured. Measured: 40.25:1 (wide), 42.71:1 (Bi band). Six times more
+favourable, and trajectory-dependent. Both retained for the audit trail; only
+measured values to be used in interpretation.
+
+Note also that an RMS sensitivity ratio is not equivalent to a torque-accuracy
+requirement. Whether a 2.34% component is exploitable depends on measurement
+noise, model uncertainty and estimator conditioning — not on the ratio alone.
+
+### Status
+
+- Rev 24's mathematical correction to s_dm STANDS.
+- Rev 24's JUSTIFICATION for Mechanism B is not demonstrated on either trajectory.
+- Station-vs-station confounding: experimentally demonstrated by regression on
+  simulation output. Load-vs-mass confounding: diagnosed by correlation only.
+  Formal conditioning and uncertainty outstanding.
+- Station results unaffected. Different computation, different question.
+- Izz: NOT blocking for this diagnostic, since d(tau3)/d(M_d) contains no I_zz.
+  STILL BLOCKING for the sensitivity matrix, which needs an inertia column
+  d(tau3)/d(I_zz) = q3ddot whose scaling depends on the parameter value. The M1
+  inertia ambiguity is not resolved.
+
+### Unreconciled
+
+Load-vs-gravity Pearson on the WIDE trajectory is 0.5389 — substantially
+different shapes — while the wide station experiment gives 1-R^2 = 2.69e-03. Both
+concern d4 weighting. Not reconciled. Probably different questions
+(station-vs-station holds the physical cause fixed; load-vs-mass compares
+different causes), but that is a hypothesis.
+
+### Next
+
+1. Same 0.54 m window at higher crowd frequency, restoring d4dot toward Bi's
+   0.76 m/s. Separates "narrow window" from "slow crowd".
+2. Resolve Izz before building S.
+3. Verify Bi et al. 2020 numbers verbatim from the PDF. WK-55 at Anjialing, not
+   a P&H 2100.
+4. Formal S: all parameter columns plus the constant. Note that kappa(S) requires
+   physically justified column scaling, since s_load is in m and s_dm in m^2/s^2.
+   The angle between s_load and span(S) is scale-invariant per column and may be
+   the better measure.
 ## TEMPLATE — copy for each new session
 
 ## YYYY-MM-DD — <one-line title>
