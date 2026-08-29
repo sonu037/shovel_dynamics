@@ -12,6 +12,12 @@ function D = sensitivity_diagnostic()
 %   model WITHOUT an intercept and gives a different ranking.
 %
 %   Repository:  M2/scripts/sensitivity_diagnostic.m
+%   SIGN CONVENTION. Columns are d(tau3)/d(parameter) WITHOUT negation.
+%   The residual carries the minus sign separately:
+%   residual = tau_measured - tau_model = -J'F.
+%   Pearson correlation is invariant under a sign flip applied to both
+%   columns, so this does not affect the shape results. It DOES affect the
+%   signs of estimates at the conditioning step.
 
 cases = { ...
     'wide',   'M2/experiments/02_known_load/M2_100kN_0p1111Hz_sp1p50.mat'; ...
