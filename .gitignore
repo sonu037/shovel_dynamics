@@ -10,3 +10,6 @@ page-*.jpg
 __pycache__/
 desktop.ini
 desktop.ini
+
+*.slxc
+slprj/
