@@ -1,7 +1,38 @@
 # M2 — Known External-Load Residual
 
 ## Status
-M2 structure only. No experimental result is implied by this directory.
+Modules 01 and 02 CLOSED. Module 06 partially complete, run out of sequence.
+Modules 03, 04, 05, 07, 08 not started. The excitation-trilemma gate in
+00_design remains OPEN.
+
+Results to date (see research_log.md for full context and caveats):
+
+    01_zero_force       numerical floor: 2.00e-06 N m (q3), 2.91e-10 N (d4);
+                        relative 7.04e-13 and 6.46e-16
+
+    02_known_load       exact recovery: slope -1.000000, 1-R^2 = 7.67e-24 (q3),
+                        max error / peak reference = 2.7e-12
+
+    06_identifiability  station confounding on three trajectories. Assuming a
+                        station 2.82 m wrong still gives 1-R^2 = 2.69e-03 (wide
+                        stroke), 4.70e-05 (narrow, off-band) and 3.00e-05 (Bi
+                        operational band, 9.50-10.04 m). An 89.8-fold collapse
+                        from wide stroke to operational band.
+
+                        Load-vs-mass separability diagnosed by correlation:
+                        r(load, full s_dm) = 0.822 (wide), 0.99999 (Bi band).
+
+Scope of these results. Module 02 verifies the force-to-generalized-force
+mapping and the subtraction identity under motion-prescribed joints with exact
+sensing. It does NOT establish load identifiability: the residual contained one
+unmodelled term by construction, and the Simscape oracle shares assumptions
+A1-A3 with the analytical model, so M2 is structurally blind to errors in those.
+
+The load-vs-mass results are DIAGNOSTIC (correlation only). Formal conditioning
+and uncertainty analysis are outstanding.
+
+Blocking: the I_zz ambiguity flagged in shovel_params.m must be resolved before
+the sensitivity matrix is built, since the inertia column's scaling depends on it.
 
 ## Scientific question
 Can the frozen, independently validated M1 mechanical model recover a known
@@ -44,6 +75,16 @@ e = 0 (consistent with report assumption A10).
     Q_q3 = (d4 + 1.5) * (Fy cos q3 - Fx sin q3)      [N m]
     Q_d4 = Fx cos q3 + Fy sin q3                      [N]
 
+Naming note: "bail station" is a convenience label for the prismatic joint's
+follower-frame origin. The 1.5 m datum is a v4 Simscape construction choice, not
+a machine dimension (see M2_nomenclature.md), and correspondence to the physical
+bail on a P&H 2100 is NOT established. Immaterial to M2, which verifies a
+mapping; material at M7, where the payload centroid migrates as the dipper fills.
+
+The station has been confirmed empirically rather than from the model tree: a
+deliberately wrong station moves the regression slope to -1.378454, while the
+assumed station d4 + 1.5 returns -1.000000.
+
 Distributed / contact loading, which would require Q = integral of J(s,q)^T f(s,t) ds,
 is deliberately deferred to a later milestone.
 
@@ -55,6 +96,7 @@ force-to-generalized-force mapping; it does NOT validate payload recovery.
 
 ## M2 sequence
     00_design                 frozen experiment design specification
+    00_archive                superseded results, retained with provenance
     01_zero_force             numerical floor; GATE - do not proceed if this fails
     02_known_load             baseline recovery against truth
     03_amplitude_sweep        linearity
@@ -75,14 +117,29 @@ Report NRMSE together with peak-magnitude error and peak-time error. A residual
 can track well on average while the transient is shifted in time, and the
 diagnostic information lives in the transients.
 
+Report 1-R^2 computed directly as ssRes/ssTot, never as 1 - R2: at R^2 ~ 0.99995
+the subtraction discards most of the significant figures, and the identifiability
+results depend on that quantity.
+
 Diagnose contamination by regressing the residual onto the sensitivity basis
 (phi_m, phi_I, phi_c, phi_f), NOT by correlating the error with qddot3: on
 sinusoidal trajectories qddot3 and cos q3 are themselves correlated, so a
 non-zero correlation does not establish causation.
 
+For shape comparison between sensitivity columns, use mean-removed Pearson
+correlation, not cosine similarity on raw vectors. The estimator fits a free
+intercept, so the constant direction carries no information and must be projected
+out. The two metrics give different RANKINGS - see LEARNING.md.
+
 ## Repository rule
 M1 is the frozen foundation. M2 may use the validated M1 model but must not
 silently modify M1 evidence or parameters.
+
+## Scripts
+    M2/scripts/recover_load.m            run a case, compute metrics, save with
+                                         git provenance
+    M2/scripts/sensitivity_diagnostic.m  load-vs-mass column comparison
+    M2/scripts/plot_m2.m                 publication figure set
 
 ## Shared project files
 LEARNING.md, research_log.md, claims.md, README.md remain at repository root
