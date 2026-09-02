@@ -447,6 +447,7 @@ restored to 2 and the model saved. Verified by `get_param`.
   retroactively, using the measured floor.
 - Next: centred narrow band; then sensitivity matrix S = [∂r/∂F | ∂r/∂δm] and
   κ(S) computed with and without the inertia and Coriolis terms.
+  [SUPERSEDED 2026-08-31 - see Izz correction at the end of this file.]
 ## 2026-08-28 — Rev 24 corrections; station confounding measured inside the Bi operational band
 
 Commit: (fill in after committing)
@@ -586,6 +587,7 @@ remaining route, and there is now a numerical reason to look there.
   uncertainty.
 - Izz ambiguity in shovel_params.m still unresolved and is now blocking, since
   the inertia column is the basis of Mechanism B.
+  [SUPERSEDED 2026-08-31 - see Izz correction at the end of this file.]
 - Modules 01 and 02 acceptance criteria still blank.
 - Trim window t >= 5 s still unjustified since the filter removal.
 ## 2026-08-28 (continued) — Load-vs-mass sensitivity diagnostic; Mechanism B not demonstrated
@@ -706,6 +708,7 @@ different causes — but that is a hypothesis, not an answer.
   column, and whether Rasuli Table II's 287,900 kg m^2 is about the COM or
   grouped about the pivot is still unresolved in shovel_params.m. Resolve before
   the SVD or the result inherits the ambiguity.
+  [SUPERSEDED 2026-08-31 - see Izz correction at the end of this file.]
 - Verify Bi et al. 2020 numbers (9.50-10.04 m, 0.76 m/s, 0.5 m/s^2) verbatim
   from the PDF into claims.md. Record that these are for a WK-55 at Anjialing,
   not a P&H 2100. Wording for any write-up: "literature-derived reference
@@ -861,6 +864,7 @@ noise, model uncertainty and estimator conditioning — not on the ratio alone.
   STILL BLOCKING for the sensitivity matrix, which needs an inertia column
   d(tau3)/d(I_zz) = q3ddot whose scaling depends on the parameter value. The M1
   inertia ambiguity is not resolved.
+  [SUPERSEDED 2026-08-31 - see Izz correction at the end of this file.]
 
 ### Unreconciled
 
@@ -875,12 +879,34 @@ different causes), but that is a hypothesis.
 1. Same 0.54 m window at higher crowd frequency, restoring d4dot toward Bi's
    0.76 m/s. Separates "narrow window" from "slow crowd".
 2. Resolve Izz before building S.
+[SUPERSEDED 2026-08-31 - see Izz correction at the end of this file.]
 3. Verify Bi et al. 2020 numbers verbatim from the PDF. WK-55 at Anjialing, not
    a P&H 2100.
 4. Formal S: all parameter columns plus the constant. Note that kappa(S) requires
    physically justified column scaling, since s_load is in m and s_dm in m^2/s^2.
    The angle between s_load and span(S) is scale-invariant per column and may be
    the better measure.
+### Correction (2026-09-02) — Izz was never open
+
+Five entries in this log state that the Izz ambiguity is unresolved or
+blocking. All are wrong.
+
+The question was closed on 2026-07-23 and recorded in claims.md line 13,
+status V: Rasuli's 287,900 kg m^2 is the about-COM value, and Phi carries
+the composite (Izz3 + Md*L_COG_Offset^2) separately, so the parallel-axis
+usage does not double-count.
+
+Cause: the comment in M1/scripts/shovel_params.m was never updated after the
+closure and still read "must be resolved against Rasuli Eq. 23/26". That
+comment was read as current and the claim repeated into this log five times
+without checking claims.md. The comment is now corrected.
+
+Nothing is blocked by Izz. The sensitivity matrix can be built.
+
+Lesson: single source of truth applies to STATUS, not only to values. A
+resolved question that still reads as open in the code will keep being
+reopened.
+
 ## TEMPLATE — copy for each new session
 
 ## YYYY-MM-DD — <one-line title>

@@ -29,12 +29,13 @@ P.c        = P.x_ref - P.L_COG;   % = -1.32 m  net in-plane lever offset
                            %          lever arm r(t) = d_4(t) + P.c
 
 % ---- Rotational inertia -----------------------------------------------
-% NOTE (open verification item): Rasuli Table II reports 287,900 kg*m^2 as
-% "Izz3". Whether this is inertia about the COM or the grouped quantity
-% (Izz3 + Md*L^2) about the pivot must be resolved against Rasuli Eq. 23/26
-% before the 4-DOF derivation. The Simscape body currently uses it as the
-% COM value on the axis parallel to the spin axis.
-P.Izz      = 287900;       % kg*m^2
+% RESOLVED 2026-07-23 (claims.md line 13, status V): Rasuli Table II /
+% thesis Table 6 reports 287,900 kg*m^2 as the ABOUT-COM Izz3. The parameter
+% vector Phi carries the composite (Izz3 + Md*L_COG_Offset^2) separately, so
+% the parallel-axis usage (Izz + Md*r^2) in the saddle equation does not
+% double-count. The Simscape body uses this as the COM value on the axis
+% parallel to the spin axis.
+P.Izz = 287900;            % kg*m^2, about the COM of the dipper+handle body
 
 % ---- Joint friction (Rasuli Table II) ---------------------------------
 P.fv3      = 3800;         % N*m*s/rad  revolute (saddle) viscous
