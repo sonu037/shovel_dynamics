@@ -72,8 +72,54 @@ Failure interpretation:
 Repository location:    M2/experiments/02_known_load/
 
 ## 03_amplitude_sweep
-[same fields]
+Question:               Does residual recovery remain exact and proportional as the
+                        injected load amplitude varies?
 
+Hypothesis:             Recovery remains linear with load amplitude, with an ideal
+                        regression slope of -1 under the adopted residual sign
+                        convention. Any increase in relative error at low amplitude
+                        is expected to arise from the approximately fixed
+                        Module-01 numerical floor while the recoverable signal
+                        decreases, rather than from physical nonlinearity.
+
+Setup:                  Baseline wide trajectory, unchanged: q3 = 45 +/- 15 deg,
+                        d4 = 8.75 +/- 2 m, both at omega = pi/10. Vertical force at
+                        the bail station s = d4 + 1.5. Force frequency 2*pi/9 rad/s.
+                        Trim per Module 01 measurement.
+
+Variables:              F0_y ONLY. Amplitudes 10, 50, 100, 200, 500, 1000 kN.
+                        Everything else held fixed, including the model file.
+                        The 1000 kN point is a deliberate numerical stress test,
+                        not a claim about a realistic operating load.
+
+Equations:              Q_q3 = (d4+1.5) Fy cos q3
+                        Q_d4 = Fy sin q3
+                        residual = tau_measured - tau_model = -J'F
+
+Metrics:                slope; intercept; 1-R^2 (direct, ssRes/ssTot); NRMSE;
+                        max err / peak ref; peak-magnitude error; peak-time error.
+                        Across the sweep also report max abs(slope + 1) and the
+                        trend of relative error against amplitude.
+
+Acceptance criterion:   (a) slope = -1.000000 to six decimals at EVERY amplitude;
+                        (b) intercept remains below the Module-01 residual floor
+                        when expressed in the same units;
+                        (c) max err / peak ref remains consistent with a
+                        floor-limited increase at low amplitude rather than a
+                        systematic amplitude-dependent scaling error;
+                        (d) no systematic trend in slope with amplitude.
+
+Failure interpretation: A departure from linearity in a motion-prescribed model
+                        with a linear mapping indicates an IMPLEMENTATION defect
+                        — saturation, overflow, or a unit error — not a physical
+                        nonlinearity. Investigate the force path before recording
+                        it as a result. First compare any low-amplitude deviation
+                        against the Module-01 numerical floor and any high-amplitude
+                        deviation against possible force-path saturation or
+                        numerical limits. If a transition does appear, refine with
+                        additional amplitudes around it.
+
+Repository location:    M2/experiments/03_amplitude_sweep/
 ## 04_frequency_sweep
 [same fields]
 Note: results are LOCAL to the operating trajectory. Do not claim broadband
@@ -99,7 +145,51 @@ redistributes between coordinates rather than vanishing - at q3 -> 90 deg,
 Q_q3 -> 0 but Q_d4 -> -F.
 
 ## 06_identifiability
-[same fields]
+### METHOD — frozen 2026-09-02; not yet executed
+
+1. Residual:        r(t) = tau_measured - tau_model
+
+2. Load column:     s_F = d(tau3)/d(Fy)        [m]
+
+3. Mass column:     s_m = d(tau3)/d(M_d)       [m^2/s^2], using the full three
+                   terms of the mass sensitivity.
+
+4. Further columns:
+                   d(tau3)/d(I_zz) = q3ddot
+                   d(tau3)/d(c)
+                   d(tau3)/d(f_v3)
+                   and the CONSTANT column for the regression intercept.
+
+5. Scaling:         The sensitivity columns carry different physical units.
+                   Therefore kappa(S) on the raw columns measures unit mismatch
+                   as well as physical conditioning. Scale each column using a
+                   resolution prior (dF, dM_d, dI_zz, etc.) chosen as an engineering
+                   requirement and JUSTIFIED IN WRITING. Record that the resulting
+                   kappa depends on those choices.
+
+6. Intercept:       Include the constant column explicitly, or project the
+                   sensitivity columns off the constant direction. Do not leave
+                   the intercept implicit.
+
+7. Decomposition:   S = U Sigma V'.
+                   Report singular values, kappa, and the ANGLE between the load
+                   sensitivity column s_F and the subspace spanned by the
+                   remaining nuisance columns. The angle is scale-invariant per
+                   column and is the preferred measure; kappa is reported
+                   alongside for comparability with the literature.
+
+8. Decision:        Well conditioned -> potentially identifiable.
+                   Poorly conditioned -> ambiguity remains.
+                   Near rank-deficient -> not separable under this excitation.
+
+9. Scope:           Every identifiability verdict is LOCAL to the trajectory
+                   tested. State the complete trajectory, amplitude, frequency,
+                   configuration, and model conditions with every reported number.
+
+Prerequisites:      Modules 03, 04, and 05 must be complete before executing
+                   Module 06. Executing Module 06 before them yields a conditioning
+                   result for one amplitude, one frequency, and one configuration
+                   without establishing how those factors affect identifiability.
 
 Core result to test:
 
