@@ -91,9 +91,27 @@ local_check_params(p);
 if ~bdIsLoaded(opt.Model), load_system(opt.Model); end
 
 si = Simulink.SimulationInput(opt.Model);
-si = si.setVariable('F0_y',    opt.Amplitude);
-si = si.setVariable('F0_x',    opt.Fx0);
-si = si.setVariable('omega_F', opt.Frequency);
+% Model-workspace variables SHADOW Simulink.SimulationInput.setVariable.
+% F0_x/F0_y/omega_F were placed in the model workspace on 2026-08-28 to make
+% the model self-contained; from that point setVariable was silently ignored.
+% This produced six identical "amplitude sweep" runs on 2026-09-02, all at
+% 100 kN, labelled 10-1000 kN. Write to the model workspace directly, then
+% read back to confirm.
+mw = get_param(opt.Model,'ModelWorkspace');
+mw.assignin('F0_y',    opt.Amplitude);
+mw.assignin('F0_x',    opt.Fx0);
+mw.assignin('omega_F', opt.Frequency);
+
+if mw.getVariable('F0_y') ~= opt.Amplitude || ...
+   mw.getVariable('F0_x') ~= opt.Fx0 || ...
+   mw.getVariable('omega_F') ~= opt.Frequency
+    error('recover_load:inputNotApplied', ...
+        ['Model-workspace write did not take. F0_y %g (requested %g), ' ...
+         'F0_x %g (requested %g), omega_F %g (requested %g).'], ...
+        mw.getVariable('F0_y'), opt.Amplitude, ...
+        mw.getVariable('F0_x'), opt.Fx0, ...
+        mw.getVariable('omega_F'), opt.Frequency);
+end
 si = si.setModelParameter('StopTime', num2str(opt.StopTime));
 si = si.setModelParameter('RelTol',   sprintf('%g', opt.RelTol));
 si = si.setModelParameter('AbsTol',   sprintf('%g', opt.AbsTol));

@@ -906,6 +906,110 @@ Nothing is blocked by Izz. The sensitivity matrix can be built.
 Lesson: single source of truth applies to STATUS, not only to values. A
 resolved question that still reads as open in the code will keep being
 reopened.
+## 2026-09-02 — Module 03 amplitude sweep CLOSED; setVariable override found and fixed
+
+Spec frozen at 074fac6 before running (fill-freeze-run rule observed).
+Script: `M2/scripts/recover_load.m`
+Results: `M2/experiments/03_amplitude_sweep/M2_03_{10,50,100,200,500,1000}kN.mat`
+
+### Defect found: model workspace shadows setVariable
+
+The first attempt returned SIX BIT-IDENTICAL results across a 100x amplitude
+range, including an intercept of -2.464e-07 N m that cannot be
+amplitude-independent. Confirmed by `max(abs(R.sig.Fy))` = 100000 in both the
+nominal 10 kN and 1000 kN runs.
+
+Cause: F0_x, F0_y and omega_F were placed in the MODEL WORKSPACE on 2026-08-28
+(commit 4fe0621) to make the model open self-contained. Model-workspace
+variables SHADOW `Simulink.SimulationInput.setVariable`. From that commit
+onward every 'Amplitude', 'Fx0' and 'Frequency' argument was silently ignored.
+
+This also explains the earlier `M2_100kN_horizontal.mat`, whose metrics matched
+the vertical run exactly. Both defects have the same root cause.
+
+Fix: `recover_load` now assigns directly to the model workspace via
+`mw.assignin` and READS THE VALUE BACK, erroring if the write did not take.
+
+**Prior results verified unaffected.** Requested and applied amplitude match in
+M2_null (0 kN), both 02_known_load cases, and both 06_identifiability station
+runs. Modules 01 and 02 and all station-confounding results stand. Only module
+03 was void, because it is the first module to vary amplitude and therefore the
+first to exercise the broken path.
+
+### Results (valid run)
+
+| amp (kN) | applied (kN) | max abs Fx (N) | slope q3 | slope d4 | intercept (N m) | 1-R^2 q3 | max err / peak |
+|---|---|---|---|---|---|---|---|
+| 10 | 10.000 | 0 | -1.000000 | -1.000000 | -2.464e-07 | 7.673e-22 | 2.723e-11 |
+| 50 | 50.000 | 0 | -1.000000 | -1.000000 | -2.464e-07 | 3.069e-23 | 5.446e-12 |
+| 100 | 100.000 | 0 | -1.000000 | -1.000000 | -2.464e-07 | 7.673e-24 | 2.724e-12 |
+| 200 | 200.000 | 0 | -1.000000 | -1.000000 | -2.464e-07 | 1.918e-24 | 1.361e-12 |
+| 500 | 500.000 | 0 | -1.000000 | -1.000000 | -2.464e-07 | 3.069e-25 | 5.448e-13 |
+| 1000 | 1000.000 | 0 | -1.000000 | -1.000000 | -2.464e-07 | 7.674e-26 | 2.726e-13 |
+
+Absolute maximum q3 recovery error across the sweep:
+
+| amp (kN) | max abs err (N m) | ref peak (N m) | relative |
+|---|---|---|---|
+| 10 | 1.999448e-06 | 7.342640e+04 | 2.723064e-11 |
+| 50 | 1.999433e-06 | 3.671320e+05 | 5.446088e-12 |
+| 100 | 1.999782e-06 | 7.342640e+05 | 2.723520e-12 |
+| 200 | 1.999317e-06 | 1.468528e+06 | 1.361443e-12 |
+| 500 | 2.000015e-06 | 3.671320e+06 | 5.447674e-13 |
+| 1000 | 2.001412e-06 | 7.342640e+06 | 2.725739e-13 |
+
+### Reading
+
+The ABSOLUTE error is constant to within 0.1% across a 100x amplitude range, at
+approximately 2.00e-06 N m — the module 01 zero-force floor. The reference peak
+scales exactly 100x. The RELATIVE error therefore falls as 1/F, from 2.723e-11
+to 2.726e-13.
+
+The 0.1% drift in absolute error is not zero and should not be reported as
+"constant". It rises very slightly with amplitude, consistent with
+floating-point rounding on larger operands. A perfectly fixed floor would show
+no drift.
+
+1-R^2 falls as 1/F^2 for the same reason: 7.673e-22 to 7.674e-26 across 100x.
+
+The intercept is -2.464e-07 N m at every amplitude, unchanged. It is a fixed
+arithmetic artefact of the trim window and the regression, four orders below the
+module 01 floor. Note that it was the CONSTANCY of this number that first
+revealed the override, since a real intercept would have scaled with force.
+
+### Acceptance criteria — all four met
+
+(a) slope = -1.000000 to six decimals at every amplitude, both channels. MET.
+(b) intercept 2.464e-07 N m, below the module 01 floor of 2.00e-06 N m. MET.
+(c) max err / peak ref scales as 1/F, consistent with a fixed floor and not with
+    an amplitude-dependent scaling error. MET, with the mechanism demonstrated
+    directly rather than inferred from the ratio.
+(d) no trend in slope with amplitude. MET.
+
+Validity check: applied amplitude equals requested at every level; max abs Fx
+exactly zero, confirming the Fx = 0 condition; both channels recover.
+
+### Scope of the claim
+
+M03 demonstrates that, under the specified baseline trajectory, station, force
+direction, solver settings and implemented linear force-injection model,
+residual recovery remains proportional to applied force over 10-1000 kN, with
+maximum absolute error at the module 01 numerical floor.
+
+It does NOT demonstrate: that real digging forces are linear over this range;
+that the physical shovel is linear over this range; that 1000 kN is a realistic
+operating load (it is a deliberate numerical stress test); that payload recovery
+behaves identically; or that identifiability is resolved.
+
+### Next
+
+Module 04, frequency sweep. Duration becomes a design variable there and must be
+justified in the Setup field: 30 s was inherited from modules 01-03 and contains
+about 1.5 saddle cycles at omega = pi/10. Slower or multi-frequency excitation
+will need longer.
+
+Still open: trim window justification (t >= 5 s inherited from the filter era);
+blank acceptance criteria on modules 01 and 02; Bi et al. verbatim verification.
 
 ## TEMPLATE — copy for each new session
 
