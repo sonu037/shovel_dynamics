@@ -193,6 +193,7 @@ CONSEQUENCE, to be stated as a limitation: M2 validates the force-to-generalized
 force mapping. It does NOT validate payload recovery.
 
 **V23. Two-station injection test.**
+
 Source: Raza & Frimpong 2017, who track the payload centroid as a DYNAMIC point
 that migrates as the dipper fills. Our formulation assumes a fixed application
 point. Injecting the same force at two different stations tests whether the
@@ -200,37 +201,296 @@ Jacobian handles application-point variation before it matters at M7.
 
 ---
 
+**V24. Full mass-error sensitivity derived.**
+
+The previous M2 identifiability analysis used the gravity-only approximation
+
+    s_dm = g r cos(q3),
+
+    r = d4 - 1.32.
+
+This is incomplete because M_d appears in three terms of the saddle equation:
+
+    tau3 =
+        (I_zz + M_d r^2) q3ddot
+        + 2 M_d r d4dot q3dot
+        + M_d g r cos(q3)
+        + f_v3 q3dot.
+
+Therefore the complete mass sensitivity is
+
+    s_dm = d(tau3)/d(M_d)
+
+         = r^2 q3ddot
+           + 2 r d4dot q3dot
+           + g r cos(q3).
+
+The three terms are respectively the inertia, Coriolis and gravity
+contributions.
+
+The previous gravity-only expression is retained only as a QUASI-STATIC
+APPROXIMATION. Whether that approximation is adequate must be evaluated
+against the actual trajectory and the measurement/model uncertainty relevant
+to the estimator; it must not be justified solely by comparison with the
+gravity term.
+
+CONSEQUENCE: the previous conclusion that cos(q3) cancels from the
+load/mass-error ratio and that separability depends only on d4 variation is
+conditional on the gravity-only quasi-static approximation. It is NOT the
+general result for the full mass sensitivity.
+
+The dimensionless station ratio and the trajectory-dependent load/mass ratio
+are kept distinct:
+
+    rho_station(d4) = (d4 + 1.5)/(d4 - 1.32)
+
+and
+
+    rho_LM(t) = s_load(t)/s_dm(t).
+
+This is a mathematical correction to the M2 analysis, not a new experimental
+result. The full derivative must be used for the primary load-vs-model-error
+identifiability analysis.
+
+---
+
+**V25. Full mass sensitivity tested; dynamic separation mechanism not demonstrated.**
+
+The full mass-error sensitivity introduced in V24 contains two dynamic terms:
+
+    s_inertia  = r^2 q3ddot
+
+    s_Coriolis = 2 r d4dot q3dot.
+
+This suggested a hypothesis:
+
+    the dynamic components of the mass-error signature might provide an
+    additional direction that allows an external vertical load to be
+    distinguished from a mass error even when d4 variation is small.
+
+This was tested using two existing M2 trajectories.
+
+For the WIDE trajectory,
+
+    d4 = 6.7505 to 10.7495 m,
+
+the mean-removed Pearson correlations were:
+
+    r(load, gravity)  = 0.53888577
+    r(load, inertia)  = 0.96130851
+    r(load, Coriolis) = 0.46882128
+    r(load, full mass)= 0.82221570.
+
+For the BI operational-band trajectory,
+
+    d4 = 9.500067 to 10.039933 m,
+
+the corresponding values were:
+
+    r(load, gravity)  = 0.9999729034
+    r(load, inertia)  = 0.99861
+    r(load, Coriolis) = 0.161
+    r(load, full mass)= 0.9999919261.
+
+The dynamic-to-gravity RMS ratios were:
+
+    WIDE:
+        inertia  = 2.563048 %
+        Coriolis = 0.979654 %
+        dynamic  = 2.484269 %
+        gravity:dynamic = 40.25:1
+
+    BI BAND:
+        inertia  = 2.353814 %
+        Coriolis = 0.127604 %
+        dynamic  = 2.341438 %
+        gravity:dynamic = 42.71:1.
+
+The diagnostic was originally inspected using raw cosine similarity. This was
+rejected because non-zero signal means can dominate the result. For example,
+the wide load/inertia raw cosine similarity was -0.411699 whereas the
+mean-removed Pearson correlation was +0.9613.
+
+Pearson correlation is used for the primary shape comparison because the
+intended recovery formulation contains a free intercept; a constant offset is
+therefore absorbed by the estimator and does not constitute an independent
+separating direction.
+
+RESULT:
+
+The dynamic terms do NOT demonstrate a useful second separation mechanism on
+the trajectories tested.
+
+In particular, on the BI-band trajectory the full mass-error signature is
+almost perfectly correlated with the load signature:
+
+    r(load, full mass) = 0.9999919261.
+
+Therefore the inference
+
+    "the load cannot produce the dynamic signature, therefore the dynamic
+     terms provide separability"
+
+is NOT supported by these experiments.
+
+This does NOT establish that dynamic excitation can never improve
+identifiability. The present tests use controlled single-frequency
+trajectories. Alternative excitation remains an open experimental question.
+
+The wide and BI-band trajectories also differ in d4 operating range and crowd
+velocity, so their difference cannot be attributed to excitation frequency
+alone.
+
+The previously quoted approximately 250:1 gravity-to-dynamic ratio was an
+unmeasured estimate. The measured values are approximately:
+
+    40.25:1  (wide trajectory)
+    42.71:1  (BI-band trajectory)
+
+These ratios are trajectory-dependent and must not be treated as fixed
+machine properties.
+
+SCIENTIFIC STATUS:
+
+    V24 mathematical correction:
+        CONFIRMED.
+
+    Dynamic-separation hypothesis:
+        NOT DEMONSTRATED on the tested trajectories.
+
+    Load/model-error identifiability:
+        OPEN.
+
+NEXT:
+
+    Test alternative admissible excitation and evaluate the resulting
+    sensitivity matrix using formal conditioning, rather than relying on
+    correlation alone.
+
+---
+
 ## Which revisions actually raise the work
 
-Most of the twenty-three are competence. Six would be noticed by a reviewer:
+Most of the twenty-three earlier revisions are competence. Several revisions
+are especially important to the scientific contribution:
 
-  V7 + V8   the identifiability degeneracy and its resolution. No paper in the
-            69-paper library does this. Palomba (2019, MSSP) met the same
-            ill-conditioning and handled it by REGULARISATION, not by analysing
-            what is and is not separable. This is the opening.
-  V17       the fingerprint library - turns "does it work" into "what does
-            failure look like"
-  V14       the error budget - allows failure to be attributed, not just observed
-  V22       stating that M2 does not validate payload recovery, before a reviewer
-            finds it
-  V11       admitting the frequency response is local, not broadband
-  V6        correcting a naive blindness claim into a two-channel result
+    V7 + V8
+        identification of the load/model-error degeneracy and its treatment.
+
+    V17
+        fingerprint-library formulation: turns "does it work?" into
+        "what does each failure/model-error source look like?"
+
+    V14
+        explicit error budget, allowing failure to be attributed rather than
+        merely observed.
+
+    V22
+        explicitly stating that M2 does not yet validate payload recovery.
+
+    V11
+        recognizing that frequency response is local to the tested trajectory,
+        rather than making a broadband claim.
+
+    V6
+        correcting a naive blindness claim into a two-channel observability
+        result.
+
+    V24
+        correcting the mass-error sensitivity from the gravity-only expression
+        to the complete inertia + Coriolis + gravity derivative.
+
+    V25
+        experimentally testing the resulting dynamic-separation hypothesis and
+        finding that it is not demonstrated on the trajectories tested.
 
 ---
 
 ## Open, not yet resolved
 
-1. THE TRILEMMA. Dynamic richness (Frimpong 2005) vs physical admissibility
-   (Fu 2024, Bi 2020) vs identifiability (wants large d4 variation at SHORT
-   extension, exactly where a real crowd is most constrained). Surfaced twice in
-   the literature reading, resolved neither time. Must be formulated as a
-   constrained design problem: maximise separability subject to the machine's real
-   envelope. THIS IS THE ACTUAL RESEARCH CONTRIBUTION and it is still unwritten.
+1. THE CONSTRAINED IDENTIFIABILITY PROBLEM.
 
-2. Two derivations owed: dp/dq3 (worked, but must be reproduced independently) and
-   the four sensitivity functions phi_I, phi_m, phi_c, phi_f.
+   The earlier formulation attributed separability primarily to d4 variation
+   under a gravity-only approximation. V24 showed that the full mass
+   sensitivity also contains inertial and Coriolis terms; V25 showed that
+   these terms do not provide a demonstrated second separation mechanism on
+   the tested single-frequency trajectories.
 
-3. Positioning. All twenty-three revisions frame M2 as proving a method. After the
-   literature review, its publishable content is the identifiability analysis -
-   Palomba (2019) already performs through-dig estimation on hydraulic excavators,
-   and the residual identity appears in US patent 12,480,286.
+   The remaining question is therefore broader:
+
+       Can an admissible trajectory be designed that makes the external-load
+       sensitivity sufficiently independent of the relevant model-error
+       sensitivities?
+
+   This should be formulated as a constrained sensitivity/conditioning
+   problem:
+
+       minimise kappa(S)
+
+       subject to the machine's feasible trajectory envelope.
+
+   The answer is not yet known.
+
+2. TWO DERIVATIONS.
+
+   dp/dq3 is worked but must be reproduced independently.
+
+   The four sensitivity functions
+
+       phi_I, phi_m, phi_c, phi_f
+
+   still need to be derived and verified.
+
+3. POSITIONING.
+
+   Earlier M2 revisions framed M2 primarily as proving a load-estimation
+   method. After the literature review, the potentially publishable
+   contribution is more specifically the identifiability analysis:
+
+       which external-load and model-error signatures are distinguishable,
+       under which trajectories, and subject to which physical constraints?
+
+   Palomba (2019, MSSP) provides an important comparison because it addresses
+   ill-conditioning in through-dig estimation using regularisation. The
+   present work instead investigates the physical source of the
+   non-identifiability and asks whether trajectory/excitation design can
+   reduce it.
+
+4. PHYSICAL OPERATING ENVELOPE.
+
+   The Bi et al. 2020 values currently used to define the BI-band trajectory
+   must be verified directly from the source PDF before being treated as
+   authoritative machine limits.
+
+   In addition, P&H 2100-specific trajectory limits remain required for the
+   final constrained-design gate. WK-55 limits must not be silently treated
+   as P&H 2100 limits.
+
+5. EXCITATION.
+
+   Frequency variation, multisine/chirp excitation and transient/realistic
+   trajectories remain to be tested. The purpose is to determine whether
+   alternative admissible trajectories reduce sensitivity collinearity.
+
+6. MODEL-ERROR FINGERPRINTS.
+
+   The mass-error sensitivity has been tested, but the broader fingerprint
+   library remains incomplete. Planned perturbations include inertia,
+   geometry/centre-of-mass parameters, viscous friction and Coulomb friction.
+
+7. FORCE DIRECTION.
+
+   The current baseline primarily investigates vertical loading. Horizontal
+   force and combined planar loading remain to be tested before any broader
+   planar-load identifiability claim is made.
+
+8. UNCERTAINTY AND VALIDATION.
+
+   Measurement noise, model mismatch and parameter uncertainty remain to be
+   introduced systematically after the deterministic sensitivity structure
+   has been established.
+
+9. HELD-OUT VALIDATION.
+
+   A held-out experiment remains required before claiming generalisation of
+   the identification procedure.

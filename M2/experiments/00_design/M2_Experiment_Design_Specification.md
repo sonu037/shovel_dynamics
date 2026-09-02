@@ -79,11 +79,18 @@ Repository location:    M2/experiments/02_known_load/
 Note: results are LOCAL to the operating trajectory. Do not claim broadband
 performance from single-frequency tests.
 
-Note (rev 24): this module's purpose is enlarged. Beyond robustness, it tests
-Mechanism B directly. The inertial contribution to s_dm scales with qddot3, so
-raising excitation frequency inflates a column the load cannot produce. Frequency
-sweep therefore becomes a candidate resolution of the gate, subject to the
-acceleration limits in requirement 2.
+Note (rev 24/25): this module's purpose is enlarged. Beyond robustness, it tests
+whether alternative excitation can improve load/model-error identifiability.
+
+The inertial contribution to s_dm scales with qddot3, so changing excitation
+frequency changes the magnitude and temporal structure of the dynamic
+sensitivity terms. Whether this produces a sufficiently independent sensitivity
+direction is an open experimental question and must be evaluated using
+correlation and, ultimately, sensitivity-matrix conditioning subject to the
+physical velocity and acceleration limits.
+
+The existing wide and Bi-source trajectories also differ in d4 range and crowd
+velocity, so their difference cannot be attributed to excitation frequency alone.
 
 ## 05_configuration_sweep
 [same fields]
@@ -118,9 +125,12 @@ cancels from rho_LM, and
 
     rho_LM  ->  (1/g) * rho_station(d4) = (1/g) * (d4 + 1.5)/(d4 - 1.32)
 
-so separability reduces to d4 variation alone (Mechanism A). With the full s_dm
-there is no common cos q3 factor, rho_LM depends on q3, q3dot, qddot3, d4 and
-d4dot, and dynamic excitation becomes a second separation mechanism (Mechanism B).
+so separability reduces to d4 variation alone (Mechanism A).With the full s_dm there is no common cos q3 factor, so rho_LM depends on
+q3, q3dot, q3ddot, d4 and d4dot. Dynamic excitation therefore provides a
+CANDIDATE second separation mechanism (Mechanism B), but its practical
+usefulness is not established. V25 found that the tested trajectories did not
+produce demonstrated load/mass separation; alternative admissible excitation
+remains to be tested.
 
 Do NOT compute the final conditioning from the gravity-only form. Doing so would
 yield a result that is a property of the truncation rather than of the machine.
@@ -147,8 +157,11 @@ Do not stop at the magnitude ratio; it is not an identifiability measure.
 
 ## 07_model_perturbation
 [same fields]
-Build the fingerprint library: deliberately set dm, dIzz, dc, dfv and record each
-residual signature. Reusable at M9.
+Build the fingerprint library: deliberately set dm, dIzz, dc, dfv and dfc and
+record each residual signature. The Coulomb-friction perturbation uses the
+identified/provisional fc3 and fc4 parameters but remains explicitly labelled as
+a model-error sensitivity until the Coulomb-friction model is activated and
+verified. Reusable at M9.
 
 ## 08_held_out
 [same fields]
