@@ -447,3 +447,41 @@ because both shared the same defect.
 A correlation moving from 0.54 to 0.82 is an observation about two columns.
 Whether that degrades identifiability is a claim about parameter estimation and
 requires conditioning analysis.
+
+## A setting accepted without error is not a setting that took effect
+
+Three silent behaviors in this project changed what we thought the experiment was doing:
+
+- a force-path filter whose nominal group-delay approximation (2*tau = 0.1 s for
+  the second-order filter with tau = 0.05 s in the block mask) appeared as a
+  phase-equivalent lag of 0.082 s inferred from the correlation;
+- an 'Fx0' argument that set F0_x, which is declared in the model workspace but
+  read by no block (verified in the model XML: F0_y appears as a Sine Wave
+  Amplitude parameter, F0_x does not);
+- model-workspace variables that shadow Simulink.SimulationInput.setVariable,
+  making six "different" amplitudes run at the same value (verified from the
+  saved artifacts: max abs Fy = 100000 in both the nominal 10 kN and 1000 kN
+  runs, and an identical intercept of -2.464e-07 N m in all six).
+
+Each time the parameter was accepted, no error was raised, and the results
+looked plausible. The only defence is to READ THE VALUE BACK from where it
+matters and compare it against what was requested.
+
+Corollary for experiment design: if a sweep varies a parameter, log the ACHIEVED
+value alongside the requested one in every result. Six bit-identical rows across
+a 100x range should be an error, not a table.
+
+## Don't remember the result. Retrieve the receipt.
+
+Before re-deriving, re-measuring or debating any numerical claim: grep claims.md.
+It records STATUS as well as values.
+
+Three items were re-investigated on 2026-09-02 that were already closed there:
+Izz (V, 2026-07-23), the trim window (V, 2026-07-15, line 51), and the module
+01/02 acceptance criteria (filled 9/9). In each case the belief came from
+conversation history rather than the file, and propagated across sessions
+because each session inherited the previous session's summary rather than the
+repository.
+
+Authority order: claims.md -> evidence artifact -> research_log.md ->
+conversation memory. Never the reverse.

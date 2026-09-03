@@ -1,27 +1,60 @@
 # M2 — Known External-Load Residual
 
 ## Status
-Modules 01 and 02 CLOSED. Module 06 partially complete, run out of sequence.
-Modules 03, 04, 05, 07, 08 not started. The excitation-trilemma gate in
-00_design remains OPEN.
+
+MS02P01 and MS02P02 CLOSED. MS02P03 CLOSED 2026-09-02.
+
+MS02P06 partially complete, run out of sequence.
+
+MS02P04, MS02P05, MS02P07 and MS02P08 not started. The excitation-trilemma
+gate in 00_design remains OPEN.
+
+## Part identification
+
+M2 is Milestone 02. Each experimental Part is identified as MS02Pxx,
+where MS02 denotes Milestone 02 and Pxx denotes the Part number.
+
+The Part identifier is the research identity; the existing directory names
+remain unchanged.
+
+    MS02P01  01_zero_force
+    MS02P02  02_known_load
+    MS02P03  03_amplitude_sweep
+    MS02P04  04_frequency_sweep
+    MS02P05  05_configuration_sweep
+    MS02P06  06_identifiability
+    MS02P07  07_model_perturbation
+    MS02P08  08_held_out
 
 Results to date (see research_log.md for full context and caveats):
 
-    01_zero_force       numerical floor: 2.00e-06 N m (q3), 2.91e-10 N (d4);
-                        relative 7.04e-13 and 6.46e-16
+    MS02P01  01_zero_force
+             numerical floor: 2.00e-06 N m (q3), 2.91e-10 N (d4);
+             relative 7.04e-13 and 6.46e-16
 
-    02_known_load       exact recovery: slope -1.000000, 1-R^2 = 7.67e-24 (q3),
-                        max error / peak reference = 2.7e-12
+    MS02P02  02_known_load
+             exact recovery: slope -1.000000, 1-R^2 = 7.67e-24 (q3),
+             max error / peak reference = 2.7e-12
 
-    06_identifiability  station confounding on three trajectories. Assuming a
-                        station 2.82 m wrong still gives 1-R^2 = 2.69e-03 (wide
-                        stroke), 4.70e-05 (narrow, off-band) and 3.00e-05 (Bi
-                        operational band, 9.50-10.04 m). An 89.8-fold collapse
-                        from wide stroke to operational band.
+    MS02P03  03_amplitude_sweep
+             CLOSED 2026-09-02. Six verified force levels: 10, 50, 100,
+             200, 500 and 1000 kN. Achieved applied force matched the
+             requested value at every level; Fx remained zero. Recovery
+             slope was -1.000000 on both generalized-force channels at
+             every amplitude. Absolute recovery error was approximately
+             2.00e-06 N m, varying by about 0.1% across the 100x amplitude
+             range, so relative error decreased approximately as 1/F over
+             the tested range.
 
-                        Load-vs-mass separability diagnosed by correlation:
-                        r(load, full s_dm) = 0.822 (wide), 0.99999 (Bi band).
+    MS02P06  06_identifiability
+             station confounding on three trajectories. Assuming a station
+             2.82 m wrong still gives 1-R^2 = 2.69e-03 (wide stroke),
+             4.70e-05 (narrow, off-band) and 3.00e-05 (Bi operational band,
+             9.50-10.04 m). An 89.77-fold collapse from wide stroke to
+             operational band.
 
+             Load-vs-mass separability diagnosed by correlation:
+             r(load, full s_dm) = 0.822 (wide), 0.99999 (Bi band).
 Scope of these results. Module 02 verifies the force-to-generalized-force
 mapping and the subtraction identity under motion-prescribed joints with exact
 sensing. It does NOT establish load identifiability: the residual contained one

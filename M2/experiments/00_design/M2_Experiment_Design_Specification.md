@@ -38,9 +38,9 @@ limits. Report the resulting conditioning. This is a constrained design problem,
 not three separate constraints to list.
 
 Note that requirement 1 and requirement 3 are in tension only under Mechanism A.
-Under Mechanism B, dynamic richness SERVES identifiability. Which mechanism
-dominates within the admissible envelope is an open question and is the substance
-of this gate.
+Under Mechanism B, dynamic richness WOULD SERVE identifiability if the mechanism
+holds. Which mechanism dominates within the admissible envelope is an open
+question and is the substance of this gate.
 
 This is the gate. Nothing downstream is meaningful until it is answered.
 
