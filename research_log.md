@@ -1011,6 +1011,181 @@ will need longer.
 Still open: trim window justification (t >= 5 s inherited from the filter era);
 blank acceptance criteria on modules 01 and 02; Bi et al. verbatim verification.
 
+## 2026-09-04 — MS02P04 frequency sweep, wide and narrow stroke
+
+### Model change
+
+Sine Wave and Sine Wave1 Frequency parameterised from the literal `pi/10` to the
+model-workspace variable `omega_traj`. Amplitudes and biases untouched, so the
+spatial stroke is held fixed and only timing varies. Sine Wave2 continues to
+carry the external force at omega_F = 2*pi/9, independent of omega_traj.
+
+DISTINCTION PREVIOUSLY CONFLATED: the 'Frequency' argument of recover_load sets
+omega_F, the EXTERNAL FORCE frequency. It had never touched the mechanism
+trajectory. The trajectory blocks held pi/10 as a literal, so NO M2 experiment
+before MS02P04 varied the mechanism frequency. omega_traj is a separate quantity
+and this is the first experiment to vary it. Both are now in the nomenclature.
+
+Pilot at omega_traj = pi/10 reproduced module 02 exactly (slope -1.000000,
+1-R^2 = 7.673389e-24), confirming the parameterisation is neutral.
+
+Artifacts: M2/experiments/04_frequency_sweep/
+  M2_04_pilot_baseline.mat
+  M2_04_w{0.314,0.500,0.700,1.000,1.360}.mat   + M2_04_sweep_wide.mat
+  M2_04n_w{0.314,0.500,0.700,1.000,1.360}.mat  + M2_04_sweep_narrow.mat
+
+### Two stroke families, five frequencies each
+
+Both share q3(t) = 45 +/- 15 deg and a 100 kN vertical force at the bail station.
+They differ only in crowd stroke. All correlations are mean-removed Pearson.
+
+WIDE: d4 = 8.75 +/- 2 m
+
+| omega_traj (rad/s) | R_dyn (%) | d4ddot_ss (m/s^2) | r(s_load,s_grav) | r(s_load,s_in) | r(s_load,s_full) |
+|---|---|---|---|---|---|
+| 0.314 | 2.4843 | 0.1973 | 0.538886 | 0.961309 | 0.822216 |
+| 0.500 | 6.0292 | 0.4997 | 0.475807 | 0.956145 | 0.931905 |
+| 0.700 | 12.0376 | 0.9788 | 0.469873 | 0.957859 | 0.981138 |
+| 1.000 | 24.0509 | 1.9950 | 0.479330 | 0.956898 | 0.996529 |
+| 1.360 | 45.3806 | 3.6821 | 0.494885 | 0.959639 | 0.999231 |
+
+NARROW: d4 = 9.77 +/- 0.27 m
+
+| omega_traj (rad/s) | R_dyn (%) | d4ddot_ss (m/s^2) | r(s_load,s_grav) | r(s_load,s_in) | r(s_load,s_full) |
+|---|---|---|---|---|---|
+| 0.314 | 2.3414 | 0.0266 | 0.999973 | 0.998613 | 0.999992 |
+| 0.500 | 5.6915 | 0.0675 | 0.999973 | 0.998582 | 1.000000 |
+| 0.700 | 11.3101 | 0.1321 | 0.999974 | 0.998645 | 0.999990 |
+| 1.000 | 22.7142 | 0.2693 | 0.999973 | 0.998597 | 0.999956 |
+| 1.360 | 42.9280 | 0.4971 | 0.999974 | 0.998651 | 0.999915 |
+
+Recovery held at slope -1.000000 on both channels in all ten cases. Recovery
+1-R^2 rose from ~6e-24 to ~1.5e-22 with frequency in both families, tracking
+signal growth at the arithmetic floor, not physical degradation.
+
+### Trajectory validation
+
+Under the present synchronized sinusoidal excitation, R_dyn follows the expected
+omega_traj^2 scaling. Wide 2.48 -> 45.38 % over a 4.33x frequency increase is a
+factor of 18.3 against (4.33)^2 = 18.7. Steady d4ddot likewise: wide 0.1973 ->
+3.6821 (18.7x), narrow 0.0266 -> 0.4971 (18.7x).
+
+At omega_traj = 1.36 rad/s the narrow case reaches d4ddot = 0.4971 m/s^2,
+essentially matching Bi et al.'s reported WK-55 crowd-acceleration reference of
+0.5 m/s^2 (Table 2, crowd system, VERIFIED against the PDF). That reference is a
+WK-55 field-test value, NOT an established admissibility envelope for this
+P&H 2100-parameterised model. The wide case at the same frequency reaches
+3.6821 m/s^2, about 7x that reference.
+
+### PREDICTION MADE BEFORE THE NARROW RUN — both parts WRONG
+
+Recorded before running: r(s_load,s_in) would stay near 0.96 (assumed
+stroke-independent), and r(s_load,s_full) would rise monotonically as in the
+wide sweep.
+
+Measured: r(s_load,s_in) is 0.9986 in the narrow stroke, not 0.96. The
+load-inertia alignment IS stroke-dependent.
+
+And r(s_load,s_full) does not rise monotonically in the narrow stroke: 0.999992
+-> 1.000000 -> 0.999990 -> 0.999956 -> 0.999915. It peaks at omega_traj = 0.5 rad/s then
+FALLS. Separability improves slightly with frequency, opposite to the wide case.
+
+### Result — the effect is STROKE-DEPENDENT
+
+Distinguishable fraction 1 - r(s_load,s_full):
+
+  WIDE:   1.78e-01 -> 7.69e-04.  A 231-fold DEGRADATION.
+  NARROW: 8.07e-06 -> 8.53e-05.  A ~10-fold IMPROVEMENT.
+
+Same physics, same five frequencies, opposite trends.
+
+Mechanism. r(s_load,s_grav) is the discriminator. In the wide stroke it is
+0.47-0.54, so gravity carries genuine shape difference and adding a
+load-parallel inertia column (0.96) dilutes it. In the narrow stroke it is
+0.999973 — gravity is already indistinguishable from the load — so adding
+inertia at 0.9986, very slightly LESS aligned, nudges the sum marginally away
+from the load.
+
+In the narrow stroke the inertia column is the least-bad direction available.
+In the wide stroke it is the worst.
+
+### Why common-frequency excitation cannot help — the ratio is invariant
+
+Narrow family. s_co is the Coriolis column (named s_co in the code).
+
+| | omega_traj  | s_co/s_grav (%) | s_in/s_grav (%) | ratio in/co |
+|---|---|---|---|
+| 0.314 | 0.1276 | 2.3538 | 18.4 |
+| 0.500 | 0.3141 | 5.6901 | 18.1 |
+| 0.700 | 0.5946 | 11.2909 | 19.0 |
+| 1.000 | 1.2565 | 22.7144 | 18.1 |
+| 1.360 | 2.3100 | 43.0223 | 18.6 |
+
+Under the present SYNCHRONIZED sinusoidal excitation, where omega_q3 = omega_d4
+= omega_traj, each velocity contributes one factor of omega and the acceleration
+two. So s_co (a product of TWO velocities) and s_in (an acceleration) acquire the
+SAME omega^2 scaling. Changing the common frequency alters their magnitude
+relative to gravity without changing their relative weighting. The in/co ratio is
+18.1-19.0 across the whole sweep.
+
+Among the three mass-sensitivity components, Coriolis has the strongest
+directional difference from the load in the NARROW family: r(s_load,s_co) =
+0.07-0.16 against r(s_load,s_grav) = 0.999973. In the WIDE family gravity is
+itself substantially distinct (0.47-0.54), so the statement is family-dependent.
+
+### Conclusion
+
+MS02P04 does not establish that frequency cannot improve identifiability. It
+establishes that COMMON-FREQUENCY excitation is insufficient.
+
+Increasing excitation frequency improves load-mass separability in the narrow
+stroke by roughly tenfold, from 1-r = 8.07e-06 to 8.53e-05 at omega_traj = 1.36 rad/s,
+where crowd acceleration reaches Bi's reported WK-55 reference value. That
+remains four orders of magnitude short of usable.
+
+Frequency does not rescue identifiability. It also does not destroy it — the
+231x degradation belongs to the wide stroke, which exceeds Bi's reference
+acceleration sevenfold.
+
+### The remaining lever
+
+A distinct and untested route: DECOUPLE the two coordinate frequencies. s_in
+scales as omega_q3^2 while s_co scales as omega_d4 * omega_q3. Raising omega_d4
+alone would grow Coriolis and leave inertia alone, breaking the fixed in/co
+ratio that closes off the common-frequency route.
+
+The present design cannot test this because omega_traj drives BOTH blocks. It
+would require a second workspace variable and a second parameterised Sine Wave
+frequency.
+
+### Notation
+
+Bare L was used in this session's working tables as informal shorthand for
+the load sensitivity. It is NOT project notation and does not appear as a
+physical load-sensitivity variable in the code. The correct symbol is
+s_load, and Frimpong 2008 uses L_1 and L_2 for crowd-arm lengths. All tables
+above use r(s_load, ...) accordingly.
+
+Nomenclature updated the same day: added s, s_grav, s_in, s_co, s_dyn, s_full,
+omega_traj, omega_F, R_dyn; documented the internal three-way rho collision
+(rho_station, rho_LM, and the local sqrt(R^2) at recover_load.m line 458) and the
+c / rho / L collisions with Bi et al. 2020 and Frimpong 2008. No experiment was
+re-run: every quantity was computed from the correct variables in
+sensitivity_diagnostic.m lines 42-49, and renaming a table header changes
+nothing about what was calculated.
+
+### Process defect
+
+MS02P04's specification fields (Question, Hypothesis, Setup, Variables,
+Equations, Metric, Acceptance criterion, Failure interpretation) are STILL BLANK.
+This run was made without a frozen acceptance criterion — the same defect
+recorded for modules 01 and 02, and the reason the fill-freeze-run rule exists.
+Recorded rather than written retroactively, so the record stays honest.
+
+### Also outstanding
+
+- Crowd excitation has now been hand-edited and restored FOUR times. Parameterise CrowdBias and CrowdAmplitude in recover_load. These are currently hand-edited model inputs rather than explicit experimental parameters recorded in the saved .mat provenance.
+
 ## TEMPLATE — copy for each new session
 
 ## YYYY-MM-DD — <one-line title>

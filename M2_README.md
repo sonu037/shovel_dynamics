@@ -49,12 +49,10 @@ Results to date (see research_log.md for full context and caveats):
     MS02P06  06_identifiability
              station confounding on three trajectories. Assuming a station
              2.82 m wrong still gives 1-R^2 = 2.69e-03 (wide stroke),
-             4.70e-05 (narrow, off-band) and 3.00e-05 (Bi operational band,
-             9.50-10.04 m). An 89.77-fold collapse from wide stroke to
-             operational band.
+             4.70e-05 (narrow, off-band) and 3.00e-05 (Bi-number-matched d4 interval, 9.50-10.04 m). An 89.77-fold collapse from wide stroke to that numerical interval. Bi et al.'s 9.50-10.04 m values are optimized initial polar-diameter values rho_0, not a validated d4 envelope.
 
              Load-vs-mass separability diagnosed by correlation:
-             r(load, full s_dm) = 0.822 (wide), 0.99999 (Bi band).
+             r(load, full s_dm) = 0.822 (wide), 0.99999 (Bi-number-matched d4 interval).
 Scope of these results. Module 02 verifies the force-to-generalized-force
 mapping and the subtraction identity under motion-prescribed joints with exact
 sensing. It does NOT establish load identifiability: the residual contained one
