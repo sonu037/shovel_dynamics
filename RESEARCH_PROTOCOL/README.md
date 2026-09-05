@@ -20,6 +20,19 @@ The purpose is to ensure that every important computational result is:
 These protocols apply to M1, M2, MS02Pxx experiments, future milestones,
 mechanics derivations, numerical analyses, identification studies, and
 research code.
+These protocols apply to M1, M2, MS02Pxx experiments, future milestones,
+mechanics derivations, numerical analyses, identification studies, and
+research code.
+
+## Relationship to other project documents
+
+RESEARCH_PROTOCOL/  — HOW to work. Process, applies to all milestones.
+LEARNING.md         — WHAT went wrong and why. Specific incidents, transferable lessons.
+M2_Experiment_Design_Specification.md — WHAT this milestone requires. Per-module criteria.
+claims.md           — WHICH numbers are verified and against what source.
+
+Where they appear to conflict, claims.md wins on facts and the milestone
+specification wins on that milestone's requirements.
 
 ---
 
