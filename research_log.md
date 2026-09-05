@@ -1036,7 +1036,7 @@ Artifacts: M2/experiments/04_frequency_sweep/
 
 ### Two stroke families, five frequencies each
 
-Both share q3(t) = 45 +/- 15 deg and a 100 kN vertical force at the bail station.
+Both families use the same saddle-angle trajectory q3(t), with a mean angle of 45 deg and amplitude 15 deg, and the same 100 kN vertical force at the bail station.
 They differ only in crowd stroke. All correlations are mean-removed Pearson.
 
 WIDE: d4 = 8.75 +/- 2 m
@@ -1113,7 +1113,7 @@ In the wide stroke it is the worst.
 
 Narrow family. s_co is the Coriolis column (named s_co in the code).
 
-| | omega_traj  | s_co/s_grav (%) | s_in/s_grav (%) | ratio in/co |
+| omega_traj  | s_co/s_grav (%) | s_in/s_grav (%) | ratio in/co |
 |---|---|---|---|
 | 0.314 | 0.1276 | 2.3538 | 18.4 |
 | 0.500 | 0.3141 | 5.6901 | 18.1 |
@@ -1121,7 +1121,7 @@ Narrow family. s_co is the Coriolis column (named s_co in the code).
 | 1.000 | 1.2565 | 22.7144 | 18.1 |
 | 1.360 | 2.3100 | 43.0223 | 18.6 |
 
-Under the present SYNCHRONIZED sinusoidal excitation, where omega_q3 = omega_d4
+Under the present SYNCHRONIZED sinusoidal excitation, the saddle-angle trajectory and crowd trajectory have the same angular frequency, so omega_q3 = omega_d4 = omega_traj. The inertia sensitivity s_in contains an acceleration term and therefore scales with omega_traj^2. The Coriolis sensitivity s_co contains the product of crowd velocity and saddle angular velocity, so it also scales with omega_traj^2. Consequently, increasing the common frequency changes the magnitude of both components relative to gravity but does not provide an independent weighting between them. The measured s_in/s_co ratio remains approximately 18.1-19.0 across the five frequencies. where omega_q3 = omega_d4
 = omega_traj, each velocity contributes one factor of omega and the acceleration
 two. So s_co (a product of TWO velocities) and s_in (an acceleration) acquire the
 SAME omega^2 scaling. Changing the common frequency alters their magnitude
@@ -1139,9 +1139,9 @@ MS02P04 does not establish that frequency cannot improve identifiability. It
 establishes that COMMON-FREQUENCY excitation is insufficient.
 
 Increasing excitation frequency improves load-mass separability in the narrow
-stroke by roughly tenfold, from 1-r = 8.07e-06 to 8.53e-05 at omega_traj = 1.36 rad/s,
-where crowd acceleration reaches Bi's reported WK-55 reference value. That
-remains four orders of magnitude short of usable.
+stroke by roughly tenfold, from 1-r(s_load,s_full) = 8.07e-06 to 8.53e-05 at
+omega_traj = 1.36 rad/s, where crowd acceleration reaches Bi's reported WK-55
+reference value. That improvement remains small in absolute terms: the distinguishable fraction reaches only 8.53e-05 at omega_traj = 1.36 rad/s.
 
 Frequency does not rescue identifiability. It also does not destroy it — the
 231x degradation belongs to the wide stroke, which exceeds Bi's reference
@@ -1185,6 +1185,24 @@ Recorded rather than written retroactively, so the record stays honest.
 ### Also outstanding
 
 - Crowd excitation has now been hand-edited and restored FOUR times. Parameterise CrowdBias and CrowdAmplitude in recover_load. These are currently hand-edited model inputs rather than explicit experimental parameters recorded in the saved .mat provenance.
+
+### RESEARCH_PROTOCOL/ created 2026-09-05
+
+Four documents, 1636 lines: CLAIMS_INTEGRITY_PROTOCOL.md,
+CODE_EXPLAINABILITY_PROTOCOL.md, EXPERIMENT_DEFENSIBILITY_PROTOCOL.md and a
+README defining the master research workflow (Question -> Motivation -> Physical
+model -> Definitions -> Mathematics -> Design choices -> Algorithm -> Code ->
+Validation -> Evidence -> Interpretation).
+
+Motivation: the nomenclature and claims.md edits on 2026-09-04/05 took six
+rounds of revision because there was no written procedure for how a shared
+document gets amended. The same absence produced the Izz incident (a code
+comment reading "unresolved" for a month after claims.md recorded it closed) and
+the 250:1 estimate (an unmeasured number repeated until it entered a frozen
+specification).
+
+Committed in e296fec alongside the MS02P04 results. The commit message describes
+only the frequency sweep, so this entry records the folder's origin.
 
 ## TEMPLATE — copy for each new session
 
