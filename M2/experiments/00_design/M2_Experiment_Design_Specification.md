@@ -120,8 +120,39 @@ Failure interpretation: A departure from linearity in a motion-prescribed model
                         additional amplitudes around it.
 
 Repository location:    M2/experiments/03_amplitude_sweep/
+
 ## 04_frequency_sweep
-[same fields]
+Question:               Does varying the mechanism trajectory frequency improve
+                        separability between the external-load sensitivity and
+                        the mass-error sensitivity?
+Hypothesis:             Raising omega_traj grows the dynamic terms as omega^2.
+                        If the inertia or Coriolis column is directionally
+                        distinct from the load, separability should improve.
+Setup:                  Sine Wave and Sine Wave1 Frequency parameterised to the
+                        model-workspace variable omega_traj. Amplitudes and
+                        biases held fixed. omega_F fixed at 2*pi/9. Force 100 kN
+                        vertical at the bail station. omega_traj = 0.314, 0.5,
+                        0.7, 1.0, 1.36 rad/s on two stroke families: WIDE
+                        d4 = 8.75 +/- 2 m, NARROW d4 = 9.77 +/- 0.27 m.
+Variables:              omega_traj and crowd stroke. All else fixed.
+Equations:              s_load = (d4+1.5) cos q3
+                        s_dm = s_in + s_co + s_grav, r = d4 - 1.32
+                        R_dyn = RMS(s_in + s_co) / RMS(s_grav)
+Metric:                 mean-removed Pearson r(s_load, s_grav), r(s_load, s_in),
+                        r(s_load, s_full); R_dyn; recovery slope and 1-R^2.
+Acceptance criterion:   RETROACTIVE - see failure note. Recovery slope must be
+                        -1.000000 at every frequency on both channels (met).
+                        R_dyn must follow omega^2 scaling, confirming the
+                        trajectory changed as intended (met: 18.3-18.7x over a
+                        4.33x frequency increase).
+Failure interpretation: PROCESS DEFECT: this module was RUN before these fields
+                        were filled, violating the fill-freeze-run rule. Same
+                        defect as modules 01 and 02. Fields written retroactively
+                        2026-09-05 and marked as such rather than presented as
+                        pre-registered. The scientific prediction that WAS made
+                        before the narrow run (r(s_load,s_in) stroke-independent
+                        at ~0.96) was refuted; see research_log 2026-09-04.
+Repository location:    M2/experiments/04_frequency_sweep/
 Note: results are LOCAL to the operating trajectory. Do not claim broadband
 performance from single-frequency tests.
 
