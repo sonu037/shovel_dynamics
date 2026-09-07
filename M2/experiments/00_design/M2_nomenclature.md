@@ -113,11 +113,30 @@ M_d — it is the same number under M1's field name.
 | kappa(S) | condition number of the sensitivity matrix | dimensionless |
 | NRMSE | normalised root-mean-square error | % |
 
-NOT YET IN THE MODEL. A_d4 and B_d4 (proposed Sine Wave1 Amplitude/Bias
-parameterisation for the crowd stroke) do not exist as of 2026-09-05. Verified
-directly from the .slx: Sine Wave1 Amplitude and Bias are still literals (2 and
-8.75). Do not reference A_d4/B_d4 as though implemented until the model is
-patched and this note is removed.
+A_d4, B_d4 — Sine Wave1 Amplitude and Bias, the crowd-extension trajectory
+parameters [m]. IMPLEMENTED. Verified 2026-09-07 by reading the saved .slx
+directly (simulink/systems/system_root.xml): Sine Wave1 Amplitude = A_d4,
+Bias = B_d4, Frequency = omega_traj, and both variables are defined in the
+model workspace. Set from recover_load via the 'CrowdAmplitude' and 'CrowdBias'
+arguments, with a read-back guard at recover_load.m:116-127.
+
+  Supersedes the note dated 2026-09-05 recording these as literals (2 and 8.75)
+  and instructing that they not be referenced as implemented. That note was
+  correct when written. It was not removed when the model was patched, and it
+  survived commit 49ef5f7 (2026-09-07), whose message asserted verification
+  against the .slx. Recorded rather than silently deleted — same failure class
+  as the stale-belief entry in LEARNING.md.
+
+  REALISED IS NOT COMMANDED. A_d4 is the COMMANDED amplitude. The Simulink-PS
+  Converter on the crowd motion input filters second-order at tau = 0.05 s, so
+  the amplitude the mechanism actually executes is
+
+      A_realised = A_d4 / (1 + (omega_traj * tau)^2)
+
+  which is 0.99975 * A_d4 at omega_traj = pi/10 and 0.99540 * A_d4 at
+  omega_traj = 1.36 rad/s. Where crowd stroke is an independent variable,
+  report the realised amplitude, measured as (max(d4) - min(d4))/2, alongside
+  the commanded value.
 
 Notes on rho_station and rho_LM (rev 24). These are two different quantities and
 were previously both called rho.

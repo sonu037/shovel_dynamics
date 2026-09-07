@@ -18,9 +18,9 @@ function R = recover_load(varargin)
 %                  -1.32  = COG station    (negative-control arm)
 %                   Default 1.5.
 %     'CrowdAmplitude'  amplitude A_d4 of the crowd-extension trajectory [m].
-                  Default 2.
+%                       Default 2.
 %     'CrowdBias'       bias B_d4 of the crowd-extension trajectory [m].
-                  Default 8.75.
+%                       Default 8.75.
 %     'TrimStart'   discard data before this time [s].  Default 5.
 %     'StopTime'    simulation stop time [s].  Default 30.
 %     'RelTol'      solver relative tolerance.  Default 1e-10.

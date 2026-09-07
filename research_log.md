@@ -1204,6 +1204,96 @@ specification).
 Committed in e296fec alongside the MS02P04 results. The commit message describes
 only the frequency sweep, so this entry records the folder's origin.
 
+## 2026-09-07 — Crowd stroke parameterised and verified; motion-input filter identified
+
+**What was done:**
+
+- Fixed `M2/scripts/recover_load.m`. The two help-block continuation lines for
+  the new arguments (`Default 2.`, `Default 8.75.`) had lost their leading `%`,
+  so MATLAB parsed `Default 2.` as command syntax and the function would not
+  run at all. Comment-only change; no executable line touched. Failure class:
+  a documentation edit that silently became executable code, invisible because
+  `help recover_load` still printed — it just stopped early, at exactly the
+  line that had lost its comment character. That truncation is the diagnostic.
+- Ran the parameterisation read-back at the frozen baseline (A_d4 = 2,
+  B_d4 = 8.75) and a control at A_d4 = 1.0, B_d4 = 8.75.
+- Identified the crowd motion-input filter from the realised trajectory.
+- Corrected a stale note in `M2_nomenclature.md` (see below).
+
+**Key result:**
+
+Parameterisation is inert at the baseline and live under change:
+
+| | read-back (A_d4 = 2) | control (A_d4 = 1) |
+|---|---|---|
+| 1-R^2 q3 | 7.673389e-24 (= baseline) | 7.580263e-24 (differs) |
+| 1-R^2 d4 | 1.852886e-30 (= baseline) | 2.093232e-30 |
+| slope, both channels | -1.000000 | -1.000000 |
+| realised half-range | 1.999507 m | 0.999753 m |
+| midpoint | 8.750000 m | 8.750000 m |
+
+Bit-identical to `M2_100kN_0p1111Hz_sp1p50` where the trajectory is unchanged,
+and different where it is changed. Either result alone proves nothing: identity
+alone is also what a DEAD parameter produces, and difference alone does not show
+the earlier runs are still comparable. Both together do.
+
+Motion-input filter. The realised crowd amplitude is not the commanded one:
+
+    A_realised = A_d4 / (1 + (omega_traj*tau)^2),  tau = 0.05 s, SECOND order
+
+Measured 1.999507 and 0.999753 at commanded 2 and 1. The first-order form
+predicts 1.999753 and 0.999877 and is excluded by the fourth decimal. Order and
+tau then confirmed by reading the Simulink-PS Converter block.
+
+**Independent cross-check.** Line 1071 of this log recorded steady d4ddot ratios
+of 18.7x against a theoretical (4.33)^2 = 18.759 and left the shortfall
+unexplained. Filter-corrected: 18.759 x [gain(1.36)/gain(0.314)] = 18.759 x
+0.995642 = 18.677, against measured 18.663 (wide) and 18.688 (narrow). Two
+independent measurements, one mechanism, no fitted parameter.
+
+**Still open — do not fold this into the above.** The filter does NOT explain
+wide R_dyn 2.48 -> 45.38% = 18.30x, which remains short of the filter-corrected
+18.68. R_dyn mixes s_in, s_co and s_grav and r varies over the stroke, so it
+need not track d4ddot exactly, but the residual gap is unexplained. Until it is,
+"R_dyn follows omega^2 scaling" should carry that caveat.
+
+**Decisions & why:**
+
+- Recorded the realised-vs-commanded distinction in nomenclature and claims
+  rather than silently using the commanded value. Module 05 makes crowd stroke
+  the independent variable, so a spec reading "A_d4 = 2" for a trajectory that
+  executed 1.9995 would be a provenance defect of exactly the kind logged on
+  2026-09-02.
+- The control run was made mandatory rather than optional. A read-back at
+  unchanged values cannot distinguish a working parameter from an ignored one;
+  that is the six-identical-rows failure, and module 05 would have reproduced it
+  across every configuration.
+
+**Correction to a committed document.** `M2_nomenclature.md` carried a note
+stating A_d4/B_d4 were "NOT YET IN THE MODEL ... verified directly from the
+.slx: Sine Wave1 Amplitude and Bias are still literals (2 and 8.75)". False
+against the saved artifact: `simulink/systems/system_root.xml` inside
+`M2_LoadInjection.slx` (saved 2026-09-05 22:07 IST) gives Sine Wave1
+Amplitude = A_d4, Bias = B_d4, Frequency = omega_traj. The note was correct when
+written on 2026-09-05, was not removed when the model was patched, and survived
+commit 49ef5f7 whose message asserts verification against the .slx. Replaced,
+not deleted, with the supersession recorded in place.
+
+**Next step:**
+
+- `git status --short` and `git show --stat HEAD`: confirm whether 49ef5f7
+  committed the non-parsing version of `recover_load.m`. Both `.mat` receipts
+  above are stamped `49ef5f7 (DIRTY)`, so neither is a clean provenance record
+  until the working tree is committed.
+- Store the realised amplitude in the `.mat` (e.g. `R.sig.d4_range`) before
+  module 05, so provenance does not depend on recomputing it.
+- Module 05 configuration sweep: the OPEN GATE at
+  `M2_Experiment_Design_Specification.md:35` still asks for P&H 2100 crowd
+  stroke and velocity limits, and module 05 IS a choice of d4 range. Either
+  obtain those limits or declare the envelope explicitly as a design choice
+  borrowed from Bi's WK-55 figures. Fill and FREEZE the eight spec fields
+  before running: modules 01, 02 and 04 all violated fill-freeze-run.
+
 ## TEMPLATE — copy for each new session
 
 ## YYYY-MM-DD — <one-line title>
