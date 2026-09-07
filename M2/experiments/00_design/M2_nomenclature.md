@@ -34,9 +34,20 @@ and ours differ by this constant. Feng et al. 2022 use the same construction
 | F = (Fx, Fy) | injected external force, world frame | N |
 | Q_q3 | generalized force on q3 — a TORQUE | N m |
 | Q_d4 | generalized force on d4 — a FORCE | N |
+| Qq3_pred | PREDICTED saddle generalized force from the known injected F: s(Fy cos q3 - Fx sin q3). Computed from F via the Jacobian, INDEPENDENT of the measured residual | N m |
+| Qd4_pred | PREDICTED crowd generalized force, Fx cos q3 + Fy sin q3 | N |
 | tau_measured | Simscape joint-torque sensor reading (the oracle) | N m |
 | tau_model | what the frozen M1 equations say the observed motion required | N m |
-| tau_load | the residual, tau_measured - tau_model | N m |
+| tau_load | the residual CONCEPT, tau_measured - tau_model, single-channel. NOT an implementation variable and NOT synonymous with e_tau3 alone: the code has two separate channels (e_tau3, e_f4). See sign convention below | N m |
+| e_tau3 | saddle-channel MEASURED residual, tau3_meas - tau3_model. Implementation variable in recover_load.m, stored in R.sig | N m |
+| e_f4 | crowd-channel MEASURED residual, f4_meas - f4_model. Implementation variable in recover_load.m, stored in R.sig | N |
+
+Sign convention and the acceptance test. e_tau3 and Qq3_pred are computed
+INDEPENDENTLY — e_tau3 from measured/modelled torque, Qq3_pred from the known
+injected force via the Jacobian. They are never the same variable. The M2
+acceptance test is that they agree up to sign: e_tau3 = -Qq3_pred (and
+e_f4 = -Qd4_pred), which is why the expected regression slope is -1. This is
+what MS02P02's slope = -1.000000 result actually verifies.
 
 ## Geometry and mapping
 
@@ -58,6 +69,26 @@ and ours differ by this constant. Feng et al. 2022 use the same construction
 | f_v3 | viscous friction, saddle | 3,800 N m s/rad |
 | f_v4 | viscous friction, crowd | 1,473 N s/m |
 | g | gravitational acceleration | 9.80665 m/s^2 |
+
+## Scientific symbol vs implementation field
+
+| scientific | M1 code (shovel_params.m) | M2 code (recover_load.m, after alias mapping) |
+|---|---|---|
+| M_d | P.m | p.M_d |
+| I_zz | P.Izz | p.I_zz |
+| c | P.c | p.c |
+| f_v3 | P.fv3 | p.f_v3 |
+| f_v4 | P.fv4 | p.f_v4 |
+| g | P.g | p.g |
+| — | P.L_COG (2.82 m) | not carried forward; used only to derive c = x_ref - L_COG |
+| — | P.x_ref (1.5 m) | not carried forward; same |
+| — | P.model_has_coulomb (flag) | not used in M2 |
+
+M1's shovel_params.m is the single source of truth for VALUES. recover_load.m's
+local_normalise_params maps M1 field names onto the canonical scientific names
+above via an alias table (e.g. M_d accepts M_d, Md, m, m_d,
+mass_dipper_handle). Do not read P.m as if it were a different quantity from
+M_d — it is the same number under M1's field name.
 
 ## Analysis symbols
 
@@ -81,6 +112,12 @@ and ours differ by this constant. Feng et al. 2022 use the same construction
 | S | sensitivity matrix; columns are parameter-error signatures | mixed |
 | kappa(S) | condition number of the sensitivity matrix | dimensionless |
 | NRMSE | normalised root-mean-square error | % |
+
+NOT YET IN THE MODEL. A_d4 and B_d4 (proposed Sine Wave1 Amplitude/Bias
+parameterisation for the crowd stroke) do not exist as of 2026-09-05. Verified
+directly from the .slx: Sine Wave1 Amplitude and Bias are still literals (2 and
+8.75). Do not reference A_d4/B_d4 as though implemented until the model is
+patched and this note is removed.
 
 Notes on rho_station and rho_LM (rev 24). These are two different quantities and
 were previously both called rho.
@@ -114,7 +151,8 @@ sharing a prefix.
 
     rho_station(d4)   station ratio, (d4+1.5)/(d4-1.32)              dimensionless
     rho_LM(t)         s_load / s_dm                                  s^2/m
-    rho (local)       sqrt(R^2), correlation coefficient, used at  recover_load.m line 458 for the implied lag    dimensionless
+    rho (local)       sqrt(R^2), correlation coefficient, used at
+                      recover_load.m line 458 for the implied lag    dimensionless
 
 NEVER write bare rho in M2 prose.
 
@@ -127,7 +165,7 @@ NEVER write bare rho in M2 prose.
 | L | not used bare in this project | L_1, L_2 crowd-arm lengths | Frimpong 2008 |
 
 Bi's rho_0 is what caused the 9.50-10.04 m misattribution: those are initial
-polar diameters from Tables 6-7, not a d4 crowd band.
+polar diameters from Tables 6-7, not a d4 crowd band. See claims.md.
 
 ## omega_traj vs omega_F
 

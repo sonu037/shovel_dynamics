@@ -17,6 +17,10 @@ function R = recover_load(varargin)
 %                   1.5   = bail station   (module 02, observable arm)
 %                  -1.32  = COG station    (negative-control arm)
 %                   Default 1.5.
+%     'CrowdAmplitude'  amplitude A_d4 of the crowd-extension trajectory [m].
+                  Default 2.
+%     'CrowdBias'       bias B_d4 of the crowd-extension trajectory [m].
+                  Default 8.75.
 %     'TrimStart'   discard data before this time [s].  Default 5.
 %     'StopTime'    simulation stop time [s].  Default 30.
 %     'RelTol'      solver relative tolerance.  Default 1e-10.
@@ -56,6 +60,8 @@ ip.addParameter('Amplitude', 100e3,        @(x)isscalar(x) && isnumeric(x));
 ip.addParameter('Frequency', 2*pi/9,       @(x)isscalar(x) && isnumeric(x));
 ip.addParameter('Fx0',       0,            @(x)isscalar(x) && isnumeric(x));
 ip.addParameter('Station',   1.5,          @(x)isscalar(x) && isnumeric(x));
+ip.addParameter('CrowdAmplitude', 2,       @(x)isscalar(x) && isnumeric(x));
+ip.addParameter('CrowdBias',      8.75,    @(x)isscalar(x) && isnumeric(x));
 ip.addParameter('TrimStart', 5,            @(x)isscalar(x) && isnumeric(x));
 ip.addParameter('StopTime',  30,           @(x)isscalar(x) && isnumeric(x));
 ip.addParameter('RelTol',    1e-10,        @(x)isscalar(x) && isnumeric(x));
@@ -97,20 +103,29 @@ si = Simulink.SimulationInput(opt.Model);
 % This produced six identical "amplitude sweep" runs on 2026-09-02, all at
 % 100 kN, labelled 10-1000 kN. Write to the model workspace directly, then
 % read back to confirm.
-mw = get_param(opt.Model,'ModelWorkspace');
+mw= get_param(opt.Model,'ModelWorkspace');
 mw.assignin('F0_y',    opt.Amplitude);
 mw.assignin('F0_x',    opt.Fx0);
 mw.assignin('omega_F', opt.Frequency);
+mw.assignin('A_d4',    opt.CrowdAmplitude);
+mw.assignin('B_d4',    opt.CrowdBias);
 
 if mw.getVariable('F0_y') ~= opt.Amplitude || ...
    mw.getVariable('F0_x') ~= opt.Fx0 || ...
-   mw.getVariable('omega_F') ~= opt.Frequency
+   mw.getVariable('omega_F') ~= opt.Frequency || ...
+   mw.getVariable('A_d4') ~= opt.CrowdAmplitude || ...
+   mw.getVariable('B_d4') ~= opt.CrowdBias
+
     error('recover_load:inputNotApplied', ...
         ['Model-workspace write did not take. F0_y %g (requested %g), ' ...
-         'F0_x %g (requested %g), omega_F %g (requested %g).'], ...
+         'F0_x %g (requested %g), omega_F %g (requested %g), ' ...
+         'A_d4 %g (requested %g), B_d4 %g (requested %g).'], ...
         mw.getVariable('F0_y'), opt.Amplitude, ...
         mw.getVariable('F0_x'), opt.Fx0, ...
-        mw.getVariable('omega_F'), opt.Frequency);
+        mw.getVariable('omega_F'), opt.Frequency, ...
+        mw.getVariable('A_d4'), opt.CrowdAmplitude, ...
+        mw.getVariable('B_d4'), opt.CrowdBias);
+
 end
 si = si.setModelParameter('StopTime', num2str(opt.StopTime));
 si = si.setModelParameter('RelTol',   sprintf('%g', opt.RelTol));
