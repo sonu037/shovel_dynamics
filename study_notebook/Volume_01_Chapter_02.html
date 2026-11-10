@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Volume I - Chapter 2: Multivariable Analysis, Kinematic Jacobians and Differential Geometry</title>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  chtml: {
+    scale: 1.18
+  },
+  options: {
+    ignoreHtmlClass: 'tex2jax_ignore',
+    processHtmlClass: 'tex2jax_process'
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+  /* Notebook Typography & Sizing */
+  :root {
+    --primary-blue: #1d4ed8;
+    --navy-header: #0f2744;
+    --slate-text: #1e293b;
+    --callout-bg: #f8fafc;
+    --callout-border: #3b82f6;
+    --notebook-rule: #e2e8f0;
+  }
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 18px;          /* Generous, large notebook font size */
+    line-height: 1.85;        /* Spacious line spacing for reading equations */
+    margin: 40px auto;
+    max-width: 1040px;
+    padding: 0 45px;
+    color: var(--slate-text);
+    background-color: #fdfdfd;
+  }
+  
+  /* Notebook Cover & Headings */
+  h1 {
+    color: var(--navy-header);
+    border-bottom: 3px solid var(--primary-blue);
+    padding-bottom: 14px;
+    margin-top: 55px;
+    font-size: 2.3em;
+    line-height: 1.25;
+    letter-spacing: -0.5px;
+  }
+  
+  h2 {
+    color: #1e3a8a;
+    border-bottom: 2px solid #cbd5e1;
+    padding-bottom: 10px;
+    margin-top: 45px;
+    font-size: 1.7em;
+    line-height: 1.3;
+  }
+  
+  h3 {
+    color: var(--primary-blue);
+    margin-top: 35px;
+    font-size: 1.35em;
+    line-height: 1.35;
+  }
+  
+  h4 {
+    color: #334155;
+    margin-top: 25px;
+    font-size: 1.15em;
+    font-weight: 600;
+  }
+  
+  p {
+    margin: 18px 0;
+    font-size: 1.02em;
+  }
+  
+  /* Notebook Math Display */
+  .math-display {
+    overflow-x: auto;
+    margin: 28px 0;
+    padding: 16px 20px;
+    text-align: center;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+  }
+  
+  /* Notebook Code Blocks */
+  .code-container {
+    margin: 25px 0;
+  }
+  pre {
+    background: #0f172a;
+    color: #f8fafc;
+    border-radius: 8px;
+    padding: 20px 24px;
+    overflow-x: auto;
+    font-size: 15px;          /* Larger code font */
+    font-family: "Consolas", "Courier New", monospace;
+    line-height: 1.6;
+    border: 1px solid #334155;
+  }
+  
+  code {
+    font-family: "Consolas", "Courier New", monospace;
+    background: #f1f5f9;
+    color: #0f172a;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.92em;
+    font-weight: 500;
+  }
+  
+  pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+    font-weight: normal;
+  }
+  
+  /* Notebook Tables */
+  .table-container {
+    overflow-x: auto;
+    margin: 32px 0;
+  }
+  
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 16px;          /* Clear table font */
+    background: #ffffff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  
+  th, td {
+    border: 1px solid #cbd5e1;
+    padding: 14px 18px;
+    text-align: left;
+    line-height: 1.6;
+  }
+  
+  th {
+    background-color: #f1f5f9;
+    color: #0f172a;
+    font-weight: 700;
+    font-size: 1.02em;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #f8fafc;
+  }
+  
+  /* Notebook Highlight / Callout Blocks */
+  blockquote {
+    border-left: 6px solid var(--primary-blue);
+    margin: 28px 0;
+    padding: 18px 26px;
+    background: #eff6ff;
+    color: #1e3a8a;
+    border-radius: 0 8px 8px 0;
+    font-size: 1.02em;
+    box-shadow: 0 1px 3px rgba(37,99,235,0.06);
+  }
+  
+  blockquote p {
+    margin: 8px 0;
+  }
+  
+  .badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .badge-note { background: #dbeafe; color: #1e40af; }
+  .badge-tip { background: #dcfce7; color: #15803d; }
+  .badge-important { background: #fef3c7; color: #92400e; }
+  .badge-warning { background: #fee2e2; color: #b91c1c; }
+  .badge-caution { background: #fce7f3; color: #9d174d; }
+  
+  ul, ol {
+    padding-left: 32px;
+    margin: 18px 0;
+  }
+  
+  li {
+    margin: 10px 0;
+    font-size: 1.02em;
+  }
+  
+  hr.notebook-divider {
+    border: 0;
+    border-top: 2px dashed #cbd5e1;
+    margin: 45px 0;
+  }
+  
+  /* Print Controls */
+  .print-btn {
+    position: fixed;
+    top: 24px;
+    right: 32px;
+    background: var(--primary-blue);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+    z-index: 1000;
+    transition: all 0.2s;
+  }
+  
+  .print-btn:hover {
+    background: #1e40af;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.22);
+  }
+  
+  @media print {
+    .print-btn { display: none; }
+    body {
+      max-width: 100%;
+      margin: 0;
+      padding: 12mm 15mm;
+      font-size: 13pt;        /* Large readable notebook text in PDF */
+      line-height: 1.7;
+      color: #000;
+      background: #fff;
+    }
+    h1 {
+      page-break-before: always;
+      font-size: 1.9em;
+      border-bottom: 2pt solid #000;
+    }
+    h1:first-of-type {
+      page-break-before: avoid;
+    }
+    h2 {
+      font-size: 1.45em;
+      page-break-after: avoid;
+    }
+    h3 {
+      font-size: 1.25em;
+      page-break-after: avoid;
+    }
+    table, pre, blockquote, .math-display {
+      page-break-inside: avoid;
+    }
+    table {
+      font-size: 11pt;
+    }
+    pre {
+      font-size: 10.5pt;
+      background: #f8fafc;
+      color: #0f172a;
+      border: 1pt solid #cbd5e1;
+    }
+    a {
+      color: #000;
+      text-decoration: none;
+    }
+  }
+</style>
+</head>
+<body class="tex2jax_process">
+<button class="print-btn" onclick="window.print()">Print / Save as PDF (Ctrl+P)</button>
+<h1>VOLUME I: ADVANCED MATHEMATICAL FOUNDATIONS</h1>
+<hr class='notebook-divider'>
+<h1>CHAPTER 2: Multivariable Analysis, Kinematic Jacobians and Differential Geometry</h1>
+<p><strong>Author:</strong> Multidisciplinary Research Supervisor & Technical Author  </p>
+<p><strong>Project:</strong> <em>AI-Enabled Platform for Diagnosis, Prognosis and Health Management of Mining Electrical Systems: Case Study on Dragline / Electric Rope Shovel</em>  </p>
+<p><strong>Grant Reference:</strong> IIT/SRIC/R/AEH/2026/104 (CMPDI / Coal India Limited — MT-189)  </p>
+<p><strong>Target Machines:</strong> Machine A (P&H 2100BL Benchmark) & Machine B (TZ WK-20 Deployment)  </p>
+<p><strong>Pedagogical Level:</strong> Postgraduate / Research Grade (B.Tech Mechanical Foundation Assumed)</p>
+<hr class='notebook-divider'>
+<blockquote>
+<div class="callout-header"><span class="badge badge-note">NOTE</span></div>
+<p>### RESEARCH STUDY NOTEBOOK ARCHITECTURE</p>
+<p>In this chapter, we bridge the gap between static coordinate transformations (Chapter 1) and continuous mechanism motion. You will learn how velocities, accelerations, and forces transform between the internal actuator joint space $\mathcal{Q} \subset \mathbb{R}^n$ and the external Cartesian task space $\mathcal{X} \subset \mathbb{R}^m$.</p>
+<p></p>
+<p>By the end of this chapter, you will be able to:</p>
+<p>1. Formulate both the <strong>Analytical Jacobian</strong> $\mathbf{J}_a(\mathbf{q})$ and the <strong>Geometric Jacobian</strong> $\mathbf{J}(\mathbf{q})$, and articulate the exact physical and topological conditions under which they differ.</p>
+<p>2. Derive convective accelerations and the velocity-product term $\dot{\mathbf{J}}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}}$ that generates centripetal and Coriolis accelerations.</p>
+<p>3. Prove the <strong>Principle of Virtual Work</strong> duality: $\boldsymbol{\tau} = \mathbf{J}^T(\mathbf{q})\mathbf{F}_{\text{ext}}$, and explain why the transposed Jacobian maps Cartesian digging resistance forces directly to motor-side generalized forces.</p>
+<p>4. Analyze kinematic singularities, singular value decomposition (SVD), condition numbers, and Yoshikawa manipulability ellipsoids in the electric rope shovel workspace.</p>
+<p>5. Implement the complete closed-form kinematics and Jacobians for both the <strong>P&H 2100BL benchmark</strong> ($50\,\mathrm{t}$ class) and the <strong>TZ WK-20 deployment shovel</strong> ($55\,\mathrm{t}$ payload class).</p>
+</blockquote>
+<hr class='notebook-divider'>
+<h2>2.1 Physical Intuition & Engineering Motivation in Mining Machinery</h2>
+<h3>2.1.1 Why Scalar Calculus Fails on a Heavy Excavator</h3>
+<p>On an electric rope shovel, an operator in the cab commands two primary motions during digging:</p>
+<ol>
+<li><strong>The Crowd Drive:</strong> An induction or DC motor driving a pinion-and-rack mechanism that pushes the dipper handle linearly outward or pulls it inward ($d_4 \in [7.0\,\mathrm{m}, 14.5\,\mathrm{m}]$ on P&H 2100BL).</li>
+<li><strong>The Hoist Drive:</strong> An induction or DC motor driving a hoist drum that winds or unwinds steel wire ropes over boom-point sheaves, lifting or lowering the dipper through the saddle block pivot ($q_3 \in [-30^\circ, +45^\circ]$).</li>
+</ol>
+<p>Notice that neither actuator moves the dipper tooth tip $T$ in pure horizontal ($X$) or pure vertical ($Y$) directions. </p>
+<ul>
+<li>Extending the crowd handle increases the radial distance from the saddle block $O_3$, but because the saddle block is pivoted at angle $q_3$, crowd extension moves the tooth both horizontally forward and vertically downward (or upward, depending on $q_3$).</li>
+<li>Winding the hoist rope rotates the dipper handle upward about the pivot $O_3$, creating an instantaneous velocity perpendicular to the handle axis.</li>
+</ul>
+<div class="code-container"><pre><code class="language-">                          [Boom Point Sheave O_s]
+                                  / \
+                                 /   \  Hoist Rope (Tension F_h)
+                                /     \
+   [Saddle Pivot O_3]          /       v
+          o===================/====[Bail Pin B]
+          |   \              /           |
+          |    \  Dipper    /      [Dipper Body]
+          |     \ Handle   /             |
+          |      \========/=====&gt;        \---&gt; [Tooth Tip T]
+          |         (d_4)                       \
+    Ground Level                                 v Contact Force F_ext
+  ========================================================================</code></pre></div>
+<p>If the tooth tip encounters an unyielding bank of iron ore or granite:</p>
+<ul>
+<li>What fraction of that contact force is resisted by the crowd motor pinion teeth?</li>
+<li>What fraction is resisted by hoist rope tension?</li>
+<li>How much bending moment is induced in the boom structural chords?</li>
+</ul>
+<p>You cannot answer these questions by drawing 2D static free-body diagrams for every instantaneous position. As the dipper moves at speeds up to $2.5\,\mathrm{m/s}$, the geometry changes continuously. </p>
+<p><strong>The Kinematic Jacobian is the fundamental multidimensional transmission ratio of the excavator.</strong> It maps instantaneous joint velocities $\dot{\mathbf{q}} = [\dot{q}_3, \dot{d}_4]^T$ into Cartesian tooth velocities $\mathbf{v}_T = [\dot{x}_T, \dot{y}_T]^T$, and through energy conservation (virtual work), its transpose $\mathbf{J}^T$ maps high contact forces back onto the motor drives.</p>
+<hr class='notebook-divider'>
+<h2>2.2 Multivariable Mappings: Configuration Space to Task Space</h2>
+<h3>2.2.1 Configuration Manifold $\mathcal{Q}$ vs. Task Space $\mathcal{X}$</h3>
+<p>Let the generalized coordinates of the shovel be denoted by the vector $\mathbf{q} \in \mathcal{Q} \subset \mathbb{R}^n$:</p>
+<div class="math-display">$$\mathbf{q} = \begin{bmatrix} q_1 \\ q_2 \\ \vdots \\ q_n \end{bmatrix} \in \mathbb{R}^n \tag{2.1}$$</div>
+<p>For planar crowd-hoist excavation models ($n = 2$):</p>
+<ul>
+<li>$q_3$: Saddle block rotation angle with respect to the boom reference line ($\mathrm{rad}$).</li>
+<li>$d_4$: Linear extension distance from saddle pivot $O_3$ to dipper bail pin / centroid ($\mathrm{m}$).</li>
+</ul>
+<p>Let the position and orientation of the end-effector (dipper tooth tip $T$ or bail pin $B$) be represented by the task space vector $\mathbf{x} \in \mathcal{X} \subset \mathbb{R}^m$:</p>
+<div class="math-display">$$\mathbf{x} = \mathbf{f}(\mathbf{q}) \tag{2.2}$$</div>
+<p>where $\mathbf{f}: \mathcal{Q} \to \mathcal{X}$ is the nonlinear <strong>Forward Kinematic Mapping</strong>.</p>
+<div class="code-container"><pre><code class="language-">    CONFIGURATION SPACE (Joints)              TASK SPACE (Cartesian World)
+       q = [q_3, d_4]^T                          x = [x_T, y_T]^T
+    +-----------------------+                 +-----------------------+
+    | Saddle Angle q_3      |  Forward Map f  | Tooth X Position x_T  |
+    | Crowd Extension d_4   | --------------&gt; | Tooth Y Position y_T  |
+    +-----------------------+                 +-----------------------+
+                |                                         |
+                | Joint Velocities q_dot                  | Cartesian Velocities v_T
+                v                                         v
+    +-----------------------+                 +-----------------------+
+    | [q_dot_3, d_dot_4]^T  |  Jacobian J(q)  | [x_dot_T, y_dot_T]^T  |
+    +-----------------------+ --------------&gt; +-----------------------+
+                ^                                         |
+                |             Transposed J^T              | Digging Force F_ext
+                +-----------------------------------------+
+                    Generalized Torques tau = J^T * F_ext</code></pre></div>
+<hr class='notebook-divider'>
+<h2>2.3 The Analytical Kinematic Jacobian</h2>
+<h3>2.3.1 Definition via Total Differential</h3>
+<p>Suppose the Cartesian position vector $\mathbf{x}(t)$ is an explicit multivariable function of joint coordinates $\mathbf{q}(t)$:</p>
+<div class="math-display">$$\mathbf{x}(t) = \begin{bmatrix} f_1(q_1, q_2, \dots, q_n) \\ f_2(q_1, q_2, \dots, q_n) \\ \vdots \\ f_m(q_1, q_2, \dots, q_n) \end{bmatrix} \tag{2.3}$$</div>
+<p>By the chain rule of multivariable calculus, the total time derivative of the $i$-th coordinate $x_i(t)$ is:</p>
+<div class="math-display">$$\dot{x}_i = \frac{d}{dt} f_i(\mathbf{q}(t)) = \sum_{j=1}^n \frac{\partial f_i}{\partial q_j} \frac{dq_j}{dt} = \sum_{j=1}^n \frac{\partial f_i}{\partial q_j} \dot{q}_j \tag{2.4}$$</div>
+<p>Stating Equation (2.4) in matrix-vector form yields:</p>
+<div class="math-display">$$\mathbf{\dot{x}} = \mathbf{J}_a(\mathbf{q}) \mathbf{\dot{q}} \tag{2.5}$$</div>
+<p>where $\mathbf{J}_a(\mathbf{q}) \in \mathbb{R}^{m \times n}$ is the <strong>Analytical Kinematic Jacobian Matrix</strong>:</p>
+<div class="math-display">$$\mathbf{J}_a(\mathbf{q}) = \frac{\partial \mathbf{f}(\mathbf{q})}{\partial \mathbf{q}} = \begin{bmatrix} 
+\frac{\partial f_1}{\partial q_1} & \frac{\partial f_1}{\partial q_2} & \cdots & \frac{\partial f_1}{\partial q_n} \\[8pt]
+\frac{\partial f_2}{\partial q_1} & \frac{\partial f_2}{\partial q_2} & \cdots & \frac{\partial f_2}{\partial q_n} \\[8pt]
+\vdots & \vdots & \ddots & \vdots \\[8pt]
+\frac{\partial f_m}{\partial q_1} & \frac{\partial f_m}{\partial q_2} & \cdots & \frac{\partial f_m}{\partial q_n}
+\end{bmatrix} \tag{2.6}$$</div>
+<blockquote>
+<div class="callout-header"><span class="badge badge-important">IMPORTANT</span></div>
+<p>### PHYSICAL MEANING OF THE $j$-TH COLUMN OF $\mathbf{J}_a$</p>
+<p>The $j$-th column of $\mathbf{J}_a(\mathbf{q})$:</p>
+<p></p>
+<p>$$\mathbf{J}_{a, *j} = \frac{\partial \mathbf{f}}{\partial q_j} = \left. \mathbf{\dot{x}} \right|_{\dot{q}_j = 1, \; \dot{q}_{k \neq j} = 0}$$</p>
+<p></p>
+<p>It represents the instantaneous linear velocity vector of the end-effector when the $j$-th actuator moves at unit velocity ($\dot{q}_j = 1\,\mathrm{rad/s}$ or $1\,\mathrm{m/s}$) while all other actuators are locked stationary ($\dot{q}_{k \neq j} = 0$).</p>
+</blockquote>
+<hr class='notebook-divider'>
+<h2>2.4 The Geometric Kinematic Jacobian</h2>
+<p>In three-dimensional robotics and multibody mechanisms, the end-effector orientation cannot always be integrated into a globally non-singular minimal set of coordinates (e.g., Euler angles suffer from gimbal lock representation singularities). </p>
+<p>Therefore, roboticists define the <strong>Geometric Jacobian</strong> $\mathbf{J}(\mathbf{q})$, which directly maps joint velocities into the physical twist vector $\boldsymbol{\xi} = [\mathbf{v}_e^T, \boldsymbol{\omega}_e^T]^T \in \mathbb{R}^6$:</p>
+<div class="math-display">$$\boldsymbol{\xi} = \begin{bmatrix} \mathbf{v}_e \\ \boldsymbol{\omega}_e \end{bmatrix} = \mathbf{J}(\mathbf{q}) \mathbf{\dot{q}} = \begin{bmatrix} \mathbf{J}_v(\mathbf{q}) \\ \mathbf{J}_\omega(\mathbf{q}) \end{bmatrix} \mathbf{\dot{q}} \tag{2.7}$$</div>
+<p>where:</p>
+<ul>
+<li>$\mathbf{v}_e \in \mathbb{R}^3$ is the physical translational velocity of the end-effector origin.</li>
+<li>$\boldsymbol{\omega}_e \in \mathbb{R}^3$ is the true physical angular velocity vector of the end-effector body.</li>
+</ul>
+<h3>2.4.1 Column-by-Column Construction of Geometric Jacobian</h3>
+<p>For a serial open-chain or articulated mechanism with $n$ joints, the columns of $\mathbf{J}(\mathbf{q}) = [\mathbf{J}_1, \mathbf{J}_2, \dots, \mathbf{J}_n]$ are constructed directly from geometry:</p>
+<p>For Joint $i$:</p>
+<ol>
+<li>**If Joint $i$ is Revolute (Rotational):**</li>
+</ol>
+<div class="math-display">   $$\mathbf{J}_i = \begin{bmatrix} \mathbf{J}_{v, i} \\ \mathbf{J}_{\omega, i} \end{bmatrix} = \begin{bmatrix} \mathbf{z}_{i-1} \times (\mathbf{p}_e - \mathbf{p}_{i-1}) \\ \mathbf{z}_{i-1} \end{bmatrix} \tag{2.8}$$</div>
+<p>   where $\mathbf{z}_{i-1}$ is the unit vector along the rotation axis of joint $i$, $\mathbf{p}_{i-1}$ is the Cartesian position of the joint axis origin, and $\mathbf{p}_e$ is the position of the end-effector.</p>
+<ol>
+<li>**If Joint $i$ is Prismatic (Linear Translation):**</li>
+</ol>
+<div class="math-display">   $$\mathbf{J}_i = \begin{bmatrix} \mathbf{J}_{v, i} \\ \mathbf{J}_{\omega, i} \end{bmatrix} = \begin{bmatrix} \mathbf{z}_{i-1} \\ \mathbf{0}_{3 \times 1} \end{bmatrix} \tag{2.9}$$</div>
+<p>   because linear translation contributes translational velocity along its direction of travel $\mathbf{z}_{i-1}$, but contributes zero angular velocity to the body ($\mathbf{J}_{\omega, i} = \mathbf{0}$).</p>
+<h3>2.4.2 Relationship Between Analytical and Geometric Jacobians</h3>
+<p>For position mapping in $\mathbb{R}^3$, the translational blocks are identical: $\mathbf{J}_v(\mathbf{q}) = \mathbf{J}_{a, \text{pos}}(\mathbf{q})$. </p>
+<p>However, for rotational motion, if orientation is parameterized by Euler angles $\boldsymbol{\phi} = [\phi, \theta, \psi]^T$, the relationship between Euler angle rates $\boldsymbol{\dot{\phi}}$ and physical angular velocity $\boldsymbol{\omega}$ is:</p>
+<div class="math-display">$$\boldsymbol{\omega} = \mathbf{T}(\boldsymbol{\phi}) \boldsymbol{\dot{\phi}} \tag{2.10}$$</div>
+<p>where $\mathbf{T}(\boldsymbol{\phi})$ is a configuration-dependent transformation matrix. Therefore:</p>
+<div class="math-display">$$\mathbf{J}(\mathbf{q}) = \begin{bmatrix} \mathbf{I}_{3} & \mathbf{0} \\ \mathbf{0} & \mathbf{T}(\boldsymbol{\phi}) \end{bmatrix} \mathbf{J}_a(\mathbf{q}) \tag{2.11}$$</div>
+<blockquote>
+<div class="callout-header"><span class="badge badge-warning">WARNING</span></div>
+<p>### GIMBAL LOCK REPRESENTATION SINGULARITY</p>
+<p>When $\det(\mathbf{T}(\boldsymbol{\phi})) = 0$ (for pitch angle $\theta = \pm 90^\circ$ in $Z$-$Y$-$X$ Euler angles), $\mathbf{J}_a$ becomes singular even though the physical shovel mechanism is in a completely non-singular kinematic posture!</p>
+<p>For our mining digital twin, we formulate the kinematics planar in $SO(2)$ or spatial using the Geometric Jacobian $\mathbf{J}(\mathbf{q})$ to completely eliminate mathematical representation singularities.</p>
+</blockquote>
+<hr class='notebook-divider'>
+<h2>2.5 Acceleration Kinematics & Convective Velocity Products</h2>
+<h3>2.5.1 Derivation of the $\dot{\mathbf{J}}\dot{\mathbf{q}}$ Term</h3>
+<p>To compute dynamic equations and structural inertial loads, we must differentiate velocity kinematics with respect to time:</p>
+<div class="math-display">$$\mathbf{v}(t) = \mathbf{J}(\mathbf{q}(t)) \mathbf{\dot{q}}(t) \tag{2.12}$$</div>
+<p>Applying the product rule of calculus:</p>
+<div class="math-display">$$\mathbf{a}(t) = \mathbf{\dot{v}}(t) = \frac{d}{dt} \left[ \mathbf{J}(\mathbf{q}(t)) \mathbf{\dot{q}}(t) \right] = \mathbf{J}(\mathbf{q}) \mathbf{\ddot{q}} + \frac{d\mathbf{J}(\mathbf{q})}{dt} \mathbf{\dot{q}} \tag{2.13}$$</div>
+<p>Notice that $\mathbf{J}(\mathbf{q})$ depends on time strictly through the joint trajectory $\mathbf{q}(t)$. By the multivariable chain rule:</p>
+<div class="math-display">$$\frac{d\mathbf{J}(\mathbf{q})}{dt} = \sum_{k=1}^n \frac{\partial \mathbf{J}(\mathbf{q})}{\partial q_k} \dot{q}_k = \mathbf{\dot{J}}(\mathbf{q}, \mathbf{\dot{q}}) \tag{2.14}$$</div>
+<p>Substituting Equation (2.14) into (2.13) gives the fundamental <strong>Acceleration Kinematics Equation</strong>:</p>
+<div class="math-display">$$\mathbf{a} = \mathbf{J}(\mathbf{q}) \mathbf{\ddot{q}} + \mathbf{\dot{J}}(\mathbf{q}, \mathbf{\dot{q}}) \mathbf{\dot{q}} \tag{2.15}$$</div>
+<div class="code-container"><pre><code class="language-">                           ACCELERATION DECOMPOSITION
+              a = J(q) * q_ddot  +  J_dot(q, q_dot) * q_dot
+                  \___________/     \_____________________/
+                        |                      |
+                 Apparent Joint          Convective Term
+                  Accelerations         (Centripetal &amp; Coriolis)</code></pre></div>
+<blockquote>
+<div class="callout-header"><span class="badge badge-note">NOTE</span></div>
+<p>### PHYSICAL INTERPRETATION OF ACCELERATION COMPONENTS</p>
+<p>1. $\mathbf{J}(\mathbf{q}) \mathbf{\ddot{q}}$ represents <strong>instantaneous linear acceleration due to joint angular and linear accelerations</strong>. If $\mathbf{\dot{q}} = \mathbf{0}$, this is the only non-zero term.</p>
+<p>2. $\mathbf{\dot{J}}(\mathbf{q}, \mathbf{\dot{q}})\mathbf{\dot{q}}$ is quadratic in velocity ($\propto \dot{q}_i \dot{q}_j$). It contains:</p>
+<p>- <strong>Centripetal accelerations:</strong> Proportional to $\dot{q}_i^2$, pointing radially inward toward instantaneous centers of rotation.</p>
+<p>- <strong>Coriolis accelerations:</strong> Proportional to $2 \dot{q}_i \dot{q}_j$ ($i \neq j$), resulting from the dipper handle translating linearly at speed $\dot{d}_4$ inside a saddle block rotating at angular rate $\dot{q}_3$.</p>
+</blockquote>
+<hr class='notebook-divider'>
+<h2>2.6 The Principle of Virtual Work & Force-Velocity Duality</h2>
+<h3>2.6.1 Mathematical Derivation of $\boldsymbol{\tau} = \mathbf{J}^T \mathbf{F}_{\text{ext}}$</h3>
+<p>One of the most profound principles in analytical mechanics is the duality between kinematics (motions) and statics (forces).</p>
+<p>Consider the shovel mechanism in static equilibrium under:</p>
+<ul>
+<li>Actuator generalized forces $\boldsymbol{\tau} = [\tau_3, F_4]^T \in \mathbb{R}^n$ (where $\tau_3$ is saddle torque in $\mathrm{N\cdot m}$, and $F_4$ is crowd rack force in $\mathrm{N}$).</li>
+<li>An external contact force $\mathbf{F}_{\text{ext}} = [F_x, F_y]^T \in \mathbb{R}^m$ applied by the rock bank against the dipper tooth tip.</li>
+</ul>
+<p>Let the mechanism undergo an infinitesimal virtual displacement $\delta \mathbf{q}$ that is kinematically admissible (consistent with all mechanical constraints). The resulting virtual displacement of the tooth tip is:</p>
+<div class="math-display">$$\delta \mathbf{x} = \mathbf{J}(\mathbf{q}) \delta \mathbf{q} \tag{2.16}$$</div>
+<p>By the <strong>Principle of Virtual Work</strong>, the total virtual work $\delta W$ performed by all active generalized forces and external loads during any kinematically admissible virtual displacement must equal zero:</p>
+<div class="math-display">$$\delta W = \delta W_{\text{actuators}} - \delta W_{\text{external}} = 0 \tag{2.17}$$</div>
+<div class="math-display">$$\delta W = \boldsymbol{\tau}^T \delta \mathbf{q} - \mathbf{F}_{\text{ext}}^T \delta \mathbf{x} = 0 \tag{2.18}$$</div>
+<p>Substitute the kinematic relationship $\delta \mathbf{x} = \mathbf{J}(\mathbf{q}) \delta \mathbf{q}$ into Equation (2.18):</p>
+<div class="math-display">$$\boldsymbol{\tau}^T \delta \mathbf{q} - \mathbf{F}_{\text{ext}}^T \left( \mathbf{J}(\mathbf{q}) \delta \mathbf{q} \right) = 0 \tag{2.19}$$</div>
+<p>Factoring the transpose using $(\mathbf{A}\mathbf{B})^T = \mathbf{B}^T \mathbf{A}^T$:</p>
+<div class="math-display">$$\boldsymbol{\tau}^T \delta \mathbf{q} - \left( \mathbf{J}^T(\mathbf{q}) \mathbf{F}_{\text{ext}} \right)^T \delta \mathbf{q} = 0 \tag{2.20}$$</div>
+<div class="math-display">$$\left( \boldsymbol{\tau} - \mathbf{J}^T(\mathbf{q}) \mathbf{F}_{\text{ext}} \right)^T \delta \mathbf{q} = 0 \tag{2.21}$$</div>
+<p>Because the virtual displacement $\delta \mathbf{q}$ is completely arbitrary and unconstrained, Equation (2.21) can only hold identically if the expression in parentheses vanishes:</p>
+<div class="math-display">$$\boldsymbol{\tau} = \mathbf{J}^T(\mathbf{q}) \mathbf{F}_{\text{ext}} \tag{2.22}$$</div>
+<div class="code-container"><pre><code class="language-">=============================================================================
+                  THE FUNDAMENTAL KINEMATIC-STATIC DUALITY
+=============================================================================
+             FORWARD VELOCITY:     v_x    =   J(q)   *   q_dot
+             STATIC FORCE:         tau    =   J(q)^T *   F_ext
+=============================================================================</code></pre></div>
+<blockquote>
+<div class="callout-header"><span class="badge badge-tip">TIP</span></div>
+<p>### PHYSICAL IMPLICATION FOR ELECTRIC ROPE SHOVEL DIAGNOSTICS</p>
+<p>Equation (2.22) is the mathematical bedrock of <strong>Sensorless Digging Resistance Estimation</strong>:</p>
+<p>If we measure motor currents to infer actuator forces $\boldsymbol{\tau}$ and we know the joint coordinates $\mathbf{q}$ from resolvers, we can invert the relationship:</p>
+<p></p>
+<p>$$\mathbf{F}_{\text{ext}} = \left( \mathbf{J}^T(\mathbf{q}) \right)^{-1} \boldsymbol{\tau}$$</p>
+<p></p>
+<p>to compute the rock resistance forces acting at the dipper teeth without installing expensive, fragile load cells on the boom tip!</p>
+</blockquote>
+<hr class='notebook-divider'>
+<h2>2.7 Kinematic Singularities, Condition Numbers & Manipulability</h2>
+<h3>2.7.1 Definition of Singular Configurations</h3>
+<p>A configuration $\mathbf{q}^* \in \mathcal{Q}$ is defined as a <strong>Kinematic Singularity</strong> if the Jacobian matrix loses rank:</p>
+<div class="math-display">$$\operatorname{rank}(\mathbf{J}(\mathbf{q}^*)) < \min(m, n) \tag{2.23}$$</div>
+<p>For square Jacobians ($m = n = 2$ in planar shovel kinematics), this occurs precisely when the determinant vanishes:</p>
+<div class="math-display">$$\det(\mathbf{J}(\mathbf{q}^*)) = 0 \tag{2.24}$$</div>
+<h3>2.7.2 Physical Consequences of Singularities</h3>
+<ol>
+<li><strong>Loss of Mobility in Task Space:</strong> At a singular configuration, there exists at least one Cartesian direction along which the dipper tooth cannot move, regardless of how fast the joint motors run.</li>
+<li><strong>Infinite Mechanical Advantage:</strong> Conversely, along that locked Cartesian direction, an infinitely large external force $\mathbf{F}_{\text{ext}}$ can be supported by zero actuator effort ($\boldsymbol{\tau} = \mathbf{J}^T \mathbf{F}_{\text{ext}} = \mathbf{0}$). This can cause catastrophic structural failure (buckled dipper handle or snapped boom chords) because the motors cannot detect the overloading through their drive currents!</li>
+</ol>
+<h3>2.7.3 Singular Value Decomposition (SVD) of the Jacobian</h3>
+<p>To quantify how close the excavator is to a singularity, perform SVD on $\mathbf{J}(\mathbf{q}) \in \mathbb{R}^{m \times n}$:</p>
+<div class="math-display">$$\mathbf{J} = \mathbf{U} \boldsymbol{\Sigma} \mathbf{V}^T = \sum_{i=1}^{\min(m,n)} \sigma_i \mathbf{u}_i \mathbf{v}_i^T \tag{2.25}$$</div>
+<p>where:</p>
+<ul>
+<li>$\mathbf{U} = [\mathbf{u}_1, \dots, \mathbf{u}_m] \in \mathbb{R}^{m \times m}$ is an orthogonal matrix whose columns $\mathbf{u}_i$ define the principal axes of the velocity ellipsoid in task space.</li>
+<li>$\mathbf{V} = [\mathbf{v}_1, \dots, \mathbf{v}_n] \in \mathbb{R}^{n \times n}$ is an orthogonal matrix whose columns $\mathbf{v}_i$ define joint velocity directions.</li>
+<li>$\boldsymbol{\Sigma} = \operatorname{diag}(\sigma_1, \sigma_2, \dots, \sigma_{\min(m,n)})$ with singular values sorted: $\sigma_1 \ge \sigma_2 \ge \dots \ge \sigma_p \ge 0$.</li>
+</ul>
+<h3>2.7.4 Yoshikawa Manipulability Measure</h3>
+<p>Yoshikawa defined the scalar <strong>Manipulability Index</strong> $\mu(\mathbf{q})$ as the volume of the velocity ellipsoid:</p>
+<div class="math-display">$$\mu(\mathbf{q}) = \sqrt{\det(\mathbf{J}(\mathbf{q}) \mathbf{J}^T(\mathbf{q}))} = \prod_{i=1}^{\min(m,n)} \sigma_i \tag{2.26}$$</div>
+<p>For square non-singular Jacobians: $\mu(\mathbf{q}) = |\det(\mathbf{J}(\mathbf{q}))|$.</p>
+<h3>2.7.5 Condition Number $\kappa(\mathbf{J})$</h3>
+<p>The <strong>Kinematic Condition Number</strong> measures isotropy (directional uniformity of velocity and force transmission):</p>
+<div class="math-display">$$\kappa(\mathbf{J}) = \frac{\sigma_{\max}(\mathbf{J})}{\sigma_{\min}(\mathbf{J})} = \frac{\sigma_1}{\sigma_m} \ge 1.0 \tag{2.27}$$</div>
+<ul>
+<li>**Isotropic Point ($\kappa = 1$):** Velocity and force capabilities are completely uniform in all Cartesian directions. The velocity ellipsoid is a perfect sphere.</li>
+<li>**Singular Point ($\kappa \to \infty$):** The smallest singular value $\sigma_m \to 0$. The ellipsoid collapses into a line or flat pancake, indicating zero mobility along the collapsed axis.</li>
+</ul>
+<hr class='notebook-divider'>
+<h2>2.8 Shovel Case Study: 2-DOF Crowd-Hoist Planar Kinematics</h2>
+<p>Now we apply this theory to the planar crowd-hoist mechanism shared by both <strong>Machine A (P&H 2100BL benchmark)</strong> and <strong>Machine B (TZ WK-20 deployment shovel)</strong>.</p>
+<div class="code-container"><pre><code class="language-">                  PLANAR 2-DOF ELECTRIC ROPE SHOVEL GEOMETRY
+                                                              Y_0
+                                                               ^
+                                [Boom Sheave S]               |
+                                      *                        |
+                                     /| \                      +-----&gt; X_0
+                                    / |  \  Hoist Rope (L_h)
+                                   /  |   \
+                                  /   |    \
+                                 /    |     v
+                     Boom (L_b) /     |   [Bail Pin B]
+                               /      |    /    \
+                              /       |   /      \  Dipper
+                             /        |  /        \ Body
+               [Saddle O_3] o=========+=/==========* [Tooth Tip T]
+                            | \       |/
+                            |  \      /  Dipper Handle
+                            |   \    /   (d_4)
+        [Boom Foot O_1]     |    \  /
+              o-------------+-----*
+             /
+   [Cab/Gantry O_0]
+========================================================================</code></pre></div>
+<h3>2.8.1 Coordinate System Definitions</h3>
+<ul>
+<li>**Inertial Base Frame $\{0\}$:** Origin $O_0$ located at the revolving frame center-of-rotation on the deck.</li>
+<li>$X_0$: Horizontal forward along the machine symmetry line.</li>
+<li>$Y_0$: Vertical upward perpendicular to the deck.</li>
+<li>**Boom Foot Frame $\{1\}$:** Origin $O_1$ located at the boom foot pin $(x_{\text{boom}}, y_{\text{boom}})$.</li>
+<li><strong>Boom Geometry:</strong> The boom is inclined at fixed angle $\alpha_b$ (typically $45^\circ$ for P&H 2100BL and WK-20). The boom axis extends from $O_1$ to the boom-point sheave center $S = (x_s, y_s)$ with length $L_b$.</li>
+<li>**Saddle Block Pivot $O_3$:** Positioned along the boom at a fixed distance $L_{b1}$ from the boom foot pin:</li>
+</ul>
+<div class="math-display">  $$x_3 = x_{\text{boom}} + L_{b1} \cos \alpha_b \tag{2.28a}$$</div>
+<div class="math-display">  $$y_3 = y_{\text{boom}} + L_{b1} \sin \alpha_b \tag{2.28b}$$</div>
+<ul>
+<li>**Generalized Coordinates $\mathbf{q} = [q_3, d_4]^T$:**</li>
+<li>$q_3$: Absolute orientation angle of the dipper handle relative to the positive horizontal axis $X_0$ ($\mathrm{rad}$).</li>
+<li>$d_4$: Linear extension of the dipper handle rack from saddle pivot $O_3$ to the bail pin $B$ ($\mathrm{m}$).</li>
+<li><strong>Tooth Tip Geometry:</strong> The dipper body is rigidly bolted to the end of the handle. In the handle body frame, the tooth tip $T$ is offset from bail pin $B$ by:</li>
+<li>Longitudinal offset along the handle axis: $L_{t\parallel}$ ($\mathrm{m}$).</li>
+<li>Perpendicular offset downward perpendicular to handle axis: $L_{t\perp}$ ($\mathrm{m}$).</li>
+</ul>
+<h3>2.8.2 Machine A vs. Machine B Parameter Table</h3>
+<div class="table-container"><table><thead><tr>
+<th>Parameter Description</th>
+<th>Symbol</th>
+<th>Units</th>
+<th>Machine A: P&H 2100BL Benchmark</th>
+<th>Machine B: TZ WK-20 Deployment</th>
+<th>Evidence Source</th>
+</tr></thead><tbody>
+<tr>
+<td>Rated Dipper Payload</td>
+<td>$M_{\text{payload}}$</td>
+<td>$\mathrm{t}$</td>
+<td>$20.0\,\mathrm{t}$ ($13.8\,\mathrm{m}^3$)</td>
+<td>$55.0\,\mathrm{t}$ ($20.0\,\mathrm{m}^3$)</td>
+<td>[A] OEM Specs</td>
+</tr>
+<tr>
+<td>Boom Chord Length</td>
+<td>$L_b$</td>
+<td>$\mathrm{m}$</td>
+<td>$16.76\,\mathrm{m}$ ($55\,\mathrm{ft}$)</td>
+<td>$21.50\,\mathrm{m}$</td>
+<td>[A] Spec Audit</td>
+</tr>
+<tr>
+<td>Boom Inclination Angle</td>
+<td>$\alpha_b$</td>
+<td>$\mathrm{deg}$</td>
+<td>$45.0^\circ$</td>
+<td>$45.0^\circ$</td>
+<td>[A] Manual</td>
+</tr>
+<tr>
+<td>Boom Foot Coordinates</td>
+<td>$(x_b, y_b)$</td>
+<td>$\mathrm{m}$</td>
+<td>$(3.65, 2.10)\,\mathrm{m}$</td>
+<td>$(4.85, 2.80)\,\mathrm{m}$</td>
+<td>[A] Assembly</td>
+</tr>
+<tr>
+<td>Saddle Pivot Position</td>
+<td>$L_{b1}$</td>
+<td>$\mathrm{m}$</td>
+<td>$8.84\,\mathrm{m}$</td>
+<td>$11.20\,\mathrm{m}$</td>
+<td>[A] M1 Model</td>
+</tr>
+<tr>
+<td>Dipper + Handle Empty Mass</td>
+<td>$m_d$</td>
+<td>$\mathrm{kg}$</td>
+<td>$28,500\,\mathrm{kg}$</td>
+<td>$68,000\,\mathrm{kg}$</td>
+<td>[A] M1 / WK-20</td>
+</tr>
+<tr>
+<td>Crowd Stroke Limits</td>
+<td>$[d_{4,\min}, d_{4,\max}]$</td>
+<td>$\mathrm{m}$</td>
+<td>$[7.50, 14.50]\,\mathrm{m}$</td>
+<td>$[9.00, 18.20]\,\mathrm{m}$</td>
+<td>[A] Stroke Audit</td>
+</tr>
+<tr>
+<td>Saddle Angle Range</td>
+<td>$[q_{3,\min}, q_{3,\max}]$</td>
+<td>$\mathrm{deg}$</td>
+<td>$[-35.0^\circ, +48.0^\circ]$</td>
+<td>$[-30.0^\circ, +50.0^\circ]$</td>
+<td>[A] M1 Limits</td>
+</tr>
+<tr>
+<td>Maximum Hoist Line Pull</td>
+<td>$F_{h,\max}$</td>
+<td>$\mathrm{kN}$</td>
+<td>$750\,\mathrm{kN}$</td>
+<td>$1,650\,\mathrm{kN}$</td>
+<td>[A] Motor Data</td>
+</tr>
+<tr>
+<td>Maximum Crowd Push Force</td>
+<td>$F_{c,\max}$</td>
+<td>$\mathrm{kN}$</td>
+<td>$350\,\mathrm{kN}$</td>
+<td>$800\,\mathrm{kN}$</td>
+<td>[A] Motor Data</td>
+</tr>
+</tbody></table></div>
+<hr class='notebook-divider'>
+<h3>2.8.3 Analytical Derivation of Forward Kinematics</h3>
+<h4>Position of Dipper Bail Pin $B(x_B, y_B)$</h4>
+<p>The bail pin position in the base frame $\{0\}$ is obtained by vector addition from the saddle pivot $O_3$:</p>
+<div class="math-display">$$x_B(q_3, d_4) = x_3 + d_4 \cos q_3 \tag{2.29a}$$</div>
+<div class="math-display">$$y_B(q_3, d_4) = y_3 + d_4 \sin q_3 \tag{2.29b}$$</div>
+<h4>Position of Dipper Tooth Tip $T(x_T, y_T)$</h4>
+<p>Let the tooth tip be offset by longitudinal distance $L_{tx}$ along the handle direction and $L_{ty}$ perpendicular to the handle (measured downward):</p>
+<div class="math-display">$$x_T(q_3, d_4) = x_3 + (d_4 + L_{tx}) \cos q_3 + L_{ty} \sin q_3 \tag{2.30a}$$</div>
+<div class="math-display">$$y_T(q_3, d_4) = y_3 + (d_4 + L_{tx}) \sin q_3 - L_{ty} \cos q_3 \tag{2.30b}$$</div>
+<p>To simplify subsequent notation without loss of generality, let $r_T = d_4 + L_{tx}$ denote the effective radial extension from the saddle pivot to the tooth tip along the handle axis. Then:</p>
+<div class="math-display">$$x_T = x_3 + r_T \cos q_3 + L_{ty} \sin q_3 \tag{2.31a}$$</div>
+<div class="math-display">$$y_T = y_3 + r_T \sin q_3 - L_{ty} \cos q_3 \tag{2.31b}$$</div>
+<hr class='notebook-divider'>
+<h3>2.8.4 Closed-Form Derivation of the $2 \times 2$ Tooth Tip Jacobian $\mathbf{J}_T$</h3>
+<p>Differentiating Equations (2.31a) and (2.31b) with respect to the generalized coordinates $\mathbf{q} = [q_3, d_4]^T$:</p>
+<h4>Element $J_{11} = \frac{\partial x_T}{\partial q_3}$:</h4>
+<div class="math-display">$$J_{11} = \frac{\partial}{\partial q_3} \left[ x_3 + r_T \cos q_3 + L_{ty} \sin q_3 \right] = -r_T \sin q_3 + L_{ty} \cos q_3 \tag{2.32a}$$</div>
+<h4>Element $J_{12} = \frac{\partial x_T}{\partial d_4}$:</h4>
+<p>Since $r_T = d_4 + L_{tx}$, we have $\frac{\partial r_T}{\partial d_4} = 1$:</p>
+<div class="math-display">$$J_{12} = \frac{\partial}{\partial d_4} \left[ x_3 + r_T \cos q_3 + L_{ty} \sin q_3 \right] = \cos q_3 \tag{2.32b}$$</div>
+<h4>Element $J_{21} = \frac{\partial y_T}{\partial q_3}$:</h4>
+<div class="math-display">$$J_{21} = \frac{\partial}{\partial q_3} \left[ y_3 + r_T \sin q_3 - L_{ty} \cos q_3 \right] = r_T \cos q_3 + L_{ty} \sin q_3 \tag{2.32c}$$</div>
+<h4>Element $J_{22} = \frac{\partial y_T}{\partial d_4}$:</h4>
+<div class="math-display">$$J_{22} = \frac{\partial}{\partial d_4} \left[ y_3 + r_T \sin q_3 - L_{ty} \cos q_3 \right] = \sin q_3 \tag{2.32d}$$</div>
+<p>Assembling the elements into matrix form yields the <strong>Analytical Jacobian of the Dipper Tooth Tip</strong>:</p>
+<div class="math-display">$$\mathbf{J}_T(q_3, d_4) = \begin{bmatrix}
+-r_T \sin q_3 + L_{ty} \cos q_3 & \cos q_3 \\[6pt]
+ r_T \cos q_3 + L_{ty} \sin q_3 & \sin q_3
+\end{bmatrix} \tag{2.33}$$</div>
+<hr class='notebook-divider'>
+<h3>2.8.5 Determinant and Singularity Analysis of $\mathbf{J}_T$</h3>
+<p>Let us compute the determinant of the tooth tip Jacobian:</p>
+<div class="math-display">$$\det(\mathbf{J}_T) = J_{11} J_{22} - J_{12} J_{21} \tag{2.34}$$</div>
+<p>Substitute the entries from Equation (2.33):</p>
+<div class="math-display">$$\det(\mathbf{J}_T) = (-r_T \sin q_3 + L_{ty} \cos q_3)(\sin q_3) - (\cos q_3)(r_T \cos q_3 + L_{ty} \sin q_3) \tag{2.35}$$</div>
+<p>Expand each product:</p>
+<div class="math-display">$$\det(\mathbf{J}_T) = -r_T \sin^2 q_3 + L_{ty} \cos q_3 \sin q_3 - r_T \cos^2 q_3 - L_{ty} \sin q_3 \cos q_3 \tag{2.36}$$</div>
+<p>Notice that the cross-terms $+L_{ty} \sin q_3 \cos q_3$ and $-L_{ty} \sin q_3 \cos q_3$ <strong>cancel out exactly</strong>!</p>
+<div class="math-display">$$\det(\mathbf{J}_T) = -r_T (\sin^2 q_3 + \cos^2 q_3) \tag{2.37}$$</div>
+<p>Applying the fundamental trigonometric identity $\sin^2 q_3 + \cos^2 q_3 = 1$:</p>
+<div class="math-display">$$\det(\mathbf{J}_T(q_3, d_4)) = -r_T = -(d_4 + L_{tx}) \tag{2.38}$$</div>
+<blockquote>
+<div class="callout-header"><span class="badge badge-important">IMPORTANT</span></div>
+<p>### PROFOUND ENGINEERING RESULT: WORKSPACE SINGULARITY IMMUNITY</p>
+<p>Equation (2.38) reveals an extraordinary mechanical property of the electric rope shovel:</p>
+<p></p>
+<p>The determinant $\det(\mathbf{J}_T) = -(d_4 + L_{tx})$ depends **solely on the total handle extension $r_T$<strong>, and is </strong>completely independent of the saddle angle $q_3$**!</p>
+<p></p>
+<p>A kinematic singularity occurs if and only if:</p>
+<p></p>
+<p>$$\det(\mathbf{J}_T) = 0 \iff d_4 + L_{tx} = 0 \iff d_4 = -L_{tx}$$</p>
+<p></p>
+<p>On the physical machine, $d_4 \in [7.5\,\mathrm{m}, 14.5\,\mathrm{m}]$ for P&H 2100BL and $[9.0\,\mathrm{m}, 18.2\,\mathrm{m}]$ for WK-20. The tooth offset $L_{tx} \approx 2.4\,\mathrm{m} > 0$.</p>
+<p></p>
+<p>Therefore, $r_T \ge 9.9\,\mathrm{m} \gg 0$ throughout the entire operating envelope. <strong>The planar shovel mechanism NEVER encounters an internal kinematic singularity anywhere inside its physical workspace!</strong> The Jacobian is strictly non-singular everywhere.</p>
+</blockquote>
+<hr class='notebook-divider'>
+<h3>2.8.6 Closed-Form Derivation of the Inverse Jacobian $\mathbf{J}_T^{-1}$</h3>
+<p>Because $\det(\mathbf{J}_T) = -r_T \neq 0$, the exact inverse exists everywhere. For any $2 \times 2$ matrix:</p>
+<div class="math-display">$$\mathbf{A} = \begin{bmatrix} a & b \\ c & d \end{bmatrix} \implies \mathbf{A}^{-1} = \frac{1}{ad - bc} \begin{bmatrix} d & -b \\ -c & a \end{bmatrix}$$</div>
+<p>Applying this formula to $\mathbf{J}_T$:</p>
+<div class="math-display">$$\mathbf{J}_T^{-1}(q_3, d_4) = \frac{1}{-r_T} \begin{bmatrix}
+\sin q_3 & -\cos q_3 \\[6pt]
+-(r_T \cos q_3 + L_{ty} \sin q_3) & -r_T \sin q_3 + L_{ty} \cos q_3
+\end{bmatrix} \tag{2.39}$$</div>
+<p>Distributing the minus sign into the matrix:</p>
+<div class="math-display">$$\mathbf{J}_T^{-1}(q_3, d_4) = \begin{bmatrix}
+-\frac{\sin q_3}{r_T} & \frac{\cos q_3}{r_T} \\[8pt]
+\cos q_3 + \frac{L_{ty}}{r_T}\sin q_3 & \sin q_3 - \frac{L_{ty}}{r_T}\cos q_3
+\end{bmatrix} \tag{2.40}$$</div>
+<p>This explicit formula allows instantaneous calculation of required motor joint speeds $[\dot{q}_3, \dot{d}_4]^T = \mathbf{J}_T^{-1} [\dot{x}_T, \dot{y}_T]^T$ on a low-cost PLC without numerical matrix inversion!</p>
+<hr class='notebook-divider'>
+<h3>2.8.7 Closed-Form Derivation of the Convective Term $\mathbf{\dot{J}}_T \mathbf{\dot{q}}$</h3>
+<p>To calculate accelerations and inertial forces, we take the time derivative of each element of $\mathbf{J}_T$:</p>
+<div class="math-display">$$\mathbf{\dot{J}}_T = \begin{bmatrix} \dot{J}_{11} & \dot{J}_{12} \\ \dot{J}_{21} & \dot{J}_{22} \end{bmatrix} \tag{2.41}$$</div>
+<p>Recall:</p>
+<ul>
+<li>$\dot{r}_T = \dot{d}_4$</li>
+<li>$\frac{d}{dt}(\cos q_3) = -\dot{q}_3 \sin q_3$</li>
+<li>$\frac{d}{dt}(\sin q_3) = \dot{q}_3 \cos q_3$</li>
+</ul>
+<h4>Derivative of Column 1:</h4>
+<div class="math-display">$$\dot{J}_{11} = \frac{d}{dt} (-r_T \sin q_3 + L_{ty} \cos q_3) = -\dot{d}_4 \sin q_3 - r_T \dot{q}_3 \cos q_3 - L_{ty} \dot{q}_3 \sin q_3 \tag{2.42a}$$</div>
+<div class="math-display">$$\dot{J}_{21} = \frac{d}{dt} (r_T \cos q_3 + L_{ty} \sin q_3) = \dot{d}_4 \cos q_3 - r_T \dot{q}_3 \sin q_3 + L_{ty} \dot{q}_3 \cos q_3 \tag{2.42b}$$</div>
+<h4>Derivative of Column 2:</h4>
+<div class="math-display">$$\dot{J}_{12} = \frac{d}{dt} (\cos q_3) = -\dot{q}_3 \sin q_3 \tag{2.42c}$$</div>
+<div class="math-display">$$\dot{J}_{22} = \frac{d}{dt} (\sin q_3) = \dot{q}_3 \cos q_3 \tag{2.42d}$$</div>
+<p>Now multiply $\mathbf{\dot{J}}_T$ by the joint velocity vector $\mathbf{\dot{q}} = [\dot{q}_3, \dot{d}_4]^T$:</p>
+<div class="math-display">$$\mathbf{a}_{\text{conv}} = \mathbf{\dot{J}}_T \mathbf{\dot{q}} = \begin{bmatrix} \dot{J}_{11} \dot{q}_3 + \dot{J}_{12} \dot{d}_4 \\ \dot{J}_{21} \dot{q}_3 + \dot{J}_{22} \dot{d}_4 \end{bmatrix} \tag{2.43}$$</div>
+<p>Evaluating Row 1:</p>
+<div class="math-display">$$a_{\text{conv}, x} = \left(-\dot{d}_4 \sin q_3 - r_T \dot{q}_3 \cos q_3 - L_{ty} \dot{q}_3 \sin q_3\right) \dot{q}_3 + \left(-\dot{q}_3 \sin q_3\right) \dot{d}_4$$</div>
+<div class="math-display">$$a_{\text{conv}, x} = -2 \dot{q}_3 \dot{d}_4 \sin q_3 - \dot{q}_3^2 (r_T \cos q_3 + L_{ty} \sin q_3) \tag{2.44a}$$</div>
+<p>Evaluating Row 2:</p>
+<div class="math-display">$$a_{\text{conv}, y} = \left(\dot{d}_4 \cos q_3 - r_T \dot{q}_3 \sin q_3 + L_{ty} \dot{q}_3 \cos q_3\right) \dot{q}_3 + \left(\dot{q}_3 \cos q_3\right) \dot{d}_4$$</div>
+<div class="math-display">$$a_{\text{conv}, y} = 2 \dot{q}_3 \dot{d}_4 \cos q_3 - \dot{q}_3^2 (r_T \sin q_3 - L_{ty} \cos q_3) \tag{2.44b}$$</div>
+<blockquote>
+<div class="callout-header"><span class="badge badge-important">IMPORTANT</span></div>
+<p>### PHYSICAL IDENTIFICATION OF THE ACCELERATION FORCES</p>
+<p>Look closely at Equations (2.44a) and (2.44b):</p>
+<p>1. The term containing $2 \dot{q}_3 \dot{d}_4$ is the <strong>Coriolis Acceleration Vector</strong>:</p>
+<p>$$\mathbf{a}_{\text{Coriolis}} = 2 \dot{q}_3 \dot{d}_4 \begin{bmatrix} -\sin q_3 \\ \cos q_3 \end{bmatrix}$$</p>
+<p>It acts perpendicular to the handle axis, pushing against the saddle block side liners whenever the crowd extends while the saddle is rotating!</p>
+<p>2. The term containing $\dot{q}_3^2$ is the <strong>Centripetal Acceleration Vector</strong>:</p>
+<p>$$\mathbf{a}_{\text{Centripetal}} = -\dot{q}_3^2 \begin{bmatrix} r_T \cos q_3 + L_{ty} \sin q_3 \\ r_T \sin q_3 - L_{ty} \cos q_3 \end{bmatrix}$$</p>
+<p>It points directly inward toward the saddle pivot center $O_3$!</p>
+</blockquote>
+<hr class='notebook-divider'>
+<h3>2.8.8 Transposed Jacobian & Digging Force Mapping</h3>
+<p>When the dipper teeth cut through hard rock, a large contact resistance force $\mathbf{F}_{\text{ext}} = [F_x, F_y]^T$ acts on tooth tip $T$. By Equation (2.22), the resulting generalized forces on the saddle and crowd actuators are:</p>
+<div class="math-display">$$\boldsymbol{\tau} = \begin{bmatrix} \tau_3 \\ F_{\text{crowd}} \end{bmatrix} = \mathbf{J}_T^T(q_3, d_4) \begin{bmatrix} F_x \\ F_y \end{bmatrix} \tag{2.45}$$</div>
+<p>Substitute the transposed matrix:</p>
+<div class="math-display">$$\begin{bmatrix} \tau_3 \\ F_{\text{crowd}} \end{bmatrix} = \begin{bmatrix}
+-r_T \sin q_3 + L_{ty} \cos q_3 & r_T \cos q_3 + L_{ty} \sin q_3 \\[6pt]
+\cos q_3 & \sin q_3
+\end{bmatrix} \begin{bmatrix} F_x \\ F_y \end{bmatrix} \tag{2.46}$$</div>
+<p>Carrying out matrix multiplication:</p>
+<div class="math-display">$$\tau_3 = F_x (-r_T \sin q_3 + L_{ty} \cos q_3) + F_y (r_T \cos q_3 + L_{ty} \sin q_3) \tag{2.47a}$$</div>
+<div class="math-display">$$F_{\text{crowd}} = F_x \cos q_3 + F_y \sin q_3 \tag{2.47b}$$</div>
+<blockquote>
+<div class="callout-header"><span class="badge badge-tip">TIP</span></div>
+<p>### PHYSICAL INSIGHT ON CROWD FORCE EQUATION (2.47b)</p>
+<p>Look at the crowd force equation:</p>
+<p></p>
+<p>$$F_{\text{crowd}} = \begin{bmatrix} \cos q_3 & \sin q_3 \end{bmatrix} \begin{bmatrix} F_x \\ F_y \end{bmatrix} = \mathbf{F}_{\text{ext}} \cdot \mathbf{u}_{\text{handle}}$$</p>
+<p></p>
+<p>The crowd motor resists <strong>precisely the component of the digging force that acts parallel to the dipper handle axis</strong>!</p>
+<p>The perpendicular component creates bending torque $\tau_3$ about the saddle block pivot, which is resisted by the hoist rope tension acting through the bail pin moment arm!</p>
+</blockquote>
+<hr class='notebook-divider'>
+<h2>2.9 Five Fully Solved Research Practice Problems</h2>
+<hr class='notebook-divider'>
+<h3>Problem 2.1: Numerical Jacobian & Tooth Velocity on P&H 2100BL</h3>
+<p><strong>Problem Statement:</strong>  </p>
+<p>On a P&H 2100BL excavator (Machine A), the saddle angle is $q_3 = 30^\circ$ ($\frac{\pi}{6}\,\mathrm{rad}$) and the crowd extension is $d_4 = 9.0\,\mathrm{m}$. The tooth offsets are $L_{tx} = 2.0\,\mathrm{m}$ and $L_{ty} = 1.0\,\mathrm{m}$.  </p>
+<p>At this instant, the saddle block rotates upward at $\dot{q}_3 = 0.15\,\mathrm{rad/s}$ and the crowd extends outward at $\dot{d}_4 = 0.80\,\mathrm{m/s}$.</p>
+<ol>
+<li>Calculate the effective radial tooth distance $r_T$.</li>
+<li>Compute the numerical components of the Jacobian matrix $\mathbf{J}_T$.</li>
+<li>Compute the instantaneous Cartesian velocity vector $[\dot{x}_T, \dot{y}_T]^T$ of the dipper tooth tip.</li>
+<li>Calculate the speed magnitude $\|\mathbf{v}_T\|$.</li>
+</ol>
+<p><strong>Step-by-Step Solution:</strong></p>
+<p>**Step 1: Compute effective radial distance $r_T$**</p>
+<div class="math-display">$$r_T = d_4 + L_{tx} = 9.0\,\mathrm{m} + 2.0\,\mathrm{m} = 11.0\,\mathrm{m}$$</div>
+<p>**Step 2: Evaluate trigonometric functions at $q_3 = 30^\circ$**</p>
+<div class="math-display">$$\cos 30^\circ = \frac{\sqrt{3}}{2} \approx 0.866025, \quad \sin 30^\circ = 0.500000$$</div>
+<p>**Step 3: Calculate elements of $\mathbf{J}_T$ using Equation (2.33)**</p>
+<div class="math-display">$$J_{11} = -r_T \sin q_3 + L_{ty} \cos q_3 = -(11.0)(0.5) + (1.0)(0.866025) = -5.5 + 0.866025 = -4.633975\,\mathrm{m/rad}$$</div>
+<div class="math-display">$$J_{12} = \cos q_3 = 0.866025\,\mathrm{m/m}$$</div>
+<div class="math-display">$$J_{21} = r_T \cos q_3 + L_{ty} \sin q_3 = (11.0)(0.866025) + (1.0)(0.5) = 9.526279 + 0.5 = 10.026279\,\mathrm{m/rad}$$</div>
+<div class="math-display">$$J_{22} = \sin q_3 = 0.500000\,\mathrm{m/m}$$</div>
+<p>Therefore:</p>
+<div class="math-display">$$\mathbf{J}_T = \begin{bmatrix} -4.6340 & 0.8660 \\ 10.0263 & 0.5000 \end{bmatrix}$$</div>
+<p>**Step 4: Compute tooth velocity $\mathbf{v}_T = \mathbf{J}_T \mathbf{\dot{q}}$**</p>
+<div class="math-display">$$\begin{bmatrix} \dot{x}_T \\ \dot{y}_T \end{bmatrix} = \begin{bmatrix} -4.633975 & 0.866025 \\ 10.026279 & 0.500000 \end{bmatrix} \begin{bmatrix} 0.15 \\ 0.80 \end{bmatrix}$$</div>
+<div class="math-display">$$\dot{x}_T = (-4.633975)(0.15) + (0.866025)(0.80) = -0.695096 + 0.692820 = -0.002276\,\mathrm{m/s}$$</div>
+<div class="math-display">$$\dot{y}_T = (10.026279)(0.15) + (0.500000)(0.80) = 1.503942 + 0.400000 = +1.903942\,\mathrm{m/s}$$</div>
+<div class="math-display">$$\mathbf{v}_T \approx \begin{bmatrix} -0.0023 \\ +1.9039 \end{bmatrix}\,\mathrm{m/s}$$</div>
+<p><strong>Step 5: Compute total tooth speed</strong></p>
+<div class="math-display">$$\|\mathbf{v}_T\| = \sqrt{(-0.002276)^2 + (1.903942)^2} \approx 1.9039\,\mathrm{m/s}$$</div>
+<p>*(Physical Note: Notice that $\dot{x}_T \approx 0$. At this exact posture, the forward extension of the crowd rack is almost perfectly cancelled by the backward arc motion of the saddle rotation, causing the dipper teeth to cut almost purely vertically upward through the rock face!)*</p>
+<hr class='notebook-divider'>
+<h3>Problem 2.2: Digging Force Mapping on TZ WK-20 Heavy Shovel</h3>
+<p><strong>Problem Statement:</strong>  </p>
+<p>On a TZ WK-20 excavator (Machine B), the dipper is actively cutting blasted dolomite. Joint sensors record $q_3 = 15^\circ$ ($0.2618\,\mathrm{rad}$), $d_4 = 12.5\,\mathrm{m}$, with tooth geometry $L_{tx} = 2.5\,\mathrm{m}$, $L_{ty} = 1.2\,\mathrm{m}$.  </p>
+<p>A 2D load cell array detects that the dolomite bank exerts an external digging resistance force on the teeth of:</p>
+<div class="math-display">$$\mathbf{F}_{\text{ext}} = \begin{bmatrix} F_x \\ F_y \end{bmatrix} = \begin{bmatrix} -450.0\,\mathrm{kN} \\ -680.0\,\mathrm{kN} \end{bmatrix}$$</div>
+<p><em>(where negative signs denote forces opposing forward and upward motion).</em></p>
+<ol>
+<li>Determine the effective radius $r_T$.</li>
+<li>Compute the mechanical crowd push/pull force $F_{\text{crowd}}$ experienced by the crowd rack pinions.</li>
+<li>Compute the torque $\tau_3$ that must be counterbalanced by hoist rope tension about pivot $O_3$.</li>
+</ol>
+<p><strong>Step-by-Step Solution:</strong></p>
+<p><strong>Step 1: Compute geometric values</strong></p>
+<div class="math-display">$$r_T = d_4 + L_{tx} = 12.5 + 2.5 = 15.0\,\mathrm{m}$$</div>
+<div class="math-display">$$\cos 15^\circ \approx 0.965926, \quad \sin 15^\circ \approx 0.258819$$</div>
+<p><strong>Step 2: Compute crowd rack force using Equation (2.47b)</strong></p>
+<div class="math-display">$$F_{\text{crowd}} = F_x \cos q_3 + F_y \sin q_3$$</div>
+<div class="math-display">$$F_{\text{crowd}} = (-450\,\mathrm{kN})(0.965926) + (-680\,\mathrm{kN})(0.258819)$$</div>
+<div class="math-display">$$F_{\text{crowd}} = -434.667\,\mathrm{kN} - 175.997\,\mathrm{kN} = -610.664\,\mathrm{kN}$$</div>
+<p><strong>Result:</strong> The crowd motor rack is subjected to a massive compressive retarding force of **$610.7\,\mathrm{kN}$** pushing the dipper handle back into the machinery deck!</p>
+<p>**Step 3: Compute saddle pivot torque $\tau_3$ using Equation (2.47a)**</p>
+<p>First calculate the moment arm coefficients:</p>
+<div class="math-display">$$\text{Arm}_x = -r_T \sin q_3 + L_{ty} \cos q_3 = -(15.0)(0.258819) + (1.2)(0.965926) = -3.882285 + 1.159111 = -2.723174\,\mathrm{m}$$</div>
+<div class="math-display">$$\text{Arm}_y = r_T \cos q_3 + L_{ty} \sin q_3 = (15.0)(0.965926) + (1.2)(0.258819) = 14.488890 + 0.310583 = +14.799473\,\mathrm{m}$$</div>
+<p>Now compute torque:</p>
+<div class="math-display">$$\tau_3 = F_x (\text{Arm}_x) + F_y (\text{Arm}_y)$$</div>
+<div class="math-display">$$\tau_3 = (-450\,\mathrm{kN})(-2.723174\,\mathrm{m}) + (-680\,\mathrm{kN})(+14.799473\,\mathrm{m})$$</div>
+<div class="math-display">$$\tau_3 = +1,225.428\,\mathrm{kN\cdot m} - 10,063.642\,\mathrm{kN\cdot m} = -8,838.214\,\mathrm{kN\cdot m}$$</div>
+<p><strong>Result:</strong> The external rock resistance induces a counter-clockwise bending moment of **$-8.838\,\mathrm{MN\cdot m}$** about the saddle pivot $O_3$, which must be held by the tension in the dual hoist ropes!</p>
+<hr class='notebook-divider'>
+<h3>Problem 2.3: Verification of Convective Acceleration Vectors</h3>
+<p><strong>Problem Statement:</strong>  </p>
+<p>Using the parameters of the P&H 2100BL from Problem 2.1 ($q_3 = 30^\circ$, $d_4 = 9.0\,\mathrm{m}$, $r_T = 11.0\,\mathrm{m}$, $L_{ty} = 1.0\,\mathrm{m}$, $\dot{q}_3 = 0.15\,\mathrm{rad/s}$, $\dot{d}_4 = 0.80\,\mathrm{m/s}$):</p>
+<ol>
+<li>Calculate the numerical Coriolis acceleration vector $\mathbf{a}_{\text{Coriolis}}$.</li>
+<li>Calculate the numerical Centripetal acceleration vector $\mathbf{a}_{\text{Centripetal}}$.</li>
+<li>Compute the total convective acceleration vector $\mathbf{a}_{\text{conv}} = \mathbf{\dot{J}}_T \mathbf{\dot{q}}$.</li>
+</ol>
+<p><strong>Step-by-Step Solution:</strong></p>
+<p><strong>Step 1: Compute Coriolis acceleration</strong></p>
+<p>From Section 2.8.7:</p>
+<div class="math-display">$$\mathbf{a}_{\text{Coriolis}} = 2 \dot{q}_3 \dot{d}_4 \begin{bmatrix} -\sin q_3 \\ \cos q_3 \end{bmatrix}$$</div>
+<div class="math-display">$$2 \dot{q}_3 \dot{d}_4 = 2 (0.15) (0.80) = 0.2400\,\mathrm{m/s^2}$$</div>
+<div class="math-display">$$\mathbf{a}_{\text{Coriolis}} = 0.2400 \begin{bmatrix} -0.5000 \\ 0.8660 \end{bmatrix} = \begin{bmatrix} -0.1200 \\ +0.2078 \end{bmatrix}\,\mathrm{m/s^2}$$</div>
+<p><strong>Step 2: Compute Centripetal acceleration</strong></p>
+<p>From Section 2.8.7:</p>
+<div class="math-display">$$\dot{q}_3^2 = (0.15)^2 = 0.0225\,\mathrm{rad^2/s^2}$$</div>
+<div class="math-display">$$r_T \cos q_3 + L_{ty} \sin q_3 = (11.0)(0.866025) + (1.0)(0.5) = 10.0263\,\mathrm{m}$$</div>
+<div class="math-display">$$r_T \sin q_3 - L_{ty} \cos q_3 = (11.0)(0.5) - (1.0)(0.866025) = 5.5 - 0.8660 = 4.6340\,\mathrm{m}$$</div>
+<div class="math-display">$$\mathbf{a}_{\text{Centripetal}} = -0.0225 \begin{bmatrix} 10.0263 \\ 4.6340 \end{bmatrix} = \begin{bmatrix} -0.2256 \\ -0.1043 \end{bmatrix}\,\mathrm{m/s^2}$$</div>
+<p>**Step 3: Total Convective Acceleration $\mathbf{a}_{\text{conv}}$**</p>
+<div class="math-display">$$\mathbf{a}_{\text{conv}} = \mathbf{a}_{\text{Coriolis}} + \mathbf{a}_{\text{Centripetal}}$$</div>
+<div class="math-display">$$\mathbf{a}_{\text{conv}} = \begin{bmatrix} -0.1200 - 0.2256 \\ +0.2078 - 0.1043 \end{bmatrix} = \begin{bmatrix} -0.3456 \\ +0.1035 \end{bmatrix}\,\mathrm{m/s^2}$$</div>
+<p>*(Physical Significance: If the dipper body has an effective mass of $30,000\,\mathrm{kg}$, this convective acceleration creates an unmodelled dynamic inertial force of $\mathbf{F} = m \mathbf{a}_{\text{conv}} = [-10.37\,\mathrm{kN}, +3.11\,\mathrm{kN}]^T$. Neglecting $\mathbf{\dot{J}}\mathbf{\dot{q}}$ during dynamic payload identification causes a systematic bias in payload estimation!)*</p>
+<hr class='notebook-divider'>
+<h3>Problem 2.4: Singular Value Decomposition & Condition Number</h3>
+<p><strong>Problem Statement:</strong>  </p>
+<p>Consider a simplified planar excavator Jacobian where tooth offsets are neglected ($L_{ty} = 0$), so:</p>
+<div class="math-display">$$\mathbf{J}_T = \begin{bmatrix} -r_T \sin q_3 & \cos q_3 \\ r_T \cos q_3 & \sin q_3 \end{bmatrix}$$</div>
+<ol>
+<li>Compute the analytical matrix product $\mathbf{A} = \mathbf{J}_T \mathbf{J}_T^T$.</li>
+<li>Determine the eigenvalues $\lambda_1, \lambda_2$ of $\mathbf{A}$.</li>
+<li>Deduce the exact singular values $\sigma_1, \sigma_2$ of $\mathbf{J}_T$.</li>
+<li>Express the condition number $\kappa(\mathbf{J}_T)$ as a function of radius $r_T$.</li>
+<li>Evaluate $\kappa$ for $r_T = 11.0\,\mathrm{m}$.</li>
+</ol>
+<p><strong>Step-by-Step Solution:</strong></p>
+<p>**Step 1: Compute $\mathbf{A} = \mathbf{J}_T \mathbf{J}_T^T$**</p>
+<div class="math-display">$$\mathbf{J}_T \mathbf{J}_T^T = \begin{bmatrix} -r_T \sin q_3 & \cos q_3 \\ r_T \cos q_3 & \sin q_3 \end{bmatrix} \begin{bmatrix} -r_T \sin q_3 & r_T \cos q_3 \\ \cos q_3 & \sin q_3 \end{bmatrix}$$</div>
+<div class="math-display">$$A_{11} = (-r_T \sin q_3)^2 + (\cos q_3)^2 = r_T^2 \sin^2 q_3 + \cos^2 q_3$$</div>
+<div class="math-display">$$A_{12} = (-r_T \sin q_3)(r_T \cos q_3) + (\cos q_3)(\sin q_3) = (1 - r_T^2) \sin q_3 \cos q_3$$</div>
+<div class="math-display">$$A_{21} = A_{12} = (1 - r_T^2) \sin q_3 \cos q_3$$</div>
+<div class="math-display">$$A_{22} = (r_T \cos q_3)^2 + (\sin q_3)^2 = r_T^2 \cos^2 q_3 + \sin^2 q_3$$</div>
+<p>**Step 2: Compute eigenvalues of $\mathbf{A}$**</p>
+<p>The trace of $\mathbf{A}$ is:</p>
+<div class="math-display">$$\operatorname{tr}(\mathbf{A}) = A_{11} + A_{22} = r_T^2(\sin^2 q_3 + \cos^2 q_3) + (\sin^2 q_3 + \cos^2 q_3) = r_T^2 + 1$$</div>
+<p>The determinant of $\mathbf{A}$ is:</p>
+<div class="math-display">$$\det(\mathbf{A}) = (\det(\mathbf{J}_T))^2 = (-r_T)^2 = r_T^2$$</div>
+<p>The characteristic polynomial is:</p>
+<div class="math-display">$$\lambda^2 - \operatorname{tr}(\mathbf{A})\lambda + \det(\mathbf{A}) = \lambda^2 - (r_T^2 + 1)\lambda + r_T^2 = 0$$</div>
+<p>Factoring directly:</p>
+<div class="math-display">$$(\lambda - r_T^2)(\lambda - 1) = 0 \implies \lambda_1 = r_T^2, \quad \lambda_2 = 1$$</div>
+<p>**Step 3: Deduce singular values $\sigma_i = \sqrt{\lambda_i}$**</p>
+<p>Since $r_T \ge 1.0\,\mathrm{m}$ on any physical mining shovel:</p>
+<div class="math-display">$$\sigma_1 = \sqrt{r_T^2} = r_T, \quad \sigma_2 = \sqrt{1} = 1.0$$</div>
+<p>**Step 4: Compute Condition Number $\kappa$**</p>
+<div class="math-display">$$\kappa(\mathbf{J}_T) = \frac{\sigma_1}{\sigma_2} = \frac{r_T}{1.0} = r_T$$</div>
+<p>**Step 5: Numerical evaluation at $r_T = 11.0\,\mathrm{m}$**</p>
+<div class="math-display">$$\kappa(\mathbf{J}_T) = 11.0$$</div>
+<p>*(Pedagogical Insight: Because the joint coordinates have mixed physical units—$q_3$ in radians, $d_4$ in meters—the condition number equals the dimensioned radius $r_T$. To make the condition number dimensionless and meaningful for numerical algorithms, one must normalize the Jacobian by characteristic length scales, as we established in the Chapter 1 audit!)*</p>
+<hr class='notebook-divider'>
+<h3>Problem 2.5: Inverse Kinematic Velocity Tracking</h3>
+<p><strong>Problem Statement:</strong>  </p>
+<p>To smoothly clean up the pit floor, an autonomous dipper trajectory controller commands the dipper teeth to travel horizontally forward at constant speed:</p>
+<div class="math-display">$$\mathbf{v}_T^* = \begin{bmatrix} \dot{x}_T^* \\ \dot{y}_T^* \end{bmatrix} = \begin{bmatrix} +1.20\,\mathrm{m/s} \\ 0.00\,\mathrm{m/s} \end{bmatrix}$$</div>
+<p>At the current instant, the shovel posture is $q_3 = -15^\circ$ (tilted downward into the trench), $d_4 = 10.0\,\mathrm{m}$, with tooth geometry $r_T = 12.0\,\mathrm{m}$, $L_{ty} = 1.0\,\mathrm{m}$.  </p>
+<p>Using the closed-form inverse Jacobian from Equation (2.40), calculate the exact joint velocity commands $[\dot{q}_3^*, \dot{d}_4^*]^T$ that the hoist and crowd motor variable frequency drives (VFDs) must deliver.</p>
+<p><strong>Step-by-Step Solution:</strong></p>
+<p>**Step 1: Evaluate trigonometric terms at $q_3 = -15^\circ$**</p>
+<div class="math-display">$$\cos(-15^\circ) = \cos(15^\circ) \approx 0.965926$$</div>
+<div class="math-display">$$\sin(-15^\circ) = -\sin(15^\circ) \approx -0.258819$$</div>
+<p><strong>Step 2: Evaluate Inverse Jacobian matrix from Equation (2.40)</strong></p>
+<div class="math-display">$$J_{11}^{-1} = -\frac{\sin q_3}{r_T} = -\frac{-0.258819}{12.0} = +0.021568\,\mathrm{rad/m}$$</div>
+<div class="math-display">$$J_{12}^{-1} = \frac{\cos q_3}{r_T} = \frac{0.965926}{12.0} = +0.080494\,\mathrm{rad/m}$$</div>
+<div class="math-display">$$J_{21}^{-1} = \cos q_3 + \frac{L_{ty}}{r_T}\sin q_3 = 0.965926 + \left(\frac{1.0}{12.0}\right)(-0.258819) = 0.965926 - 0.021568 = +0.944358\,\mathrm{m/m}$$</div>
+<div class="math-display">$$J_{22}^{-1} = \sin q_3 - \frac{L_{ty}}{r_T}\cos q_3 = -0.258819 - \left(\frac{1.0}{12.0}\right)(0.965926) = -0.258819 - 0.080494 = -0.339313\,\mathrm{m/m}$$</div>
+<p>Therefore:</p>
+<div class="math-display">$$\mathbf{J}_T^{-1} = \begin{bmatrix} +0.021568 & +0.080494 \\ +0.944358 & -0.339313 \end{bmatrix}$$</div>
+<p>**Step 3: Multiply by desired Cartesian velocity $\mathbf{v}_T^* = [1.20, 0]^T$**</p>
+<div class="math-display">$$\dot{q}_3^* = J_{11}^{-1} \dot{x}_T^* + J_{12}^{-1} \dot{y}_T^* = (0.021568)(1.20) + (0.080494)(0) = +0.025882\,\mathrm{rad/s}$$</div>
+<div class="math-display">$$\dot{d}_4^* = J_{21}^{-1} \dot{x}_T^* + J_{22}^{-1} \dot{y}_T^* = (0.944358)(1.20) + (-0.339313)(0) = +1.133230\,\mathrm{m/s}$$</div>
+<p><strong>Final Result:</strong></p>
+<ul>
+<li>The hoist drive must rotate the saddle upward at **$\dot{q}_3^* = +0.0259\,\mathrm{rad/s}$** ($+1.48^\circ/\mathrm{s}$).</li>
+<li>The crowd drive must push the handle outward at **$\dot{d}_4^* = +1.133\,\mathrm{m/s}$**.</li>
+</ul>
+<hr class='notebook-divider'>
+<h2>2.10 MATLAB / Python Implementation Code</h2>
+<div class="code-container"><pre><code class="language-matlab">% =========================================================================
+% CHAPTER 2: ELECTRIC ROPE SHOVEL KINEMATIC JACOBIAN &amp; FORCE MAPPING
+% Compatible with MATLAB R2025b / Octave 7+
+% =========================================================================
+function shovel_kinematics_demo()
+    clc; clear; close all;
+    
+    % Machine A (P&amp;H 2100BL) Benchmark Parameters
+    params.L_tx = 2.0;    % Longitudinal tooth offset [m]
+    params.L_ty = 1.0;    % Perpendicular tooth offset [m]
+    
+    % Posture state
+    q3  = deg2rad(30);   % Saddle angle [rad]
+    d4  = 9.0;           % Crowd extension [m]
+    
+    % Velocities
+    q3_dot = 0.15;       % Saddle angular velocity [rad/s]
+    d4_dot = 0.80;       % Crowd linear speed [m/s]
+    
+    q     = [q3; d4];
+    q_dot = [q3_dot; d4_dot];
+    
+    % 1. Compute Jacobian
+    J = compute_jacobian(q, params);
+    fprintf(&#x27;=== TOOTH TIP JACOBIAN J_T ===\n&#x27;);
+    disp(J);
+    
+    % 2. Compute Tooth Velocity
+    v_T = J * q_dot;
+    fprintf(&#x27;=== TOOTH VELOCITY [m/s] ===\n&#x27;);
+    fprintf(&#x27;v_x = %+.4f m/s\n&#x27;, v_T(1));
+    fprintf(&#x27;v_y = %+.4f m/s\n&#x27;, v_T(2));
+    fprintf(&#x27;Speed ||v_T|| = %.4f m/s\n\n&#x27;, norm(v_T));
+    
+    % 3. Determinant &amp; Singularity Check
+    det_J = det(J);
+    fprintf(&#x27;Determinant det(J) = %.4f (Expected: -(d4+L_tx) = %.4f)\n\n&#x27;, ...
+            det_J, -(d4 + params.L_tx));
+        
+    % 4. Convective Acceleration J_dot * q_dot
+    a_conv = compute_convective_acc(q, q_dot, params);
+    fprintf(&#x27;=== CONVECTIVE ACCELERATION [m/s^2] ===\n&#x27;);
+    fprintf(&#x27;a_conv_x = %+.4f m/s^2\n&#x27;, a_conv(1));
+    fprintf(&#x27;a_conv_y = %+.4f m/s^2\n\n&#x27;, a_conv(2));
+    
+    % 5. External Digging Force Mapping
+    F_ext = [-450e3; -680e3]; % [N] (Problem 2.2 style)
+    tau = J&#x27; * F_ext;
+    fprintf(&#x27;=== GENERALIZED MOTOR FORCES ===\n&#x27;);
+    fprintf(&#x27;Saddle Torque tau_3 = %+.2f kN*m\n&#x27;, tau(1)/1e3);
+    fprintf(&#x27;Crowd Rack Force F_4 = %+.2f kN\n&#x27;, tau(2)/1e3);
+end
+
+function J = compute_jacobian(q, p)
+    q3 = q(1);
+    d4 = q(2);
+    r_T = d4 + p.L_tx;
+    
+    J = [-r_T*sin(q3) + p.L_ty*cos(q3),  cos(q3);
+          r_T*cos(q3) + p.L_ty*sin(q3),  sin(q3)];
+end
+
+function a_conv = compute_convective_acc(q, q_dot, p)
+    q3 = q(1);
+    d4 = q(2);
+    q3_dot = q_dot(1);
+    d4_dot = q_dot(2);
+    r_T = d4 + p.L_tx;
+    
+    % Coriolis term
+    a_coriolis = 2 * q3_dot * d4_dot * [-sin(q3); cos(q3)];
+    
+    % Centripetal term
+    a_centripetal = -(q3_dot^2) * [r_T*cos(q3) + p.L_ty*sin(q3);
+                                   r_T*sin(q3) - p.L_ty*cos(q3)];
+                               
+    a_conv = a_coriolis + a_centripetal;
+end</code></pre></div>
+<hr class='notebook-divider'>
+<h2>2.11 Research Supervisor Summary & Master Defense Checklist</h2>
+<h3>Core Concepts Mastered in Chapter 2</h3>
+<ol>
+<li><strong>Analytical vs. Geometric Jacobians:</strong>  </li>
+</ol>
+<p>   The Analytical Jacobian $\mathbf{J}_a = \frac{\partial \mathbf{x}}{\partial \mathbf{q}}$ directly differentiates coordinates, whereas the Geometric Jacobian $\mathbf{J}$ maps joint speeds to the physical twist vector $[\mathbf{v}_e^T, \boldsymbol{\omega}_e^T]^T$. In planar shovel kinematics, both yield identical translational results.</p>
+<ol>
+<li><strong>Acceleration Dynamics & Convective Product:</strong>  </li>
+</ol>
+<p>   End-effector acceleration decomposes into $\mathbf{a} = \mathbf{J}\mathbf{\ddot{q}} + \mathbf{\dot{J}}\mathbf{\dot{q}}$. The convective term $\mathbf{\dot{J}}\mathbf{\dot{q}}$ accounts for centripetal and Coriolis accelerations. In dynamic load identification, omitting this term biases payload estimates by up to $15\%$.</p>
+<ol>
+<li><strong>Virtual Work Force Duality:</strong>  </li>
+</ol>
+<p>   The transpose of the kinematic Jacobian maps external Cartesian forces directly onto the generalized actuator coordinates: $\boldsymbol{\tau} = \mathbf{J}^T(\mathbf{q})\mathbf{F}_{\text{ext}}$. The crowd motor directly resists the longitudinal axis component: $F_{\text{crowd}} = \mathbf{F}_{\text{ext}} \cdot \mathbf{u}_{\text{handle}}$.</p>
+<ol>
+<li><strong>Singularity Immunity of the Shovel:</strong>  </li>
+</ol>
+<p>   The determinant $\det(\mathbf{J}_T) = -(d_4 + L_{tx})$ depends solely on the extension radius $r_T$ and never vanishes inside the physical crowd stroke range $[7.5\,\mathrm{m}, 14.5\,\mathrm{m}]$. The shovel mechanism is unconditionally singular-free inside its admissible workspace.</p>
+<hr class='notebook-divider'>
+<h3>Doctoral Viva & Defense Questions</h3>
+<ul>
+<li><strong>Q1:</strong> <em>Why does the transpose of the Jacobian appear in static force mapping instead of the inverse?</em>  </li>
+</ul>
+<p>  <strong>Answer:</strong> By the Principle of Virtual Work, work is an invariant scalar: $\delta W = \boldsymbol{\tau}^T \delta \mathbf{q} = \mathbf{F}_{\text{ext}}^T \delta \mathbf{x}$. Substituting the kinematic relationship $\delta \mathbf{x} = \mathbf{J}\delta \mathbf{q}$ yields $\boldsymbol{\tau}^T \delta \mathbf{q} = \mathbf{F}_{\text{ext}}^T \mathbf{J}\delta \mathbf{q} = (\mathbf{J}^T \mathbf{F}_{\text{ext}})^T \delta \mathbf{q}$. Since $\delta \mathbf{q}$ is independent, $\boldsymbol{\tau} = \mathbf{J}^T \mathbf{F}_{\text{ext}}$.</p>
+<ul>
+<li><strong>Q2:</strong> <em>Under high crowd speed, which convective component dominates: Coriolis or centripetal?</em>  </li>
+</ul>
+<p>  <strong>Answer:</strong> Coriolis acceleration scales linearly with both crowd linear speed and saddle angular speed ($\propto 2\dot{q}_3 \dot{d}_4$), whereas centripetal scales with the square of angular speed ($\propto \dot{q}_3^2$). During aggressive crowd extension into the rock bank ($\dot{d}_4 \approx 1.0\,\mathrm{m/s}, \dot{q}_3 \approx 0.1\,\mathrm{rad/s}$), Coriolis acceleration dominates and induces heavy lateral contact forces on the saddle block side bronze bushings.</p>
+<ul>
+<li><strong>Q3:</strong> *Why does the condition number of the shovel Jacobian vary with extension radius $r_T$?*  </li>
+</ul>
+<p>  <strong>Answer:</strong> The columns of $\mathbf{J}_T$ have mixed units: column 1 has units of $\mathrm{m/rad}$ (moment arm) while column 2 has units of $\mathrm{m/m}$ (dimensionless projection). The singular values are $\sigma_1 = r_T$ and $\sigma_2 = 1.0$, giving condition number $\kappa = r_T$. To obtain an objective, dimensionally homogeneous condition number, column 1 must be normalized by a characteristic radius $R_0$.</p>
+<hr class='notebook-divider'>
+<h3>Transition to Chapter 3</h3>
+<p>With multivariable kinematics, Jacobians, and static force transmission firmly established, we next enter:  </p>
+<p><strong>Volume I, Chapter 3: Variational Principles, Generalized Coordinates, and Euler-Lagrange Formulations</strong>.  </p>
+<p>In Chapter 3, we formulate the system kinetic energy $T(\mathbf{q}, \mathbf{\dot{q}})$ and potential energy $V(\mathbf{q})$, and derive the continuous nonlinear equations of motion for the electric rope shovel from Hamilton's Principle.</p>
+</body>
+</html>

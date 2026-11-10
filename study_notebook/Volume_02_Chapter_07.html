@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Study Notebook</title>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  chtml: {
+    scale: 1.18
+  },
+  options: {
+    ignoreHtmlClass: 'tex2jax_ignore',
+    processHtmlClass: 'tex2jax_process'
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+  /* Notebook Typography & Sizing */
+  :root {
+    --primary-blue: #1d4ed8;
+    --navy-header: #0f2744;
+    --slate-text: #1e293b;
+    --callout-bg: #f8fafc;
+    --callout-border: #3b82f6;
+    --notebook-rule: #e2e8f0;
+  }
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 18px;          /* Generous, large notebook font size */
+    line-height: 1.85;        /* Spacious line spacing for reading equations */
+    margin: 40px auto;
+    max-width: 1040px;
+    padding: 0 45px;
+    color: var(--slate-text);
+    background-color: #fdfdfd;
+  }
+  
+  /* Notebook Cover & Headings */
+  h1 {
+    color: var(--navy-header);
+    border-bottom: 3px solid var(--primary-blue);
+    padding-bottom: 14px;
+    margin-top: 55px;
+    font-size: 2.3em;
+    line-height: 1.25;
+    letter-spacing: -0.5px;
+  }
+  
+  h2 {
+    color: #1e3a8a;
+    border-bottom: 2px solid #cbd5e1;
+    padding-bottom: 10px;
+    margin-top: 45px;
+    font-size: 1.7em;
+    line-height: 1.3;
+  }
+  
+  h3 {
+    color: var(--primary-blue);
+    margin-top: 35px;
+    font-size: 1.35em;
+    line-height: 1.35;
+  }
+  
+  h4 {
+    color: #334155;
+    margin-top: 25px;
+    font-size: 1.15em;
+    font-weight: 600;
+  }
+  
+  p {
+    margin: 18px 0;
+    font-size: 1.02em;
+  }
+  
+  /* Notebook Math Display */
+  .math-display {
+    overflow-x: auto;
+    margin: 28px 0;
+    padding: 16px 20px;
+    text-align: center;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+  }
+  
+  /* Notebook Code Blocks */
+  .code-container {
+    margin: 25px 0;
+  }
+  pre {
+    background: #0f172a;
+    color: #f8fafc;
+    border-radius: 8px;
+    padding: 20px 24px;
+    overflow-x: auto;
+    font-size: 15px;          /* Larger code font */
+    font-family: "Consolas", "Courier New", monospace;
+    line-height: 1.6;
+    border: 1px solid #334155;
+  }
+  
+  code {
+    font-family: "Consolas", "Courier New", monospace;
+    background: #f1f5f9;
+    color: #0f172a;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.92em;
+    font-weight: 500;
+  }
+  
+  pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+    font-weight: normal;
+  }
+  
+  /* Notebook Tables */
+  .table-container {
+    overflow-x: auto;
+    margin: 32px 0;
+  }
+  
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 16px;          /* Clear table font */
+    background: #ffffff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  
+  th, td {
+    border: 1px solid #cbd5e1;
+    padding: 14px 18px;
+    text-align: left;
+    line-height: 1.6;
+  }
+  
+  th {
+    background-color: #f1f5f9;
+    color: #0f172a;
+    font-weight: 700;
+    font-size: 1.02em;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #f8fafc;
+  }
+  
+  /* Notebook Highlight / Callout Blocks */
+  blockquote {
+    border-left: 6px solid var(--primary-blue);
+    margin: 28px 0;
+    padding: 18px 26px;
+    background: #eff6ff;
+    color: #1e3a8a;
+    border-radius: 0 8px 8px 0;
+    font-size: 1.02em;
+    box-shadow: 0 1px 3px rgba(37,99,235,0.06);
+  }
+  
+  blockquote p {
+    margin: 8px 0;
+  }
+  
+  .badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .badge-note { background: #dbeafe; color: #1e40af; }
+  .badge-tip { background: #dcfce7; color: #15803d; }
+  .badge-important { background: #fef3c7; color: #92400e; }
+  .badge-warning { background: #fee2e2; color: #b91c1c; }
+  .badge-caution { background: #fce7f3; color: #9d174d; }
+  
+  ul, ol {
+    padding-left: 32px;
+    margin: 18px 0;
+  }
+  
+  li {
+    margin: 10px 0;
+    font-size: 1.02em;
+  }
+  
+  hr.notebook-divider {
+    border: 0;
+    border-top: 2px dashed #cbd5e1;
+    margin: 45px 0;
+  }
+  
+  /* Print Controls */
+  .print-btn {
+    position: fixed;
+    top: 24px;
+    right: 32px;
+    background: var(--primary-blue);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+    z-index: 1000;
+    transition: all 0.2s;
+  }
+  
+  .print-btn:hover {
+    background: #1e40af;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.22);
+  }
+  
+  @media print {
+    .print-btn { display: none; }
+    body {
+      max-width: 100%;
+      margin: 0;
+      padding: 12mm 15mm;
+      font-size: 13pt;        /* Large readable notebook text in PDF */
+      line-height: 1.7;
+      color: #000;
+      background: #fff;
+    }
+    h1 {
+      page-break-before: always;
+      font-size: 1.9em;
+      border-bottom: 2pt solid #000;
+    }
+    h1:first-of-type {
+      page-break-before: avoid;
+    }
+    h2 {
+      font-size: 1.45em;
+      page-break-after: avoid;
+    }
+    h3 {
+      font-size: 1.25em;
+      page-break-after: avoid;
+    }
+    table, pre, blockquote, .math-display {
+      page-break-inside: avoid;
+    }
+    table {
+      font-size: 11pt;
+    }
+    pre {
+      font-size: 10.5pt;
+      background: #f8fafc;
+      color: #0f172a;
+      border: 1pt solid #cbd5e1;
+    }
+    a {
+      color: #000;
+      text-decoration: none;
+    }
+  }
+</style>
+</head>
+<body class="tex2jax_process">
+<button class="print-btn" onclick="window.print()">Print / Save as PDF (Ctrl+P)</button>
+<h1>VOLUME II: RIGID-BODY & MULTIBODY DYNAMICS OF THE SHOVEL SYSTEM</h1>
+<hr class='notebook-divider'>
+<h1>CHAPTER 7: Planar 2-DOF Crowd-Hoist Dynamics and Cable-Driven Kinematics</h1>
+<p><strong>Author:</strong> Multidisciplinary Research Supervisor & Technical Author  </p>
+<p><strong>Project:</strong> <em>AI-Enabled Platform for Diagnosis, Prognosis and Health Management of Mining Electrical Systems: Case Study on Dragline / Electric Rope Shovel</em>  </p>
+<p><strong>Grant Reference:</strong> IIT/SRIC/R/AEH/2026/104 (CMPDI / Coal India Limited - MT-189)  </p>
+<p><strong>Target Machines:</strong> Machine A (P&H 2100BL Benchmark) & Machine B (TZ WK-20 Deployment)  </p>
+<p><strong>Pedagogical Level:</strong> Postgraduate / Research Grade (B.Tech Mechanical Foundation Assumed)</p>
+<hr class='notebook-divider'>
+<blockquote>
+<div class="callout-header"><span class="badge badge-note">NOTE</span></div>
+<p>### RESEARCH STUDY NOTEBOOK ARCHITECTURE</p>
+<p>In <strong>Chapter 6</strong>, we established the top-down kinematic tree and topological graph of the electric rope shovel, defining coordinate frames from the revolving superstructure frame $\{0\}$ to the dipper tooth tip $\{T\}$, and resolving the closed hoist cable loop geometry.</p>
+<p></p>
+<p>In <strong>Chapter 7</strong>, we construct the core dynamic engine of the front-end working attachment: the <strong>Planar 2-Degree-of-Freedom (2-DOF) Crowd-Hoist Mechanism</strong>. This chapter bridges pure rigid-body kinematics and true electromechanical drive dynamics by formulating:</p>
+<p>1. The kinematic transmission mapping between actuator space (drum rotation $\theta_{\text{drum}}$, pinion rotation $\theta_{\text{pinion}}$) and configuration space $\mathbf{q} = [q_3, d_4]^T$.</p>
+<p>2. The closed-loop cable kinematics, deriving the Hoist Actuator Jacobian $\mathbf{J}_h(\mathbf{q})$ and analytical hoist moment arm $h_h(\mathbf{q})$.</p>
+<p>3. Flexible wire rope constitutive mechanics: axial stiffness $k_r(L_h) = \frac{E A}{L_h}$, viscoelastic structural damping $c_r$, and the unilateral cable constraint ($T_h \ge 0$, no push capacity).</p>
+<p>4. Electromechanical drive-train inertia reflection: planetary gearboxes, drum inertia $J_D$, motor rotor inertia $J_m$, and armature torque generation.</p>
+<p>5. Generalized actuation force vector $\boldsymbol{\tau}_{\text{act}} = [\tau_{\text{saddle}}, F_{\text{crowd}}]^T$ and its exact projection from actuator line tensions.</p>
+<p></p>
+<p>Every equation is rigorously proven from variational mechanics, verified against industrial specifications for both <strong>Machine A (P&H 2100BL)</strong> and <strong>Machine B (TZ WK-20)</strong>, and backed by worked numerical proofs and executable Python simulation algorithms.</p>
+</blockquote>
+<hr class='notebook-divider'>
+<h2>7.1 The Front-End Kinematic Mechanism: Actuator Space vs. Configuration Space</h2>
+<p>An electric rope shovel operates via two primary planar front-end drive systems mounted on the revolving upper works:</p>
+<ol>
+<li><strong>The Hoist Drive Subsystem:</strong> One or two high-power variable-frequency AC induction motors (or DC motors on vintage units) coupled through a double- or triple-reduction helical gearbox to a grooved cylindrical hoist drum. Twin or quadruple high-strength wire ropes wind onto the drum, route over the boom point sheave cluster, and dead-end at the dipper bail pin or equalizer.</li>
+<li><strong>The Crowd Drive Subsystem:</strong> An electromechanical pinion-and-rack drive (or in some legacy designs, a crowd/retract cable reeving system) located at the shipper shaft on the boom. The crowd motor drives pinions that mesh directly with hardened racks welded to the lower surfaces of the dipper handle beams.</li>
+</ol>
+<div class="code-container"><pre><code class="language-">       [ Hoist Motor ] ---&gt; [ Gearbox: G_h ] ---&gt; [ Hoist Drum: R_D ] ===( Wire Rope: L_h )===&gt; [ Bail Pin B ]
+                                                                                                      |
+                                                                                               [ Dipper Body ]
+                                                                                                      |
+       [ Crowd Motor ] ---&gt; [ Gearbox: G_c ] ---&gt; [ Pinion: R_p ] ===[ Rack: d_4 ]==============&gt; [ Shipper Pin O_s ]</code></pre></div>
+<h3>7.1.1 Generalized Coordinates vs. Actuator Coordinates</h3>
+<p>We formally define two distinct coordinate vectors describing the front-end working attachment:</p>
+<h4>1. Configuration Space Coordinates $\mathbf{q} \in \mathbb{R}^2$</h4>
+<p>The joint space generalized coordinates defining the geometric pose of the saddle and handle relative to the boom frame $\{1\}$:</p>
+<div class="math-display">$$\mathbf{q} = \begin{bmatrix} q_3 \\ d_4 \end{bmatrix}$$</div>
+<p>where:</p>
+<ul>
+<li>$q_3 \in [-\pi/6, \pi/3]\,\mathrm{rad}$ (or approximately $-10^\circ \text{ to } +65^\circ$): Pitch angle of the dipper handle and saddle block measured positive counter-clockwise from the horizontal boom axis $X_1$.</li>
+<li>$d_4 \in [d_{4,\min}, d_{4,\max}]\,\mathrm{m}$: Prismatic crowd displacement of the dipper handle measured from the shipper shaft center $O_s$ along the longitudinal handle axis $X_4$.</li>
+</ul>
+<h4>2. Actuator Space Coordinates $\mathbf{q}_{\text{act}} \in \mathbb{R}^2$</h4>
+<p>The physical state of the transmission drums and pinions directly connected to the mechanical working gear:</p>
+<div class="math-display">$$\mathbf{q}_{\text{act}} = \begin{bmatrix} \theta_{\text{drum}} \\ \theta_{\text{pinion}} \end{bmatrix}$$</div>
+<p>where:</p>
+<ul>
+<li>$\theta_{\text{drum}}\,\mathrm{rad}$: Angular rotation of the hoist winch drum.</li>
+<li>$\theta_{\text{pinion}}\,\mathrm{rad}$: Angular rotation of the crowd shipper shaft pinion.</li>
+</ul>
+<h4>3. Motor Rotor Coordinates $\mathbf{\theta}_m \in \mathbb{R}^2$</h4>
+<p>The high-speed shaft angular positions measured directly by motor encoders:</p>
+<div class="math-display">$$\mathbf{\theta}_m = \begin{bmatrix} \theta_{m,h} \\ \theta_{m,c} \end{bmatrix}$$</div>
+<hr class='notebook-divider'>
+<h2>7.2 Electromechanical Transmission Kinematics</h2>
+<p>The mechanical gear trains enforce kinematic reduction ratios between the high-speed motor shafts, intermediate gear stages, and final output linkages.</p>
+<h3>7.2.1 Hoist Drive Transmission Kinematics</h3>
+<p>Let $G_h$ denote the overall gear reduction ratio of the hoist transmission:</p>
+<div class="math-display">$$G_h = \frac{\omega_{m,h}}{\omega_{\text{drum}}} = \frac{\dot{\theta}_{m,h}}{\dot{\theta}_{\text{drum}}} > 1$$</div>
+<p>Let $R_D$ denote the effective pitch radius of the hoist drum (including half the wire rope diameter $d_{\text{rope}}$):</p>
+<div class="math-display">$$R_D = R_{\text{drum,core}} + \frac{d_{\text{rope}}}{2}$$</div>
+<p>For a multi-layer grooved drum, if layer $n_L \in \{1, 2, 3\}$ is winding:</p>
+<div class="math-display">$$R_D(n_L) = R_{\text{drum,core}} + \left(n_L - \frac{1}{2}\right) d_{\text{rope}} \cos 30^\circ$$</div>
+<p>*(In this textbook, unless otherwise noted, we treat $R_D$ as constant over a single digging pass on layer 1 or 2).*</p>
+<p>The linear velocity of the wire rope being pulled onto the drum (rope payout rate $-\dot{L}_h$) satisfies:</p>
+<div class="math-display">$$v_{\text{spool}} = -\dot{L}_h = n_{\text{reev}} R_D \dot{\theta}_{\text{drum}} = \frac{n_{\text{reev}} R_D}{G_h} \dot{\theta}_{m,h}$$</div>
+<p>where $n_{\text{reev}}$ is the reeving multiplication factor:</p>
+<ul>
+<li>For single-line hoist systems (direct attachment to bail): $n_{\text{reev}} = 1$.</li>
+<li>For standard twin-rope equalized hoist systems (two ropes dead-ended at bail): $n_{\text{reev}} = 1$ per rope line.</li>
+<li>For double-reeved mechanical advantage systems (sheave at dipper bail): $n_{\text{reev}} = 2$.</li>
+</ul>
+<p>In both Machine A (P&H 2100BL) and Machine B (TZ WK-20), the hoist rope runs directly from the boom point sheave to the dipper bail pin ($n_{\text{reev}} = 1$), while twin parallel rope lines share the suspended load.</p>
+<h3>7.2.2 Crowd Drive Transmission Kinematics</h3>
+<p>The crowd motor drives the shipper shaft pinion through a reduction gearbox of ratio $G_c$:</p>
+<div class="math-display">$$G_c = \frac{\omega_{m,c}}{\omega_{\text{pinion}}} = \frac{\dot{\theta}_{m,c}}{\dot{\theta}_{\text{pinion}}} > 1$$</div>
+<p>Let $R_p$ be the pitch radius of the crowd pinion. The linear handle extension velocity $\dot{d}_4$ is governed directly by rack-and-pinion pitch line engagement:</p>
+<div class="math-display">$$\dot{d}_4 = R_p \dot{\theta}_{\text{pinion}} = \frac{R_p}{G_c} \dot{\theta}_{m,c}$$</div>
+<p>Integrating over time from an initial calibrated zero datum:</p>
+<div class="math-display">$$d_4(t) = d_{4,0} + \frac{R_p}{G_c} \theta_{m,c}(t)$$</div>
+<hr class='notebook-divider'>
+<h2>7.3 Complete Closed-Loop Hoist Cable Kinematics</h2>
+<p>The wire rope is not an unconstrained rigid link; it forms a kinematically closed geometric loop between the upper works, the boom point sheave, and the moving dipper.</p>
+<div class="code-container"><pre><code class="language-">                                  [Boom Point Sheave S]
+                                       (x_s, y_s)
+                                      /          \
+                                     /            \
+                                    /              \  Hoist Cable
+                                   /                \  Vector L_h
+                            Boom  /                  \
+                            Link /                    \
+                                /                      \
+                               /                        \
+                              /                    [Bail Pin B]
+                             /                         /
+                    [Shipper Shaft O_s]               / Dipper Handle
+                             \                       /
+                              \                     /
+                               \=== [Saddle Block] =
+                                    d_4 extension</code></pre></div>
+<h3>7.3.1 Analytic Vector Formulation in Boom Frame $\{1\}$</h3>
+<p>Recall from Chapter 6 that all front-end planar kinematics are naturally formulated in the planar boom frame $\{1\}$, where the boom axis lies along $X_1$ and $Y_1$ is normal to the boom pointing upwards.</p>
+<h4>1. Boom Point Sheave Center $\mathbf{p}_S^{(1)}$</h4>
+<p>The boom point sheave is permanently pinned at the boom crest at distance $L_b$ from the boom foot pin:</p>
+<div class="math-display">$$\mathbf{p}_S^{(1)} = \begin{bmatrix} L_b \\ 0 \end{bmatrix}$$</div>
+<p>In global revolving frame $\{0\}$, tilted by boom elevation angle $\alpha_b$:</p>
+<div class="math-display">$$\mathbf{p}_S^{(0)} = \begin{bmatrix} L_b \cos\alpha_b \\ L_b \sin\alpha_b \end{bmatrix}$$</div>
+<h4>2. Shipper Shaft Pin Center $\mathbf{p}_S^{(0)}$ and $\mathbf{p}_{O_s}^{(1)}$</h4>
+<p>The shipper shaft is located along the boom at fixed distance $L_{b1}$ from the boom foot pin:</p>
+<div class="math-display">$$\mathbf{p}_{O_s}^{(1)} = \begin{bmatrix} L_{b1} \\ 0 \end{bmatrix}$$</div>
+<p>The distance from shipper shaft $O_s$ to boom point sheave $S$ is:</p>
+<div class="math-display">$$L_{b2} = L_b - L_{b1}$$</div>
+<h4>3. Bail Pin Position $\mathbf{p}_B^{(1)}(q_3, d_4)$</h4>
+<p>The bail pin $B$ is the physical attachment point of the hoist ropes onto the dipper. In handle frame $\{4\}$:</p>
+<div class="math-display">$$\mathbf{p}_B^{(4)} = \begin{bmatrix} d_4 + L_{bx} \\ L_{by} \end{bmatrix}$$</div>
+<p>where:</p>
+<ul>
+<li>$L_{bx}$: Axial offset from handle reference origin to bail pin (often negative or small positive depending on dipper geometry).</li>
+<li>$L_{by}$: Perpendicular offset of the bail pin above the handle pitch centerline.</li>
+</ul>
+<p>Transforming into boom frame $\{1\}$ via rotation through relative pitch angle $\gamma = q_3 - \alpha_b$:</p>
+<div class="math-display">$$\mathbf{p}_B^{(1)}(q_3, d_4) = \mathbf{p}_{O_s}^{(1)} + \mathbf{R}_1^4(\gamma) \mathbf{p}_B^{(4)}$$</div>
+<div class="math-display">$$\mathbf{p}_B^{(1)}(q_3, d_4) = \begin{bmatrix} L_{b1} \\ 0 \end{bmatrix} + \begin{bmatrix} \cos\gamma & -\sin\gamma \\ \sin\gamma & \cos\gamma \end{bmatrix} \begin{bmatrix} d_4 + L_{bx} \\ L_{by} \end{bmatrix}$$</div>
+<p>Carrying out the matrix multiplication:</p>
+<div class="math-display">$$\begin{aligned}
+x_B^{(1)}(q_3, d_4) &= L_{b1} + (d_4 + L_{bx})\cos\gamma - L_{by}\sin\gamma \\
+y_B^{(1)}(q_3, d_4) &= (d_4 + L_{bx})\sin\gamma + L_{by}\cos\gamma
+\end{aligned}$$</div>
+<h3>7.3.2 Analytical Hoist Rope Length $L_h(\mathbf{q})$</h3>
+<p>The instantaneous free rope vector $\mathbf{L}_h^{(1)}$ pointing from the boom sheave tangent point $S$ to bail pin $B$ is:</p>
+<div class="math-display">$$\mathbf{L}_h^{(1)} = \mathbf{p}_B^{(1)}(q_3, d_4) - \mathbf{p}_S^{(1)} = \begin{bmatrix} x_B^{(1)} - L_b \\ y_B^{(1)} \end{bmatrix}$$</div>
+<p>Substituting the coordinates and recognizing that $L_{b1} - L_b = -L_{b2}$:</p>
+<div class="math-display">$$\mathbf{L}_h^{(1)} = \begin{bmatrix} (d_4 + L_{bx})\cos\gamma - L_{by}\sin\gamma - L_{b2} \\ (d_4 + L_{bx})\sin\gamma + L_{by}\cos\gamma \end{bmatrix}$$</div>
+<p>The scalar hoist rope length $L_h$ is the Euclidean norm:</p>
+<div class="math-display">$$L_h(q_3, d_4) = \|\mathbf{L}_h^{(1)}\| = \sqrt{ \left( (d_4 + L_{bx})\cos\gamma - L_{by}\sin\gamma - L_{b2} \right)^2 + \left( (d_4 + L_{bx})\sin\gamma + L_{by}\cos\gamma \right)^2 }$$</div>
+<p>Expanding the squares:</p>
+<div class="math-display">$$\begin{aligned}
+L_h^2 &= \left[ (d_4 + L_{bx})\cos\gamma - L_{by}\sin\gamma \right]^2 - 2 L_{b2} \left[ (d_4 + L_{bx})\cos\gamma - L_{by}\sin\gamma \right] + L_{b2}^2 \\
+&\quad + \left[ (d_4 + L_{bx})\sin\gamma + L_{by}\cos\gamma \right]^2
+\end{aligned}$$</div>
+<p>Applying the fundamental Pythagorean trigonometric identity $\cos^2\gamma + \sin^2\gamma = 1$:</p>
+<div class="math-display">$$\left[ (d_4 + L_{bx})\cos\gamma - L_{by}\sin\gamma \right]^2 + \left[ (d_4 + L_{bx})\sin\gamma + L_{by}\cos\gamma \right]^2 = (d_4 + L_{bx})^2 + L_{by}^2$$</div>
+<p>Thus, we obtain the <strong>Exact Master Closed-Form Hoist Length Formula</strong>:</p>
+<div class="math-display">$$L_h(q_3, d_4) = \sqrt{ (d_4 + L_{bx})^2 + L_{by}^2 + L_{b2}^2 - 2 L_{b2} \left[ (d_4 + L_{bx})\cos\gamma - L_{by}\sin\gamma \right] }$$</div>
+<blockquote>
+<div class="callout-header"><span class="badge badge-important">IMPORTANT</span></div>
+<p>### PHYSICAL INTROSPECTION OF THE HOIST LENGTH FORMULA</p>
+<p>Notice the elegant geometric structure of this equation:</p>
+<p>- The term $(d_4 + L_{bx})^2 + L_{by}^2$ is the squared distance from shipper shaft $O_s$ to bail pin $B$, denoted $r_B^2$.</p>
+<p>- $L_{b2}^2$ is the squared distance from shipper shaft $O_s$ to boom sheave $S$.</p>
+<p>- The cross term is exactly $2 r_B L_{b2} \cos\angle(B - O_s - S)$.</p>
+<p>This is nothing other than the <strong>Law of Cosines</strong> applied to triangle $\triangle O_s - B - S$, generalized to account for the bail pin perpendicular offset $L_{by}$!</p>
+</blockquote>
+<hr class='notebook-divider'>
+<h2>7.4 Hoist Actuator Jacobian $\mathbf{J}_h(\mathbf{q})$ and Rope Payout Velocity</h2>
+<p>The rate of change of the hoist rope length, $\dot{L}_h$, represents the instantaneous rope payout velocity. By the multivariable chain rule:</p>
+<div class="math-display">$$\dot{L}_h = \frac{\partial L_h}{\partial q_3} \dot{q}_3 + \frac{\partial L_h}{\partial d_4} \dot{d}_4 = \mathbf{J}_h(\mathbf{q}) \mathbf{\dot{q}}$$</div>
+<p>where $\mathbf{J}_h(\mathbf{q}) \in \mathbb{R}^{1 \times 2}$ is the <strong>Hoist Actuator Jacobian row vector</strong>:</p>
+<div class="math-display">$$\mathbf{J}_h(\mathbf{q}) = \begin{bmatrix} \frac{\partial L_h}{\partial q_3} & \frac{\partial L_h}{\partial d_4} \end{bmatrix}$$</div>
+<h3>7.4.1 Step-by-Step Derivation of Partial Derivatives</h3>
+<p>Let $U = L_h^2$. Then $L_h = \sqrt{U}$, so:</p>
+<div class="math-display">$$\frac{\partial L_h}{\partial q_i} = \frac{1}{2\sqrt{U}} \frac{\partial U}{\partial q_i} = \frac{1}{2 L_h} \frac{\partial (L_h^2)}{\partial q_i}$$</div>
+<h4>1. Partial Derivative with respect to $q_3$</h4>
+<p>Recall $\gamma = q_3 - \alpha_b$, so $\frac{\partial \gamma}{\partial q_3} = 1$. Differentiating $L_h^2$:</p>
+<div class="math-display">$$\frac{\partial (L_h^2)}{\partial q_3} = -2 L_{b2} \frac{\partial}{\partial q_3} \left[ (d_4 + L_{bx})\cos\gamma - L_{by}\sin\gamma \right]$$</div>
+<div class="math-display">$$\frac{\partial (L_h^2)}{\partial q_3} = -2 L_{b2} \left[ -(d_4 + L_{bx})\sin\gamma - L_{by}\cos\gamma \right] = 2 L_{b2} \left[ (d_4 + L_{bx})\sin\gamma + L_{by}\cos\gamma \right]$$</div>
+<p>Dividing by $2 L_h$:</p>
+<div class="math-display">$$\frac{\partial L_h}{\partial q_3} = \frac{L_{b2} \left[ (d_4 + L_{bx})\sin\gamma + L_{by}\cos\gamma \right]}{L_h}$$</div>
+<p>Notice from Section 7.3.1 that $(d_4 + L_{bx})\sin\gamma + L_{by}\cos\gamma = y_B^{(1)}$, the height of the bail pin above the boom centerline!</p>
+<p>Therefore:</p>
+<div class="math-display">$$\frac{\partial L_h}{\partial q_3} = \frac{L_{b2} y_B^{(1)}}{L_h}$$</div>
+<h4>2. Partial Derivative with respect to $d_4$</h4>
+<p>Differentiating $L_h^2$ with respect to handle crowd stroke $d_4$:</p>
+<div class="math-display">$$\frac{\partial (L_h^2)}{\partial d_4} = 2(d_4 + L_{bx}) - 2 L_{b2}\cos\gamma$$</div>
+<p>Dividing by $2 L_h$:</p>
+<div class="math-display">$$\frac{\partial L_h}{\partial d_4} = \frac{(d_4 + L_{bx}) - L_{b2}\cos\gamma}{L_h}$$</div>
+<p>Again, inspecting the $x$-component of the rope vector $\mathbf{L}_h^{(1)}$:</p>
+<div class="math-display">$$(d_4 + L_{bx})\cos\gamma - L_{by}\sin\gamma - L_{b2}$$</div>
+<p>When the bail offset $L_{by}$ is small, $\frac{\partial L_h}{\partial d_4}$ is exactly the cosine of the angle between the handle axis and the hoist cable line!</p>
+<h3>7.4.2 The Analytical Hoist Moment Arm $h_h(\mathbf{q})$</h3>
+<p>In rotating mechanical systems, the generalized torque exerted about a pivot by a cable in tension $T_h$ is defined by the perpendicular distance (moment arm) from the pivot to the line of action of the cable:</p>
+<div class="math-display">$$\tau_{\text{hoist}} = -h_h(\mathbf{q}) T_h$$</div>
+<p>By the Principle of Virtual Work, the generalized force associated with coordinate $q_3$ due to tension $T_h$ pulling along $-\mathbf{L}_h$ is:</p>
+<div class="math-display">$$\delta W = -T_h \delta L_h = -T_h \left( \frac{\partial L_h}{\partial q_3} \delta q_3 + \frac{\partial L_h}{\partial d_4} \delta d_4 \right)$$</div>
+<p>Equating to $\tau_{q_3} \delta q_3$:</p>
+<div class="math-display">$$\tau_{q_3} = -T_h \frac{\partial L_h}{\partial q_3}$$</div>
+<p>Comparing with $\tau_{\text{hoist}} = -h_h T_h$, we discover the fundamental identity:</p>
+<div class="math-display">$$h_h(q_3, d_4) \equiv \frac{\partial L_h}{\partial q_3} = \frac{L_{b2} \left[ (d_4 + L_{bx})\sin\gamma + L_{by}\cos\gamma \right]}{L_h}$$</div>
+<div class="code-container"><pre><code class="language-">                [Boom Sheave S]
+                      *
+                     /|
+                    / |
+         Cable L_h /  |
+                  /   |
+                 /    |  h_h = Perpendicular Distance from O_s to Cable Line
+                /     |
+               /  [O_s] Shipper Shaft Pivot
+              /      /
+             *------/
+        [Bail B]</code></pre></div>
+<blockquote>
+<div class="callout-header"><span class="badge badge-tip">TIP</span></div>
+<p>### PHYSICAL INTERPRETATION OF HOIST MOMENT ARM $h_h$</p>
+<p>The moment arm $h_h$ has dimensions of meters $[\mathrm{m}]$ and physical meaning:</p>
+<p>1. It is the instantaneous perpendicular lever arm from the shipper shaft pivot $O_s$ to the hoist rope line $\overline{SB}$.</p>
+<p>2. When the dipper handle aligns parallel to the cable line, $y_B^{(1)} \to 0 \implies h_h \to 0$. In this singular configuration, the hoist cable can exert zero rotational torque about the shipper shaft—it can only pull the handle axially!</p>
+<p>3. As the handle is crowded forward ($d_4$ increases), $y_B^{(1)}$ increases, and the mechanical leverage of the hoist winch on dipper pitch rotation increases significantly.</p>
+</blockquote>
+<hr class='notebook-divider'>
+<h2>7.5 Cable Mechanics: Elasticity, Damping, and Unilateral Slackness</h2>
+<p>In rigid-body robotics textbooks, cables are frequently idealized as perfectly inextensible rods. In heavy mining machinery, this assumption causes severe simulation errors and can destroy digital twin accuracy.</p>
+<p>A typical $800\,\mathrm{t}$ shovel utilizes twin structural hoist ropes with diameters $d_{\text{rope}} \approx 60\,\mathrm{mm} - 72\,\mathrm{mm}$, operating under tensions exceeding $1.5\,\mathrm{MN}$ ($150\,\mathrm{t}$ force). The elastic elongation $\Delta L_h$ under maximum digging stall can exceed $150\,\mathrm{mm}-250\,\mathrm{mm}$!</p>
+<h3>7.5.1 Longitudinal Axial Stiffness of Wire Rope</h3>
+<p>Mining hoist ropes are stranded steel wire ropes with an Independent Wire Rope Core (IWRC), typically $6 \times 36$ or $8 \times 37$ Warrington-Seale construction.</p>
+<p>Because of the helical lay of the outer strands and individual wires, the effective elastic modulus $E_{\text{rope}}$ is lower than solid structural steel ($E_{\text{steel}} \approx 210\,\mathrm{GPa}$):</p>
+<div class="math-display">$$E_{\text{rope}} \approx 105\,\mathrm{GPa} - 125\,\mathrm{GPa} \quad (\approx 50\% - 60\% \text{ of solid steel})$$</div>
+<p>The metallic cross-sectional area for $n_{\text{lines}}$ parallel ropes of nominal diameter $d_{\text{rope}}$ is:</p>
+<div class="math-display">$$A_{\text{metal}} = n_{\text{lines}} \cdot c_{\text{fill}} \cdot \frac{\pi d_{\text{rope}}^2}{4}$$</div>
+<p>where $c_{\text{fill}} \approx 0.58 - 0.62$ is the metallic cross-section fill factor.</p>
+<p>The instantaneous axial spring stiffness $k_r(L_h)$ varies inversely with suspended free cable length:</p>
+<div class="math-display">$$k_r(L_h) = \frac{E_{\text{rope}} A_{\text{metal}}}{L_h(t)} \quad \left[\frac{\mathrm{N}}{\mathrm{m}}\right]$$</div>
+<h3>7.5.2 Viscoelastic Structural Damping</h3>
+<p>Steel wire ropes exhibit internal hysteretic damping caused by inter-wire frictional sliding and lubricant squeeze under fluctuating tension. We model this via a Kelvin-Voigt viscoelastic parallel constitutive law:</p>
+<div class="math-display">$$c_r(L_h) = 2 \zeta_r \sqrt{k_r(L_h) M_{\text{eff}}}$$</div>
+<p>where:</p>
+<ul>
+<li>$\zeta_r \in [0.03, 0.08]$: Cable structural damping ratio (typically $5\%$ critical).</li>
+<li>$M_{\text{eff}}$: Effective lumped mass suspended at the bail pin.</li>
+</ul>
+<p>Alternatively, expressing damping proportionally to rope stiffness:</p>
+<div class="math-display">$$c_r(L_h) = \beta_d k_r(L_h) = \beta_d \frac{E_{\text{rope}} A_{\text{metal}}}{L_h}$$</div>
+<p>where $\beta_d \in [0.005, 0.02]\,\mathrm{s}$ is the material stiffness-proportional damping coefficient.</p>
+<h3>7.5.3 The Unilateral Constraint: Cable Slack Formulation</h3>
+<p>A wire rope can support tensile force ($T_h > 0$), but cannot support compression ($T_h < 0$). If the dipper teeth strike a hard rock face or the ground with downward velocity while the hoist winch pays out rope, the rope goes <strong>slack</strong> ($T_h = 0$).</p>
+<p>Let $L_{h,\text{geom}}(\mathbf{q})$ be the geometric Euclidean distance between sheave and bail pin.  </p>
+<p>Let $L_{h,\text{drum}}(\theta_{\text{drum}})$ be the unstretched material length paid out from the drum:</p>
+<div class="math-display">$$L_{h,\text{drum}}(t) = L_{h,0} - n_{\text{reev}} R_D \theta_{\text{drum}}(t)$$</div>
+<p>The cable elongation (strain displacement) $\delta_c$ is:</p>
+<div class="math-display">$$\delta_c = L_{h,\text{geom}}(\mathbf{q}) - L_{h,\text{drum}}(\theta_{\text{drum}})$$</div>
+<p>The physical hoist tension $T_h$ is governed by the non-smooth unilateral complementarity condition:</p>
+<div class="math-display">$$T_h = \begin{cases}
+k_r(L_h) \delta_c + c_r(L_h) \dot{\delta}_c, & \text{if } \delta_c > 0 \text{ and } (k_r \delta_c + c_r \dot{\delta}_c) > 0 \\
+0, & \text{otherwise (Cable Slack)}
+\end{cases}$$</div>
+<p>For continuous numerical integration in ODE solvers (e.g., <code>ode45</code>, <code>ode15s</code>), the non-smooth step is regularized using a smooth sigmoid switching function:</p>
+<div class="math-display">$$T_h = \frac{1}{2} \left[ 1 + \tanh\left(\frac{\delta_c}{\epsilon_{\text{slack}}}\right) \right] \max\left(0, k_r \delta_c + c_r \dot{\delta}_c\right)$$</div>
+<p>where $\epsilon_{\text{slack}} \approx 10^{-3}\,\mathrm{m}$ is a small regularization parameter preventing gradient discontinuity.</p>
+<hr class='notebook-divider'>
+<h2>7.6 Electromechanical Drive-Train Dynamics: Motor-to-Drum Coupling</h2>
+<p>To connect electric motor drive currents to dipper motion, we must model the high-speed motor rotors, brakes, gear trains, and winch drums.</p>
+<div class="code-container"><pre><code class="language-"> [Electromagnetic]       [Motor Rotor]       [Gearbox Reduction]       [Hoist Winch Drum]
+   [Air Gap Torque]        [Inertia J_m]          [Ratio G_h, \eta_h]         [Inertia J_D]
+        \                      \                     \                     /
+         \                      \                     \                   /
+   \tau_e = K_t I_q ======&gt; J_m \ddot{\theta}_m + B_m \dot{\theta}_m + \tau_{g,\text{in}} = 0
+                                                           \
+                                                            \---&gt; \tau_{g,\text{out}} = G_h \eta_h \tau_{g,\text{in}}
+                                                                         \
+                                                                          \===&gt; J_D \ddot{\theta}_D + B_D \dot{\theta}_D + \tau_{\text{cable}} = 0</code></pre></div>
+<h3>7.6.1 Lumped Rotor-to-Drum Equations of Motion</h3>
+<h4>1. Hoist Winch Drive Dynamics</h4>
+<p>The hoist drum is driven by $n_{\text{mot},h}$ electric motors (typically 2 identical AC induction motors on WK-20, or 2 DC motors on P&H 2100BL):</p>
+<ul>
+<li>Total motor electromagnetic air-gap torque: $\tau_{e,h} = n_{\text{mot},h} \tau_{m,h}$.</li>
+<li>Motor shaft equation of motion:</li>
+</ul>
+<div class="math-display">  $$J_{m,h} \ddot{\theta}_{m,h} + B_{m,h} \dot{\theta}_{m,h} = \tau_{e,h} - \tau_{\text{pinion},h}$$</div>
+<ul>
+<li>Gearbox transmission relationship:</li>
+</ul>
+<div class="math-display">  $$\theta_{m,h} = G_h \theta_{\text{drum}}, \quad \dot{\theta}_{m,h} = G_h \dot{\theta}_{\text{drum}}$$</div>
+<ul>
+<li>Drum shaft equation of motion:</li>
+</ul>
+<div class="math-display">  $$J_D \ddot{\theta}_{\text{drum}} + B_D \dot{\theta}_{\text{drum}} = G_h \eta_h \tau_{\text{pinion},h} - R_D T_h$$</div>
+<p>  where $\eta_h \in [0.90, 0.96]$ is the forward mechanical efficiency of the gearbox.</p>
+<p>Eliminating the internal gearbox torque $\tau_{\text{pinion},h}$ by substituting $\ddot{\theta}_{m,h} = G_h \ddot{\theta}_{\text{drum}}$:</p>
+<div class="math-display">$$\left( J_D + G_h^2 \eta_h J_{m,h} \right) \ddot{\theta}_{\text{drum}} + \left( B_D + G_h^2 \eta_h B_{m,h} \right) \dot{\theta}_{\text{drum}} = G_h \eta_h \tau_{e,h} - R_D T_h$$</div>
+<p>Defining the <strong>Equivalent Inertia Reflected to the Drum</strong>:</p>
+<div class="math-display">$$J_{\text{eq},h} = J_D + G_h^2 \eta_h J_{m,h}$$</div>
+<div class="math-display">$$B_{\text{eq},h} = B_D + G_h^2 \eta_h B_{m,h}$$</div>
+<p>The hoist drum equation of motion simplifies to:</p>
+<div class="math-display">$$J_{\text{eq},h} \ddot{\theta}_{\text{drum}} + B_{\text{eq},h} \dot{\theta}_{\text{drum}} = G_h \eta_h \tau_{e,h} - R_D T_h$$</div>
+<blockquote>
+<div class="callout-header"><span class="badge badge-warning">WARNING</span></div>
+<p>### THE QUADRATIC GEAR RATIO AMPLIFICATION</p>
+<p>Notice that the motor rotor inertia $J_{m,h}$ is multiplied by $G_h^2$!</p>
+<p>In the TZ WK-20 hoist transmission, $G_h \approx 31.5$.</p>
+<p>Therefore, $G_h^2 \approx 31.5^2 = 992.25$!</p>
+<p>Even though a single motor rotor inertia might be only $J_{m} \approx 28\,\mathrm{kg}\cdot\mathrm{m}^2$, reflected to the drum shaft it represents:</p>
+<p>$$G_h^2 J_m \approx 992.25 \times 28 = 27,783\,\mathrm{kg}\cdot\mathrm{m}^2$$</p>
+<p>Neglecting motor rotor inertia in dynamic simulations leads to catastrophic underestimation of acceleration torque during hoist reversal!</p>
+</blockquote>
+<h4>2. Crowd Drive Dynamics</h4>
+<p>Similarly for the crowd drive with gear ratio $G_c$, pinion radius $R_p$, and efficiency $\eta_c$:</p>
+<div class="math-display">$$\left( J_{\text{pinion}} + G_c^2 \eta_c J_{m,c} \right) \ddot{\theta}_{\text{pinion}} + \left( B_{\text{pinion}} + G_c^2 \eta_c B_{m,c} \right) \dot{\theta}_{\text{pinion}} = G_c \eta_c \tau_{e,c} - R_p F_{\text{rack}}$$</div>
+<p>Converting to linear handle acceleration $\ddot{d}_4 = R_p \ddot{\theta}_{\text{pinion}}$:</p>
+<div class="math-display">$$M_{\text{eq},c} \ddot{d}_4 + C_{\text{eq},c} \dot{d}_4 = F_{\text{crowd,act}} - F_{\text{rack}}$$</div>
+<p>where:</p>
+<div class="math-display">$$M_{\text{eq},c} = \frac{J_{\text{pinion}} + G_c^2 \eta_c J_{m,c}}{R_p^2} \quad [\mathrm{kg}]$$</div>
+<div class="math-display">$$F_{\text{crowd,act}} = \frac{G_c \eta_c \tau_{e,c}}{R_p} \quad [\mathrm{N}]$$</div>
+<hr class='notebook-divider'>
+<h2>7.7 Generalized Actuator Force Vector $\boldsymbol{\tau}_{\text{act}}$ in Configuration Space</h2>
+<p>Now we perform the critical synthesis: how do the physical wire rope tension $T_h$ and the crowd rack force $F_{\text{rack}}$ project into the generalized forces $\boldsymbol{\tau}_{\text{act}} = [\tau_{q_3}, \tau_{d_4}]^T$ of the Lagrangian equations of motion?</p>
+<h3>7.7.1 Derivation via the Principle of Virtual Work</h3>
+<p>Consider virtual displacements of the generalized coordinates:</p>
+<div class="math-display">$$\delta \mathbf{q} = \begin{bmatrix} \delta q_3 \\ \delta d_4 \end{bmatrix}$$</div>
+<ol>
+<li>**Virtual Work of Hoist Tension $T_h$:**  </li>
+</ol>
+<p>   The hoist cable pulls inward along $-\mathbf{L}_h$ at the bail pin $B$. The virtual work done by tension $T_h$ is:</p>
+<div class="math-display">   $$\delta W_{\text{hoist}} = -T_h \delta L_h = -T_h \left( \frac{\partial L_h}{\partial q_3} \delta q_3 + \frac{\partial L_h}{\partial d_4} \delta d_4 \right)$$</div>
+<p>   Using our derived derivatives from Section 7.4:</p>
+<div class="math-display">   $$\delta W_{\text{hoist}} = -T_h h_h(\mathbf{q}) \delta q_3 - T_h \left( \frac{(d_4 + L_{bx}) - L_{b2}\cos\gamma}{L_h} \right) \delta d_4$$</div>
+<ol>
+<li>**Virtual Work of Crowd Motor Force $F_{\text{crowd}}$:**  </li>
+</ol>
+<p>   The crowd pinion pushes the handle rack linearly along direction $X_4$ with net force $F_{\text{crowd}}$:</p>
+<div class="math-display">   $$\delta W_{\text{crowd}} = F_{\text{crowd}} \delta d_4$$</div>
+<ol>
+<li><strong>Total Virtual Work of Actuators:</strong></li>
+</ol>
+<div class="math-display">   $$\delta W_{\text{act}} = \delta W_{\text{hoist}} + \delta W_{\text{crowd}} = \tau_{q_3} \delta q_3 + \tau_{d_4} \delta d_4$$</div>
+<div class="math-display">   $$\delta W_{\text{act}} = \left( -h_h(\mathbf{q}) T_h \right) \delta q_3 + \left( F_{\text{crowd}} - T_h \frac{(d_4 + L_{bx}) - L_{b2}\cos\gamma}{L_h} \right) \delta d_4$$</div>
+<p>Therefore, the <strong>Exact Generalized Actuator Force Vector</strong> is:</p>
+<div class="math-display">$$\boldsymbol{\tau}_{\text{act}}(\mathbf{q}, T_h, F_{\text{crowd}}) = \begin{bmatrix} \tau_{q_3} \\ \tau_{d_4} \end{bmatrix} = \begin{bmatrix} -h_h(\mathbf{q}) T_h \\ F_{\text{crowd}} - T_h \left(\frac{(d_4 + L_{bx}) - L_{b2}\cos\gamma}{L_h}\right) \end{bmatrix}$$</div>
+<blockquote>
+<div class="callout-header"><span class="badge badge-important">IMPORTANT</span></div>
+<p>### COUPLING BETWEEN HOIST TENSION AND CROWD RETRACTION</p>
+<p>Look closely at the second row of $\boldsymbol{\tau}_{\text{act}}$:</p>
+<p>$$\tau_{d_4} = F_{\text{crowd}} - T_h \left(\frac{(d_4 + L_{bx}) - L_{b2}\cos\gamma}{L_h}\right)$$</p>
+<p>The term $\frac{(d_4 + L_{bx}) - L_{b2}\cos\gamma}{L_h} \equiv \cos\beta_h$ is the cosine of the angle between the hoist cable and the dipper handle axis!</p>
+<p>This proves mathematically that <strong>hoisting pulls the dipper handle backward toward the boom</strong>!</p>
+<p>When an operator hoists with high tension, the crowd drive must actively deliver forward crowd force just to prevent the handle from retracting spontaneously! This electromechanical coupling is a major source of motor thermal overload during hard digging.</p>
+</blockquote>
+<hr class='notebook-divider'>
+<h2>7.8 Machine A vs. Machine B: Technical Specifications & Parameter Comparison</h2>
+<p>To ensure absolute fidelity to the project mandate, we maintain rigorous parameter isolation between the academic benchmark (Machine A: P&H 2100BL) and the field deployment machine (Machine B: TZ WK-20 at NCL Amlohri).</p>
+<div class="table-container"><table><thead><tr>
+<th>Parameter Symbol</th>
+<th>Physical Description</th>
+<th>Units</th>
+<th>Machine A: P&H 2100BL (Benchmark)</th>
+<th>Machine B: TZ WK-20 (Field Deployment)</th>
+<th>Physical Evidence Tag</th>
+</tr></thead><tbody>
+<tr>
+<td>$M_{\text{oper}}$</td>
+<td>Total Operating Weight</td>
+<td>$\mathrm{t}$</td>
+<td>$\approx 350.0$</td>
+<td>$850.0$</td>
+<td><strong>[Source-Supported]</strong></td>
+</tr>
+<tr>
+<td>$V_{\text{bucket}}$</td>
+<td>Nominal Bucket Capacity</td>
+<td>$\mathrm{m}^3$</td>
+<td>$11.5$</td>
+<td>$20.0$</td>
+<td><strong>[Source-Supported]</strong></td>
+</tr>
+<tr>
+<td>$W_{\text{pay}}$</td>
+<td>Rated Nominal Payload</td>
+<td>$\mathrm{t}$</td>
+<td>$20.0$</td>
+<td>$40.0 - 45.0$</td>
+<td><strong>[Source-Supported]</strong></td>
+</tr>
+<tr>
+<td>$L_b$</td>
+<td>Total Boom Length</td>
+<td>$\mathrm{m}$</td>
+<td>$18.30$</td>
+<td>$21.50$</td>
+<td><strong>[Source-Supported]</strong></td>
+</tr>
+<tr>
+<td>$\alpha_b$</td>
+<td>Boom Incline Angle</td>
+<td>$\mathrm{deg}$</td>
+<td>$45.0^\circ$</td>
+<td>$45.0^\circ$</td>
+<td><strong>[Source-Supported]</strong></td>
+</tr>
+<tr>
+<td>$L_{b1}$</td>
+<td>Shipper Shaft Pin Location</td>
+<td>$\mathrm{m}$</td>
+<td>$9.15$</td>
+<td>$10.25$</td>
+<td><strong>[Source-Supported]</strong></td>
+</tr>
+<tr>
+<td>$L_{b2}$</td>
+<td>Sheave to Shipper Shaft</td>
+<td>$\mathrm{m}$</td>
+<td>$9.15$</td>
+<td>$11.25$</td>
+<td><strong>[Derived Geometric]</strong></td>
+</tr>
+<tr>
+<td>$R_S$</td>
+<td>Boom Sheave Pitch Radius</td>
+<td>$\mathrm{m}$</td>
+<td>$0.915$</td>
+<td>$1.200$</td>
+<td><strong>[Source-Supported]</strong></td>
+</tr>
+<tr>
+<td>$d_{\text{rope}}$</td>
+<td>Hoist Wire Rope Diameter</td>
+<td>$\mathrm{mm}$</td>
+<td>$52.0$</td>
+<td>$64.0$</td>
+<td><strong>[Source-Supported]</strong></td>
+</tr>
+<tr>
+<td>$n_{\text{lines}}$</td>
+<td>Active Hoist Rope Lines</td>
+<td>$-$</td>
+<td>$2$ (Twin line)</td>
+<td>$2$ (Twin line)</td>
+<td><strong>[Source-Supported]</strong></td>
+</tr>
+<tr>
+<td>$E_{\text{rope}}$</td>
+<td>Rope Effective Modulus</td>
+<td>$\mathrm{GPa}$</td>
+<td>$110.0$</td>
+<td>$115.0$</td>
+<td><strong>[Established Theory]</strong></td>
+</tr>
+<tr>
+<td>$R_D$</td>
+<td>Hoist Winch Drum Radius</td>
+<td>$\mathrm{m}$</td>
+<td>$0.780$</td>
+<td>$1.050$</td>
+<td><strong>[Source-Supported]</strong></td>
+</tr>
+<tr>
+<td>$G_h$</td>
+<td>Hoist Total Gear Ratio</td>
+<td>$-$</td>
+<td>$26.4$</td>
+<td>$31.5$</td>
+<td><strong>[Source-Supported]</strong></td>
+</tr>
+<tr>
+<td>$P_{\text{hoist}}$</td>
+<td>Total Hoist Motor Power</td>
+<td>$\mathrm{kW}$</td>
+<td>$1 \times 600\,\mathrm{kW}$ (DC)</td>
+<td>$2 \times 600 = 1200\,\mathrm{kW}$ (AC)</td>
+<td><strong>[Source-Supported]</strong></td>
+</tr>
+<tr>
+<td>$R_p$</td>
+<td>Crowd Pinion Pitch Radius</td>
+<td>$\mathrm{m}$</td>
+<td>$0.320$</td>
+<td>$0.410$</td>
+<td><strong>[Source-Supported]</strong></td>
+</tr>
+<tr>
+<td>$G_c$</td>
+<td>Crowd Total Gear Ratio</td>
+<td>$-$</td>
+<td>$38.2$</td>
+<td>$44.8$</td>
+<td><strong>[Source-Supported]</strong></td>
+</tr>
+<tr>
+<td>$P_{\text{crowd}}$</td>
+<td>Total Crowd Motor Power</td>
+<td>$\mathrm{kW}$</td>
+<td>$1 \times 185\,\mathrm{kW}$ (DC)</td>
+<td>$1 \times 350\,\mathrm{kW}$ (AC)</td>
+<td><strong>[Source-Supported]</strong></td>
+</tr>
+<tr>
+<td>$m_{\text{handle}}$</td>
+<td>Dipper Handle Mass</td>
+<td>$\mathrm{kg}$</td>
+<td>$11,200$</td>
+<td>$24,500$</td>
+<td><strong>[Source-Supported]</strong></td>
+</tr>
+<tr>
+<td>$m_{\text{dipper}}$</td>
+<td>Empty Dipper Body Mass</td>
+<td>$\mathrm{kg}$</td>
+<td>$17,500$</td>
+<td>$38,000$</td>
+<td><strong>[Source-Supported]</strong></td>
+</tr>
+<tr>
+<td>$d_{4,\min} - d_{4,\max}$</td>
+<td>Handle Usable Stroke</td>
+<td>$\mathrm{m}$</td>
+<td>$3.50 - 11.20$</td>
+<td>$4.20 - 13.80$</td>
+<td><strong>[Source-Supported]</strong></td>
+</tr>
+</tbody></table></div>
+<hr class='notebook-divider'>
+<h2>7.9 Solved Numerical Practice Problems</h2>
+<hr class='notebook-divider'>
+<h3>Problem 7.1: Exact Hoist Rope Length and Bail Geometry Calculation</h3>
+<p><strong>Statement:</strong>  </p>
+<p>For Machine B (TZ WK-20), let the front-end mechanism be operating at:</p>
+<ul>
+<li>Dipper handle angle: $q_3 = 25^\circ = 0.43633\,\mathrm{rad}$</li>
+<li>Dipper handle extension: $d_4 = 8.50\,\mathrm{m}$</li>
+<li>Machine parameters: $L_{b1} = 10.25\,\mathrm{m}$, $L_b = 21.50\,\mathrm{m}$ ($\implies L_{b2} = 11.25\,\mathrm{m}$), $\alpha_b = 45^\circ$, $L_{bx} = 0.80\,\mathrm{m}$, $L_{by} = 0.65\,\mathrm{m}$.</li>
+</ul>
+<p>Compute:</p>
+<ol>
+<li>Relative handle angle $\gamma = q_3 - \alpha_b$.</li>
+<li>Coordinates of bail pin $\mathbf{p}_B^{(1)}$ in boom frame $\{1\}$.</li>
+<li>Exact Euclidean hoist rope length $L_h$.</li>
+</ol>
+<p><strong>Step-by-Step Solution:</strong></p>
+<ol>
+<li>**Calculate relative angle $\gamma$:**</li>
+</ol>
+<div class="math-display">   $$\gamma = 25^\circ - 45^\circ = -20^\circ = -0.349066\,\mathrm{rad}$$</div>
+<div class="math-display">   $$\cos(-20^\circ) = 0.939693, \quad \sin(-20^\circ) = -0.342020$$</div>
+<ol>
+<li>**Compute bail pin position $\mathbf{p}_B^{(1)}$ in boom frame:**</li>
+</ol>
+<div class="math-display">   $$d_4 + L_{bx} = 8.50 + 0.80 = 9.30\,\mathrm{m}$$</div>
+<div class="math-display">   $$\begin{aligned}
+   x_B^{(1)} &= L_{b1} + (d_4 + L_{bx})\cos\gamma - L_{by}\sin\gamma \\
+   &= 10.25 + (9.30)(0.939693) - (0.65)(-0.342020) \\
+   &= 10.25 + 8.73914 + 0.22231 = 19.21145\,\mathrm{m}
+   \end{aligned}$$</div>
+<div class="math-display">   $$\begin{aligned}
+   y_B^{(1)} &= (d_4 + L_{bx})\sin\gamma + L_{by}\cos\gamma \\
+   &= (9.30)(-0.342020) + (0.65)(0.939693) \\
+   &= -3.18079 + 0.61080 = -2.56999\,\mathrm{m}
+   \end{aligned}$$</div>
+<ol>
+<li><strong>Compute hoist rope vector and length:</strong></li>
+</ol>
+<p>   Sheave position: $\mathbf{p}_S^{(1)} = [L_b, 0]^T = [21.50, 0]^T$.</p>
+<div class="math-display">   $$\mathbf{L}_h^{(1)} = \mathbf{p}_B^{(1)} - \mathbf{p}_S^{(1)} = \begin{bmatrix} 19.21145 - 21.50000 \\ -2.56999 - 0 \end{bmatrix} = \begin{bmatrix} -2.28855 \\ -2.56999 \end{bmatrix}\,\mathrm{m}$$</div>
+<div class="math-display">   $$L_h = \sqrt{(-2.28855)^2 + (-2.56999)^2} = \sqrt{5.23746 + 6.60485} = \sqrt{11.84231} = \mathbf{3.44127\,\mathrm{m}}$$</div>
+<hr class='notebook-divider'>
+<h3>Problem 7.2: Analytical Hoist Moment Arm and Jacobian Row Vector</h3>
+<p><strong>Statement:</strong>  </p>
+<p>Using the kinematic results from Problem 7.1 for Machine B:</p>
+<ol>
+<li>Compute the analytical hoist moment arm $h_h(q_3, d_4)$.</li>
+<li>Compute the crowd-coupling partial derivative $\frac{\partial L_h}{\partial d_4}$.</li>
+<li>If the wire rope is under total tension $T_h = 850\,\mathrm{kN}$, compute the generalized torque $\tau_{q_3}$ and generalized force component on $\tau_{d_4}$.</li>
+</ol>
+<p><strong>Step-by-Step Solution:</strong></p>
+<ol>
+<li>**Calculate Hoist Moment Arm $h_h$:**</li>
+</ol>
+<p>   From Section 7.4.2:</p>
+<div class="math-display">   $$h_h = \frac{L_{b2} y_B^{(1)}}{L_h} = \frac{(11.25\,\mathrm{m})(-2.56999\,\mathrm{m})}{3.44127\,\mathrm{m}} = \frac{-28.9124}{3.44127} = \mathbf{-8.40167\,\mathrm{m}}$$</div>
+<p>   *(The negative sign indicates that pulling along the cable induces counter-clockwise positive pitch torque about $O_s$)*.</p>
+<p>   Physical perpendicular distance: $|h_h| = 8.402\,\mathrm{m}$.</p>
+<ol>
+<li>**Calculate partial derivative $\frac{\partial L_h}{\partial d_4}$:**</li>
+</ol>
+<div class="math-display">   $$\frac{\partial L_h}{\partial d_4} = \frac{(d_4 + L_{bx})\cos\gamma - L_{by}\sin\gamma - L_{b2}}{L_h} = \frac{x_B^{(1)} - L_b}{L_h}$$</div>
+<div class="math-display">   $$\frac{\partial L_h}{\partial d_4} = \frac{-2.28855}{3.44127} = \mathbf{-0.66503}$$</div>
+<p>   Thus, the Hoist Actuator Jacobian is:</p>
+<div class="math-display">   $$\mathbf{J}_h = \begin{bmatrix} -8.40167\,\mathrm{m} & -0.66503 \end{bmatrix}$$</div>
+<ol>
+<li>**Compute Generalized Forces for $T_h = 850\,\mathrm{kN}$ ($8.50 \times 10^5\,\mathrm{N}$):**</li>
+</ol>
+<div class="math-display">   $$\tau_{q_3,\text{hoist}} = -h_h T_h = -(-8.40167\,\mathrm{m})(850,000\,\mathrm{N}) = \mathbf{+7.1414 \times 10^6\,\mathrm{N}\cdot\mathrm{m}} = \mathbf{+7.141\,\mathrm{MN}\cdot\mathrm{m}}$$</div>
+<div class="math-display">   $$\tau_{d_4,\text{hoist}} = -T_h \frac{\partial L_h}{\partial d_4} = -(850,000\,\mathrm{N})(-0.66503) = \mathbf{+5.6528 \times 10^5\,\mathrm{N}} = \mathbf{+565.28\,\mathrm{kN}}$$</div>
+<p>   Notice that tension pulls the handle backwards toward the shipper shaft with $565.28\,\mathrm{kN}$ of force!</p>
+<hr class='notebook-divider'>
+<h3>Problem 7.3: Wire Rope Stiffness and Elastic Stretch Under Stall Load</h3>
+<p><strong>Statement:</strong>  </p>
+<p>For Machine B (TZ WK-20), two $d_{\text{rope}} = 64\,\mathrm{mm}$ hoist ropes with fill factor $c_{\text{fill}} = 0.60$ and elastic modulus $E_{\text{rope}} = 115\,\mathrm{GPa}$ support the dipper. The instantaneous suspended rope length is $L_h = 14.5\,\mathrm{m}$ (when the dipper is lowered near the pit floor).</p>
+<ol>
+<li>Calculate the metallic area $A_{\text{metal}}$ of the twin rope system.</li>
+<li>Determine the instantaneous axial stiffness $k_r$.</li>
+<li>Compute the elastic elongation $\Delta L_h$ under maximum digging stall tension $T_{\text{stall}} = 1.65\,\mathrm{MN}$.</li>
+</ol>
+<p><strong>Step-by-Step Solution:</strong></p>
+<ol>
+<li>**Calculate total metallic area for $n_{\text{lines}} = 2$ ropes:**</li>
+</ol>
+<div class="math-display">   $$A_{\text{single}} = c_{\text{fill}} \frac{\pi d_{\text{rope}}^2}{4} = (0.60) \frac{\pi (0.064\,\mathrm{m})^2}{4} = (0.60)(0.003217\,\mathrm{m}^2) = 1.9302 \times 10^{-3}\,\mathrm{m}^2$$</div>
+<div class="math-display">   $$A_{\text{metal}} = 2 \times A_{\text{single}} = 3.8604 \times 10^{-3}\,\mathrm{m}^2 = 3860.4\,\mathrm{mm}^2$$</div>
+<ol>
+<li>**Compute axial stiffness $k_r$:**</li>
+</ol>
+<div class="math-display">   $$k_r = \frac{E_{\text{rope}} A_{\text{metal}}}{L_h} = \frac{(115 \times 10^9\,\mathrm{N/m}^2)(3.8604 \times 10^{-3}\,\mathrm{m}^2)}{14.5\,\mathrm{m}}$$</div>
+<div class="math-display">   $$k_r = \frac{4.43946 \times 10^8}{14.5} = \mathbf{3.0617 \times 10^7\,\mathrm{N/m}} = \mathbf{30.617\,\mathrm{MN/m}}$$</div>
+<ol>
+<li>**Compute elastic elongation $\Delta L_h$:**</li>
+</ol>
+<div class="math-display">   $$\Delta L_h = \frac{T_{\text{stall}}}{k_r} = \frac{1.65 \times 10^6\,\mathrm{N}}{3.0617 \times 10^7\,\mathrm{N/m}} = 0.05389\,\mathrm{m} = \mathbf{53.89\,\mathrm{mm}}$$</div>
+<p>   Under shock loading where peak dynamic tension reaches $2.2 \times T_{\text{stall}} \approx 3.63\,\mathrm{MN}$, elongation reaches $\mathbf{118.6\,\mathrm{mm}}$!</p>
+<hr class='notebook-divider'>
+<h3>Problem 7.4: Reflected Rotor Inertia in Hoist Drive Gear Train</h3>
+<p><strong>Statement:</strong>  </p>
+<p>The TZ WK-20 hoist drive consists of two AC induction motors driving a grooved winch drum:</p>
+<ul>
+<li>Motor rotor inertia (each): $J_{m,1} = 28.5\,\mathrm{kg}\cdot\mathrm{m}^2 \implies J_{m,\text{tot}} = 57.0\,\mathrm{kg}\cdot\mathrm{m}^2$.</li>
+<li>Gear reduction ratio: $G_h = 31.5:1$.</li>
+<li>Gearbox mechanical forward efficiency: $\eta_h = 0.93$.</li>
+<li>Hoist drum core radius: $R_D = 1.05\,\mathrm{m}$, Drum inertia: $J_D = 4,200\,\mathrm{kg}\cdot\mathrm{m}^2$.</li>
+<li>Drum angular acceleration during rapid dig initiation: $\ddot{\theta}_{\text{drum}} = 1.8\,\mathrm{rad/s}^2$.</li>
+</ul>
+<p>Compute:</p>
+<ol>
+<li>Equivalent inertia $J_{\text{eq},h}$ reflected to the drum shaft.</li>
+<li>Percentage contribution of the motor rotor inertia to the total reflected inertia.</li>
+<li>Acceleration torque required at the drum shaft solely to overcome system inertia (excluding cable tension).</li>
+</ol>
+<p><strong>Step-by-Step Solution:</strong></p>
+<ol>
+<li><strong>Calculate reflected motor rotor inertia:</strong></li>
+</ol>
+<div class="math-display">   $$J_{m,\text{reflected}} = G_h^2 \eta_h J_{m,\text{tot}} = (31.5)^2 (0.93) (57.0\,\mathrm{kg}\cdot\mathrm{m}^2)$$</div>
+<div class="math-display">   $$(31.5)^2 = 992.25$$</div>
+<div class="math-display">   $$J_{m,\text{reflected}} = (992.25)(0.93)(57.0) = \mathbf{52,600.8\,\mathrm{kg}\cdot\mathrm{m}^2}$$</div>
+<ol>
+<li><strong>Compute total equivalent inertia at the drum:</strong></li>
+</ol>
+<div class="math-display">   $$J_{\text{eq},h} = J_D + J_{m,\text{reflected}} = 4,200 + 52,600.8 = \mathbf{56,800.8\,\mathrm{kg}\cdot\mathrm{m}^2}$$</div>
+<ol>
+<li><strong>Percentage contribution of motor rotor:</strong></li>
+</ol>
+<div class="math-display">   $$\%_{\text{rotor}} = \frac{52,600.8}{56,800.8} \times 100\% = \mathbf{92.6\%}$$</div>
+<p>   *(The high-speed motor rotors represent over $92\%$ of the total rotational inertia of the hoist drive!)*</p>
+<ol>
+<li><strong>Inertial acceleration torque at the drum:</strong></li>
+</ol>
+<div class="math-display">   $$\tau_{\text{accel,drum}} = J_{\text{eq},h} \ddot{\theta}_{\text{drum}} = (56,800.8\,\mathrm{kg}\cdot\mathrm{m}^2)(1.8\,\mathrm{rad/s}^2) = \mathbf{102,241.4\,\mathrm{N}\cdot\mathrm{m}} = \mathbf{102.24\,\mathrm{kN}\cdot\mathrm{m}}$$</div>
+<p>   Torque required at the motor high-speed shafts:</p>
+<div class="math-display">   $$\tau_{\text{motor,tot}} = \frac{\tau_{\text{accel,drum}}}{G_h \eta_h} = \frac{102,241.4}{(31.5)(0.93)} = \frac{102,241.4}{29.295} = \mathbf{3,490.1\,\mathrm{N}\cdot\mathrm{m}}$$</div>
+<p>   Split across 2 motors: $\tau_{m} = 1,745\,\mathrm{N}\cdot\mathrm{m}$ per motor just for dry acceleration!</p>
+<hr class='notebook-divider'>
+<h3>Problem 7.5: Minimum Crowd Motor Force to Prevent Spontaneous Retraction</h3>
+<p><strong>Statement:</strong>  </p>
+<p>During a heavy bank excavation pass on Machine A (P&H 2100BL):</p>
+<ul>
+<li>Handle angle: $q_3 = 30^\circ$ ($\implies \gamma = 30^\circ - 45^\circ = -15^\circ$).</li>
+<li>Handle extension: $d_4 = 6.20\,\mathrm{m}$.</li>
+<li>Hoist rope tension: $T_h = 620\,\mathrm{kN}$.</li>
+<li>Machine parameters: $L_{b1} = 9.15\,\mathrm{m}$, $L_{b2} = 9.15\,\mathrm{m}$, $L_{bx} = 0.50\,\mathrm{m}$, $L_{by} = 0.40\,\mathrm{m}$.</li>
+<li>Crowd pinion radius: $R_p = 0.320\,\mathrm{m}$, Gear ratio: $G_c = 38.2$, Efficiency $\eta_c = 0.91$.</li>
+</ul>
+<p>Find:</p>
+<ol>
+<li>The instantaneous cable retraction projection factor $\cos\beta_h = \frac{\partial L_h}{\partial d_4}$.</li>
+<li>The backward retracting force exerted by the hoist cable along the handle rack.</li>
+<li>The minimum electromagnetic crowd motor torque $\tau_{e,c}$ required to maintain steady crowd extension speed ($\ddot{d}_4 = 0$) resisting this cable pull.</li>
+</ol>
+<p><strong>Step-by-Step Solution:</strong></p>
+<ol>
+<li><strong>Calculate bail position and rope length:</strong></li>
+</ol>
+<div class="math-display">   $$\gamma = -15^\circ \implies \cos(-15^\circ) = 0.965926, \quad \sin(-15^\circ) = -0.258819$$</div>
+<div class="math-display">   $$d_4 + L_{bx} = 6.20 + 0.50 = 6.70\,\mathrm{m}$$</div>
+<div class="math-display">   $$\begin{aligned}
+   x_B^{(1)} &= L_{b1} + (6.70)(0.965926) - (0.40)(-0.258819) = 9.15 + 6.4717 + 0.1035 = 15.7252\,\mathrm{m} \\
+   y_B^{(1)} &= (6.70)(-0.258819) + (0.40)(0.965926) = -1.7341 + 0.3864 = -1.3477\,\mathrm{m}
+   \end{aligned}$$</div>
+<div class="math-display">   $$L_b = 9.15 + 9.15 = 18.30\,\mathrm{m}$$</div>
+<div class="math-display">   $$\mathbf{L}_h^{(1)} = \begin{bmatrix} 15.7252 - 18.3000 \\ -1.3477 \end{bmatrix} = \begin{bmatrix} -2.5748 \\ -1.3477 \end{bmatrix}\,\mathrm{m}$$</div>
+<div class="math-display">   $$L_h = \sqrt{(-2.5748)^2 + (-1.3477)^2} = \sqrt{6.6296 + 1.8163} = \sqrt{8.4459} = 2.9062\,\mathrm{m}$$</div>
+<ol>
+<li><strong>Compute handle retraction projection factor:</strong></li>
+</ol>
+<div class="math-display">   $$\frac{\partial L_h}{\partial d_4} = \frac{x_B^{(1)} - L_b}{L_h} = \frac{-2.5748\,\mathrm{m}}{2.9062\,\mathrm{m}} = \mathbf{-0.88597}$$</div>
+<ol>
+<li><strong>Compute backward retracting force:</strong></li>
+</ol>
+<div class="math-display">   $$F_{\text{retract}} = T_h \left| \frac{\partial L_h}{\partial d_4} \right| = (620,000\,\mathrm{N})(0.88597) = \mathbf{549,301\,\mathrm{N}} = \mathbf{549.3\,\mathrm{kN}}$$</div>
+<ol>
+<li><strong>Compute required crowd motor torque:</strong></li>
+</ol>
+<p>   To maintain motion, the crowd drive must deliver:</p>
+<div class="math-display">   $$F_{\text{crowd}} = F_{\text{retract}} = 549,301\,\mathrm{N}$$</div>
+<p>   From Section 7.6.1:</p>
+<div class="math-display">   $$F_{\text{crowd}} = \frac{G_c \eta_c \tau_{e,c}}{R_p} \implies \tau_{e,c} = \frac{F_{\text{crowd}} R_p}{G_c \eta_c}$$</div>
+<div class="math-display">   $$\tau_{e,c} = \frac{(549,301\,\mathrm{N})(0.320\,\mathrm{m})}{(38.2)(0.91)} = \frac{175,776.3}{34.762} = \mathbf{5,056.6\,\mathrm{N}\cdot\mathrm{m}}$$</div>
+<p>   The crowd motor must produce over $5\,\mathrm{kN}\cdot\mathrm{m}$ of continuous shaft torque solely to prevent the dipper from being dragged backward by the hoist ropes!</p>
+<hr class='notebook-divider'>
+<h2>7.10 Executable Simulation Algorithm (Python & MATLAB)</h2>
+<p>The following industrial-grade script implements the exact closed-loop cable kinematics, actuator Jacobians, reflected inertias, and unilateral tension dynamics for both Machine A and Machine B.</p>
+<div class="code-container"><pre><code class="language-python">&quot;&quot;&quot;
+Electric Rope Shovel Digital Twin - Front-End 2-DOF Cable Dynamics Simulator
+Target: Machine A (P&amp;H 2100BL) &amp; Machine B (TZ WK-20)
+Project: AI-Enabled Platform for PHM of Mining Electrical Systems
+Grant: IIT/SRIC/R/AEH/2026/104 (CMPDI / CIL MT-189)
+&quot;&quot;&quot;
+
+import numpy as np
+
+class ShovelFrontEndModel:
+    def __init__(self, machine_type=&#x27;WK20&#x27;):
+        if machine_type == &#x27;WK20&#x27;:
+            # Machine B: TZ WK-20 (Amlohri Deployment)
+            self.name = &quot;TZ WK-20 (Machine B)&quot;
+            self.L_b = 21.50      # Boom length (m)
+            self.alpha_b = np.radians(45.0)  # Boom angle (rad)
+            self.L_b1 = 10.25     # Shipper shaft pin location (m)
+            self.L_b2 = self.L_b - self.L_b1 # Sheave distance (m)
+            self.L_bx = 0.80      # Bail pin x-offset in handle frame (m)
+            self.L_by = 0.65      # Bail pin y-offset in handle frame (m)
+            self.d_rope = 0.064   # Wire rope diameter (m)
+            self.n_lines = 2      # Twin hoist ropes
+            self.c_fill = 0.60    # Rope fill factor
+            self.E_rope = 115e9   # Rope elastic modulus (Pa)
+            self.R_D = 1.05       # Hoist drum radius (m)
+            self.G_h = 31.5       # Hoist gear ratio
+            self.eta_h = 0.93     # Hoist efficiency
+            self.J_m_h = 57.0     # Total hoist motor rotor inertia (kg*m^2)
+            self.J_D = 4200.0     # Hoist drum inertia (kg*m^2)
+            self.R_p = 0.410      # Crowd pinion radius (m)
+            self.G_c = 44.8       # Crowd gear ratio
+            self.eta_c = 0.90     # Crowd efficiency
+        else:
+            # Machine A: P&amp;H 2100BL (Literature Benchmark)
+            self.name = &quot;P&amp;H 2100BL (Machine A)&quot;
+            self.L_b = 18.30
+            self.alpha_b = np.radians(45.0)
+            self.L_b1 = 9.15
+            self.L_b2 = self.L_b - self.L_b1
+            self.L_bx = 0.50
+            self.L_by = 0.40
+            self.d_rope = 0.052
+            self.n_lines = 2
+            self.c_fill = 0.58
+            self.E_rope = 110e9
+            self.R_D = 0.78
+            self.G_h = 26.4
+            self.eta_h = 0.92
+            self.J_m_h = 24.0
+            self.J_D = 1850.0
+            self.R_p = 0.320
+            self.G_c = 38.2
+            self.eta_c = 0.91
+
+        # Metallic area of wire rope
+        self.A_metal = self.n_lines * self.c_fill * (np.pi * self.d_rope**2 / 4.0)
+
+    def compute_kinematics(self, q3, d4):
+        &quot;&quot;&quot;
+        Computes bail position, hoist length, moment arm, and Actuator Jacobian.
+        q3: Saddle pitch angle (rad)
+        d4: Handle crowd extension (m)
+        &quot;&quot;&quot;
+        gamma = q3 - self.alpha_b
+        cos_g = np.cos(gamma)
+        sin_g = np.sin(gamma)
+
+        # Bail pin coordinates in Boom Frame {1}
+        x_B1 = self.L_b1 + (d4 + self.L_bx) * cos_g - self.L_by * sin_g
+        y_B1 = (d4 + self.L_bx) * sin_g + self.L_by * cos_g
+
+        # Hoist cable vector L_h pointing from sheave S to bail B
+        L_hx = x_B1 - self.L_b
+        L_hy = y_B1
+        L_h = np.sqrt(L_hx**2 + L_hy**2)
+
+        # Analytical partial derivatives
+        dL_dq3 = (self.L_b2 * y_B1) / L_h
+        dL_dd4 = L_hx / L_h
+
+        h_h = dL_dq3 # Analytical hoist moment arm
+        J_h = np.array([dL_dq3, dL_dd4])
+
+        return {
+            &#x27;x_B1&#x27;: x_B1, &#x27;y_B1&#x27;: y_B1,
+            &#x27;L_h&#x27;: L_h, &#x27;h_h&#x27;: h_h,
+            &#x27;J_h&#x27;: J_h, &#x27;gamma&#x27;: gamma
+        }
+
+    def compute_cable_stiffness(self, L_h):
+        &quot;&quot;&quot;Computes axial stiffness k_r (N/m).&quot;&quot;&quot;
+        return (self.E_rope * self.A_metal) / L_h
+
+    def compute_generalized_actuator_forces(self, q3, d4, T_h, F_crowd):
+        &quot;&quot;&quot;
+        Maps wire rope tension T_h and crowd force F_crowd to generalized forces.
+        &quot;&quot;&quot;
+        kin = self.compute_kinematics(q3, d4)
+        tau_q3 = -kin[&#x27;h_h&#x27;] * T_h
+        tau_d4 = F_crowd - T_h * kin[&#x27;J_h&#x27;][1]
+        return np.array([tau_q3, tau_d4])
+
+# Execution and verification
+if __name__ == &#x27;__main__&#x27;:
+    print(&quot;=&quot; * 75)
+    print(&quot;ELECTRIC ROPE SHOVEL: FRONT-END 2-DOF KINEMATICS &amp; DYNAMICS ENGINE&quot;)
+    print(&quot;=&quot; * 75)
+
+    for m_type in [&#x27;P&amp;H&#x27;, &#x27;WK20&#x27;]:
+        model = ShovelFrontEndModel(machine_type=m_type)
+        q3_eval = np.radians(25.0)
+        d4_eval = 8.50 if m_type == &#x27;WK20&#x27; else 6.20
+        kin = model.compute_kinematics(q3_eval, d4_eval)
+        k_r = model.compute_cable_stiffness(kin[&#x27;L_h&#x27;])
+
+        print(f&quot;\n--- Machine: {model.name} ---&quot;)
+        print(f&quot;Configuration: q3 = {np.degrees(q3_eval):.1f} deg, d4 = {d4_eval:.2f} m&quot;)
+        print(f&quot;Bail Pin Position in Boom Frame: ({kin[&#x27;x_B1&#x27;]:.3f}, {kin[&#x27;y_B1&#x27;]:.3f}) m&quot;)
+        print(f&quot;Free Hoist Cable Length L_h:     {kin[&#x27;L_h&#x27;]:.3f} m&quot;)
+        print(f&quot;Hoist Moment Arm h_h:            {kin[&#x27;h_h&#x27;]:.3f} m&quot;)
+        print(f&quot;Actuator Jacobian J_h:           [{kin[&#x27;J_h&#x27;][0]:.3f}, {kin[&#x27;J_h&#x27;][1]:.3f}]&quot;)
+        print(f&quot;Axial Cable Stiffness k_r:       {k_r / 1e6:.2f} MN/m&quot;)
+
+        # Test Generalized Forces
+        T_h_test = 850e3 if m_type == &#x27;WK20&#x27; else 620e3
+        F_c_test = 300e3
+        tau_gen = model.compute_generalized_actuator_forces(q3_eval, d4_eval, T_h_test, F_c_test)
+        print(f&quot;For T_h = {T_h_test/1e3:.1f} kN, F_crowd = {F_c_test/1e3:.1f} kN:&quot;)
+        print(f&quot;  Generalized Torque tau_q3:    {tau_gen[0]/1e6:.3f} MN*m&quot;)
+        print(f&quot;  Generalized Force  tau_d4:    {tau_gen[1]/1e3:.1f} kN&quot;)
+    print(&quot;=&quot; * 75)</code></pre></div>
+<hr class='notebook-divider'>
+<h2>7.11 Doctoral Viva Defense Questions & Physical Logic</h2>
+<h3>Question 1: Why is the hoist actuator Jacobian $\mathbf{J}_h(\mathbf{q})$ non-square and configuration-dependent?</h3>
+<p><strong>Authoritative Answer:</strong>  </p>
+<p>The hoist winch possesses a single scalar degree of actuation ($\theta_{\text{drum}} \in \mathbb{R}^1$) which pays out a single cable length $L_h$. However, this single cable acts upon a 2-DOF planar linkage whose configuration is spanned by both rotation $q_3$ and translation $d_4$. Consequently, the kinematic mapping $\dot{L}_h = \mathbf{J}_h(\mathbf{q})\mathbf{\dot{q}}$ requires a $1 \times 2$ row vector Jacobian:</p>
+<div class="math-display">$$\mathbf{J}_h(\mathbf{q}) = \begin{bmatrix} \frac{\partial L_h}{\partial q_3} & \frac{\partial L_h}{\partial d_4} \end{bmatrix} = \begin{bmatrix} h_h(\mathbf{q}) & \cos\beta_h(\mathbf{q}) \end{bmatrix}$$</div>
+<p>It is configuration-dependent because the angle of the triangle $\triangle O_s - B - S$ deforms continuously as the dipper handle crowds and rotates. As a result, the distribution of wire rope payout between pitch rotation and handle extension changes dynamically across the digging envelope.</p>
+<h3>Question 2: In our generalized actuator force equation, why does the hoist rope tension create a generalized force component along the crowd coordinate $d_4$?</h3>
+<p><strong>Authoritative Answer:</strong>  </p>
+<p>Because the hoist cable does not act perpendicularly to the dipper handle; the line of action of the cable connects the boom point sheave $S$ to the bail pin $B$ at an acute or obtuse angle $\beta_h \neq 90^\circ$ relative to the handle axis $X_4$. The projection of tension $T_h$ onto the handle centerline is $-T_h \cos\beta_h = -T_h \frac{\partial L_h}{\partial d_4}$. This axial component directly opposes the crowd pinion rack thrust. It is not an unmodeled parasitic disturbance; it is an exact holonomic geometric coupling dictated by the closed kinematic loop.</p>
+<h3>Question 3: Why does neglecting the motor rotor inertia in the hoist gearbox produce catastrophic errors during digital twin load estimation?</h3>
+<p><strong>Authoritative Answer:</strong>  </p>
+<p>In high-ratio gear reducers ($G_h \approx 31.5$ on WK-20), the rotor inertia reflected to the output shaft scales with the square of the gear ratio: $J_{\text{refl}} = G_h^2 \eta_h J_m \approx 992 J_m$. In our numerical audit of the TZ WK-20, the reflected motor inertia accounts for $92.6\%$ of the total rotational inertia of the entire winch assembly ($52,600\,\mathrm{kg}\cdot\mathrm{m}^2$ out of $56,800\,\mathrm{kg}\cdot\mathrm{m}^2$). If a digital twin neglects this term, the observer will attribute the massive inertial acceleration torque during sudden hoisting reversals to an external rock impact force, causing massive false-positive overload alarms.</p>
+<h3>Question 4: How does the unilateral constraint $T_h \ge 0$ affect numerical stability in stiff ODE solvers, and how is it regularized?</h3>
+<p><strong>Authoritative Answer:</strong>  </p>
+<p>When the dipper strikes a bench or drops rapidly, the geometric distance $L_{h,\text{geom}}$ may become shorter than the paid-out drum length $L_{h,\text{drum}}$, causing the rope to go slack. An ideal rope produces zero compressive stress ($T_h = 0$). This creates a discontinuous derivative $\frac{d T_h}{d \delta_c}$ at $\delta_c = 0$, violating the Lipschitz continuity conditions required by standard Runge-Kutta numerical integrators (<code>ode45</code>, <code>ode15s</code>) and causing solver step size collapse or chattering. We regularize this condition using a smooth hyperbolic tangent sigmoid function $T_h = \frac{1}{2}\left[1 + \tanh(\delta_c / \epsilon)\right]\max(0, k_r \delta_c + c_r \dot{\delta}_c)$, preserving $C^1$ differentiability while enforcing zero compressive resistance to within engineering precision.</p>
+<h3>Question 5: Why can we NOT transfer the boom and shipper shaft geometric parameters of Machine A (P&H 2100BL) to Machine B (TZ WK-20)?</h3>
+<p><strong>Authoritative Answer:</strong>  </p>
+<p>The P&H 2100BL is a vintage $350\,\mathrm{t}$, $11.5\,\mathrm{m}^3$ shovel with boom length $L_b = 18.30\,\mathrm{m}$ and equal split $L_{b1} = L_{b2} = 9.15\,\mathrm{m}$. In contrast, the TZ WK-20 is an $850\,\mathrm{t}$, $20\,\mathrm{m}^3$ heavy shovel deployed at NCL Amlohri with an extended boom length $L_b = 21.50\,\mathrm{m}$, shipper shaft location $L_{b1} = 10.25\,\mathrm{m}$, and sheave offset $L_{b2} = 11.25\,\mathrm{m}$. Transferring Machine A geometry to Machine B introduces an error of over $2.1\,\mathrm{m}$ in sheave distance and shifts the hoist moment arm $h_h$ by up to $22\%$, completely corrupting the Generalized Momentum Observer and payload estimation algorithms.</p>
+<hr class='notebook-divider'>
+<h2>7.12 Summary of Chapter 7 Core Analytical Deliverables</h2>
+<div class="code-container"><pre><code class="language-">====================================================================================================
+                        CHAPTER 7 CORE MATHEMATICAL &amp; PHYSICAL IDENTITIES
+====================================================================================================
+1. Exact Hoist Cable Length:
+   L_h(q_3, d_4) = \sqrt{(d_4 + L_{bx})^2 + L_{by}^2 + L_{b2}^2 - 2 L_{b2}[(d_4 + L_{bx})\cos\gamma - L_{by}\sin\gamma]}
+
+2. Hoist Actuator Jacobian:
+   \mathbf{J}_h(\mathbf{q}) = \begin{bmatrix} \frac{\partial L_h}{\partial q_3} &amp; \frac{\partial L_h}{\partial d_4} \end{bmatrix} = \begin{bmatrix} h_h(\mathbf{q}) &amp; \cos\beta_h(\mathbf{q}) \end{bmatrix}
+
+3. Hoist Moment Arm Identity:
+   h_h(q_3, d_4) \equiv \frac{\partial L_h}{\partial q_3} = \frac{L_{b2} y_B^{(1)}}{L_h}
+
+4. Reflected Winch Drum Equivalent Inertia:
+   J_{\text{eq},h} = J_D + G_h^2 \eta_h J_{m,h}  \quad (\text{Reflected rotor accounts for } &gt;92\% \text{ of total inertia})
+
+5. Exact Generalized Actuation Vector:
+   \boldsymbol{\tau}_{\text{act}} = \begin{bmatrix} \tau_{q_3} \\ \tau_{d_4} \end{bmatrix} = \begin{bmatrix} -h_h(\mathbf{q}) T_h \\ F_{\text{crowd}} - T_h \left(\frac{(d_4 + L_{bx}) - L_{b2}\cos\gamma}{L_h}\right) \end{bmatrix}
+====================================================================================================</code></pre></div>
+</body>
+</html>

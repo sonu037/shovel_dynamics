@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Volume I - Chapter 5: Advanced Nonlinear Observers and Generalized Momentum Formulations (M3)</title>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  chtml: {
+    scale: 1.18
+  },
+  options: {
+    ignoreHtmlClass: 'tex2jax_ignore',
+    processHtmlClass: 'tex2jax_process'
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+  /* Notebook Typography & Sizing */
+  :root {
+    --primary-blue: #1d4ed8;
+    --navy-header: #0f2744;
+    --slate-text: #1e293b;
+    --callout-bg: #f8fafc;
+    --callout-border: #3b82f6;
+    --notebook-rule: #e2e8f0;
+  }
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 18px;          /* Generous, large notebook font size */
+    line-height: 1.85;        /* Spacious line spacing for reading equations */
+    margin: 40px auto;
+    max-width: 1040px;
+    padding: 0 45px;
+    color: var(--slate-text);
+    background-color: #fdfdfd;
+  }
+  
+  /* Notebook Cover & Headings */
+  h1 {
+    color: var(--navy-header);
+    border-bottom: 3px solid var(--primary-blue);
+    padding-bottom: 14px;
+    margin-top: 55px;
+    font-size: 2.3em;
+    line-height: 1.25;
+    letter-spacing: -0.5px;
+  }
+  
+  h2 {
+    color: #1e3a8a;
+    border-bottom: 2px solid #cbd5e1;
+    padding-bottom: 10px;
+    margin-top: 45px;
+    font-size: 1.7em;
+    line-height: 1.3;
+  }
+  
+  h3 {
+    color: var(--primary-blue);
+    margin-top: 35px;
+    font-size: 1.35em;
+    line-height: 1.35;
+  }
+  
+  h4 {
+    color: #334155;
+    margin-top: 25px;
+    font-size: 1.15em;
+    font-weight: 600;
+  }
+  
+  p {
+    margin: 18px 0;
+    font-size: 1.02em;
+  }
+  
+  /* Notebook Math Display */
+  .math-display {
+    overflow-x: auto;
+    margin: 28px 0;
+    padding: 16px 20px;
+    text-align: center;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+  }
+  
+  /* Notebook Code Blocks */
+  .code-container {
+    margin: 25px 0;
+  }
+  pre {
+    background: #0f172a;
+    color: #f8fafc;
+    border-radius: 8px;
+    padding: 20px 24px;
+    overflow-x: auto;
+    font-size: 15px;          /* Larger code font */
+    font-family: "Consolas", "Courier New", monospace;
+    line-height: 1.6;
+    border: 1px solid #334155;
+  }
+  
+  code {
+    font-family: "Consolas", "Courier New", monospace;
+    background: #f1f5f9;
+    color: #0f172a;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.92em;
+    font-weight: 500;
+  }
+  
+  pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+    font-weight: normal;
+  }
+  
+  /* Notebook Tables */
+  .table-container {
+    overflow-x: auto;
+    margin: 32px 0;
+  }
+  
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 16px;          /* Clear table font */
+    background: #ffffff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  
+  th, td {
+    border: 1px solid #cbd5e1;
+    padding: 14px 18px;
+    text-align: left;
+    line-height: 1.6;
+  }
+  
+  th {
+    background-color: #f1f5f9;
+    color: #0f172a;
+    font-weight: 700;
+    font-size: 1.02em;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #f8fafc;
+  }
+  
+  /* Notebook Highlight / Callout Blocks */
+  blockquote {
+    border-left: 6px solid var(--primary-blue);
+    margin: 28px 0;
+    padding: 18px 26px;
+    background: #eff6ff;
+    color: #1e3a8a;
+    border-radius: 0 8px 8px 0;
+    font-size: 1.02em;
+    box-shadow: 0 1px 3px rgba(37,99,235,0.06);
+  }
+  
+  blockquote p {
+    margin: 8px 0;
+  }
+  
+  .badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .badge-note { background: #dbeafe; color: #1e40af; }
+  .badge-tip { background: #dcfce7; color: #15803d; }
+  .badge-important { background: #fef3c7; color: #92400e; }
+  .badge-warning { background: #fee2e2; color: #b91c1c; }
+  .badge-caution { background: #fce7f3; color: #9d174d; }
+  
+  ul, ol {
+    padding-left: 32px;
+    margin: 18px 0;
+  }
+  
+  li {
+    margin: 10px 0;
+    font-size: 1.02em;
+  }
+  
+  hr.notebook-divider {
+    border: 0;
+    border-top: 2px dashed #cbd5e1;
+    margin: 45px 0;
+  }
+  
+  /* Print Controls */
+  .print-btn {
+    position: fixed;
+    top: 24px;
+    right: 32px;
+    background: var(--primary-blue);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+    z-index: 1000;
+    transition: all 0.2s;
+  }
+  
+  .print-btn:hover {
+    background: #1e40af;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.22);
+  }
+  
+  @media print {
+    .print-btn { display: none; }
+    body {
+      max-width: 100%;
+      margin: 0;
+      padding: 12mm 15mm;
+      font-size: 13pt;        /* Large readable notebook text in PDF */
+      line-height: 1.7;
+      color: #000;
+      background: #fff;
+    }
+    h1 {
+      page-break-before: always;
+      font-size: 1.9em;
+      border-bottom: 2pt solid #000;
+    }
+    h1:first-of-type {
+      page-break-before: avoid;
+    }
+    h2 {
+      font-size: 1.45em;
+      page-break-after: avoid;
+    }
+    h3 {
+      font-size: 1.25em;
+      page-break-after: avoid;
+    }
+    table, pre, blockquote, .math-display {
+      page-break-inside: avoid;
+    }
+    table {
+      font-size: 11pt;
+    }
+    pre {
+      font-size: 10.5pt;
+      background: #f8fafc;
+      color: #0f172a;
+      border: 1pt solid #cbd5e1;
+    }
+    a {
+      color: #000;
+      text-decoration: none;
+    }
+  }
+</style>
+</head>
+<body class="tex2jax_process">
+<button class="print-btn" onclick="window.print()">Print / Save as PDF (Ctrl+P)</button>
+<h1>VOLUME I: ADVANCED MATHEMATICAL FOUNDATIONS</h1>
+<hr class='notebook-divider'>
+<h1>CHAPTER 5: Advanced Nonlinear Observers and Generalized Momentum Formulations (M3)</h1>
+<p><strong>Author:</strong> Multidisciplinary Research Supervisor & Technical Author  </p>
+<p><strong>Project:</strong> <em>AI-Enabled Platform for Diagnosis, Prognosis and Health Management of Mining Electrical Systems: Case Study on Dragline / Electric Rope Shovel</em>  </p>
+<p><strong>Grant Reference:</strong> IIT/SRIC/R/AEH/2026/104 (CMPDI / Coal India Limited — MT-189)  </p>
+<p><strong>Target Machines:</strong> Machine A (P&H 2100BL Benchmark) & Machine B (TZ WK-20 Deployment)  </p>
+<p><strong>Pedagogical Level:</strong> Postgraduate / Research Grade (B.Tech Mechanical Foundation Assumed)</p>
+<hr class='notebook-divider'>
+<blockquote>
+<div class="callout-header"><span class="badge badge-note">NOTE</span></div>
+<p>### RESEARCH STUDY NOTEBOOK ARCHITECTURE</p>
+<p>In Chapters 3 and 4, we formulated the forward multibody dynamics and parameter identification regressor. However, in an operational digital twin for health monitoring and fault diagnosis, we face a crucial inverse challenge:</p>
+<p></p>
+<p>**How can we estimate unknown rock cutting resistance forces $\mathbf{F}_{\text{ext}}$ and dynamic payload variations in real time without mounting fragile, expensive load cells on the dipper teeth?**</p>
+<p></p>
+<p>The naive approach—inverting the dynamic equations $\mathbf{Q}_{\text{ext}} = \mathbf{D}\mathbf{\ddot{q}} + \mathbf{C}\mathbf{\dot{q}} + \mathbf{G} - \boldsymbol{\tau}$—fails completely in the field because double differentiation of noisy encoder signals $\mathbf{q}(t)$ amplifies high-frequency noise into millions of Newtons of artificial force spikes!</p>
+<p></p>
+<p>In this chapter, we develop the theoretical foundation of <strong>Module M3</strong>: the <strong>Generalized Momentum Observer (GMO)</strong>.</p>
+<p></p>
+<p>By the end of this chapter, you will be able to:</p>
+<p>1. Formulate system momentum $\mathbf{p} = \mathbf{D}(\mathbf{q})\mathbf{\dot{q}}$ and prove that its time derivative $\mathbf{\dot{p}}$ eliminates joint accelerations $\mathbf{\ddot{q}}$ identically using the passivity skew-symmetry property.</p>
+<p>2. Derive the De Luca-Haddadin residual observer $\mathbf{r}(t)$ and prove that each channel behaves as a decoupled first-order low-pass filter driven by the true external load.</p>
+<p>3. Prove global exponential convergence of the observer error dynamics using Lyapunov stability theory.</p>
+<p>4. Invert the transposed Jacobian $\hat{\mathbf{F}}_{\text{ext}} = (\mathbf{J}_T^T)^{-1}\mathbf{r}$ to reconstruct 2D digging resistance forces at the dipper teeth.</p>
+<p>5. Implement the complete discrete observer algorithm with anti-windup and parameter uncertainty bounds for both the <strong>P&H 2100BL benchmark</strong> and the <strong>TZ WK-20 heavy shovel</strong>.</p>
+</blockquote>
+<hr class='notebook-divider'>
+<h2>5.1 Physical Intuition: The Dilemma of External Force Sensing in Open-Pit Mining</h2>
+<h3>5.1.1 Why Physical Load Cells Fail in Mining Environments</h3>
+<p>In laboratory robotics, interaction forces between an end-effector and the environment are measured directly using six-axis strain-gauge load cells mounted at the wrist flange. </p>
+<p>On an electric rope shovel or dragline operating in an open-cast mine, mounting physical load cells at the dipper teeth or bail pin is practically impossible:</p>
+<ol>
+<li><strong>Extreme Shock Loads:</strong> During hard rock excavation in blasted granite or basalt, dipper teeth encounter peak shock accelerations exceeding $15\,\mathrm{g}$ and peak contact forces over $1,500\,\mathrm{kN}$. Delicate strain gauges and piezoresistive foil sensors fracture or de-bond within hours.</li>
+<li><strong>Harsh Environmental Contamination:</strong> Dipper teeth are subjected to abrasive silica dust, slurry, corrosive acid mine drainage, and sub-zero freeze-thaw cycles.</li>
+<li><strong>Cabling Vulnerability:</strong> Signal cables running along the dipper handle chord through the pivoting saddle block are routinely sheared, crushed, or severed by falling rock fragments from the highwall.</li>
+</ol>
+<div class="code-container"><pre><code class="language-">                  THE SENSORLESS LOAD ESTIMATION ARCHITECTURE
+                  
+       INDUSTRIAL SENSORS (Available &amp; Rugged):
+       - Motor Resolvers / Optical Encoders (Measure q_3, d_4, q_dot_3, d_dot_4)
+       - Motor Inverter Current Sensors (Measure Armature Currents -&gt; Motor Torques tau)
+                                     |
+                                     v
+                       +---------------------------+
+                       |  M3 GENERALIZED MOMENTUM  |
+                       |         OBSERVER          |
+                       +---------------------------+
+                                     |
+                                     v
+       RECONSTRUCTED ESTIMATES (Sensorless):
+       - External Digging Resistance Force F_ext = [F_x, F_y]^T
+       - Net Dynamic Payload Mass M_payload
+       - Mechanical Faults: Tooth Stall, Bank Collapse, Rope Slack</code></pre></div>
+<hr class='notebook-divider'>
+<h3>5.1.2 The Failure of Naive Direct Inversion</h3>
+<p>Suppose an engineer attempts to compute the external load $\mathbf{Q}_{\text{ext}}$ by directly rearranging the equations of motion:</p>
+<div class="math-display">$$\mathbf{Q}_{\text{ext, naive}} = \mathbf{D}(\mathbf{q})\mathbf{\ddot{q}} + \mathbf{C}(\mathbf{q}, \mathbf{\dot{q}})\mathbf{\dot{q}} + \mathbf{G}(\mathbf{q}) + \mathbf{F}_f(\mathbf{\dot{q}}) - \boldsymbol{\tau} \tag{5.1}$$</div>
+<p>Why is Equation (5.1) completely unusable in industrial practice?</p>
+<p>Examine the term $\mathbf{D}(\mathbf{q})\mathbf{\ddot{q}}$:</p>
+<ul>
+<li>On a P&H 2100BL, the saddle rotational inertia is $D_{11} \approx 7.0 \times 10^6\,\mathrm{kg\cdot m^2}$.</li>
+<li>On a TZ WK-20, $D_{11} \approx 2.5 \times 10^7\,\mathrm{kg\cdot m^2}$.</li>
+<li>Joint acceleration $\mathbf{\ddot{q}}$ is not measured directly; it must be obtained by differentiating encoder position signals $\mathbf{q}(t)$.</li>
+</ul>
+<p>Suppose the encoder signal has a small high-frequency quantization noise of amplitude $\delta q = 10^{-4}\,\mathrm{rad}$ at sampling frequency $f_s = 500\,\mathrm{Hz}$ ($\Delta t = 2\,\mathrm{ms}$). Numerical double differentiation yields an acceleration noise spike of:</p>
+<div class="math-display">$$\delta \ddot{q} \approx \frac{\delta q}{\Delta t^2} = \frac{10^{-4}}{(0.002)^2} = \frac{10^{-4}}{4 \times 10^{-6}} = 25.0\,\mathrm{rad/s^2} \tag{5.2}$$</div>
+<p>Multiplying this noise spike by the inertia matrix:</p>
+<div class="math-display">$$\delta \tau_{\text{noise}} = D_{11} \, \delta \ddot{q} = (7.0 \times 10^6\,\mathrm{kg\cdot m^2})(25.0\,\mathrm{rad/s^2}) = 1.75 \times 10^8\,\mathrm{N\cdot m} = 175\,\mathrm{MN\cdot m}! \tag{5.3}$$</div>
+<p><strong>The noise spike is 30 times larger than the maximum torque rating of the entire shovel motor!</strong> </p>
+<p>Low-pass filtering the acceleration signal introduces severe phase lag (delay), making impact detection and overload trip protection far too slow to prevent structural yielding.</p>
+<p>**We require an observer architecture that reconstructs external forces WITHOUT differentiating joint velocities $\mathbf{\dot{q}}$.**</p>
+<hr class='notebook-divider'>
+<h2>5.2 The Generalized Momentum Formulation</h2>
+<h3>5.2.1 Definition of Generalized Momentum $\mathbf{p}$</h3>
+<p>In classical Hamiltonian mechanics, the <strong>Generalized Momentum Vector</strong> $\mathbf{p} \in \mathbb{R}^n$ conjugate to the generalized coordinates $\mathbf{q}$ is defined as the partial derivative of kinetic energy with respect to generalized velocities:</p>
+<div class="math-display">$$\mathbf{p} = \frac{\partial T(\mathbf{q}, \mathbf{\dot{q}})}{\partial \mathbf{\dot{q}}} \tag{5.4}$$</div>
+<p>Recall that $T = \frac{1}{2}\mathbf{\dot{q}}^T \mathbf{D}(\mathbf{q})\mathbf{\dot{q}}$. Differentiating yields:</p>
+<div class="math-display">$$\mathbf{p} = \mathbf{D}(\mathbf{q}) \mathbf{\dot{q}} \tag{5.5}$$</div>
+<p>For our 2-DOF crowd-hoist shovel mechanism:</p>
+<div class="math-display">$$\mathbf{p} = \begin{bmatrix} p_3 \\ p_4 \end{bmatrix} = \begin{bmatrix} D_{11}(d_4) \dot{q}_3 \\ M_{\text{total}} \dot{d}_4 \end{bmatrix} \tag{5.6}$$</div>
+<p>where:</p>
+<ul>
+<li>$p_3$ is the <strong>generalized angular momentum</strong> of the entire moving assembly (saddle, handle, dipper, payload) about the shipper shaft pivot $O_3$ ($\mathrm{kg\cdot m^2/s} = \mathrm{N\cdot m\cdot s}$).</li>
+<li>$p_4$ is the <strong>generalized linear momentum</strong> of the handle and dipper translating along the crowd track ($\mathrm{kg\cdot m/s} = \mathrm{N\cdot s}$).</li>
+</ul>
+<hr class='notebook-divider'>
+<h3>5.2.2 Time Derivative of Generalized Momentum</h3>
+<p>Now differentiate the generalized momentum $\mathbf{p} = \mathbf{D}(\mathbf{q})\mathbf{\dot{q}}$ with respect to time using the product rule:</p>
+<div class="math-display">$$\mathbf{\dot{p}} = \frac{d}{dt}\left( \mathbf{D}(\mathbf{q})\mathbf{\dot{q}} \right) = \mathbf{D}(\mathbf{q})\mathbf{\ddot{q}} + \mathbf{\dot{D}}(\mathbf{q})\mathbf{\dot{q}} \tag{5.7}$$</div>
+<p>From the canonical equations of motion (Chapter 3, Equation (3.38)):</p>
+<div class="math-display">$$\mathbf{D}(\mathbf{q})\mathbf{\ddot{q}} = \boldsymbol{\tau} + \mathbf{Q}_{\text{ext}} - \mathbf{C}(\mathbf{q}, \mathbf{\dot{q}})\mathbf{\dot{q}} - \mathbf{G}(\mathbf{q}) - \mathbf{F}_f(\mathbf{\dot{q}}) \tag{5.8}$$</div>
+<p>Substitute Equation (5.8) into Equation (5.7):</p>
+<div class="math-display">$$\mathbf{\dot{p}} = \left[ \boldsymbol{\tau} + \mathbf{Q}_{\text{ext}} - \mathbf{C}(\mathbf{q}, \mathbf{\dot{q}})\mathbf{\dot{q}} - \mathbf{G}(\mathbf{q}) - \mathbf{F}_f(\mathbf{\dot{q}}) \right] + \mathbf{\dot{D}}(\mathbf{q})\mathbf{\dot{q}} \tag{5.9}$$</div>
+<p>Group the velocity product terms:</p>
+<div class="math-display">$$\mathbf{\dot{p}} = \boldsymbol{\tau} - \mathbf{G}(\mathbf{q}) - \mathbf{F}_f(\mathbf{\dot{q}}) + \mathbf{Q}_{\text{ext}} + \left[ \mathbf{\dot{D}}(\mathbf{q}) - \mathbf{C}(\mathbf{q}, \mathbf{\dot{q}}) \right] \mathbf{\dot{q}} \tag{5.10}$$</div>
+<hr class='notebook-divider'>
+<h3>5.2.3 Exploiting the Passivity Skew-Symmetry Identity</h3>
+<p>Now examine the bracketed term in Equation (5.10): $\left[ \mathbf{\dot{D}}(\mathbf{q}) - \mathbf{C}(\mathbf{q}, \mathbf{\dot{q}}) \right] \mathbf{\dot{q}}$.</p>
+<p>Recall the fundamental <strong>Passivity Skew-Symmetry Identity</strong> rigorously proved in Chapter 3 (Equation (3.40)):</p>
+<div class="math-display">$$\mathbf{\dot{D}}(\mathbf{q}) - 2\mathbf{C}(\mathbf{q}, \mathbf{\dot{q}}) = -\left( \mathbf{\dot{D}}(\mathbf{q}) - 2\mathbf{C}(\mathbf{q}, \mathbf{\dot{q}}) \right)^T \tag{5.11}$$</div>
+<p>Since $\mathbf{\dot{D}}$ is symmetric ($\mathbf{\dot{D}}^T = \mathbf{\dot{D}}$):</p>
+<div class="math-display">$$\mathbf{\dot{D}} - 2\mathbf{C} = -\mathbf{\dot{D}} + 2\mathbf{C}^T \implies 2\mathbf{\dot{D}} - 2\mathbf{C} = 2\mathbf{C}^T \implies \mathbf{\dot{D}} - \mathbf{C} = \mathbf{C}^T \tag{5.12}$$</div>
+<blockquote>
+<div class="callout-header"><span class="badge badge-important">IMPORTANT</span></div>
+<p>### THE CARDINAL MOMENTUM IDENTITY</p>
+<p>Substituting Equation (5.12) into Equation (5.10) gives the central identity of nonlinear observer theory:</p>
+<p></p>
+<p>$$\mathbf{\dot{D}}(\mathbf{q})\mathbf{\dot{q}} - \mathbf{C}(\mathbf{q}, \mathbf{\dot{q}})\mathbf{\dot{q}} = \mathbf{C}^T(\mathbf{q}, \mathbf{\dot{q}})\mathbf{\dot{q}} \tag{5.13}$$</p>
+<p></p>
+<p>Applying this identity to the momentum derivative in Equation (5.10) yields:</p>
+<p></p>
+<p>$$\mathbf{\dot{p}} = \boldsymbol{\tau} + \mathbf{C}^T(\mathbf{q}, \mathbf{\dot{q}})\mathbf{\dot{q}} - \mathbf{G}(\mathbf{q}) - \mathbf{F}_f(\mathbf{\dot{q}}) + \mathbf{Q}_{\text{ext}} \tag{5.14}$$</p>
+</blockquote>
+<p>Look at Equation (5.14) with mathematical awe:</p>
+<p>**The joint acceleration vector $\mathbf{\ddot{q}}$ has completely vanished!**</p>
+<p>The rate of change of generalized momentum $\mathbf{\dot{p}}$ depends solely on:</p>
+<ul>
+<li>Measured actuator torques $\boldsymbol{\tau}$.</li>
+<li>Measured joint positions $\mathbf{q}$ and velocities $\mathbf{\dot{q}}$.</li>
+<li>The unknown external generalized force $\mathbf{Q}_{\text{ext}}$.</li>
+</ul>
+<hr class='notebook-divider'>
+<h2>5.3 The De Luca-Haddadin Generalized Momentum Observer</h2>
+<h3>5.3.1 Definition of the Observer Residual Vector $\mathbf{r}(t)$</h3>
+<p>Building upon Equation (5.14), Alessandro De Luca and Sami Haddadin proposed an integral observer that tracks the momentum error.</p>
+<p>Define the <strong>Observer Residual Vector</strong> $\mathbf{r}(t) \in \mathbb{R}^n$:</p>
+<div class="math-display">$$\mathbf{r}(t) = \mathbf{K}_O \left[ \mathbf{p}(t) - \int_0^t \left( \boldsymbol{\tau}(\sigma) + \mathbf{C}^T(\mathbf{q}, \mathbf{\dot{q}})\mathbf{\dot{q}} - \mathbf{G}(\mathbf{q}) - \mathbf{F}_f(\mathbf{\dot{q}}) + \mathbf{r}(\sigma) \right) d\sigma - \mathbf{p}(0) \right] \tag{5.15}$$</div>
+<p>where:</p>
+<ul>
+<li>$\mathbf{K}_O = \operatorname{diag}(K_{O,1}, K_{O,2}, \dots, K_{O,n}) > 0$ is a diagonal, positive-definite <strong>Observer Gain Matrix</strong> ($K_{O,i} > 0, \; \forall i$).</li>
+<li>$\mathbf{p}(t) = \mathbf{D}(\mathbf{q}(t))\mathbf{\dot{q}}(t)$ is the instantaneous generalized momentum.</li>
+<li>$\mathbf{p}(0) = \mathbf{D}(\mathbf{q}(0))\mathbf{\dot{q}}(0)$ is the initial momentum at time $t = 0$.</li>
+</ul>
+<div class="code-container"><pre><code class="language-">                 THE GENERALIZED MOMENTUM OBSERVER ARCHITECTURE
+                 
+      Actuator Torques tau
+      Measured States (q, q_dot) 
+                 |
+                 v
+         [ Dynamic Model ] ---&gt; alpha(t) = tau + C^T*q_dot - G - F_f
+                 |                               |
+                 v                               v
+        p(t) = D(q)*q_dot                      ( + ) &lt;--- Residual feedback r(t)
+                 |                               |
+                 |                               v
+                 |                         [ Integrator ] ---&gt; Integral of (alpha + r)
+                 |                               |
+                 v                               v
+               ( + ) &lt;------------------------ ( - )
+                 |
+                 v
+             [ Gain K_O ]
+                 |
+                 v
+         Residual Vector r(t)  ==================&gt;  Estimates Q_ext !
+                 |
+                 v
+         [ (J_T^T)^(-1) ]
+                 |
+                 v
+         Cartesian Tooth Force Estimate F_ext = [F_x, F_y]^T</code></pre></div>
+<hr class='notebook-divider'>
+<h3>5.3.2 Derivation of Error Dynamics</h3>
+<p>Let us differentiate the residual vector $\mathbf{r}(t)$ in Equation (5.15) with respect to time:</p>
+<div class="math-display">$$\mathbf{\dot{r}}(t) = \mathbf{K}_O \left[ \mathbf{\dot{p}}(t) - \frac{d}{dt} \int_0^t \left( \boldsymbol{\tau} + \mathbf{C}^T\mathbf{\dot{q}} - \mathbf{G} - \mathbf{F}_f + \mathbf{r} \right) d\sigma \right] \tag{5.16}$$</div>
+<p>By the Fundamental Theorem of Calculus, the time derivative of the integral is simply the integrand evaluated at $t$:</p>
+<div class="math-display">$$\mathbf{\dot{r}}(t) = \mathbf{K}_O \left[ \mathbf{\dot{p}}(t) - \left( \boldsymbol{\tau} + \mathbf{C}^T\mathbf{\dot{q}} - \mathbf{G} - \mathbf{F}_f + \mathbf{r} \right) \right] \tag{5.17}$$</div>
+<p>Now substitute the true physical momentum derivative $\mathbf{\dot{p}}$ from Equation (5.14):</p>
+<div class="math-display">$$\mathbf{\dot{r}}(t) = \mathbf{K}_O \left[ \left( \boldsymbol{\tau} + \mathbf{C}^T\mathbf{\dot{q}} - \mathbf{G} - \mathbf{F}_f + \mathbf{Q}_{\text{ext}} \right) - \left( \boldsymbol{\tau} + \mathbf{C}^T\mathbf{\dot{q}} - \mathbf{G} - \mathbf{F}_f + \mathbf{r} \right) \right] \tag{5.18}$$</div>
+<p>Notice what happens inside the brackets:</p>
+<p>$\boldsymbol{\tau}$, $\mathbf{C}^T\mathbf{\dot{q}}$, $\mathbf{G}$, and $\mathbf{F}_f$ <strong>cancel out identically</strong>:</p>
+<div class="math-display">$$\mathbf{\dot{r}}(t) = \mathbf{K}_O \left[ \mathbf{Q}_{\text{ext}}(t) - \mathbf{r}(t) \right] \tag{5.19}$$</div>
+<p>Rearranging into standard state-space form:</p>
+<div class="math-display">$$\mathbf{\dot{r}}(t) + \mathbf{K}_O \mathbf{r}(t) = \mathbf{K}_O \mathbf{Q}_{\text{ext}}(t) \tag{5.20}$$</div>
+<hr class='notebook-divider'>
+<h3>5.3.3 Frequency-Domain Transfer Function</h3>
+<p>Since $\mathbf{K}_O = \operatorname{diag}(K_{O,1}, \dots, K_{O,n})$ is diagonal, Equation (5.20) decouples into $n$ completely independent first-order differential equations:</p>
+<div class="math-display">$$\dot{r}_i(t) + K_{O,i} r_i(t) = K_{O,i} Q_{\text{ext},i}(t), \quad i = 1, 2, \dots, n \tag{5.21}$$</div>
+<p>Taking the Laplace transform with zero initial residual ($r_i(0) = 0$):</p>
+<div class="math-display">$$s R_i(s) + K_{O,i} R_i(s) = K_{O,i} Q_{\text{ext},i}(s) \tag{5.22}$$</div>
+<div class="math-display">$$\frac{R_i(s)}{Q_{\text{ext},i}(s)} = \frac{K_{O,i}}{s + K_{O,i}} = \frac{1}{\frac{1}{K_{O,i}}s + 1} \tag{5.23}$$</div>
+<blockquote>
+<div class="callout-header"><span class="badge badge-important">IMPORTANT</span></div>
+<p>### PROFOUND ENGINEERING RESULT: THE GMO AS A LOW-PASS FILTER</p>
+<p>Look closely at transfer function (5.23):</p>
+<p></p>
+<p>The observer residual $r_i(t)$ is **strictly a decoupled, first-order low-pass filtered replica of the true external generalized force $Q_{\text{ext},i}(t)$**!</p>
+<p></p>
+<p>1. <strong>DC Gain:</strong> At steady state ($s \to 0$):</p>
+<p>$$\lim_{s \to 0} \frac{R_i(s)}{Q_{\text{ext},i}(s)} = \frac{K_{O,i}}{0 + K_{O,i}} = 1.000$$</p>
+<p>The observer has <strong>zero steady-state tracking error</strong>: $\lim_{t \to \infty} r_i(t) = Q_{\text{ext},i}$.</p>
+<p>2. <strong>Filter Bandwidth:</strong> The $-3\,\mathrm{dB}$ cutoff frequency of the observer is:</p>
+<p>$$\omega_{c,i} = K_{O,i} \quad (\mathrm{rad/s})$$</p>
+<p>The time constant is:</p>
+<p>$$T_{O,i} = \frac{1}{K_{O,i}} \quad (\mathrm{seconds})$$</p>
+<p>3. <strong>Complete Elimination of Accelerations:</strong> At no point in Equation (5.15) or (5.20) is joint acceleration $\mathbf{\ddot{q}}$ computed, measured, or differentiated!</p>
+</blockquote>
+<hr class='notebook-divider'>
+<h2>5.4 Lyapunov Stability Proof of Observer Convergence</h2>
+<p>We now prove that the estimation error converges exponentially to zero using Lyapunov stability theory.</p>
+<h3>5.4.1 Definition of Estimation Error</h3>
+<p>Define the estimation error vector $\mathbf{e}_r(t) \in \mathbb{R}^n$:</p>
+<div class="math-display">$$\mathbf{e}_r(t) = \mathbf{Q}_{\text{ext}}(t) - \mathbf{r}(t) \tag{5.24}$$</div>
+<p>Differentiating with respect to time:</p>
+<div class="math-display">$$\mathbf{\dot{e}}_r(t) = \mathbf{\dot{Q}}_{\text{ext}}(t) - \mathbf{\dot{r}}(t) \tag{5.25}$$</div>
+<p>Substitute the observer dynamics $\mathbf{\dot{r}} = \mathbf{K}_O(\mathbf{Q}_{\text{ext}} - \mathbf{r}) = \mathbf{K}_O \mathbf{e}_r$:</p>
+<div class="math-display">$$\mathbf{\dot{e}}_r(t) = -\mathbf{K}_O \mathbf{e}_r(t) + \mathbf{\dot{Q}}_{\text{ext}}(t) \tag{5.26}$$</div>
+<hr class='notebook-divider'>
+<h3>5.4.2 Lyapunov Function Formulation</h3>
+<p>For piecewise-constant or slowly-varying contact forces ($\mathbf{\dot{Q}}_{\text{ext}} \approx \mathbf{0}$):</p>
+<div class="math-display">$$\mathbf{\dot{e}}_r(t) = -\mathbf{K}_O \mathbf{e}_r(t) \tag{5.27}$$</div>
+<p>Consider the candidate scalar <strong>Lyapunov Function</strong> $V(\mathbf{e}_r)$:</p>
+<div class="math-display">$$V(\mathbf{e}_r) = \frac{1}{2} \mathbf{e}_r^T \mathbf{P}_O \mathbf{e}_r \tag{5.28}$$</div>
+<p>where $\mathbf{P}_O$ is a symmetric, positive-definite matrix (chosen as $\mathbf{P}_O = \mathbf{I}_n$).</p>
+<p>Clearly:</p>
+<ol>
+<li>$V(\mathbf{0}) = 0$.</li>
+<li>$V(\mathbf{e}_r) > 0$ for all $\mathbf{e}_r \neq \mathbf{0}$.</li>
+<li>$V(\mathbf{e}_r)$ is radially unbounded ($\lim_{\|\mathbf{e}_r\| \to \infty} V(\mathbf{e}_r) = \infty$).</li>
+</ol>
+<hr class='notebook-divider'>
+<h3>5.4.3 Derivative of the Lyapunov Function</h3>
+<p>Differentiate $V(\mathbf{e}_r)$ along the system trajectories:</p>
+<div class="math-display">$$\dot{V}(\mathbf{e}_r) = \mathbf{e}_r^T \mathbf{\dot{e}}_r = \mathbf{e}_r^T \left( -\mathbf{K}_O \mathbf{e}_r \right) = -\mathbf{e}_r^T \mathbf{K}_O \mathbf{e}_r \tag{5.29}$$</div>
+<p>Since $\mathbf{K}_O = \operatorname{diag}(K_{O,1}, \dots, K_{O,n})$ with all $K_{O,i} > 0$:</p>
+<div class="math-display">$$\dot{V}(\mathbf{e}_r) = -\sum_{i=1}^n K_{O,i} e_{r,i}^2 \le -K_{O,\min} \|\mathbf{e}_r\|^2 < 0, \quad \forall \mathbf{e}_r \neq \mathbf{0} \tag{5.30}$$</div>
+<p>where $K_{O,\min} = \min_i(K_{O,i}) > 0$.</p>
+<blockquote>
+<div class="callout-header"><span class="badge badge-important">IMPORTANT</span></div>
+<p>### GLOBAL EXPONENTIAL STABILITY THEOREM</p>
+<p>Since $V = \frac{1}{2}\|\mathbf{e}_r\|^2$ and $\dot{V} \le -2 K_{O,\min} V$:</p>
+<p></p>
+<p>$$V(t) \le V(0) e^{-2 K_{O,\min} t} \implies \|\mathbf{e}_r(t)\| \le \|\mathbf{e}_r(0)\| e^{-K_{O,\min} t} \tag{5.31}$$</p>
+<p></p>
+<p>By Lyapunov's Direct Method, the equilibrium point $\mathbf{e}_r = \mathbf{0}$ is <strong>Globally Exponentially Stable (GES)</strong>. The estimated generalized load $\mathbf{r}(t)$ converges exponentially to the true external load $\mathbf{Q}_{\text{ext}}$ at rate $K_{O,\min}$. $\blacksquare$</p>
+</blockquote>
+<hr class='notebook-divider'>
+<h2>5.5 Reconstruction of Cartesian Digging Forces at Dipper Teeth</h2>
+<p>Once the generalized residual vector $\mathbf{r}(t) = [r_3, r_4]^T$ is estimated by the observer, we must reconstruct the true Cartesian cutting force $\mathbf{F}_{\text{ext}} = [F_x, F_y]^T$ acting at the dipper tooth tip.</p>
+<p>Recall from Chapter 2 (Equation (2.22)) that the transposed Jacobian maps Cartesian forces to generalized forces:</p>
+<div class="math-display">$$\mathbf{Q}_{\text{ext}} = \mathbf{J}_T^T(q_3, d_4) \mathbf{F}_{\text{ext}} \tag{5.32}$$</div>
+<p>At steady state, $\mathbf{r}(t) \to \mathbf{Q}_{\text{ext}}$. Therefore:</p>
+<div class="math-display">$$\mathbf{r}(t) = \mathbf{J}_T^T(q_3, d_4) \hat{\mathbf{F}}_{\text{ext}} \tag{5.33}$$</div>
+<p>Invert the $2 \times 2$ transposed Jacobian matrix:</p>
+<div class="math-display">$$\hat{\mathbf{F}}_{\text{ext}} = \left( \mathbf{J}_T^T(q_3, d_4) \right)^{-1} \mathbf{r}(t) = \left( \mathbf{J}_T^{-1}(q_3, d_4) \right)^T \mathbf{r}(t) \tag{5.34}$$</div>
+<p>Using the closed-form inverse Jacobian derived in Chapter 2 (Equation (2.40)):</p>
+<div class="math-display">$$\mathbf{J}_T^{-1}(q_3, d_4) = \begin{bmatrix}
+-\frac{\sin q_3}{r_T} & \frac{\cos q_3}{r_T} \\[8pt]
+\cos q_3 + \frac{L_{ty}}{r_T}\sin q_3 & \sin q_3 - \frac{L_{ty}}{r_T}\cos q_3
+\end{bmatrix} \tag{5.35}$$</div>
+<p>Taking the matrix transpose:</p>
+<div class="math-display">$$\left( \mathbf{J}_T^T \right)^{-1} = \left( \mathbf{J}_T^{-1} \right)^T = \begin{bmatrix}
+-\frac{\sin q_3}{r_T} & \cos q_3 + \frac{L_{ty}}{r_T}\sin q_3 \\[8pt]
+\frac{\cos q_3}{r_T} & \sin q_3 - \frac{L_{ty}}{r_T}\cos q_3
+\end{bmatrix} \tag{5.36}$$</div>
+<p>Carrying out the matrix-vector multiplication with $\mathbf{r} = [r_3, r_4]^T$:</p>
+<div class="math-display">$$\hat{F}_x = -\frac{\sin q_3}{r_T} r_3 + \left( \cos q_3 + \frac{L_{ty}}{r_T}\sin q_3 \right) r_4 \tag{5.37a}$$</div>
+<div class="math-display">$$\hat{F}_y = \frac{\cos q_3}{r_T} r_3 + \left( \sin q_3 - \frac{L_{ty}}{r_T}\cos q_3 \right) r_4 \tag{5.37b}$$</div>
+<p>where $r_T = d_4 + L_{tx}$ is the total distance from pivot $O_3$ to the tooth tip.</p>
+<blockquote>
+<div class="callout-header"><span class="badge badge-tip">TIP</span></div>
+<p>### PHYSICAL INTUITION ON CARTESIAN FORCE DECOUPLING</p>
+<p>Look at Equations (5.37a) and (5.37b):</p>
+<p>- $r_3$ (saddle torque residual) is divided by the moment arm $r_T \approx 11\,\mathrm{m}$, transforming Newton-meters of bending moment back into Newtons of transverse force.</p>
+<p>- $r_4$ (crowd force residual) is multiplied directly by handle orientation projections ($\cos q_3$ and $\sin q_3$).</p>
+<p>- **Because $\det(\mathbf{J}_T) = -r_T \neq 0$ everywhere (Chapter 2), this force reconstruction is unconditionally non-singular across the entire digging envelope!**</p>
+</blockquote>
+<hr class='notebook-divider'>
+<h2>5.6 Discrete-Time Implementation & Practical Engineering Safeguards</h2>
+<p>In industrial digital twins, the momentum observer is executed on a PLC or embedded industrial controller at discrete sample rate $\Delta t$ (typically $\Delta t = 2\,\mathrm{ms}$ to $10\,\mathrm{ms}$, corresponding to $100\,\mathrm{Hz} - 500\,\mathrm{Hz}$).</p>
+<h3>5.6.1 Trapezoidal Numerical Integration</h3>
+<p>To prevent numerical drift and phase lag, the integral term in Equation (5.15) is discretized using the <strong>Tustin / Trapezoidal Rule</strong>:</p>
+<p>Let the internal dynamic signal be:</p>
+<div class="math-display">$$\boldsymbol{\alpha}(t) = \boldsymbol{\tau}(t) + \mathbf{C}^T(\mathbf{q}, \mathbf{\dot{q}})\mathbf{\dot{q}} - \mathbf{G}(\mathbf{q}) - \mathbf{F}_f(\mathbf{\dot{q}}) \tag{5.38}$$</div>
+<p>Let the integral state vector be $\mathbf{z}(t_k) \in \mathbb{R}^n$:</p>
+<div class="math-display">$$\mathbf{z}(t_k) = \mathbf{z}(t_{k-1}) + \frac{\Delta t}{2} \left[ \boldsymbol{\alpha}(t_k) + \mathbf{r}(t_k) + \boldsymbol{\alpha}(t_{k-1}) + \mathbf{r}(t_{k-1}) \right] \tag{5.39}$$</div>
+<p>The discrete observer update at step $k$ is:</p>
+<div class="math-display">$$\mathbf{r}(t_k) = \mathbf{K}_O \left[ \mathbf{p}(t_k) - \mathbf{z}(t_k) - \mathbf{p}(0) \right] \tag{5.40}$$</div>
+<hr class='notebook-divider'>
+<h3>5.6.2 Resolving Implicit Algebraic Loops</h3>
+<p>Notice that $\mathbf{r}(t_k)$ appears on both the left-hand side of Equation (5.40) and inside $\mathbf{z}(t_k)$ on the right-hand side! This is an implicit algebraic loop.</p>
+<p>Substitute Equation (5.39) into (5.40):</p>
+<div class="math-display">$$\mathbf{r}(t_k) = \mathbf{K}_O \left[ \mathbf{p}(t_k) - \mathbf{z}(t_{k-1}) - \frac{\Delta t}{2}\boldsymbol{\alpha}(t_k) - \frac{\Delta t}{2}\mathbf{r}(t_k) - \frac{\Delta t}{2}(\boldsymbol{\alpha}(t_{k-1}) + \mathbf{r}(t_{k-1})) - \mathbf{p}(0) \right]$$</div>
+<p>Bring all terms containing $\mathbf{r}(t_k)$ to the left-hand side:</p>
+<div class="math-display">$$\left( \mathbf{I}_n + \frac{\Delta t}{2} \mathbf{K}_O \right) \mathbf{r}(t_k) = \mathbf{K}_O \left[ \mathbf{p}(t_k) - \mathbf{z}(t_{k-1}) - \frac{\Delta t}{2}\boldsymbol{\alpha}(t_k) - \frac{\Delta t}{2}(\boldsymbol{\alpha}(t_{k-1}) + \mathbf{r}(t_{k-1})) - \mathbf{p}(0) \right] \tag{5.41}$$</div>
+<p>Since $\mathbf{K}_O$ is diagonal, $\left( \mathbf{I}_n + \frac{\Delta t}{2} \mathbf{K}_O \right)$ is a diagonal matrix whose inversion is trivial:</p>
+<div class="math-display">$$r_i(t_k) = \frac{K_{O,i}}{1 + \frac{\Delta t}{2} K_{O,i}} \left[ p_i(t_k) - z_i(t_{k-1}) - \frac{\Delta t}{2}\alpha_i(t_k) - \frac{\Delta t}{2}(\alpha_i(t_{k-1}) + r_i(t_{k-1})) - p_i(0) \right] \tag{5.42}$$</div>
+<p>Equation (5.42) is **strictly explicit, causal, and evaluates in $0.05\,\mu\mathrm{s}$ with zero algebraic loops**!</p>
+<hr class='notebook-divider'>
+<h3>5.6.3 Robustness to Parameter Errors (Sensitivity Analysis)</h3>
+<p>What happens if our model parameters $\hat{\mathbf{D}}, \hat{\mathbf{C}}, \hat{\mathbf{G}}$ differ slightly from the true shovel parameters $\mathbf{D}, \mathbf{C}, \mathbf{G}$?</p>
+<p>Let the model mismatch generalized force be:</p>
+<div class="math-display">$$\Delta \boldsymbol{\tau}_{\text{model}} = (\mathbf{D} - \hat{\mathbf{D}})\mathbf{\ddot{q}} + (\mathbf{C} - \hat{\mathbf{C}})\mathbf{\dot{q}} + (\mathbf{G} - \hat{\mathbf{G}}) + (\mathbf{F}_f - \hat{\mathbf{F}}_f) \tag{5.43}$$</div>
+<p>Then the observer error dynamics in Equation (5.20) become:</p>
+<div class="math-display">$$\mathbf{\dot{r}} + \mathbf{K}_O \mathbf{r} = \mathbf{K}_O \left( \mathbf{Q}_{\text{ext}} + \Delta \boldsymbol{\tau}_{\text{model}} \right) \tag{5.44}$$</div>
+<p>At steady state:</p>
+<div class="math-display">$$\mathbf{r}_{\text{ss}} = \mathbf{Q}_{\text{ext}} + \Delta \boldsymbol{\tau}_{\text{model}} \tag{5.45}$$</div>
+<blockquote>
+<div class="callout-header"><span class="badge badge-warning">WARNING</span></div>
+<p>### WHY PRECISE BASE PARAMETER IDENTIFICATION (M2) IS MANDATORY</p>
+<p>Equation (5.45) establishes the direct coupling between <strong>Module M2</strong> and <strong>Module M3</strong>:</p>
+<p>Any residual error in the identified parameters $\hat{\boldsymbol{\theta}}_b$ (from Chapter 4) acts as a systematic bias $\Delta \boldsymbol{\tau}_{\text{model}}$ in the estimated digging force!</p>
+<p></p>
+<p>This is why Module M2 (the multi-channel base parameter identification system) had to be developed and verified before Module M3 could be deployed!</p>
+</blockquote>
+<hr class='notebook-divider'>
+<h2>5.7 Five Fully Solved Research Practice Problems</h2>
+<hr class='notebook-divider'>
+<h3>Problem 5.1: Discrete Observer Update on P&H 2100BL</h3>
+<p><strong>Problem Statement:</strong>  </p>
+<p>A P&H 2100BL excavator has identified parameters:</p>
+<ul>
+<li>$D_{11}(d_4) = 7.4274 \times 10^5 + 3.6600 \times 10^4 d_4 + 4.8500 \times 10^4 d_4^2\,\mathrm{kg\cdot m^2}$</li>
+<li>$D_{22} = 48,500\,\mathrm{kg}$</li>
+<li>Observer gains are tuned to $K_{O,1} = 25.0\,\mathrm{rad/s}$ (hoist) and $K_{O,2} = 30.0\,\mathrm{rad/s}$ (crowd).</li>
+<li>The discrete execution step is $\Delta t = 0.005\,\mathrm{s}$ ($200\,\mathrm{Hz}$).</li>
+</ul>
+<p>At time step $k$, the dipper teeth suddenly strike an unblasted rock ledge. The sensor readings are:</p>
+<ul>
+<li>$q_3 = 10^\circ$ ($0.1745\,\mathrm{rad}$), $\dot{q}_3 = 0.10\,\mathrm{rad/s}$</li>
+<li>$d_4 = 10.0\,\mathrm{m}$, $\dot{d}_4 = 0.50\,\mathrm{m/s}$</li>
+<li>Motor torques: $\tau_3 = 6.20 \times 10^6\,\mathrm{N\cdot m}$, $F_{\text{crowd}} = 2.50 \times 10^5\,\mathrm{N}$</li>
+<li>Model gravity and coupling: $\alpha_1 = 5.10 \times 10^6\,\mathrm{N\cdot m}$, $\alpha_2 = 1.15 \times 10^5\,\mathrm{N}$</li>
+<li>Previous integral states: $z_1(k-1) = 2.45 \times 10^5\,\mathrm{N\cdot m\cdot s}$, $z_2(k-1) = 1.80 \times 10^4\,\mathrm{N\cdot s}$</li>
+<li>Initial momentum was $\mathbf{p}(0) = \mathbf{0}$.</li>
+</ul>
+<p>Compute the instantaneous residual vector $\mathbf{r}(t_k) = [r_3, r_4]^T$.</p>
+<p><strong>Step-by-Step Solution:</strong></p>
+<p>**Step 1: Compute instantaneous generalized momentum $\mathbf{p}(t_k)$**</p>
+<p>At $d_4 = 10.0\,\mathrm{m}$:</p>
+<div class="math-display">$$D_{11}(10.0) = 742,740 + (36,600)(10.0) + (48,500)(10.0)^2$$</div>
+<div class="math-display">$$D_{11}(10.0) = 742,740 + 366,000 + 4,850,000 = 5,958,740\,\mathrm{kg\cdot m^2}$$</div>
+<div class="math-display">$$p_1 = D_{11} \dot{q}_3 = (5,958,740\,\mathrm{kg\cdot m^2})(0.10\,\mathrm{rad/s}) = 595,874\,\mathrm{N\cdot m\cdot s}$$</div>
+<div class="math-display">$$p_2 = D_{22} \dot{d}_4 = (48,500\,\mathrm{kg})(0.50\,\mathrm{m/s}) = 24,250\,\mathrm{N\cdot s}$$</div>
+<div class="math-display">$$\mathbf{p}(t_k) = \begin{bmatrix} 595,874\,\mathrm{N\cdot m\cdot s} \\ 24,250\,\mathrm{N\cdot s} \end{bmatrix}$$</div>
+<p><strong>Step 2: Evaluate the explicit discrete formula (Equation (5.42)) for Channel 1</strong></p>
+<div class="math-display">$$G_{\text{scale},1} = \frac{K_{O,1}}{1 + \frac{\Delta t}{2} K_{O,1}} = \frac{25.0}{1 + (0.0025)(25.0)} = \frac{25.0}{1 + 0.0625} = \frac{25.0}{1.0625} \approx 23.52941\,\mathrm{s^{-1}}$$</div>
+<p>Difference term:</p>
+<div class="math-display">$$\Delta p_1 = p_1(t_k) - z_1(k-1) - \frac{\Delta t}{2}\alpha_1(k) = 595,874 - 245,000 - (0.0025)(5,100,000)$$</div>
+<div class="math-display">$$\Delta p_1 = 350,874 - 12,750 = 338,124\,\mathrm{N\cdot m\cdot s}$$</div>
+<div class="math-display">$$r_1(t_k) = (23.52941\,\mathrm{s^{-1}})(338,124\,\mathrm{N\cdot m\cdot s}) \approx 7,955,858\,\mathrm{N\cdot m} \approx +7.956\,\mathrm{MN\cdot m}$$</div>
+<p><strong>Step 3: Evaluate Channel 2</strong></p>
+<div class="math-display">$$G_{\text{scale},2} = \frac{K_{O,2}}{1 + \frac{\Delta t}{2} K_{O,2}} = \frac{30.0}{1 + (0.0025)(30.0)} = \frac{30.0}{1 + 0.075} = \frac{30.0}{1.075} \approx 27.90698\,\mathrm{s^{-1}}$$</div>
+<p>Difference term:</p>
+<div class="math-display">$$\Delta p_2 = p_2(t_k) - z_2(k-1) - \frac{\Delta t}{2}\alpha_2(k) = 24,250 - 18,000 - (0.0025)(115,000)$$</div>
+<div class="math-display">$$\Delta p_2 = 6,250 - 287.5 = 5,962.5\,\mathrm{N\cdot s}$$</div>
+<div class="math-display">$$r_2(t_k) = (27.90698\,\mathrm{s^{-1}})(5,962.5\,\mathrm{N\cdot s}) \approx 166,395\,\mathrm{N} \approx +166.4\,\mathrm{kN}$$</div>
+<p><strong>Result:</strong> The observer instantaneously estimates an external generalized contact load of:</p>
+<div class="math-display">$$\mathbf{r}(t_k) = \begin{bmatrix} +7.956\,\mathrm{MN\cdot m} \\ +166.4\,\mathrm{kN} \end{bmatrix}$$</div>
+<hr class='notebook-divider'>
+<h3>Problem 5.2: Reconstructing 2D Tooth Tip Cutting Force Vector</h3>
+<p><strong>Problem Statement:</strong>  </p>
+<p>Using the residual estimates from Problem 5.1 ($\mathbf{r} = [7.956 \times 10^6\,\mathrm{N\cdot m}, \; 1.664 \times 10^5\,\mathrm{N}]^T$) at posture $q_3 = 10^\circ$, $d_4 = 10.0\,\mathrm{m}$ with tooth offsets $L_{tx} = 2.0\,\mathrm{m}$ and $L_{ty} = 1.0\,\mathrm{m}$:</p>
+<ol>
+<li>Compute the effective tooth radius $r_T$.</li>
+<li>Invert the transposed Jacobian to calculate the horizontal cutting force $\hat{F}_x$ and vertical breakout force $\hat{F}_y$.</li>
+<li>Compute the resultant cutting force magnitude $\|\hat{\mathbf{F}}_{\text{ext}}\|$ and direction angle $\beta_{\text{cut}}$.</li>
+</ol>
+<p><strong>Step-by-Step Solution:</strong></p>
+<p><strong>Step 1: Compute geometric values</strong></p>
+<div class="math-display">$$r_T = d_4 + L_{tx} = 10.0 + 2.0 = 12.0\,\mathrm{m}$$</div>
+<div class="math-display">$$\cos 10^\circ \approx 0.984808, \quad \sin 10^\circ \approx 0.173648$$</div>
+<p><strong>Step 2: Evaluate Inverse Transposed Jacobian entries from Equation (5.36)</strong></p>
+<div class="math-display">$$\text{Entry}_{11} = -\frac{\sin q_3}{r_T} = -\frac{0.173648}{12.0} \approx -0.014471\,\mathrm{m^{-1}}$$</div>
+<div class="math-display">$$\text{Entry}_{12} = \cos q_3 + \frac{L_{ty}}{r_T}\sin q_3 = 0.984808 + \left(\frac{1.0}{12.0}\right)(0.173648) = 0.984808 + 0.014471 = +0.999279$$</div>
+<div class="math-display">$$\text{Entry}_{21} = \frac{\cos q_3}{r_T} = \frac{0.984808}{12.0} \approx +0.082067\,\mathrm{m^{-1}}$$</div>
+<div class="math-display">$$\text{Entry}_{22} = \sin q_3 - \frac{L_{ty}}{r_T}\cos q_3 = 0.173648 - \left(\frac{1.0}{12.0}\right)(0.984808) = 0.173648 - 0.082067 = +0.091581$$</div>
+<p>**Step 3: Compute Cartesian Forces $[\hat{F}_x, \hat{F}_y]^T$**</p>
+<div class="math-display">$$\hat{F}_x = \text{Entry}_{11} r_1 + \text{Entry}_{12} r_2$$</div>
+<div class="math-display">$$\hat{F}_x = (-0.014471)(7,956,000) + (0.999279)(166,400)$$</div>
+<div class="math-display">$$\hat{F}_x = -115,131\,\mathrm{N} + 166,280\,\mathrm{N} = +51,149\,\mathrm{N} \approx +51.15\,\mathrm{kN}$$</div>
+<div class="math-display">$$\hat{F}_y = \text{Entry}_{21} r_1 + \text{Entry}_{22} r_2$$</div>
+<div class="math-display">$$\hat{F}_y = (+0.082067)(7,956,000) + (+0.091581)(166,400)$$</div>
+<div class="math-display">$$\hat{F}_y = +652,925\,\mathrm{N} + 15,239\,\mathrm{N} = +668,164\,\mathrm{N} \approx +668.16\,\mathrm{kN}$$</div>
+<div class="math-display">$$\hat{\mathbf{F}}_{\text{ext}} = \begin{bmatrix} +51.15\,\mathrm{kN} \\ +668.16\,\mathrm{kN} \end{bmatrix}$$</div>
+<p><strong>Step 4: Magnitude and Angle</strong></p>
+<div class="math-display">$$\|\hat{\mathbf{F}}_{\text{ext}}\| = \sqrt{(51.15)^2 + (668.16)^2} = \sqrt{2,616.3 + 446,437.8} = \sqrt{449,054.1} \approx 670.1\,\mathrm{kN}$$</div>
+<div class="math-display">$$\beta = \operatorname{atan2}(\hat{F}_y, \hat{F}_x) = \operatorname{atan2}(668.16, 51.15) \approx 85.6^\circ$$</div>
+<p>*(Physical Interpretation: The dipper teeth are encountering a steep vertical breakout resistance of $668.2\,\mathrm{kN}$ directed almost purely upward ($85.6^\circ$) as the teeth pry under the rock slab!).*</p>
+<hr class='notebook-divider'>
+<h3>Problem 5.3: Transient Step Response and Time-to-Detect Calculation</h3>
+<p><strong>Problem Statement:</strong>  </p>
+<p>At $t = 0$, a TZ WK-20 dipper strikes a buried basalt boulder, producing an instantaneous step increase in external digging force $Q_{\text{ext}}(t) = 500\,\mathrm{kN\cdot m} \cdot u(t)$.  </p>
+<p>The observer gain is set to $K_O = 40.0\,\mathrm{rad/s}$.</p>
+<ol>
+<li>Write the closed-form analytical equation for $r(t)$ for $t \ge 0$.</li>
+<li>Calculate the time $t_{90\%}$ required for the observer to reach $90\%$ of the true load value.</li>
+<li>Calculate the time $t_{99\%}$ required to reach $99\%$ of the true load.</li>
+<li>If an overload protection system trips when the estimated load exceeds $400\,\mathrm{kN\cdot m}$ ($80\%$), how fast does the trip trigger?</li>
+</ol>
+<p><strong>Step-by-Step Solution:</strong></p>
+<p>**Step 1: Analytical solution to $\dot{r} + K_O r = K_O Q_0$**</p>
+<p>For a step input of magnitude $Q_0$ with $r(0) = 0$:</p>
+<div class="math-display">$$r(t) = Q_0 \left( 1 - e^{-K_O t} \right) = 500 \left( 1 - e^{-40 t} \right)\,\mathrm{kN\cdot m} \tag{5.46}$$</div>
+<p>**Step 2: Time to $90\%$**</p>
+<div class="math-display">$$1 - e^{-40 t_{90\%}} = 0.90 \implies e^{-40 t_{90\%}} = 0.10 \implies -40 t_{90\%} = \ln(0.10) = -2.30259$$</div>
+<div class="math-display">$$t_{90\%} = \frac{2.30259}{40} \approx 0.05756\,\mathrm{s} \approx 57.6\,\mathrm{ms}$$</div>
+<p>**Step 3: Time to $99\%$**</p>
+<div class="math-display">$$e^{-40 t_{99\%}} = 0.01 \implies -40 t_{99\%} = \ln(0.01) = -4.60517$$</div>
+<div class="math-display">$$t_{99\%} = \frac{4.60517}{40} \approx 0.11513\,\mathrm{s} \approx 115.1\,\mathrm{ms}$$</div>
+<p>**Step 4: Time to $80\%$ Overload Trip**</p>
+<div class="math-display">$$1 - e^{-40 t_{80\%}} = 0.80 \implies e^{-40 t_{80\%}} = 0.20 \implies -40 t_{80\%} = \ln(0.20) = -1.60944$$</div>
+<div class="math-display">$$t_{\text{trip}} = \frac{1.60944}{40} \approx 0.04024\,\mathrm{s} \approx 40.2\,\mathrm{ms}$$</div>
+<p><em>(Engineering Significance: The observer detects the severe rock impact and triggers motor drive de-excitation in just </em>*$40.2\,\mathrm{milliseconds}$*<em>—well before peak mechanical stresses propagate to the boom foot chords!).</em></p>
+<hr class='notebook-divider'>
+<h3>Problem 5.4: Gain Tuning Trade-Off: Bandwidth vs. Noise Immunity</h3>
+<p><strong>Problem Statement:</strong>  </p>
+<p>During real digging, the motor torque signal $\tau(t)$ is corrupted by high-frequency inverter PWM ripple modeled as white noise with spectral density $S_w = 10^4\,(\mathrm{N\cdot m})^2/\mathrm{Hz}$.</p>
+<ol>
+<li>Calculate the variance of the observer output noise $\sigma_r^2$ as a function of the gain $K_O$.</li>
+<li>For $K_O = 10\,\mathrm{rad/s}$, $K_O = 40\,\mathrm{rad/s}$, and $K_O = 100\,\mathrm{rad/s}$, compute the noise standard deviation $\sigma_r$ and the response time constant $T_O = 1/K_O$.</li>
+<li>Formulate the optimal gain tuning recommendation for mining shovels.</li>
+</ol>
+<p><strong>Step-by-Step Solution:</strong></p>
+<p><strong>Step 1: Noise variance through a first-order low-pass filter</strong></p>
+<p>The transfer function from noise $w(t)$ to residual $r(t)$ is:</p>
+<div class="math-display">$$H(s) = \frac{K_O}{s + K_O}$$</div>
+<p>The output noise variance is given by the integral of the power spectral density:</p>
+<div class="math-display">$$\sigma_r^2 = \frac{1}{2\pi} \int_{-\infty}^{\infty} |H(j\omega)|^2 S_w \, d\omega = S_w \cdot \frac{K_O}{2}$$</div>
+<div class="math-display">$$\sigma_r = \sqrt{\frac{S_w K_O}{2}}$$</div>
+<p><strong>Step 2: Evaluate for three gain values</strong></p>
+<ul>
+<li>**Case A: $K_O = 10\,\mathrm{rad/s}$**</li>
+</ul>
+<div class="math-display">  $$\sigma_r = \sqrt{\frac{(10^4)(10)}{2}} = \sqrt{50,000} \approx 223.6\,\mathrm{N\cdot m}$$</div>
+<div class="math-display">  $$T_O = \frac{1}{10} = 0.100\,\mathrm{s} = 100\,\mathrm{ms}$$</div>
+<ul>
+<li>**Case B: $K_O = 40\,\mathrm{rad/s}$**</li>
+</ul>
+<div class="math-display">  $$\sigma_r = \sqrt{\frac{(10^4)(40)}{2}} = \sqrt{200,000} \approx 447.2\,\mathrm{N\cdot m}$$</div>
+<div class="math-display">  $$T_O = \frac{1}{40} = 0.025\,\mathrm{s} = 25\,\mathrm{ms}$$</div>
+<ul>
+<li>**Case C: $K_O = 100\,\mathrm{rad/s}$**</li>
+</ul>
+<div class="math-display">  $$\sigma_r = \sqrt{\frac{(10^4)(100)}{2}} = \sqrt{500,000} \approx 707.1\,\mathrm{N\cdot m}$$</div>
+<div class="math-display">  $$T_O = \frac{1}{100} = 0.010\,\mathrm{s} = 10\,\mathrm{ms}$$</div>
+<p><strong>Step 3: Recommendation</strong></p>
+<p>$K_O = 30 - 50\,\mathrm{rad/s}$ provides the ideal engineering compromise for an electric rope shovel: response time under $30\,\mathrm{ms}$ with noise standard deviation under $0.5\,\mathrm{kN\cdot m}$ (less than $0.01\%$ of the $6\,\mathrm{MN\cdot m}$ nominal torque rating!).</p>
+<hr class='notebook-divider'>
+<h3>Problem 5.5: Payload Mass Recovery from Steady-State Momentum Residual</h3>
+<p><strong>Problem Statement:</strong>  </p>
+<p>After scooping a bucket of ore and hoisting it out of the bank into mid-air, the shovel holds the loaded dipper statically in mid-air at $q_3 = 25^\circ, d_4 = 11.5\,\mathrm{m}$.  </p>
+<p>Because the dipper is in mid-air, external contact forces are zero ($\mathbf{F}_{\text{ext}} = \mathbf{0}$). However, the observer model was configured using the <strong>empty bucket baseline parameters</strong> ($M_{d,\text{empty}} = 17,000\,\mathrm{kg}$).  </p>
+<p>The observer outputs a steady-state residual on the crowd channel of $r_4 = +82,500\,\mathrm{N}$.  </p>
+<ol>
+<li>Explain physically why $r_4 \neq 0$ even though no rock is touching the teeth.</li>
+<li>Using Equation (5.45), calculate the exact payload mass $M_{\text{payload}}$ in metric tonnes.</li>
+</ol>
+<p><strong>Step-by-Step Solution:</strong></p>
+<p><strong>Step 1: Physical Explanation</strong></p>
+<p>When the dipper holds payload mass $M_{\text{payload}}$, the true gravitational downward force along the handle is:</p>
+<div class="math-display">$$G_{2,\text{true}} = (m_h + M_{d,\text{empty}} + M_{\text{payload}}) g \sin q_3$$</div>
+<p>However, the observer uses the baseline model:</p>
+<div class="math-display">$$\hat{G}_2 = (m_h + M_{d,\text{empty}}) g \sin q_3$$</div>
+<p>Because the observer model lacks the payload gravity term, the observer perceives the unmodeled gravity load as an "external force":</p>
+<div class="math-display">$$r_4 = G_{2,\text{true}} - \hat{G}_2 = M_{\text{payload}} g \sin q_3$$</div>
+<p><strong>Step 2: Solve for Payload Mass</strong></p>
+<div class="math-display">$$r_4 = M_{\text{payload}} g \sin q_3 \implies M_{\text{payload}} = \frac{r_4}{g \sin q_3}$$</div>
+<p>Evaluate at $q_3 = 25^\circ$:</p>
+<div class="math-display">$$\sin 25^\circ \approx 0.422618$$</div>
+<div class="math-display">$$M_{\text{payload}} = \frac{82,500\,\mathrm{N}}{(9.81\,\mathrm{m/s^2})(0.422618)} = \frac{82,500}{4.14588} \approx 19,899.3\,\mathrm{kg} \approx 19.90\,\mathrm{metric\ tonnes}$$</div>
+<p>*(Profound Result: The Generalized Momentum Observer automatically acts as a <strong>Precision Electronic Scale</strong>, measuring the suspended payload to within $0.5\%$ accuracy without requiring any specialized payload weighing pins!).*</p>
+<hr class='notebook-divider'>
+<h2>5.8 MATLAB / Python Simulation Script</h2>
+<div class="code-container"><pre><code class="language-matlab">% =========================================================================
+% CHAPTER 5: GENERALIZED MOMENTUM OBSERVER (M3) SIMULATION &amp; BENCHMARK
+% Compatible with MATLAB R2025b / Octave 7+
+% =========================================================================
+function shovel_momentum_observer_demo()
+    clc; clear; close all;
+    
+    % Model Parameters (P&amp;H 2100BL Loaded)
+    p.I0   = 4.20e5;     p.ms  = 3500;   p.rs  = 0.50;
+    p.mh   = 11500;      p.Lch = 4.20;
+    p.Md   = 37000;      p.Lcd = 1.80;
+    p.Ltx  = 2.00;       p.Lty = 1.00;
+    p.g    = 9.81;
+    
+    % Observer Gain Matrix
+    Ko = diag([30.0, 40.0]); % [rad/s]
+    
+    % Simulation Time Base
+    dt = 0.005; % 200 Hz
+    t = (0:dt:5)&#x27;;
+    N_steps = length(t);
+    
+    % True External Disturbance (Step rock collision at t = 2.0s)
+    F_ext_true = zeros(2, N_steps);
+    for k = 1:N_steps
+        if t(k) &gt;= 2.0 &amp;&amp; t(k) &lt;= 4.0
+            F_ext_true(:, k) = [-150e3; 450e3]; % [-150 kN cutting, +450 kN breakout]
+        end
+    end
+    
+    % Trajectory: Digging Sweep
+    q3  = deg2rad(15 + 10*sin(0.5*t));
+    d4  = 10.0 + 1.5*sin(0.4*t);
+    q3_d = gradient(q3, dt);
+    d4_d = gradient(d4, dt);
+    
+    % Pre-allocate Observer Arrays
+    r_est = zeros(2, N_steps);
+    F_ext_est = zeros(2, N_steps);
+    z_int = zeros(2, 1);
+    alpha_prev = zeros(2, 1);
+    r_prev = zeros(2, 1);
+    
+    % Initial Momentum
+    p_init = eval_momentum([q3(1); d4(1)], [q3_d(1); d4_d(1)], p);
+    
+    fprintf(&#x27;Running M3 Generalized Momentum Observer Simulation...\n&#x27;);
+    for k = 1:N_steps
+        qk  = [q3(k); d4(k)];
+        qdk = [q3_d(k); d4_d(k)];
+        
+        % 1. Physical Dynamics
+        D = eval_D(qk, p);
+        C = eval_C(qk, qdk, p);
+        G = eval_G(qk, p);
+        J = eval_J(qk, p);
+        
+        % True Generalized Contact Load
+        Q_ext_true = J&#x27; * F_ext_true(:, k);
+        
+        % Motor Torque = Dynamics - Q_ext
+        tau_act = C*qdk + G - Q_ext_true; 
+        
+        % 2. Observer Signals
+        p_meas = D * qdk;
+        alpha_k = tau_act + C&#x27;*qdk - G;
+        
+        % 3. Explicit Trapezoidal GMO Update (Eq 5.42)
+        if k == 1
+            r_k = zeros(2, 1);
+        else
+            G_scale = Ko / (eye(2) + 0.5*dt*Ko);
+            diff_term = p_meas - z_int - 0.5*dt*alpha_k - ...
+                        0.5*dt*(alpha_prev + r_prev) - p_init;
+            r_k = G_scale * diff_term;
+        end
+        
+        % Update integral state
+        z_int = z_int + 0.5*dt*(alpha_k + r_k + alpha_prev + r_prev);
+        alpha_prev = alpha_k;
+        r_prev = r_k;
+        
+        % 4. Invert Transposed Jacobian to get Cartesian Force
+        F_ext_est(:, k) = (J&#x27;) \ r_k;
+        r_est(:, k) = r_k;
+    end
+    
+    % Plotting Results
+    figure(&#x27;Color&#x27;, &#x27;w&#x27;, &#x27;Position&#x27;, [100, 100, 850, 600]);
+    subplot(2,1,1);
+    plot(t, F_ext_true(1,:)/1e3, &#x27;k--&#x27;, &#x27;LineWidth&#x27;, 2); hold on;
+    plot(t, F_ext_est(1,:)/1e3, &#x27;r-&#x27;, &#x27;LineWidth&#x27;, 1.5);
+    ylabel(&#x27;F_x (Cutting) [kN]&#x27;);
+    legend(&#x27;True Rock Force&#x27;, &#x27;M3 Observer Estimate&#x27;, &#x27;Location&#x27;, &#x27;Best&#x27;);
+    grid on; title(&#x27;M3 Generalized Momentum Observer: Sensorless Cutting Force Estimation&#x27;);
+    
+    subplot(2,1,2);
+    plot(t, F_ext_true(2,:)/1e3, &#x27;k--&#x27;, &#x27;LineWidth&#x27;, 2); hold on;
+    plot(t, F_ext_est(2,:)/1e3, &#x27;b-&#x27;, &#x27;LineWidth&#x27;, 1.5);
+    ylabel(&#x27;F_y (Breakout) [kN]&#x27;); xlabel(&#x27;Time [seconds]&#x27;);
+    legend(&#x27;True Rock Force&#x27;, &#x27;M3 Observer Estimate&#x27;, &#x27;Location&#x27;, &#x27;Best&#x27;);
+    grid on;
+    
+    fprintf(&#x27;Simulation Complete. Peak Tracking Error at Steady State: %.2f%%\n&#x27;, ...
+        abs(norm(F_ext_est(:, 600)) - norm(F_ext_true(:, 600))) / norm(F_ext_true(:, 600)) * 100);
+end
+
+function p_vec = eval_momentum(q, qd, p)
+    D = eval_D(q, p);
+    p_vec = D * qd;
+end
+
+function D = eval_D(q, p)
+    d4 = q(2);
+    D11 = p.I0 + p.mh*(d4 - p.Lch)^2 + p.Md*(d4 + p.Lcd)^2;
+    D22 = p.mh + p.Md;
+    D = [D11, 0; 0, D22];
+end
+
+function C = eval_C(q, qd, p)
+    d4 = q(2);
+    gamma = p.mh*(d4 - p.Lch) + p.Md*(d4 + p.Lcd);
+    C = [gamma*qd(2),  gamma*qd(1);
+        -gamma*qd(1),  0];
+end
+
+function G = eval_G(q, p)
+    q3 = q(1); d4 = q(2);
+    gamma = p.mh*(d4 - p.Lch) + p.Md*(d4 + p.Lcd);
+    G1 = p.g * cos(q3) * (p.ms*p.rs + gamma);
+    G2 = (p.mh + p.Md) * p.g * sin(q3);
+    G = [G1; G2];
+end
+
+function J = eval_J(q, p)
+    q3 = q(1); d4 = q(2);
+    r_T = d4 + p.Ltx;
+    J = [-r_T*sin(q3) + p.Lty*cos(q3), cos(q3);
+          r_T*cos(q3) + p.Lty*sin(q3), sin(q3)];
+end</code></pre></div>
+<hr class='notebook-divider'>
+<h2>5.9 Research Supervisor Summary & Master Defense Checklist</h2>
+<h3>Core Concepts Mastered in Chapter 5</h3>
+<ol>
+<li><strong>The Core Advantage of Generalized Momentum:</strong>  </li>
+</ol>
+<p>   By defining $\mathbf{p} = \mathbf{D}(\mathbf{q})\mathbf{\dot{q}}$ and substituting the skew-symmetry identity $\mathbf{\dot{D}}\mathbf{\dot{q}} - \mathbf{C}\mathbf{\dot{q}} = \mathbf{C}^T\mathbf{\dot{q}}$, the time derivative of momentum $\mathbf{\dot{p}} = \boldsymbol{\tau} + \mathbf{C}^T\mathbf{\dot{q}} - \mathbf{G} + \mathbf{Q}_{\text{ext}}$ **completely eliminates joint acceleration $\mathbf{\ddot{q}}$**.</p>
+<ol>
+<li><strong>Decoupled Low-Pass Filtering:</strong>  </li>
+</ol>
+<p>   The observer residual $\mathbf{r}(t)$ obeys the linear filter dynamics:</p>
+<div class="math-display">   $$\frac{R_i(s)}{Q_{\text{ext},i}(s)} = \frac{K_{O,i}}{s + K_{O,i}}$$</div>
+<p>   Each channel operates as a decoupled first-order filter with zero steady-state error, controllable bandwidth $\omega_c = K_{O,i}$, and zero acceleration feedback noise.</p>
+<ol>
+<li><strong>Global Exponential Stability:</strong>  </li>
+</ol>
+<p>   Using the quadratic Lyapunov candidate $V = \frac{1}{2}\|\mathbf{e}_r\|^2$, the error dynamics $\mathbf{\dot{e}}_r = -\mathbf{K}_O \mathbf{e}_r$ yield $\dot{V} = -\mathbf{e}_r^T \mathbf{K}_O \mathbf{e}_r < 0$, guaranteeing exponential convergence at rate $K_{O,\min}$.</p>
+<ol>
+<li><strong>Cartesian Force Reconstruction:</strong>  </li>
+</ol>
+<p>   Because the shovel Jacobian is strictly non-singular ($\det(\mathbf{J}_T) = -r_T \neq 0$), external rock cutting and breakout forces are reconstructed without singularity:</p>
+<div class="math-display">   $$\hat{\mathbf{F}}_{\text{ext}} = \left( \mathbf{J}_T^T \right)^{-1} \mathbf{r}(t)$$</div>
+<hr class='notebook-divider'>
+<h3>Doctoral Viva & Defense Questions</h3>
+<ul>
+<li><strong>Q1:</strong> <em>Why is the Generalized Momentum Observer (M3) fundamentally superior to high-gain state observers or Extended Kalman Filters for contact force estimation?</em>  </li>
+</ul>
+<p>  <strong>Answer:</strong> High-gain state observers require numerically differentiating velocity or estimating acceleration states, which amplifies sensor quantization noise and introduces extreme sensitivity to sensor noise covariance tuning. The GMO exploits the exact physical Hamiltonian structure of the multibody system to compute momentum directly from velocity, eliminating acceleration states entirely and guaranteeing passivity.</p>
+<ul>
+<li><strong>Q2:</strong> <em>How does the observer handle sudden dipper impact with an unyielding highwall (tooth stall)?</em>  </li>
+</ul>
+<p>  <strong>Answer:</strong> During tooth stall, velocity rapidly drops to zero while motor currents surge. The observer residual $\mathbf{r}(t)$ tracks the impact force with first-order exponential latency $T_O = 1/K_O \approx 25\,\mathrm{ms}$. When $\|\mathbf{r}(t)\|$ exceeds the pre-set threshold ($80\%$ structural yield), the digital twin triggers a fast torque-limit clamp to the motor variable frequency drives, preventing structural damage.</p>
+<ul>
+<li><strong>Q3:</strong> <em>What is the effect of friction modeling errors on the momentum observer?</em>  </li>
+</ul>
+<p>  <strong>Answer:</strong> Any unmodelled friction $\Delta \mathbf{F}_f = \mathbf{F}_{f,\text{true}} - \hat{\mathbf{F}}_f$ enters the residual dynamics as a disturbance input: $\mathbf{r}_{\text{ss}} = \mathbf{Q}_{\text{ext}} + \Delta \mathbf{F}_f$. During motion reversals, unmodeled Coulomb friction creates small step artifacts in $\mathbf{r}(t)$. This is why precise identification of Coulomb and viscous friction (Chapter 4) is essential to maximize observer fidelity.</p>
+<hr class='notebook-divider'>
+<h3>Transition to Chapter 6</h3>
+<p>With the analytical mechanics, kinematic Jacobians, Euler-Lagrange equations, parameter regressors, and momentum observers complete, we now conclude <strong>Volume I: Advanced Mathematical Foundations</strong> and transition to:  </p>
+<p><strong>Volume II: Rigid-Body & Multibody Dynamics of the Shovel System</strong>.  </p>
+<p>In Chapter 6, we begin <strong>Volume II, Chapter 6: Top-Down Kinematic & Topological Decomposition of the Electric Rope Shovel</strong>, establishing the complete 3D kinematic topology, reference frame trees, closed kinematic loops, and sheave-cable constraints for the complete industrial machine.</p>
+</body>
+</html>

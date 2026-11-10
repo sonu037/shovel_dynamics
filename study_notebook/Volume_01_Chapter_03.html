@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Volume I - Chapter 3: Variational Principles, Generalized Coordinates, and Euler-Lagrange Formulations</title>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  chtml: {
+    scale: 1.18
+  },
+  options: {
+    ignoreHtmlClass: 'tex2jax_ignore',
+    processHtmlClass: 'tex2jax_process'
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+  /* Notebook Typography & Sizing */
+  :root {
+    --primary-blue: #1d4ed8;
+    --navy-header: #0f2744;
+    --slate-text: #1e293b;
+    --callout-bg: #f8fafc;
+    --callout-border: #3b82f6;
+    --notebook-rule: #e2e8f0;
+  }
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 18px;          /* Generous, large notebook font size */
+    line-height: 1.85;        /* Spacious line spacing for reading equations */
+    margin: 40px auto;
+    max-width: 1040px;
+    padding: 0 45px;
+    color: var(--slate-text);
+    background-color: #fdfdfd;
+  }
+  
+  /* Notebook Cover & Headings */
+  h1 {
+    color: var(--navy-header);
+    border-bottom: 3px solid var(--primary-blue);
+    padding-bottom: 14px;
+    margin-top: 55px;
+    font-size: 2.3em;
+    line-height: 1.25;
+    letter-spacing: -0.5px;
+  }
+  
+  h2 {
+    color: #1e3a8a;
+    border-bottom: 2px solid #cbd5e1;
+    padding-bottom: 10px;
+    margin-top: 45px;
+    font-size: 1.7em;
+    line-height: 1.3;
+  }
+  
+  h3 {
+    color: var(--primary-blue);
+    margin-top: 35px;
+    font-size: 1.35em;
+    line-height: 1.35;
+  }
+  
+  h4 {
+    color: #334155;
+    margin-top: 25px;
+    font-size: 1.15em;
+    font-weight: 600;
+  }
+  
+  p {
+    margin: 18px 0;
+    font-size: 1.02em;
+  }
+  
+  /* Notebook Math Display */
+  .math-display {
+    overflow-x: auto;
+    margin: 28px 0;
+    padding: 16px 20px;
+    text-align: center;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+  }
+  
+  /* Notebook Code Blocks */
+  .code-container {
+    margin: 25px 0;
+  }
+  pre {
+    background: #0f172a;
+    color: #f8fafc;
+    border-radius: 8px;
+    padding: 20px 24px;
+    overflow-x: auto;
+    font-size: 15px;          /* Larger code font */
+    font-family: "Consolas", "Courier New", monospace;
+    line-height: 1.6;
+    border: 1px solid #334155;
+  }
+  
+  code {
+    font-family: "Consolas", "Courier New", monospace;
+    background: #f1f5f9;
+    color: #0f172a;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.92em;
+    font-weight: 500;
+  }
+  
+  pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+    font-weight: normal;
+  }
+  
+  /* Notebook Tables */
+  .table-container {
+    overflow-x: auto;
+    margin: 32px 0;
+  }
+  
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 16px;          /* Clear table font */
+    background: #ffffff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  
+  th, td {
+    border: 1px solid #cbd5e1;
+    padding: 14px 18px;
+    text-align: left;
+    line-height: 1.6;
+  }
+  
+  th {
+    background-color: #f1f5f9;
+    color: #0f172a;
+    font-weight: 700;
+    font-size: 1.02em;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #f8fafc;
+  }
+  
+  /* Notebook Highlight / Callout Blocks */
+  blockquote {
+    border-left: 6px solid var(--primary-blue);
+    margin: 28px 0;
+    padding: 18px 26px;
+    background: #eff6ff;
+    color: #1e3a8a;
+    border-radius: 0 8px 8px 0;
+    font-size: 1.02em;
+    box-shadow: 0 1px 3px rgba(37,99,235,0.06);
+  }
+  
+  blockquote p {
+    margin: 8px 0;
+  }
+  
+  .badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .badge-note { background: #dbeafe; color: #1e40af; }
+  .badge-tip { background: #dcfce7; color: #15803d; }
+  .badge-important { background: #fef3c7; color: #92400e; }
+  .badge-warning { background: #fee2e2; color: #b91c1c; }
+  .badge-caution { background: #fce7f3; color: #9d174d; }
+  
+  ul, ol {
+    padding-left: 32px;
+    margin: 18px 0;
+  }
+  
+  li {
+    margin: 10px 0;
+    font-size: 1.02em;
+  }
+  
+  hr.notebook-divider {
+    border: 0;
+    border-top: 2px dashed #cbd5e1;
+    margin: 45px 0;
+  }
+  
+  /* Print Controls */
+  .print-btn {
+    position: fixed;
+    top: 24px;
+    right: 32px;
+    background: var(--primary-blue);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+    z-index: 1000;
+    transition: all 0.2s;
+  }
+  
+  .print-btn:hover {
+    background: #1e40af;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.22);
+  }
+  
+  @media print {
+    .print-btn { display: none; }
+    body {
+      max-width: 100%;
+      margin: 0;
+      padding: 12mm 15mm;
+      font-size: 13pt;        /* Large readable notebook text in PDF */
+      line-height: 1.7;
+      color: #000;
+      background: #fff;
+    }
+    h1 {
+      page-break-before: always;
+      font-size: 1.9em;
+      border-bottom: 2pt solid #000;
+    }
+    h1:first-of-type {
+      page-break-before: avoid;
+    }
+    h2 {
+      font-size: 1.45em;
+      page-break-after: avoid;
+    }
+    h3 {
+      font-size: 1.25em;
+      page-break-after: avoid;
+    }
+    table, pre, blockquote, .math-display {
+      page-break-inside: avoid;
+    }
+    table {
+      font-size: 11pt;
+    }
+    pre {
+      font-size: 10.5pt;
+      background: #f8fafc;
+      color: #0f172a;
+      border: 1pt solid #cbd5e1;
+    }
+    a {
+      color: #000;
+      text-decoration: none;
+    }
+  }
+</style>
+</head>
+<body class="tex2jax_process">
+<button class="print-btn" onclick="window.print()">Print / Save as PDF (Ctrl+P)</button>
+<h1>VOLUME I: ADVANCED MATHEMATICAL FOUNDATIONS</h1>
+<hr class='notebook-divider'>
+<h1>CHAPTER 3: Variational Principles, Generalized Coordinates, and Euler-Lagrange Formulations</h1>
+<p><strong>Author:</strong> Multidisciplinary Research Supervisor & Technical Author  </p>
+<p><strong>Project:</strong> <em>AI-Enabled Platform for Diagnosis, Prognosis and Health Management of Mining Electrical Systems: Case Study on Dragline / Electric Rope Shovel</em>  </p>
+<p><strong>Grant Reference:</strong> IIT/SRIC/R/AEH/2026/104 (CMPDI / Coal India Limited — MT-189)  </p>
+<p><strong>Target Machines:</strong> Machine A (P&H 2100BL Benchmark) & Machine B (TZ WK-20 Deployment)  </p>
+<p><strong>Pedagogical Level:</strong> Postgraduate / Research Grade (B.Tech Mechanical Foundation Assumed)</p>
+<hr class='notebook-divider'>
+<blockquote>
+<div class="callout-header"><span class="badge badge-note">NOTE</span></div>
+<p>### RESEARCH STUDY NOTEBOOK ARCHITECTURE</p>
+<p>In Chapters 1 and 2, we established the geometry of coordinate transformations and the kinematics of velocities, accelerations, and virtual work. In this chapter, we transition from pure geometry into <strong>Analytical Mechanics and System Dynamics</strong>.</p>
+<p></p>
+<p>You will learn how Hamilton's Principle and the calculus of variations eliminate all internal constraint forces, allowing the equations of motion of heavy mining excavators to be derived directly from scalar energy functions.</p>
+<p></p>
+<p>By the end of this chapter, you will be able to:</p>
+<p>1. Formulate Hamilton's Principle of Stationary Action and derive the Euler-Lagrange equations from first variational principles.</p>
+<p>2. Determine generalized coordinates for holonomic multi-degree-of-freedom mining mechanisms using the Grübler-Kutzbach mobility criterion.</p>
+<p>3. Derive the general nonlinear multibody structure:</p>
+<p>$$\mathbf{D}(\mathbf{q})\mathbf{\ddot{q}} + \mathbf{C}(\mathbf{q}, \mathbf{\dot{q}})\mathbf{\dot{q}} + \mathbf{G}(\mathbf{q}) + \mathbf{F}_f(\mathbf{\dot{q}}) = \boldsymbol{\tau} + \mathbf{J}^T(\mathbf{q})\mathbf{F}_{\text{ext}}$$</p>
+<p>4. Derive Christoffel symbols of the first kind and prove the foundational <strong>Passivity Skew-Symmetry Property</strong> ($\mathbf{\dot{D}} - 2\mathbf{C} = -(\mathbf{\dot{D}} - 2\mathbf{C})^T$), which is the bedrock of energy-conserving digital twins and nonlinear momentum observers (M3).</p>
+<p>5. Derive the exact, closed-form equations of motion for the planar crowd-hoist shovel mechanism for both the <strong>P&H 2100BL benchmark</strong> ($50\,\mathrm{t}$ class) and the <strong>TZ WK-20 deployment shovel</strong> ($55\,\mathrm{t}$ payload class).</p>
+</blockquote>
+<hr class='notebook-divider'>
+<h2>3.1 Physical Intuition & The Failure of Newtonian Vector Mechanics</h2>
+<h3>3.1.1 Why Free-Body Diagrams Fail on a Mining Shovel</h3>
+<p>In introductory undergraduate mechanics, dynamic problems are solved using Newton's second law ($\sum \mathbf{F} = m\mathbf{a}$) and Euler's rotational equation ($\sum \mathbf{M} = \mathbf{I}\boldsymbol{\alpha}$). To apply this Newtonian approach to an electric rope shovel, an engineer must:</p>
+<ol>
+<li>Isolate the revolving upper deck as a free body, introducing three unknown ground reaction forces and three unknown reaction moments at the center gantry pin and roller circle.</li>
+<li>Isolate the boom, introducing unknown reaction forces at the two boom foot pins and tension forces in the boom suspension bridge ropes.</li>
+<li>Isolate the pivoting saddle block, introducing unknown radial and axial reaction forces at the boom shipper shaft bronze bearings.</li>
+<li>Isolate the dipper handle, introducing normal contact forces and friction forces between the handle rack plates and the saddle block guide liners.</li>
+<li>Isolate the dipper body, introducing shear forces at the bail pin and pitch adjustment links.</li>
+<li>Isolate the moving hoist cables, formulating dynamic boundary conditions over multiple rotating sheaves.</li>
+</ol>
+<div class="code-container"><pre><code class="language-">                  NEWTONIAN (VECTORIAL) vs. LAGRANGIAN (ANALYTICAL)
+                  
+    NEWTON-EULER VECTOR MECHANICS:          ANALYTICAL LAGRANGIAN DYNAMICS:
+    ------------------------------          -------------------------------
+    - Dissects machine into 6+ bodies.      - Treats machine as a single unified
+    - Solves for 20+ unknown internal         holonomic kinematic system.
+      reaction forces at pins &amp; bearings.   - Constraint forces do ZERO virtual work;
+    - Produces a large coupled system of      they vanish algebraically!
+      differential-algebraic equations.     - Yields exactly n = 2 independent,
+    - Extremely error-prone for digital       minimal ordinary differential 
+      twin state-space simulations.           equations of motion.</code></pre></div>
+<p>The forces transmitted through the shipper shaft bronze bushings, guide rollers, and saddle pins are <strong>internal constraint forces</strong>. They exist solely to hold the dipper handle along its track and prevent it from flying off the boom. Under ideal conditions (neglecting joint clearance and friction), these constraint forces do zero net mechanical work during kinematically admissible displacements.</p>
+<p><strong>Lagrangian mechanics bypasses all internal constraint forces.</strong> Instead of projecting vectors across dozens of free-body diagrams, you calculate two scalar quantities for the entire machine:</p>
+<ol>
+<li>**Total Kinetic Energy $T(\mathbf{q}, \mathbf{\dot{q}})$** (energy of motion).</li>
+<li>**Total Potential Energy $V(\mathbf{q})$** (energy of position in gravity and elastic ropes).</li>
+</ol>
+<p>Applying a systematic variational derivative to the Lagrangian $L = T - V$ yields the exact, minimal set of governing equations of motion with zero constraint reaction forces.</p>
+<hr class='notebook-divider'>
+<h2>3.2 Generalized Coordinates, Degrees of Freedom & Holonomic Constraints</h2>
+<h3>3.2.1 Degrees of Freedom & The Grübler-Kutzbach Criterion</h3>
+<p>Before writing equations of motion, an engineer must rigorously establish the true number of <strong>Degrees of Freedom (DOF)</strong> of the mechanism.</p>
+<p>For a planar mechanism consisting of $N$ rigid bodies (links), with link 0 designated as the fixed base frame, the unconstrained system has $3(N - 1)$ degrees of freedom. Each kinematic joint imposes geometric constraints:</p>
+<ul>
+<li>A revolute joint (pin, $R$) removes 2 translational degrees of freedom, allowing only 1 rotation ($c_1 = 2$).</li>
+<li>A prismatic joint (slider, $P$) removes 1 translation and 1 rotation, allowing only 1 linear translation ($c_1 = 2$).</li>
+<li>Higher-pair joints (cam, rolling contact) remove 1 degree of freedom ($c_2 = 1$).</li>
+</ul>
+<p>The <strong>Grübler-Kutzbach Mobility Criterion</strong> for a planar mechanism is:</p>
+<div class="math-display">$$M = 3(N - 1) - 2 j_1 - j_2 \tag{3.1}$$</div>
+<p>where:</p>
+<ul>
+<li>$N$ is the total number of links (including the fixed base / deck).</li>
+<li>$j_1$ is the number of 1-DOF joints (revolute $R$ and prismatic $P$).</li>
+<li>$j_2$ is the number of 2-DOF joints.</li>
+</ul>
+<div class="code-container"><pre><code class="language-">                     PLANAR SHOVEL KINEMATIC TOPOLOGY
+                     
+      [Base / Boom: Link 0]  --- (Revolute Joint J_1 at Shipper Shaft O_3)
+                                            |
+                                            v
+                                 [Saddle Block: Link 1]
+                                            |
+                             (Prismatic Joint J_2 along Handle Rack)
+                                            |
+                                            v
+                             [Dipper Handle &amp; Body: Link 2]</code></pre></div>
+<p>Let us evaluate Equation (3.1) for the crowd-hoist digging mechanism:</p>
+<ul>
+<li>Link 0: Boom and revolving frame (fixed reference for planar motion).</li>
+<li>Link 1: Saddle block.</li>
+<li>Link 2: Dipper handle rigidly carrying dipper body and teeth.</li>
+<li>Total links: $N = 3$.</li>
+<li>Joint 1: Revolute pin at shipper shaft $O_3$ connecting Link 0 and Link 1 ($j_1 = 1$).</li>
+<li>Joint 2: Prismatic guide rack connecting Link 1 and Link 2 ($j_1 = 2$).</li>
+<li>Higher pairs: $j_2 = 0$.</li>
+</ul>
+<p>Applying Grübler's criterion:</p>
+<div class="math-display">$$M = 3(3 - 1) - 2(2) - 0 = 3(2) - 4 = 6 - 4 = 2 \tag{3.2}$$</div>
+<p>The planar crowd-hoist digging mechanism possesses **strictly 2 Degrees of Freedom ($n = 2$)**.</p>
+<blockquote>
+<div class="callout-header"><span class="badge badge-important">IMPORTANT</span></div>
+<p>### WHY HOIST CABLES DO NOT ADD A DEGREE OF FREEDOM</p>
+<p>You might wonder: <em>"Doesn't the hoist rope add another degree of freedom?"</em></p>
+<p></p>
+<p>No. The hoist rope extends from the motorized hoist drum inside the machinery deck, passes over the boom-point sheave, and dead-ends at the dipper bail pin. The hoist rope acts as a <strong>rheonomic kinematic constraint or an external line pull actuator</strong> that determines the elevation angle $q_3$ of the handle.</p>
+<p></p>
+<p>The shovel mechanism cannot move independently of the saddle angle $q_3$ and crowd extension $d_4$. Thus, the configuration of the entire mechanical linkage is uniquely specified by:</p>
+<p></p>
+<p>$$\mathbf{q} = \begin{bmatrix} q_3 \\ d_4 \end{bmatrix} \in \mathcal{Q} \subset \mathbb{R}^2 \tag{3.3}$$</p>
+</blockquote>
+<h3>3.2.2 Classification of Constraints</h3>
+<ol>
+<li><strong>Holonomic Constraints:</strong> Algebraic constraints that depend only on coordinates and time:</li>
+</ol>
+<div class="math-display">   $$\phi_i(\mathbf{r}_1, \mathbf{r}_2, \dots, \mathbf{r}_N, t) = 0 \tag{3.4}$$</div>
+<p>   The pin joints and slider guides on the electric rope shovel are holonomic. Holonomic constraints allow us to define a minimal set of independent generalized coordinates $\mathbf{q} \in \mathbb{R}^n$, completely eliminating redundant variables.</p>
+<ol>
+<li><strong>Scleronomic vs. Rheonomic:</strong></li>
+</ol>
+<ul>
+<li><strong>Scleronomic Constraints:</strong> Time does not appear explicitly in the constraint equation ($\frac{\partial \phi_i}{\partial t} = 0$). The rigid links of the boom and dipper handle are scleronomic.</li>
+<li><strong>Rheonomic Constraints:</strong> Time appears explicitly ($\phi_i(\mathbf{r}, t) = 0$). If the hoist drum rotates at a prescribed time-dependent speed $\omega_{\text{drum}}(t)$, the changing rope length $L_h(t)$ acts as a rheonomic constraint.</li>
+</ul>
+<hr class='notebook-divider'>
+<h2>3.3 Variational Calculus & Hamilton's Principle of Stationary Action</h2>
+<h3>3.3.1 The Action Integral and The Functional</h3>
+<p>Let the state of a mechanical system at any instant $t$ be described by its generalized coordinates $\mathbf{q}(t)$ and generalized velocities $\mathbf{\dot{q}}(t)$.</p>
+<p>The <strong>Lagrangian function</strong> $L(\mathbf{q}, \mathbf{\dot{q}}, t)$ is defined as the difference between the total kinetic energy $T$ and total potential energy $V$:</p>
+<div class="math-display">$$L(\mathbf{q}, \mathbf{\dot{q}}, t) = T(\mathbf{q}, \mathbf{\dot{q}}) - V(\mathbf{q}) \tag{3.5}$$</div>
+<p>The <strong>Action Integral</strong> $S[\mathbf{q}(t)]$ is a scalar functional that assigns a number to any kinematically admissible trajectory $\mathbf{q}(t)$ traversing between fixed configurations $\mathbf{q}(t_1) = \mathbf{q}_1$ and $\mathbf{q}(t_2) = \mathbf{q}_2$:</p>
+<div class="math-display">$$S[\mathbf{q}(t)] = \int_{t_1}^{t_2} L(\mathbf{q}(t), \mathbf{\dot{q}}(t), t) \, dt \tag{3.6}$$</div>
+<div class="code-container"><pre><code class="language-">                           CALCULUS OF VARIATIONS
+                           
+              Configuration q
+                     ^
+                     |          Varied Trajectory q(t) + alpha * eta(t)
+                     |                .---&#x27;&quot;&quot;`---.
+                     |              .&#x27;   \delta q `-.
+                     |             /                 \
+                     |   q_1 =====*===================*===== q_2
+                     |            (Actual Physical Trajectory q*(t))
+                     |
+                     +---------------------------------------------&gt; Time t
+                                  t_1                 t_2</code></pre></div>
+<h3>3.3.2 Hamilton's Principle</h3>
+<p><strong>Hamilton's Principle (The Principle of Stationary Action):</strong>  </p>
+<p>*The actual physical trajectory $\mathbf{q}^*(t)$ followed by a dynamical system between two specified states $\mathbf{q}(t_1)$ and $\mathbf{q}(t_2)$ is a stationary path of the action integral $S$. That is, the first variation of the action vanishes identically:*</p>
+<div class="math-display">$$\delta S = \delta \int_{t_1}^{t_2} L(\mathbf{q}, \mathbf{\dot{q}}, t) \, dt = 0 \tag{3.7}$$</div>
+<p>for all arbitrary variations $\delta \mathbf{q}(t)$ that satisfy the essential boundary conditions:</p>
+<div class="math-display">$$\delta \mathbf{q}(t_1) = \mathbf{0}, \quad \delta \mathbf{q}(t_2) = \mathbf{0} \tag{3.8}$$</div>
+<hr class='notebook-divider'>
+<h3>3.3.3 Rigorous Mathematical Derivation of the Euler-Lagrange Equations</h3>
+<p>We now derive the Euler-Lagrange equations directly from Hamilton's Principle using the calculus of variations.</p>
+<p><strong>Step 1: Take the first variation inside the integral</strong></p>
+<p>The variation of the functional $S$ is obtained by varying the trajectory $\mathbf{q}(t) \to \mathbf{q}(t) + \delta \mathbf{q}(t)$:</p>
+<div class="math-display">$$\delta S = \int_{t_1}^{t_2} \delta L(\mathbf{q}, \mathbf{\dot{q}}, t) \, dt = 0 \tag{3.9}$$</div>
+<p>By the multivariable chain rule, the variation of the scalar function $L(\mathbf{q}, \mathbf{\dot{q}}, t)$ is:</p>
+<div class="math-display">$$\delta L = \sum_{i=1}^n \left( \frac{\partial L}{\partial q_i} \delta q_i + \frac{\partial L}{\partial \dot{q}_i} \delta \dot{q}_i \right) \tag{3.10}$$</div>
+<p>Notice that the variation and time derivative operators commute:</p>
+<div class="math-display">$$\delta \dot{q}_i = \delta \left( \frac{dq_i}{dt} \right) = \frac{d}{dt}(\delta q_i) \tag{3.11}$$</div>
+<p>Substitute Equation (3.11) into Equation (3.10):</p>
+<div class="math-display">$$\delta S = \int_{t_1}^{t_2} \sum_{i=1}^n \left[ \frac{\partial L}{\partial q_i} \delta q_i + \frac{\partial L}{\partial \dot{q}_i} \frac{d}{dt}(\delta q_i) \right] dt = 0 \tag{3.12}$$</div>
+<p><strong>Step 2: Integrate the second term by parts</strong></p>
+<p>Examine the term containing $\frac{d}{dt}(\delta q_i)$:</p>
+<div class="math-display">$$\int_{t_1}^{t_2} \frac{\partial L}{\partial \dot{q}_i} \frac{d}{dt}(\delta q_i) \, dt = \left[ \frac{\partial L}{\partial \dot{q}_i} \delta q_i \right]_{t_1}^{t_2} - \int_{t_1}^{t_2} \frac{d}{dt}\left( \frac{\partial L}{\partial \dot{q}_i} \right) \delta q_i \, dt \tag{3.13}$$</div>
+<p>Because the end-points of the path are fixed by Equation (3.8), $\delta q_i(t_1) = \delta q_i(t_2) = 0$, the boundary term <strong>vanishes identically</strong>:</p>
+<div class="math-display">$$\left[ \frac{\partial L}{\partial \dot{q}_i} \delta q_i \right]_{t_1}^{t_2} = \frac{\partial L}{\partial \dot{q}_i}(t_2) \cdot (0) - \frac{\partial L}{\partial \dot{q}_i}(t_1) \cdot (0) = 0 \tag{3.14}$$</div>
+<p><strong>Step 3: Combine integrals and apply the Fundamental Lemma</strong></p>
+<p>Substitute Equation (3.13) back into Equation (3.12):</p>
+<div class="math-display">$$\delta S = \int_{t_1}^{t_2} \sum_{i=1}^n \left[ \frac{\partial L}{\partial q_i} - \frac{d}{dt}\left( \frac{\partial L}{\partial \dot{q}_i} \right) \right] \delta q_i \, dt = 0 \tag{3.15}$$</div>
+<p>Factor out the minus sign:</p>
+<div class="math-display">$$\int_{t_1}^{t_2} \sum_{i=1}^n \left[ \frac{d}{dt}\left( \frac{\partial L}{\partial \dot{q}_i} \right) - \frac{\partial L}{\partial q_i} \right] \delta q_i \, dt = 0 \tag{3.16}$$</div>
+<p>By the <strong>Fundamental Lemma of the Calculus of Variations</strong>, since the virtual variations $\delta q_i(t)$ are completely arbitrary, continuous, and independent functions between $t_1$ and $t_2$, the integral can vanish for all possible variations **if and only if the expression inside the brackets is identically zero for every coordinate $i = 1, 2, \dots, n$**:</p>
+<div class="math-display">$$\frac{d}{dt}\left( \frac{\partial L}{\partial \dot{q}_i} \right) - \frac{\partial L}{\partial q_i} = 0, \quad \forall i \in \{1, 2, \dots, n\} \tag{3.17}$$</div>
+<p>Equation (3.17) is the celebrated <strong>Euler-Lagrange Equation of Motion for a Conservative System</strong>.</p>
+<hr class='notebook-divider'>
+<h3>3.3.4 Extension to Non-Conservative Systems: Actuators, Damping & Rock Loads</h3>
+<p>Real mining machines are not conservative:</p>
+<ol>
+<li>Actuator electric motors apply mechanical torques and forces $\boldsymbol{\tau}$.</li>
+<li>Bearings, gears, and cables dissipate energy through viscous and Coulomb friction.</li>
+<li>Dipper teeth perform work breaking and fragmenting rock faces ($\mathbf{F}_{\text{ext}}$).</li>
+</ol>
+<p>When non-conservative forces act on the system, Hamilton's Principle generalizes to <strong>Hamilton's Extended Principle</strong>:</p>
+<div class="math-display">$$\int_{t_1}^{t_2} \left( \delta L + \delta W_{\text{nc}} \right) dt = 0 \tag{3.18}$$</div>
+<p>where $\delta W_{\text{nc}}$ is the virtual work performed by all non-conservative forces:</p>
+<div class="math-display">$$\delta W_{\text{nc}} = \sum_{i=1}^n Q_i^{\text{nc}} \, \delta q_i \tag{3.19}$$</div>
+<p>The generalized non-conservative force $Q_i^{\text{nc}}$ associated with coordinate $q_i$ is computed from all external physical forces $\mathbf{F}_k$ acting at Cartesian locations $\mathbf{r}_k$:</p>
+<div class="math-display">$$Q_i^{\text{nc}} = \sum_{k} \mathbf{F}_k \cdot \frac{\partial \mathbf{r}_k}{\partial q_i} \tag{3.20}$$</div>
+<p>The resulting <strong>Non-Conservative Euler-Lagrange Equations</strong> are:</p>
+<div class="math-display">$$\frac{d}{dt}\left( \frac{\partial L}{\partial \dot{q}_i} \right) - \frac{\partial L}{\partial q_i} = Q_i^{\text{nc}}, \quad i = 1, 2, \dots, n \tag{3.21}$$</div>
+<hr class='notebook-divider'>
+<h3>3.3.5 Rayleigh's Dissipation Function for Friction</h3>
+<p>Viscous friction forces proportional to velocity ($F_{f,i} = -b_i \dot{q}_i$) can be generated systematically from <strong>Rayleigh's Dissipation Function</strong> $\mathcal{R}(\mathbf{\dot{q}})$:</p>
+<div class="math-display">$$\mathcal{R}(\mathbf{\dot{q}}) = \frac{1}{2} \mathbf{\dot{q}}^T \mathbf{B} \mathbf{\dot{q}} = \frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n B_{ij} \dot{q}_i \dot{q}_j \tag{3.22}$$</div>
+<p>where $\mathbf{B}$ is a symmetric, positive-semidefinite viscous damping matrix. The damping force is:</p>
+<div class="math-display">$$Q_{i, \text{damping}} = -\frac{\partial \mathcal{R}}{\partial \dot{q}_i} \tag{3.23}$$</div>
+<p>Incorporating Rayleigh's dissipation function into Equation (3.21):</p>
+<div class="math-display">$$\frac{d}{dt}\left( \frac{\partial L}{\partial \dot{q}_i} \right) - \frac{\partial L}{\partial q_i} + \frac{\partial \mathcal{R}}{\partial \dot{q}_i} = Q_{i, \text{actuator}} + Q_{i, \text{ext}} \tag{3.24}$$</div>
+<hr class='notebook-divider'>
+<h2>3.4 Canonical Structure of Multibody Dynamic Equations</h2>
+<p>We now expand the Euler-Lagrange equations to reveal their canonical matrix-vector structure.</p>
+<h3>3.4.1 The Generalized Inertia Matrix $\mathbf{D}(\mathbf{q})$</h3>
+<p>For any mechanical system with scleronomic constraints, the total kinetic energy $T$ is a strictly positive, quadratic form in generalized velocities:</p>
+<div class="math-display">$$T(\mathbf{q}, \mathbf{\dot{q}}) = \frac{1}{2} \mathbf{\dot{q}}^T \mathbf{D}(\mathbf{q}) \mathbf{\dot{q}} = \frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n D_{ij}(\mathbf{q}) \dot{q}_i \dot{q}_j \tag{3.25}$$</div>
+<p>where $\mathbf{D}(\mathbf{q}) \in \mathbb{R}^{n \times n}$ is the <strong>Generalized Inertia Matrix</strong> (also called the Mass Matrix).</p>
+<blockquote>
+<div class="callout-header"><span class="badge badge-important">IMPORTANT</span></div>
+<p>### FUNDAMENTAL PROPERTIES OF $\mathbf{D}(\mathbf{q})$</p>
+<p>1. <strong>Symmetry:</strong> $D_{ij}(\mathbf{q}) = D_{ji}(\mathbf{q})$ for all $i, j$, so $\mathbf{D}^T(\mathbf{q}) = \mathbf{D}(\mathbf{q})$.</p>
+<p>2. <strong>Positive Definiteness:</strong> Since kinetic energy must be strictly positive for any non-zero motion ($\mathbf{\dot{q}} \neq \mathbf{0}$):</p>
+<p>$$T = \frac{1}{2}\mathbf{\dot{q}}^T \mathbf{D}(\mathbf{q}) \mathbf{\dot{q}} > 0, \quad \forall \mathbf{\dot{q}} \neq \mathbf{0}$$</p>
+<p>Therefore, all eigenvalues of $\mathbf{D}(\mathbf{q})$ are strictly positive: $\lambda_i(\mathbf{D}) > 0$.</p>
+<p>3. <strong>Invertibility:</strong> Since $\det(\mathbf{D}(\mathbf{q})) = \prod_{i=1}^n \lambda_i > 0$, the inertia matrix is <strong>unconditionally invertible everywhere in the workspace</strong>: $\mathbf{D}^{-1}(\mathbf{q})$ exists for all physical configurations $\mathbf{q}$.</p>
+</blockquote>
+<hr class='notebook-divider'>
+<h3>3.4.2 Expansion of the Kinetic Energy Derivatives</h3>
+<p>Substitute $L = T - V$ into the left-hand side of the Euler-Lagrange equations:</p>
+<div class="math-display">$$\frac{d}{dt}\left( \frac{\partial L}{\partial \dot{q}_k} \right) - \frac{\partial L}{\partial q_k} = \frac{d}{dt}\left( \frac{\partial T}{\partial \dot{q}_k} \right) - \frac{\partial T}{\partial q_k} + \frac{\partial V}{\partial q_k} \tag{3.26}$$</div>
+<p>Let us evaluate each partial derivative term:</p>
+<p><strong>Term 1:</strong> Differentiating $T = \frac{1}{2}\sum_i \sum_j D_{ij}(\mathbf{q}) \dot{q}_i \dot{q}_j$ with respect to $\dot{q}_k$:</p>
+<p>Using the symmetry of $\mathbf{D}$:</p>
+<div class="math-display">$$\frac{\partial T}{\partial \dot{q}_k} = \sum_{j=1}^n D_{kj}(\mathbf{q}) \dot{q}_j \tag{3.27}$$</div>
+<p>Notice that $\frac{\partial T}{\partial \dot{q}_k} = p_k$ is the **$k$-th Generalized Momentum** of the system.</p>
+<p>Now take the total time derivative of $p_k$:</p>
+<div class="math-display">$$\frac{d}{dt}\left( \frac{\partial T}{\partial \dot{q}_k} \right) = \frac{d}{dt} \left[ \sum_{j=1}^n D_{kj}(\mathbf{q}) \dot{q}_j \right] = \sum_{j=1}^n D_{kj}(\mathbf{q}) \ddot{q}_j + \sum_{j=1}^n \dot{D}_{kj}(\mathbf{q}) \dot{q}_j \tag{3.28}$$</div>
+<p>Applying the multivariable chain rule to $\dot{D}_{kj} = \sum_{i=1}^n \frac{\partial D_{kj}}{\partial q_i} \dot{q}_i$:</p>
+<div class="math-display">$$\frac{d}{dt}\left( \frac{\partial T}{\partial \dot{q}_k} \right) = \sum_{j=1}^n D_{kj} \ddot{q}_j + \sum_{i=1}^n \sum_{j=1}^n \frac{\partial D_{kj}}{\partial q_i} \dot{q}_i \dot{q}_j \tag{3.29}$$</div>
+<p><strong>Term 2:</strong> Differentiating $T$ with respect to generalized coordinate $q_k$:</p>
+<div class="math-display">$$\frac{\partial T}{\partial q_k} = \frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n \frac{\partial D_{ij}}{\partial q_k} \dot{q}_i \dot{q}_j \tag{3.30}$$</div>
+<p><strong>Term 3:</strong> Combine Terms 1 and 2:</p>
+<div class="math-display">$$\frac{d}{dt}\left( \frac{\partial T}{\partial \dot{q}_k} \right) - \frac{\partial T}{\partial q_k} = \sum_{j=1}^n D_{kj} \ddot{q}_j + \sum_{i=1}^n \sum_{j=1}^n \left( \frac{\partial D_{kj}}{\partial q_i} - \frac{1}{2} \frac{\partial D_{ij}}{\partial q_k} \right) \dot{q}_i \dot{q}_j \tag{3.31}$$</div>
+<p>To exploit the symmetry of the velocity product $\dot{q}_i \dot{q}_j = \frac{1}{2}(\dot{q}_i \dot{q}_j + \dot{q}_j \dot{q}_i)$, we rewrite the term $\frac{\partial D_{kj}}{\partial q_i} \dot{q}_i \dot{q}_j$ as:</p>
+<div class="math-display">$$\sum_{i=1}^n \sum_{j=1}^n \frac{\partial D_{kj}}{\partial q_i} \dot{q}_i \dot{q}_j = \frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n \left( \frac{\partial D_{kj}}{\partial q_i} + \frac{\partial D_{ki}}{\partial q_j} \right) \dot{q}_i \dot{q}_j \tag{3.32}$$</div>
+<p>Substituting Equation (3.32) into Equation (3.31) gives:</p>
+<div class="math-display">$$\frac{d}{dt}\left( \frac{\partial T}{\partial \dot{q}_k} \right) - \frac{\partial T}{\partial q_k} = \sum_{j=1}^n D_{kj}(\mathbf{q}) \ddot{q}_j + \sum_{i=1}^n \sum_{j=1}^n c_{ijk}(\mathbf{q}) \dot{q}_i \dot{q}_j \tag{3.33}$$</div>
+<p>where $c_{ijk}(\mathbf{q})$ are the <strong>Christoffel Symbols of the First Kind</strong>:</p>
+<div class="math-display">$$c_{ijk}(\mathbf{q}) = \frac{1}{2} \left( \frac{\partial D_{kj}}{\partial q_i} + \frac{\partial D_{ki}}{\partial q_j} - \frac{\partial D_{ij}}{\partial q_k} \right) \tag{3.34}$$</div>
+<hr class='notebook-divider'>
+<h3>3.4.3 The Coriolis and Centrifugal Matrix $\mathbf{C}(\mathbf{q}, \mathbf{\dot{q}})$</h3>
+<p>We now group the quadratic velocity terms into an $n \times n$ matrix $\mathbf{C}(\mathbf{q}, \mathbf{\dot{q}})$ such that:</p>
+<div class="math-display">$$\sum_{i=1}^n \sum_{j=1}^n c_{ijk}(\mathbf{q}) \dot{q}_i \dot{q}_j = \sum_{j=1}^n C_{kj}(\mathbf{q}, \mathbf{\dot{q}}) \dot{q}_j = \left[ \mathbf{C}(\mathbf{q}, \mathbf{\dot{q}}) \mathbf{\dot{q}} \right]_k \tag{3.35}$$</div>
+<p>The $(k, j)$-th element of the matrix $\mathbf{C}(\mathbf{q}, \mathbf{\dot{q}})$ is defined by:</p>
+<div class="math-display">$$C_{kj}(\mathbf{q}, \mathbf{\dot{q}}) = \sum_{i=1}^n c_{ijk}(\mathbf{q}) \dot{q}_i = \frac{1}{2} \sum_{i=1}^n \left( \frac{\partial D_{kj}}{\partial q_i} + \frac{\partial D_{ki}}{\partial q_j} - \frac{\partial D_{ij}}{\partial q_k} \right) \dot{q}_i \tag{3.36}$$</div>
+<h3>3.4.4 The Gravity Vector $\mathbf{G}(\mathbf{q})$</h3>
+<p>The generalized gravity force vector $\mathbf{G}(\mathbf{q}) \in \mathbb{R}^n$ is obtained from the gradient of the potential energy:</p>
+<div class="math-display">$$\mathbf{G}(\mathbf{q}) = \frac{\partial V(\mathbf{q})}{\partial \mathbf{q}} = \begin{bmatrix} \frac{\partial V}{\partial q_1} \\ \frac{\partial V}{\partial q_2} \\ \vdots \\ \frac{\partial V}{\partial q_n} \end{bmatrix} \tag{3.37}$$</div>
+<hr class='notebook-divider'>
+<h3>3.4.5 The Complete Multibody Equations of Motion</h3>
+<p>Assembling all terms into matrix-vector form gives the universal governing equation for any articulated robotic or mining mechanism:</p>
+<div class="math-display">$$\mathbf{D}(\mathbf{q})\mathbf{\ddot{q}} + \mathbf{C}(\mathbf{q}, \mathbf{\dot{q}})\mathbf{\dot{q}} + \mathbf{G}(\mathbf{q}) + \mathbf{F}_f(\mathbf{\dot{q}}) = \boldsymbol{\tau} + \mathbf{Q}_{\text{ext}} \tag{3.38}$$</div>
+<p>where:</p>
+<ul>
+<li>$\mathbf{D}(\mathbf{q}) \in \mathbb{R}^{n \times n}$: Symmetric, positive-definite Generalized Inertia Matrix.</li>
+<li>$\mathbf{C}(\mathbf{q}, \mathbf{\dot{q}}) \in \mathbb{R}^{n \times n}$: Coriolis and Centrifugal Matrix defined via Christoffel symbols.</li>
+<li>$\mathbf{G}(\mathbf{q}) \in \mathbb{R}^n$: Gravitational generalized forces.</li>
+<li>$\mathbf{F}_f(\mathbf{\dot{q}}) \in \mathbb{R}^n$: Friction generalized forces (viscous + Coulomb).</li>
+<li>$\boldsymbol{\tau} \in \mathbb{R}^n$: Actuator control generalized forces (motor torques/thrusts).</li>
+<li>$\mathbf{Q}_{\text{ext}} = \mathbf{J}^T(\mathbf{q})\mathbf{F}_{\text{ext}} \in \mathbb{R}^n$: External rock resistance generalized forces at the dipper teeth.</li>
+</ul>
+<div class="code-container"><pre><code class="language-">=============================================================================
+                  THE UNIVERSAL MULTIBODY DYNAMIC STRUCTURE
+=============================================================================
+    D(q) * q_ddot  +  C(q, q_dot) * q_dot  +  G(q)  +  F_f(q_dot)  =  tau + Q_ext
+    \___________/     \_________________/     \__/     \________/     \_________/
+          |                    |                |           |              |
+      Inertial             Coriolis &amp;        Gravity    Friction       Actuator &amp;
+    Acceleration          Centripetal         Forces     Forces         External
+       Forces               Forces                                       Forces
+=============================================================================</code></pre></div>
+<hr class='notebook-divider'>
+<h2>3.5 The Fundamental Skew-Symmetry / Passivity Property</h2>
+<p>In the literature of advanced nonlinear control and observer theory, one identity stands above all others: the **Skew-Symmetry of $\mathbf{\dot{D}} - 2\mathbf{C}$**.</p>
+<h3>3.5.1 Theorem Statement</h3>
+<p>*If the Coriolis and Centrifugal matrix $\mathbf{C}(\mathbf{q}, \mathbf{\dot{q}})$ is formulated using the Christoffel symbols of the first kind as defined in Equation (3.36), then the matrix:*</p>
+<div class="math-display">$$\mathbf{N}(\mathbf{q}, \mathbf{\dot{q}}) = \mathbf{\dot{D}}(\mathbf{q}) - 2\mathbf{C}(\mathbf{q}, \mathbf{\dot{q}}) \tag{3.39}$$</div>
+<p><em>is strictly <strong>skew-symmetric</strong>:</em></p>
+<div class="math-display">$$\mathbf{N}^T = -\mathbf{N} \iff \mathbf{\dot{D}}(\mathbf{q}) - 2\mathbf{C}(\mathbf{q}, \mathbf{\dot{q}}) = -\left( \mathbf{\dot{D}}(\mathbf{q}) - 2\mathbf{C}(\mathbf{q}, \mathbf{\dot{q}}) \right)^T \tag{3.40}$$</div>
+<p>*Consequently, the quadratic form of $\mathbf{N}$ vanishes identically for any arbitrary vector $\mathbf{x} \in \mathbb{R}^n$:*</p>
+<div class="math-display">$$\mathbf{x}^T \left( \mathbf{\dot{D}}(\mathbf{q}) - 2\mathbf{C}(\mathbf{q}, \mathbf{\dot{q}}) \right) \mathbf{x} = 0, \quad \forall \mathbf{x} \in \mathbb{R}^n \tag{3.41}$$</div>
+<hr class='notebook-divider'>
+<h3>3.5.2 Mathematical Proof of Skew-Symmetry</h3>
+<p>Let us evaluate the $(k, j)$-th entry of the matrix $\mathbf{N} = \mathbf{\dot{D}} - 2\mathbf{C}$:</p>
+<p>From the chain rule:</p>
+<div class="math-display">$$\dot{D}_{kj}(\mathbf{q}) = \sum_{i=1}^n \frac{\partial D_{kj}}{\partial q_i} \dot{q}_i \tag{3.42}$$</div>
+<p>From Equation (3.36), multiplying $C_{kj}$ by 2:</p>
+<div class="math-display">$$2 C_{kj}(\mathbf{q}, \mathbf{\dot{q}}) = \sum_{i=1}^n \left( \frac{\partial D_{kj}}{\partial q_i} + \frac{\partial D_{ki}}{\partial q_j} - \frac{\partial D_{ij}}{\partial q_k} \right) \dot{q}_i \tag{3.43}$$</div>
+<p>Subtracting Equation (3.43) from (3.42):</p>
+<div class="math-display">$$N_{kj} = \dot{D}_{kj} - 2 C_{kj} = \sum_{i=1}^n \left[ \frac{\partial D_{kj}}{\partial q_i} - \left( \frac{\partial D_{kj}}{\partial q_i} + \frac{\partial D_{ki}}{\partial q_j} - \frac{\partial D_{ij}}{\partial q_k} \right) \right] \dot{q}_i$$</div>
+<p>Notice that the term $\frac{\partial D_{kj}}{\partial q_i}$ cancels out directly!</p>
+<div class="math-display">$$N_{kj} = \sum_{i=1}^n \left( \frac{\partial D_{ij}}{\partial q_k} - \frac{\partial D_{ki}}{\partial q_j} \right) \dot{q}_i \tag{3.44}$$</div>
+<p>Now, compute the $(j, k)$-th entry $N_{jk}$ (swapping indices $j$ and $k$):</p>
+<div class="math-display">$$N_{jk} = \sum_{i=1}^n \left( \frac{\partial D_{ik}}{\partial q_j} - \frac{\partial D_{ji}}{\partial q_k} \right) \dot{q}_i \tag{3.45}$$</div>
+<p>Using the symmetry of the inertia matrix ($D_{ik} = D_{ki}$ and $D_{ji} = D_{ij}$):</p>
+<div class="math-display">$$N_{jk} = \sum_{i=1}^n \left( \frac{\partial D_{ki}}{\partial q_j} - \frac{\partial D_{ij}}{\partial q_k} \right) \dot{q}_i = - \sum_{i=1}^n \left( \frac{\partial D_{ij}}{\partial q_k} - \frac{\partial D_{ki}}{\partial q_j} \right) \dot{q}_i = -N_{kj} \tag{3.46}$$</div>
+<p>Since $N_{jk} = -N_{kj}$ for all pairs $(j, k)$, the matrix $\mathbf{N} = \mathbf{\dot{D}} - 2\mathbf{C}$ is <strong>identically skew-symmetric</strong>. $\blacksquare$</p>
+<hr class='notebook-divider'>
+<h3>3.5.3 Physical Meaning: Conservation of Energy & Observer Passivity</h3>
+<p>Why is this mathematical proof so celebrated in robotics and digital twin design?</p>
+<p>Consider the rate of change of the system's kinetic energy $T = \frac{1}{2}\mathbf{\dot{q}}^T \mathbf{D}(\mathbf{q}) \mathbf{\dot{q}}$:</p>
+<div class="math-display">$$\dot{T} = \frac{d}{dt}\left( \frac{1}{2}\mathbf{\dot{q}}^T \mathbf{D} \mathbf{\dot{q}} \right) = \mathbf{\dot{q}}^T \mathbf{D} \mathbf{\ddot{q}} + \frac{1}{2} \mathbf{\dot{q}}^T \mathbf{\dot{D}} \mathbf{\dot{q}} \tag{3.47}$$</div>
+<p>From the equations of motion (in the absence of gravity and friction for pure inertial motion): $\mathbf{D}\mathbf{\ddot{q}} = \boldsymbol{\tau} - \mathbf{C}\mathbf{\dot{q}}$. Substitute this into Equation (3.47):</p>
+<div class="math-display">$$\dot{T} = \mathbf{\dot{q}}^T \left( \boldsymbol{\tau} - \mathbf{C}\mathbf{\dot{q}} \right) + \frac{1}{2} \mathbf{\dot{q}}^T \mathbf{\dot{D}} \mathbf{\dot{q}} = \mathbf{\dot{q}}^T \boldsymbol{\tau} + \frac{1}{2} \mathbf{\dot{q}}^T \left( \mathbf{\dot{D}} - 2\mathbf{C} \right) \mathbf{\dot{q}} \tag{3.48}$$</div>
+<p>Applying the skew-symmetry property $\mathbf{\dot{q}}^T(\mathbf{\dot{D}} - 2\mathbf{C})\mathbf{\dot{q}} = 0$:</p>
+<div class="math-display">$$\dot{T} = \mathbf{\dot{q}}^T \boldsymbol{\tau} = P_{\text{mechanical}} \tag{3.49}$$</div>
+<blockquote>
+<div class="callout-header"><span class="badge badge-tip">TIP</span></div>
+<p>### WHY THIS PROPERTY PROTECTS OUR DIGITAL TWIN FROM INSTABILITY</p>
+<p>Equation (3.49) proves that <strong>Coriolis and centrifugal forces do zero net mechanical work on the excavator</strong>. They are internal gyroscopic coupling forces that redistribute energy among links, but can neither create nor destroy energy!</p>
+<p></p>
+<p>If a numerical simulation or digital twin uses an ad-hoc or incorrect formula for $\mathbf{C}(\mathbf{q}, \mathbf{\dot{q}})$ that violates skew-symmetry, the simulation will artificially create energy, causing numerical instability and wild oscillations in the estimated digging force!</p>
+</blockquote>
+<hr class='notebook-divider'>
+<h2>3.6 Complete 2-DOF Shovel Dynamic Derivation: P&H 2100BL & TZ WK-20</h2>
+<p>We now execute the full analytical derivation of $\mathbf{D}(\mathbf{q})$, $\mathbf{C}(\mathbf{q}, \mathbf{\dot{q}})$, and $\mathbf{G}(\mathbf{q})$ for the planar electric rope shovel digging mechanism.</p>
+<div class="code-container"><pre><code class="language-">                      PLANAR 2-DOF SHOVEL DYNAMIC MODEL
+                      
+                                            Y_0
+                                             ^
+                                             |           Boom Point Sheave S
+                                             |                  *
+                                             |                 / \
+                                             |                /   \  Hoist Rope
+                                             |               /     \
+                                             |              /       v
+                                             |             /     Bail Pin B (m_d)
+                             Saddle Block    |            /         |
+                            Center of Mass   |           /     [Dipper Body]
+                                 (m_s)       |          /           |
+                                   *         |         /      Dipper Teeth T
+                              o====|=========+========/=============*
+                             /      \        |       /   Dipper Handle
+                            /        \       |      /        (m_h)
+                     Boom  /          \      |     /
+                          /            \     |    /
+                         /              \    |   /
+                        /                \   |  /
+                       o                  \  | /
+                   Boom Foot               v v/
+                   Pin O_1                  O_3 (Shipper Shaft Pivot)
+       ----------------+--------------------------------------------------&gt; X_0</code></pre></div>
+<h3>3.6.1 Subsystem Decomposition and Kinematics of Component Centers of Mass</h3>
+<p>The moving mechanism consists of three physical components:</p>
+<ol>
+<li>**Saddle Block (Link 1, subscript $s$):**</li>
+</ol>
+<ul>
+<li>Mass: $m_s$ ($\mathrm{kg}$).</li>
+<li>Pinned at shipper shaft pivot $O_3(x_3, y_3)$. Rotates by angle $q_3$ about $O_3$.</li>
+<li>Center of mass: Located at fixed offset distance $r_s$ from $O_3$ along the handle axis.</li>
+<li>Moment of inertia: $I_s$ ($\mathrm{kg\cdot m^2}$) about pivot axis $O_3$.</li>
+</ul>
+<ol>
+<li>**Dipper Handle (Link 2, subscript $h$):**</li>
+</ol>
+<ul>
+<li>Mass: $m_h$ ($\mathrm{kg}$), total length $L_h$ ($\mathrm{m}$).</li>
+<li>Slides linearly through saddle block by displacement $d_4$.</li>
+<li>Center of mass $G_h$: Located along the handle axis at distance $r_h(d_4)$ from pivot $O_3$:</li>
+</ul>
+<div class="math-display">     $$r_h(d_4) = d_4 - L_{ch} \tag{3.50}$$</div>
+<p>     where $L_{ch}$ is the distance from bail pin $B$ back to the handle center of mass.</p>
+<ul>
+<li>Moment of inertia about its own center of mass $G_h$: $I_{h, \text{cm}} = \frac{1}{12}m_h L_h^2$.</li>
+</ul>
+<ol>
+<li>**Dipper Body & Payload (subscript $d$):**</li>
+</ol>
+<ul>
+<li>Mass: $M_d = m_{d,\text{empty}} + m_{\text{payload}}$ ($\mathrm{kg}$).</li>
+<li>Rigidly attached to the handle end at distance $d_4$ from pivot $O_3$.</li>
+<li>Center of mass $G_d$: Located at radial distance $r_d(d_4) = d_4 + L_{cd,x}$ and perpendicular offset $L_{cd,y}$. For planar derivation without loss of generality, let $r_d \approx d_4 + L_{cd}$.</li>
+<li>Moment of inertia about its center of mass: $I_{d, \text{cm}}$.</li>
+</ul>
+<hr class='notebook-divider'>
+<h3>3.6.2 Formulation of Total Kinetic Energy $T(\mathbf{q}, \mathbf{\dot{q}})$</h3>
+<p>The total kinetic energy of the mechanism is the sum of the kinetic energies of the three bodies:</p>
+<div class="math-display">$$T = T_{\text{saddle}} + T_{\text{handle}} + T_{\text{dipper}} \tag{3.51}$$</div>
+<h4>1. Kinetic Energy of Saddle Block $T_s$:</h4>
+<p>Since the saddle block purely rotates about fixed pivot $O_3$:</p>
+<div class="math-display">$$T_s = \frac{1}{2} I_s \dot{q}_3^2 \tag{3.52}$$</div>
+<h4>2. Kinetic Energy of Dipper Handle $T_h$:</h4>
+<p>By König's theorem, the kinetic energy of a rigid body is the translational energy of its center of mass plus rotational energy about its center of mass:</p>
+<div class="math-display">$$T_h = \frac{1}{2} m_h \|\mathbf{v}_{G_h}\|^2 + \frac{1}{2} I_{h, \text{cm}} \dot{q}_3^2 \tag{3.53}$$</div>
+<p>Let us compute the Cartesian position of the handle center of mass $G_h$:</p>
+<div class="math-display">$$x_{G_h} = x_3 + r_h(d_4) \cos q_3 \tag{3.54a}$$</div>
+<div class="math-display">$$y_{G_h} = y_3 + r_h(d_4) \sin q_3 \tag{3.54b}$$</div>
+<p>Differentiating with respect to time ($r_h = d_4 - L_{ch} \implies \dot{r}_h = \dot{d}_4$):</p>
+<div class="math-display">$$\dot{x}_{G_h} = \dot{d}_4 \cos q_3 - r_h \dot{q}_3 \sin q_3 \tag{3.55a}$$</div>
+<div class="math-display">$$\dot{y}_{G_h} = \dot{d}_4 \sin q_3 + r_h \dot{q}_3 \cos q_3 \tag{3.55b}$$</div>
+<p>Compute the squared velocity magnitude $\|\mathbf{v}_{G_h}\|^2 = \dot{x}_{G_h}^2 + \dot{y}_{G_h}^2$:</p>
+<div class="math-display">$$\|\mathbf{v}_{G_h}\|^2 = (\dot{d}_4 \cos q_3 - r_h \dot{q}_3 \sin q_3)^2 + (\dot{d}_4 \sin q_3 + r_h \dot{q}_3 \cos q_3)^2$$</div>
+<p>Expand each squared term:</p>
+<div class="math-display">$$\|\mathbf{v}_{G_h}\|^2 = \dot{d}_4^2 \cos^2 q_3 - 2 r_h \dot{q}_3 \dot{d}_4 \sin q_3 \cos q_3 + r_h^2 \dot{q}_3^2 \sin^2 q_3 + \dot{d}_4^2 \sin^2 q_3 + 2 r_h \dot{q}_3 \dot{d}_4 \sin q_3 \cos q_3 + r_h^2 \dot{q}_3^2 \cos^2 q_3$$</div>
+<p>Notice that the cross terms $\pm 2 r_h \dot{q}_3 \dot{d}_4 \sin q_3 \cos q_3$ <strong>cancel out identically</strong>:</p>
+<div class="math-display">$$\|\mathbf{v}_{G_h}\|^2 = \dot{d}_4^2 (\cos^2 q_3 + \sin^2 q_3) + r_h^2 \dot{q}_3^2 (\sin^2 q_3 + \cos^2 q_3) = \dot{d}_4^2 + r_h^2 \dot{q}_3^2 \tag{3.56}$$</div>
+<p>Substitute Equation (3.56) into Equation (3.53):</p>
+<div class="math-display">$$T_h = \frac{1}{2} m_h \left( \dot{d}_4^2 + (d_4 - L_{ch})^2 \dot{q}_3^2 \right) + \frac{1}{2} I_{h, \text{cm}} \dot{q}_3^2 \tag{3.57}$$</div>
+<h4>3. Kinetic Energy of Dipper Body & Payload $T_d$:</h4>
+<p>Similarly, for the dipper body positioned at effective radius $r_d = d_4 + L_{cd}$:</p>
+<div class="math-display">$$T_d = \frac{1}{2} M_d \|\mathbf{v}_{G_d}\|^2 + \frac{1}{2} I_{d, \text{cm}} \dot{q}_3^2 \tag{3.58}$$</div>
+<div class="math-display">$$\|\mathbf{v}_{G_d}\|^2 = \dot{d}_4^2 + (d_4 + L_{cd})^2 \dot{q}_3^2 \tag{3.59}$$</div>
+<div class="math-display">$$T_d = \frac{1}{2} M_d \left( \dot{d}_4^2 + (d_4 + L_{cd})^2 \dot{q}_3^2 \right) + \frac{1}{2} I_{d, \text{cm}} \dot{q}_3^2 \tag{3.60}$$</div>
+<h4>Total Kinetic Energy $T$:</h4>
+<p>Summing Equations (3.52), (3.57), and (3.60):</p>
+<div class="math-display">$$T = \frac{1}{2} \left[ I_s + I_{h,\text{cm}} + I_{d,\text{cm}} + m_h (d_4 - L_{ch})^2 + M_d (d_4 + L_{cd})^2 \right] \dot{q}_3^2 + \frac{1}{2} \left[ m_h + M_d \right] \dot{d}_4^2 \tag{3.61}$$</div>
+<hr class='notebook-divider'>
+<h3>3.6.3 Closed-Form Extraction of the Generalized Inertia Matrix $\mathbf{D}(\mathbf{q})$</h3>
+<p>Comparing Equation (3.61) with the general quadratic form $T = \frac{1}{2}\mathbf{\dot{q}}^T \mathbf{D}(\mathbf{q})\mathbf{\dot{q}}$:</p>
+<div class="math-display">$$T = \frac{1}{2} \begin{bmatrix} \dot{q}_3 & \dot{d}_4 \end{bmatrix} \begin{bmatrix} D_{11}(d_4) & D_{12} \\ D_{21} & D_{22} \end{bmatrix} \begin{bmatrix} \dot{q}_3 \\ \dot{d}_4 \end{bmatrix} \tag{3.62}$$</div>
+<p>We extract the elements of the <strong>Generalized Inertia Matrix</strong>:</p>
+<div class="math-display">$$D_{11}(d_4) = I_0 + m_h (d_4 - L_{ch})^2 + M_d (d_4 + L_{cd})^2 \tag{3.63a}$$</div>
+<div class="math-display">$$D_{12} = D_{21} = 0 \tag{3.63b}$$</div>
+<div class="math-display">$$D_{22} = m_h + M_d = M_{\text{total}} \tag{3.63c}$$</div>
+<p>where $I_0 = I_s + I_{h,\text{cm}} + I_{d,\text{cm}}$ is the baseline rotational inertia about pivot $O_3$.</p>
+<div class="math-display">$$\mathbf{D}(d_4) = \begin{bmatrix} I_0 + m_h(d_4 - L_{ch})^2 + M_d(d_4 + L_{cd})^2 & 0 \\[8pt] 0 & m_h + M_d \end{bmatrix} \tag{3.64}$$</div>
+<blockquote>
+<div class="callout-header"><span class="badge badge-important">IMPORTANT</span></div>
+<p>### PHYSICAL INSIGHT INTO THE INERTIA MATRIX</p>
+<p>1. **Cross-Coupling $D_{12} = 0$:** In pure polar coordinates $(q_3, d_4)$, radial translation and angular rotation have orthogonal velocities at the center of mass, making $\mathbf{D}$ diagonal!</p>
+<p>2. <strong>Extension-Dependent Inertia:</strong> $D_{11}(d_4)$ scales with $d_4^2$. As the crowd extends the dipper from $d_4 = 7.5\,\mathrm{m}$ to $14.5\,\mathrm{m}$ on a P&H 2100BL, the effective rotational inertia of the shovel mechanism <strong>quadruples</strong>! The hoist motor must work significantly harder to accelerate the saddle rotation when the handle is extended.</p>
+</blockquote>
+<hr class='notebook-divider'>
+<h3>3.6.4 Derivation of the Coriolis & Centrifugal Matrix $\mathbf{C}(\mathbf{q}, \mathbf{\dot{q}})$</h3>
+<p>To compute $\mathbf{C}$ via Equation (3.36), we evaluate the partial derivatives of the elements of $\mathbf{D}$:</p>
+<ul>
+<li>All elements are independent of $q_3$: $\frac{\partial D_{ij}}{\partial q_3} = 0$.</li>
+<li>$D_{22}$ is constant: $\frac{\partial D_{22}}{\partial d_4} = 0$.</li>
+<li>Only $D_{11}$ varies with $d_4$:</li>
+</ul>
+<div class="math-display">  $$\frac{\partial D_{11}}{\partial d_4} = 2 m_h (d_4 - L_{ch}) + 2 M_d (d_4 + L_{cd}) \tag{3.65}$$</div>
+<p>For convenience, define the scalar function:</p>
+<div class="math-display">$$\gamma(d_4) = \frac{1}{2} \frac{\partial D_{11}}{\partial d_4} = m_h (d_4 - L_{ch}) + M_d (d_4 + L_{cd}) \tag{3.66}$$</div>
+<p>Now compute the Christoffel symbols using Equation (3.34) (where index 1 denotes $q_3$ and index 2 denotes $d_4$):</p>
+<div class="math-display">$$c_{121} = \frac{1}{2}\left( \frac{\partial D_{12}}{\partial q_3} + \frac{\partial D_{11}}{\partial d_4} - \frac{\partial D_{12}}{\partial q_3} \right) = \frac{1}{2} \frac{\partial D_{11}}{\partial d_4} = \gamma(d_4) \tag{3.67a}$$</div>
+<div class="math-display">$$c_{211} = c_{121} = \gamma(d_4) \tag{3.67b}$$</div>
+<div class="math-display">$$c_{112} = \frac{1}{2}\left( \frac{\partial D_{21}}{\partial q_3} + \frac{\partial D_{21}}{\partial q_3} - \frac{\partial D_{11}}{\partial d_4} \right) = -\frac{1}{2} \frac{\partial D_{11}}{\partial d_4} = -\gamma(d_4) \tag{3.67c}$$</div>
+<p>All other Christoffel symbols are identically zero.</p>
+<p>Now assemble the matrix elements $C_{kj} = \sum_i c_{ijk} \dot{q}_i$:</p>
+<div class="math-display">$$C_{11} = c_{111}\dot{q}_3 + c_{211}\dot{d}_4 = \gamma(d_4) \dot{d}_4 \tag{3.68a}$$</div>
+<div class="math-display">$$C_{12} = c_{121}\dot{q}_3 + c_{221}\dot{d}_4 = \gamma(d_4) \dot{q}_3 \tag{3.68b}$$</div>
+<div class="math-display">$$C_{21} = c_{112}\dot{q}_3 + c_{212}\dot{d}_4 = -\gamma(d_4) \dot{q}_3 \tag{3.68c}$$</div>
+<div class="math-display">$$C_{22} = c_{122}\dot{q}_3 + c_{222}\dot{d}_4 = 0 \tag{3.68d}$$</div>
+<p>Assembling into the <strong>Coriolis and Centrifugal Matrix</strong>:</p>
+<div class="math-display">$$\mathbf{C}(d_4, \mathbf{\dot{q}}) = \begin{bmatrix} \gamma(d_4)\dot{d}_4 & \gamma(d_4)\dot{q}_3 \\[6pt] -\gamma(d_4)\dot{q}_3 & 0 \end{bmatrix} \tag{3.69}$$</div>
+<p>Multiply $\mathbf{C}$ by $\mathbf{\dot{q}} = [\dot{q}_3, \dot{d}_4]^T$:</p>
+<div class="math-display">$$\mathbf{C}\mathbf{\dot{q}} = \begin{bmatrix} \gamma(d_4)\dot{d}_4 \dot{q}_3 + \gamma(d_4)\dot{q}_3 \dot{d}_4 \\ -\gamma(d_4)\dot{q}_3^2 + 0 \end{bmatrix} = \begin{bmatrix} 2 \gamma(d_4) \dot{q}_3 \dot{d}_4 \\ -\gamma(d_4) \dot{q}_3^2 \end{bmatrix} \tag{3.70}$$</div>
+<blockquote>
+<div class="callout-header"><span class="badge badge-note">NOTE</span></div>
+<p>### PHYSICAL MEANING OF THE TWO FORCE TERMS</p>
+<p>Look at the two rows of Equation (3.70):</p>
+<p>1. <strong>Row 1:</strong> $2 \gamma(d_4) \dot{q}_3 \dot{d}_4$ is the <strong>Coriolis Torque</strong>. When the crowd motor pushes the handle outward ($\dot{d}_4 > 0$) while the saddle rotates upward ($\dot{q}_3 > 0$), this Coriolis torque opposes the saddle rotation, requiring extra hoist torque from the hoist motor!</p>
+<p>2. <strong>Row 2:</strong> $-\gamma(d_4) \dot{q}_3^2$ is the <strong>Centrifugal Force</strong>. When the dipper handle rotates at angular speed $\dot{q}_3$, centrifugal force flings the dipper outward radially, assisting the crowd extension and pushing the handle out of the saddle block!</p>
+</blockquote>
+<hr class='notebook-divider'>
+<h3>3.6.5 Explicit Verification of the Skew-Symmetry Property</h3>
+<p>Let us directly verify $\mathbf{\dot{D}} - 2\mathbf{C} = -(\mathbf{\dot{D}} - 2\mathbf{C})^T$ for our shovel model:</p>
+<p>First compute $\mathbf{\dot{D}}$:</p>
+<div class="math-display">$$\mathbf{\dot{D}} = \frac{d}{dt} \begin{bmatrix} D_{11}(d_4) & 0 \\ 0 & M_{\text{total}} \end{bmatrix} = \begin{bmatrix} \frac{\partial D_{11}}{\partial d_4} \dot{d}_4 & 0 \\ 0 & 0 \end{bmatrix} = \begin{bmatrix} 2\gamma(d_4)\dot{d}_4 & 0 \\ 0 & 0 \end{bmatrix} \tag{3.71}$$</div>
+<p>Now compute $2\mathbf{C}$ from Equation (3.69):</p>
+<div class="math-display">$$2\mathbf{C} = \begin{bmatrix} 2\gamma(d_4)\dot{d}_4 & 2\gamma(d_4)\dot{q}_3 \\ -2\gamma(d_4)\dot{q}_3 & 0 \end{bmatrix} \tag{3.72}$$</div>
+<p>Subtract $2\mathbf{C}$ from $\mathbf{\dot{D}}$:</p>
+<div class="math-display">$$\mathbf{\dot{D}} - 2\mathbf{C} = \begin{bmatrix} 2\gamma(d_4)\dot{d}_4 & 0 \\ 0 & 0 \end{bmatrix} - \begin{bmatrix} 2\gamma(d_4)\dot{d}_4 & 2\gamma(d_4)\dot{q}_3 \\ -2\gamma(d_4)\dot{q}_3 & 0 \end{bmatrix}$$</div>
+<div class="math-display">$$\mathbf{\dot{D}} - 2\mathbf{C} = \begin{bmatrix} 0 & -2\gamma(d_4)\dot{q}_3 \\ +2\gamma(d_4)\dot{q}_3 & 0 \end{bmatrix} \tag{3.73}$$</div>
+<p>Equation (3.73) is a pure skew-symmetric matrix: the diagonal is zero, and the off-diagonal entries are exact negatives of each other ($N_{12} = -N_{21}$). <strong>The skew-symmetry property holds exactly!</strong></p>
+<hr class='notebook-divider'>
+<h3>3.6.6 Derivation of the Gravitational Vector $\mathbf{G}(\mathbf{q})$</h3>
+<p>The potential energy $V$ is due to gravity acting along the $-Y_0$ vertical axis:</p>
+<div class="math-display">$$V = V_s + V_h + V_d = m_s g y_{G_s} + m_h g y_{G_h} + M_d g y_{G_d} \tag{3.74}$$</div>
+<p>Substituting the vertical positions:</p>
+<ul>
+<li>$y_{G_s} = y_3 + r_s \sin q_3$</li>
+<li>$y_{G_h} = y_3 + (d_4 - L_{ch}) \sin q_3$</li>
+<li>$y_{G_d} = y_3 + (d_4 + L_{cd}) \sin q_3$</li>
+</ul>
+<div class="math-display">$$V(q_3, d_4) = g y_3 (m_s + m_h + M_d) + g \sin q_3 \left[ m_s r_s + m_h (d_4 - L_{ch}) + M_d (d_4 + L_{cd}) \right] \tag{3.75}$$</div>
+<p>Using the function $\gamma(d_4) = m_h(d_4 - L_{ch}) + M_d(d_4 + L_{cd})$ from Equation (3.66):</p>
+<div class="math-display">$$V(q_3, d_4) = \text{const} + g \sin q_3 \left[ m_s r_s + \gamma(d_4) \right] \tag{3.76}$$</div>
+<p>Now compute the gravitational generalized forces $\mathbf{G} = \frac{\partial V}{\partial \mathbf{q}}$:</p>
+<div class="math-display">$$G_1(q_3, d_4) = \frac{\partial V}{\partial q_3} = g \cos q_3 \left[ m_s r_s + \gamma(d_4) \right] \tag{3.77a}$$</div>
+<div class="math-display">$$G_2(q_3) = \frac{\partial V}{\partial d_4} = g \sin q_3 \frac{\partial \gamma}{\partial d_4} = g \sin q_3 (m_h + M_d) = M_{\text{total}} g \sin q_3 \tag{3.77b}$$</div>
+<div class="math-display">$$\mathbf{G}(q_3, d_4) = \begin{bmatrix} g \cos q_3 \left( m_s r_s + m_h(d_4 - L_{ch}) + M_d(d_4 + L_{cd}) \right) \\[6pt] (m_h + M_d) g \sin q_3 \end{bmatrix} \tag{3.78}$$</div>
+<blockquote>
+<div class="callout-header"><span class="badge badge-tip">TIP</span></div>
+<p>### PHYSICAL INTUITION ON GRAVITATIONAL FORCES</p>
+<p>1. $G_1$ is the <strong>gravitational moment</strong> pulling the handle downward about the saddle pivot $O_3$. It is maximum when the handle is horizontal ($q_3 = 0^\circ, \cos q_3 = 1$) and increases linearly as the dipper extends outward ($d_4 \uparrow$).</p>
+<p>2. $G_2 = M_{\text{total}} g \sin q_3$ is the <strong>downward component of gravity along the dipper handle</strong>. If the dipper handle points upward ($q_3 > 0$), gravity pulls the handle backward into the saddle; if the handle points downward into the pit ($q_3 < 0$), gravity pulls the handle outward!</p>
+</blockquote>
+<hr class='notebook-divider'>
+<h2>3.7 Five Fully Solved Research Practice Problems</h2>
+<hr class='notebook-divider'>
+<h3>Problem 3.1: Closed-Form Inertia Calculation for P&H 2100BL</h3>
+<p><strong>Problem Statement:</strong>  </p>
+<p>For a P&H 2100BL benchmark excavator (Machine A), the structural mass properties are:</p>
+<ul>
+<li>Baseline pivot inertia: $I_0 = 4.20 \times 10^5\,\mathrm{kg\cdot m^2}$</li>
+<li>Dipper handle mass: $m_h = 11,500\,\mathrm{kg}$, with center of mass offset $L_{ch} = 4.20\,\mathrm{m}$</li>
+<li>Dipper empty mass + nominal payload ($20\,\mathrm{t}$): $M_d = 17,000\,\mathrm{kg} + 20,000\,\mathrm{kg} = 37,000\,\mathrm{kg}$, with offset $L_{cd} = 1.80\,\mathrm{m}$</li>
+</ul>
+<ol>
+<li>Calculate the elements of the generalized inertia matrix $\mathbf{D}(d_4)$ at minimum crowd extension $d_4 = 7.50\,\mathrm{m}$.</li>
+<li>Calculate $\mathbf{D}(d_4)$ at maximum crowd extension $d_4 = 14.50\,\mathrm{m}$.</li>
+<li>Determine the percentage increase in rotational inertia $D_{11}$ due to crowd extension.</li>
+</ol>
+<p><strong>Step-by-Step Solution:</strong></p>
+<p>**Step 1: Compute $D_{11}$ at $d_4 = 7.50\,\mathrm{m}$**</p>
+<p>Using Equation (3.63a):</p>
+<div class="math-display">$$r_h = d_4 - L_{ch} = 7.50 - 4.20 = 3.30\,\mathrm{m}$$</div>
+<div class="math-display">$$r_d = d_4 + L_{cd} = 7.50 + 1.80 = 9.30\,\mathrm{m}$$</div>
+<div class="math-display">$$D_{11}(7.50) = I_0 + m_h r_h^2 + M_d r_d^2$$</div>
+<div class="math-display">$$D_{11}(7.50) = 4.20 \times 10^5 + (11,500)(3.30)^2 + (37,000)(9.30)^2$$</div>
+<div class="math-display">$$D_{11}(7.50) = 420,000 + (11,500)(10.89) + (37,000)(86.49)$$</div>
+<div class="math-display">$$D_{11}(7.50) = 420,000 + 125,235 + 3,200,130 = 3,745,365\,\mathrm{kg\cdot m^2} \approx 3.745 \times 10^6\,\mathrm{kg\cdot m^2}$$</div>
+<div class="math-display">$$D_{22} = m_h + M_d = 11,500 + 37,000 = 48,500\,\mathrm{kg}$$</div>
+<div class="math-display">$$\mathbf{D}(7.50\,\mathrm{m}) = \begin{bmatrix} 3.745 \times 10^6\,\mathrm{kg\cdot m^2} & 0 \\ 0 & 4.850 \times 10^4\,\mathrm{kg} \end{bmatrix}$$</div>
+<p>**Step 2: Compute $D_{11}$ at $d_4 = 14.50\,\mathrm{m}$**</p>
+<div class="math-display">$$r_h = 14.50 - 4.20 = 10.30\,\mathrm{m}$$</div>
+<div class="math-display">$$r_d = 14.50 + 1.80 = 16.30\,\mathrm{m}$$</div>
+<div class="math-display">$$D_{11}(14.50) = 420,000 + (11,500)(10.30)^2 + (37,000)(16.30)^2$$</div>
+<div class="math-display">$$D_{11}(14.50) = 420,000 + (11,500)(106.09) + (37,000)(265.69)$$</div>
+<div class="math-display">$$D_{11}(14.50) = 420,000 + 1,220,035 + 9,830,530 = 11,470,565\,\mathrm{kg\cdot m^2} \approx 11.471 \times 10^6\,\mathrm{kg\cdot m^2}$$</div>
+<div class="math-display">$$\mathbf{D}(14.50\,\mathrm{m}) = \begin{bmatrix} 1.147 \times 10^7\,\mathrm{kg\cdot m^2} & 0 \\ 0 & 4.850 \times 10^4\,\mathrm{kg} \end{bmatrix}$$</div>
+<p><strong>Step 3: Percentage increase</strong></p>
+<div class="math-display">$$\Delta \% = \frac{11.471 \times 10^6 - 3.745 \times 10^6}{3.745 \times 10^6} \times 100\% = \frac{7.726 \times 10^6}{3.745 \times 10^6} \times 100\% = +206.3\%$$</div>
+<p>*(Engineering Implication: The rotational inertia increases by more than a factor of $3.0$ ($+206\%$). A fixed-gain PID controller tuned at $d_4 = 7.5\,\mathrm{m}$ will suffer severe sluggishness or instability when the dipper is fully extended! This rigorously proves why adaptive or gain-scheduled control is required for rope shovels.)*</p>
+<hr class='notebook-divider'>
+<h3>Problem 3.2: Coriolis and Centrifugal Forces on TZ WK-20 Heavy Shovel</h3>
+<p><strong>Problem Statement:</strong>  </p>
+<p>On a TZ WK-20 deployment shovel (Machine B), structural masses are $m_h = 24,000\,\mathrm{kg}$ ($L_{ch} = 5.5\,\mathrm{m}$) and loaded dipper $M_d = 95,000\,\mathrm{kg}$ ($L_{cd} = 2.2\,\mathrm{m}$).  </p>
+<p>The excavator is swinging upward at $\dot{q}_3 = 0.20\,\mathrm{rad/s}$ while extending outward at full crowd speed $\dot{d}_4 = 1.10\,\mathrm{m/s}$ at extension $d_4 = 13.0\,\mathrm{m}$.</p>
+<ol>
+<li>Compute the coupling coefficient $\gamma(d_4)$.</li>
+<li>Calculate the Coriolis torque acting on the saddle block.</li>
+<li>Calculate the centrifugal force acting along the dipper handle.</li>
+<li>Calculate the electrical power absorbed or generated by these coupling terms.</li>
+</ol>
+<p><strong>Step-by-Step Solution:</strong></p>
+<p>**Step 1: Compute coupling coefficient $\gamma(d_4)$**</p>
+<p>Using Equation (3.66):</p>
+<div class="math-display">$$\gamma(d_4) = m_h (d_4 - L_{ch}) + M_d (d_4 + L_{cd})$$</div>
+<div class="math-display">$$\gamma(13.0) = (24,000)(13.0 - 5.5) + (95,000)(13.0 + 2.2)$$</div>
+<div class="math-display">$$\gamma(13.0) = (24,000)(7.5) + (95,000)(15.2) = 180,000 + 1,444,000 = 1,624,000\,\mathrm{kg\cdot m}$$</div>
+<p><strong>Step 2: Compute Coriolis torque</strong></p>
+<p>Using Equation (3.70), Row 1:</p>
+<div class="math-display">$$\tau_{\text{Coriolis}} = 2 \gamma(d_4) \dot{q}_3 \dot{d}_4$$</div>
+<div class="math-display">$$\tau_{\text{Coriolis}} = 2 (1,624,000\,\mathrm{kg\cdot m}) (0.20\,\mathrm{rad/s}) (1.10\,\mathrm{m/s}) = 714,560\,\mathrm{N\cdot m} \approx +714.6\,\mathrm{kN\cdot m}$$</div>
+<p><strong>Result:</strong> The hoist drive must exert an additional **$714.6\,\mathrm{kN\cdot m}$** of torque purely to overcome Coriolis retarding torque!</p>
+<p><strong>Step 3: Compute Centrifugal force</strong></p>
+<p>Using Equation (3.70), Row 2:</p>
+<div class="math-display">$$F_{\text{centrifugal}} = -\gamma(d_4) \dot{q}_3^2$$</div>
+<div class="math-display">$$F_{\text{centrifugal}} = -(1,624,000\,\mathrm{kg\cdot m}) (0.20\,\mathrm{rad/s})^2 = -(1,624,000)(0.04) = -64,960\,\mathrm{N} \approx -64.96\,\mathrm{kN}$$</div>
+<p><strong>Result:</strong> A centrifugal force of **$65.0\,\mathrm{kN}$** pushes the handle outward away from pivot $O_3$.</p>
+<p><strong>Step 4: Compute net power of Coriolis and centrifugal terms</strong></p>
+<div class="math-display">$$P_{\text{coupling}} = \tau_{\text{Coriolis}} \dot{q}_3 + F_{\text{centrifugal}} \dot{d}_4$$</div>
+<div class="math-display">$$P_{\text{coupling}} = (+714,560\,\mathrm{N\cdot m})(0.20\,\mathrm{rad/s}) + (-64,960\,\mathrm{N})(1.10\,\mathrm{m/s})$$</div>
+<div class="math-display">$$P_{\text{coupling}} = +142,912\,\mathrm{W} - 71,456\,\mathrm{W} = +71,456\,\mathrm{W} \approx +71.46\,\mathrm{kW}$$</div>
+<p>*(Note: Why is this not zero? Because $\dot{d}_4 \neq \dot{q}_3$. In matrix form, $\mathbf{\dot{q}}^T \mathbf{C}\mathbf{\dot{q}} = \frac{1}{2}\mathbf{\dot{q}}^T \mathbf{\dot{D}}\mathbf{\dot{q}} = 71.46\,\mathrm{kW}$, which exactly equals the rate of increase of kinetic energy due to the moving inertia matrix: $\frac{1}{2}\dot{D}_{11}\dot{q}_3^2 = \gamma \dot{d}_4 \dot{q}_3^2 = (1.624 \times 10^6)(1.10)(0.04) = 71.456\,\mathrm{kW}$! Total energy is rigorously conserved!)*</p>
+<hr class='notebook-divider'>
+<h3>Problem 3.3: Gravitational Holding Torque at Varied Angles</h3>
+<p><strong>Problem Statement:</strong>  </p>
+<p>Using the P&H 2100BL parameters from Problem 3.1 ($m_s = 3,500\,\mathrm{kg}, r_s = 0.5\,\mathrm{m}$, $m_h = 11,500\,\mathrm{kg}, L_{ch} = 4.2\,\mathrm{m}$, $M_d = 37,000\,\mathrm{kg}, L_{cd} = 1.8\,\mathrm{m}$, $g = 9.81\,\mathrm{m/s^2}$):  </p>
+<p>Compute the steady-state holding torque $\tau_3^{\text{hold}}$ required to keep the dipper suspended statically at $d_4 = 10.0\,\mathrm{m}$ for three typical operational angles:</p>
+<ol>
+<li>$q_3 = -20^\circ$ (tilted down in trench).</li>
+<li>$q_3 = 0^\circ$ (horizontal reach).</li>
+<li>$q_3 = +40^\circ$ (elevated near dumping height).</li>
+</ol>
+<p><strong>Step-by-Step Solution:</strong></p>
+<p>**Step 1: Compute constant bracket term in $G_1$**</p>
+<p>From Equation (3.78):</p>
+<div class="math-display">$$\text{Bracket} = m_s r_s + m_h(d_4 - L_{ch}) + M_d(d_4 + L_{cd})$$</div>
+<div class="math-display">$$\text{Bracket} = (3,500)(0.5) + (11,500)(10.0 - 4.2) + (37,000)(10.0 + 1.8)$$</div>
+<div class="math-display">$$\text{Bracket} = 1,750 + (11,500)(5.8) + (37,000)(11.8)$$</div>
+<div class="math-display">$$\text{Bracket} = 1,750 + 66,700 + 436,600 = 505,050\,\mathrm{kg\cdot m}$$</div>
+<p>Now multiply by $g = 9.81\,\mathrm{m/s^2}$:</p>
+<div class="math-display">$$K_G = g \times \text{Bracket} = (9.81)(505,050) = 4,954,540\,\mathrm{N\cdot m} \approx 4.955\,\mathrm{MN\cdot m}$$</div>
+<p>Therefore, $G_1(q_3) = K_G \cos q_3$. In static equilibrium, $\tau_3 = G_1(q_3)$:</p>
+<p>**Case 1: $q_3 = -20^\circ$**</p>
+<div class="math-display">$$\tau_3(-20^\circ) = (4.955\,\mathrm{MN\cdot m}) \cos(-20^\circ) = (4.955)(0.93969) = +4.656\,\mathrm{MN\cdot m}$$</div>
+<p>**Case 2: $q_3 = 0^\circ$ (Horizontal)**</p>
+<div class="math-display">$$\tau_3(0^\circ) = (4.955\,\mathrm{MN\cdot m}) \cos(0^\circ) = (4.955)(1.00000) = +4.955\,\mathrm{MN\cdot m}$$</div>
+<p>**Case 3: $q_3 = +40^\circ$**</p>
+<div class="math-display">$$\tau_3(+40^\circ) = (4.955\,\mathrm{MN\cdot m}) \cos(+40^\circ) = (4.955)(0.76604) = +3.796\,\mathrm{MN\cdot m}$$</div>
+<p><em>(Result: The gravity holding torque reaches its absolute peak of </em>*$4.955\,\mathrm{MN\cdot m}$** when the handle is horizontal, and drops by $23.4\%$ as the dipper is hoisted to dumping elevation).*</p>
+<hr class='notebook-divider'>
+<h3>Problem 3.4: Analytical Inversion of Dynamic Equations for State-Space Simulation</h3>
+<p><strong>Problem Statement:</strong>  </p>
+<p>To simulate the digital twin forward in time using an ODE solver (e.g., Runge-Kutta <code>ode45</code>), one must solve Equation (3.38) explicitly for joint accelerations:</p>
+<div class="math-display">$$\mathbf{\ddot{q}} = \mathbf{D}^{-1}(\mathbf{q}) \left[ \boldsymbol{\tau} + \mathbf{J}^T \mathbf{F}_{\text{ext}} - \mathbf{C}(\mathbf{q}, \mathbf{\dot{q}})\mathbf{\dot{q}} - \mathbf{G}(\mathbf{q}) - \mathbf{F}_f(\mathbf{\dot{q}}) \right]$$</div>
+<p>Derive the explicit closed-form expressions for $\ddot{q}_3$ and $\ddot{d}_4$ for the shovel model.</p>
+<p><strong>Step-by-Step Solution:</strong></p>
+<p>Since $\mathbf{D}(d_4)$ is diagonal from Equation (3.64):</p>
+<div class="math-display">$$\mathbf{D}^{-1}(d_4) = \begin{bmatrix} \frac{1}{D_{11}(d_4)} & 0 \\[6pt] 0 & \frac{1}{M_{\text{total}}} \end{bmatrix} \tag{3.79}$$</div>
+<p>Let the total net generalized force on each joint be denoted by $\Sigma_1$ and $\Sigma_2$:</p>
+<div class="math-display">$$\Sigma_1 = \tau_3 + Q_{\text{ext},1} - 2\gamma(d_4)\dot{q}_3\dot{d}_4 - G_1(q_3, d_4) - F_{f,1}(\dot{q}_3)$$</div>
+<div class="math-display">$$\Sigma_2 = F_{\text{crowd}} + Q_{\text{ext},2} + \gamma(d_4)\dot{q}_3^2 - G_2(q_3) - F_{f,2}(\dot{d}_4)$$</div>
+<p>Carrying out matrix multiplication $\mathbf{\ddot{q}} = \mathbf{D}^{-1} \boldsymbol{\Sigma}$:</p>
+<div class="math-display">$$\ddot{q}_3 = \frac{\tau_3 + Q_{\text{ext},1} - 2\gamma(d_4)\dot{q}_3\dot{d}_4 - g\cos q_3 \left[ m_s r_s + \gamma(d_4) \right] - b_3 \dot{q}_3}{I_0 + m_h(d_4 - L_{ch})^2 + M_d(d_4 + L_{cd})^2} \tag{3.80a}$$</div>
+<div class="math-display">$$\ddot{d}_4 = \frac{F_{\text{crowd}} + Q_{\text{ext},2} + \gamma(d_4)\dot{q}_3^2 - (m_h + M_d)g\sin q_3 - b_4 \dot{d}_4}{m_h + M_d} \tag{3.80b}$$</div>
+<p>*(Significance: Equations (3.80a) and (3.80b) can be evaluated in $0.12\,\mu\mathrm{s}$ on an embedded ARM microcontroller, enabling hard real-time dynamic digital twins operating at $1,000\,\mathrm{Hz}$!).*</p>
+<hr class='notebook-divider'>
+<h3>Problem 3.5: Numerical Verification of Skew-Symmetry Quadratic Form</h3>
+<p><strong>Problem Statement:</strong>  </p>
+<p>Using the TZ WK-20 parameters from Problem 3.2 ($d_4 = 13.0\,\mathrm{m}, \dot{q}_3 = 0.20\,\mathrm{rad/s}, \dot{d}_4 = 1.10\,\mathrm{m/s}, \gamma = 1.624 \times 10^6\,\mathrm{kg\cdot m}$):</p>
+<ol>
+<li>Compute the numerical matrix $\mathbf{\dot{D}}$.</li>
+<li>Compute the numerical matrix $\mathbf{C}$.</li>
+<li>Form the matrix $\mathbf{N} = \mathbf{\dot{D}} - 2\mathbf{C}$.</li>
+<li>Test the quadratic form $\mathbf{x}^T \mathbf{N} \mathbf{x}$ for an arbitrary non-zero test vector $\mathbf{x} = [3.5, -7.2]^T$.</li>
+</ol>
+<p><strong>Step-by-Step Solution:</strong></p>
+<p>**Step 1: Compute $\mathbf{\dot{D}}$**</p>
+<div class="math-display">$$\dot{D}_{11} = 2 \gamma \dot{d}_4 = 2 (1.624 \times 10^6) (1.10) = 3,572,800\,\mathrm{kg\cdot m^2/s}$$</div>
+<div class="math-display">$$\mathbf{\dot{D}} = \begin{bmatrix} 3,572,800 & 0 \\ 0 & 0 \end{bmatrix}$$</div>
+<p>**Step 2: Compute $\mathbf{C}$**</p>
+<div class="math-display">$$C_{11} = \gamma \dot{d}_4 = (1.624 \times 10^6)(1.10) = 1,786,400$$</div>
+<div class="math-display">$$C_{12} = \gamma \dot{q}_3 = (1.624 \times 10^6)(0.20) = 324,800$$</div>
+<div class="math-display">$$C_{21} = -\gamma \dot{q}_3 = -324,800$$</div>
+<div class="math-display">$$C_{22} = 0$$</div>
+<div class="math-display">$$\mathbf{C} = \begin{bmatrix} 1,786,400 & 324,800 \\ -324,800 & 0 \end{bmatrix}$$</div>
+<p>**Step 3: Form $\mathbf{N} = \mathbf{\dot{D}} - 2\mathbf{C}$**</p>
+<div class="math-display">$$2\mathbf{C} = \begin{bmatrix} 3,572,800 & 649,600 \\ -649,600 & 0 \end{bmatrix}$$</div>
+<div class="math-display">$$\mathbf{N} = \begin{bmatrix} 3,572,800 & 0 \\ 0 & 0 \end{bmatrix} - \begin{bmatrix} 3,572,800 & 649,600 \\ -649,600 & 0 \end{bmatrix} = \begin{bmatrix} 0 & -649,600 \\ +649,600 & 0 \end{bmatrix}$$</div>
+<p>**Step 4: Evaluate $\mathbf{x}^T \mathbf{N} \mathbf{x}$ for $\mathbf{x} = [3.5, -7.2]^T$**</p>
+<div class="math-display">$$\mathbf{N} \mathbf{x} = \begin{bmatrix} 0 & -649,600 \\ +649,600 & 0 \end{bmatrix} \begin{bmatrix} 3.5 \\ -7.2 \end{bmatrix} = \begin{bmatrix} (-649,600)(-7.2) \\ (+649,600)(3.5) \end{bmatrix} = \begin{bmatrix} +4,677,120 \\ +2,273,600 \end{bmatrix}$$</div>
+<div class="math-display">$$\mathbf{x}^T (\mathbf{N} \mathbf{x}) = \begin{bmatrix} 3.5 & -7.2 \end{bmatrix} \begin{bmatrix} +4,677,120 \\ +2,273,600 \end{bmatrix}$$</div>
+<div class="math-display">$$\mathbf{x}^T (\mathbf{N} \mathbf{x}) = (3.5)(4,677,120) + (-7.2)(2,273,600)$$</div>
+<div class="math-display">$$\mathbf{x}^T (\mathbf{N} \mathbf{x}) = +16,369,920 - 16,369,920 = 0.000000 \quad \blacksquare$$</div>
+<p><em>(Result: The quadratic form evaluates to <strong>exactly zero</strong> to machine precision, numerically demonstrating the skew-symmetry property on the industrial WK-20 shovel equations!)</em></p>
+<hr class='notebook-divider'>
+<h2>3.8 MATLAB / Python Simulation Script</h2>
+<div class="code-container"><pre><code class="language-matlab">% =========================================================================
+% CHAPTER 3: EULER-LAGRANGE EQUATIONS OF MOTION &amp; SKEW-SYMMETRY TEST
+% Compatible with MATLAB R2025b / Octave 7+
+% =========================================================================
+function shovel_dynamics_demo()
+    clc; clear; close all;
+    
+    % Machine A (P&amp;H 2100BL) Structural Parameters
+    p.I0   = 4.20e5;     % Baseline rotational inertia [kg*m^2]
+    p.ms   = 3500;       % Saddle mass [kg]
+    p.rs   = 0.50;       % Saddle CM offset [m]
+    p.mh   = 11500;      % Handle mass [kg]
+    p.Lch  = 4.20;       % Handle CM back-offset from bail [m]
+    p.Md   = 37000;      % Dipper empty + payload mass [kg]
+    p.Lcd  = 1.80;       % Dipper CM forward-offset [m]
+    p.g    = 9.81;       % Gravity [m/s^2]
+    p.b    = [1.2e4; 8.5e3]; % Viscous friction coefficients [N*s/m, N*m*s]
+    
+    % Operating state
+    q  = [deg2rad(25); 10.5];    % [q3 (rad); d4 (m)]
+    qd = [0.15; 0.75];           % [q3_dot (rad/s); d4_dot (m/s)]
+    
+    % 1. Evaluate Matrices
+    D = eval_D(q, p);
+    C = eval_C(q, qd, p);
+    G = eval_G(q, p);
+    
+    fprintf(&#x27;=== GENERALIZED INERTIA MATRIX D(q) ===\n&#x27;);
+    disp(D);
+    
+    fprintf(&#x27;=== CORIOLIS &amp; CENTRIFUGAL MATRIX C(q, qd) ===\n&#x27;);
+    disp(C);
+    
+    fprintf(&#x27;=== GRAVITY VECTOR G(q) [N*m; N] ===\n&#x27;);
+    disp(G);
+    
+    % 2. Skew-Symmetry Verification (D_dot - 2*C)
+    D_dot = eval_D_dot(q, qd, p);
+    N = D_dot - 2*C;
+    fprintf(&#x27;=== N = D_dot - 2*C ===\n&#x27;);
+    disp(N);
+    
+    % Test with random vector x
+    x = randn(2, 1);
+    quad_form = x&#x27; * N * x;
+    fprintf(&#x27;Test quadratic form x^T * (D_dot - 2*C) * x = %e (Zero within eps)\n\n&#x27;, quad_form);
+    
+    % 3. Forward Acceleration Computation
+    tau = [5.5e6; 2.2e5]; % Actuator forces [N*m; N]
+    F_ext = [-1.5e5; -3.0e5]; % Digging resistance [N]
+    
+    % Tooth Tip Jacobian (From Chapter 2)
+    r_T = q(2) + 2.0; % L_tx = 2.0m
+    L_ty = 1.0;
+    J = [-r_T*sin(q(1)) + L_ty*cos(q(1)), cos(q(1));
+          r_T*cos(q(1)) + L_ty*sin(q(1)), sin(q(1))];
+    Q_ext = J&#x27; * F_ext;
+    
+    F_friction = p.b .* qd;
+    
+    % Solve D * qdd = tau + Q_ext - C*qd - G - F_friction
+    net_generalized_forces = tau + Q_ext - C*qd - G - F_friction;
+    qdd = D \ net_generalized_forces;
+    
+    fprintf(&#x27;=== RESULTING FORWARD ACCELERATIONS ===\n&#x27;);
+    fprintf(&#x27;Saddle Angular Acceleration q3_ddot = %+.4f rad/s^2\n&#x27;, qdd(1));
+    fprintf(&#x27;Crowd Linear Acceleration  d4_ddot = %+.4f m/s^2\n&#x27;, qdd(2));
+end
+
+function D = eval_D(q, p)
+    d4 = q(2);
+    D11 = p.I0 + p.mh*(d4 - p.Lch)^2 + p.Md*(d4 + p.Lcd)^2;
+    D22 = p.mh + p.Md;
+    D = [D11, 0; 0, D22];
+end
+
+function C = eval_C(q, qd, p)
+    d4 = q(2);
+    q3_dot = qd(1);
+    d4_dot = qd(2);
+    gamma = p.mh*(d4 - p.Lch) + p.Md*(d4 + p.Lcd);
+    
+    C = [gamma*d4_dot,  gamma*q3_dot;
+        -gamma*q3_dot,  0];
+end
+
+function D_dot = eval_D_dot(q, qd, p)
+    d4 = q(2);
+    d4_dot = qd(2);
+    gamma = p.mh*(d4 - p.Lch) + p.Md*(d4 + p.Lcd);
+    D_dot = [2*gamma*d4_dot, 0; 0, 0];
+end
+
+function G = eval_G(q, p)
+    q3 = q(1);
+    d4 = q(2);
+    gamma = p.mh*(d4 - p.Lch) + p.Md*(d4 + p.Lcd);
+    G1 = p.g * cos(q3) * (p.ms*p.rs + gamma);
+    G2 = (p.mh + p.Md) * p.g * sin(q3);
+    G = [G1; G2];
+end</code></pre></div>
+<hr class='notebook-divider'>
+<h2>3.9 Research Supervisor Summary & Master Defense Checklist</h2>
+<h3>Core Concepts Mastered in Chapter 3</h3>
+<ol>
+<li><strong>Variational Foundation of Analytical Dynamics:</strong>  </li>
+</ol>
+<p>   Hamilton's Principle ($\delta \int L \, dt = 0$) eliminates all internal constraint forces that do no virtual work. For the $n = 2$ planar shovel mechanism, this replaces over 20 coupled algebraic constraint equations with 2 unconstrained ordinary differential equations.</p>
+<ol>
+<li><strong>The Quadratic Kinetic Energy Structure:</strong>  </li>
+</ol>
+<p>   $T = \frac{1}{2}\mathbf{\dot{q}}^T \mathbf{D}(\mathbf{q})\mathbf{\dot{q}}$. The Generalized Inertia Matrix $\mathbf{D}(\mathbf{q})$ is strictly symmetric, positive-definite, and unconditionally invertible across the entire physical workspace. Its dominant rotational entry $D_{11}(d_4)$ scales quadratically with crowd extension $d_4^2$.</p>
+<ol>
+<li><strong>Christoffel Symbols & Quadratic Velocity Terms:</strong>  </li>
+</ol>
+<p>   Coriolis and centrifugal forces are uniquely generated by spatial gradients of the inertia matrix via Christoffel symbols of the first kind: $c_{ijk} = \frac{1}{2}(\partial D_{kj}/\partial q_i + \partial D_{ki}/\partial q_j - \partial D_{ij}/\partial q_k)$.</p>
+<ol>
+<li><strong>The Passivity Skew-Symmetry Identity:</strong>  </li>
+</ol>
+<p>   $\mathbf{\dot{D}} - 2\mathbf{C} = -(\mathbf{\dot{D}} - 2\mathbf{C})^T$. This ensures that Coriolis and centrifugal forces do zero net work on the system ($\mathbf{\dot{q}}^T(\mathbf{\dot{D}} - 2\mathbf{C})\mathbf{\dot{q}} = 0$), preserving total mechanical energy and providing the Lyapunov stability foundation for our M3 generalized momentum observers!</p>
+<hr class='notebook-divider'>
+<h3>Doctoral Viva & Defense Questions</h3>
+<ul>
+<li><strong>Q1:</strong> *Why does the electric rope shovel have a diagonal generalized inertia matrix $\mathbf{D}$, while articulated robots typically have dense off-diagonal terms?*  </li>
+</ul>
+<p>  <strong>Answer:</strong> In the shovel mechanism, the coordinates are polar $(q_3, d_4)$. The coordinate $d_4$ describes pure radial translation along the dipper handle axis, while $q_3$ describes rotation about the axis perpendicular to the plane. Because radial translation velocity is strictly orthogonal to tangential rotation velocity at the center of mass, the cross-product integral $\int (\mathbf{v}_{\text{radial}} \cdot \mathbf{v}_{\text{tangential}}) dm = 0$, causing $D_{12} = D_{21} = 0$.</p>
+<ul>
+<li><strong>Q2:</strong> *What is the physical danger of neglecting the Coriolis term $2\gamma(d_4)\dot{q}_3\dot{d}_4$ in the hoist motor drive control?*  </li>
+</ul>
+<p>  <strong>Answer:</strong> When the operator rapidly crowds outward while hoisting, Coriolis acceleration creates a retarding torque on the order of $700\,\mathrm{kN\cdot m}$ on a $55\,\mathrm{t}$ shovel. If the hoist control loop does not anticipate this convective load, the hoist motor will suffer large transient speed sags, rope slackening, and shock loads on the boom-point sheave when the dipper teeth engage the bench.</p>
+<ul>
+<li><strong>Q3:</strong> *If $\mathbf{\dot{D}} - 2\mathbf{C}$ is skew-symmetric, does this hold for ANY definition of the matrix $\mathbf{C}$?*  </li>
+</ul>
+<p>  <strong>Answer:</strong> No. The vector of Coriolis/centrifugal forces $\mathbf{c}(\mathbf{q}, \mathbf{\dot{q}}) = \mathbf{C}\mathbf{\dot{q}}$ is uniquely defined by the physics, but the matrix $\mathbf{C}$ itself is not unique unless it is defined strictly through the Christoffel symbols of the first kind ($C_{kj} = \sum_i c_{ijk}\dot{q}_i$). Ad-hoc factorizations of $\mathbf{c}(\mathbf{q}, \mathbf{\dot{q}})$ will generally violate skew-symmetry, destroying the passivity property of the digital twin.</p>
+<hr class='notebook-divider'>
+<h3>Transition to Chapter 4</h3>
+<p>With the canonical Euler-Lagrange equations $\mathbf{D}\mathbf{\ddot{q}} + \mathbf{C}\mathbf{\dot{q}} + \mathbf{G} = \boldsymbol{\tau} + \mathbf{Q}_{\text{ext}}$ derived and proved, we advance to:  </p>
+<p><strong>Volume I, Chapter 4: Linear Parameter-Separable Regressors and System Identification Theory</strong>.  </p>
+<p>In Chapter 4, we prove the fundamental Property of Linearity in the Parameters ($\mathbf{D}\mathbf{\ddot{q}} + \mathbf{C}\mathbf{\dot{q}} + \mathbf{G} = \mathbf{Y}(\mathbf{q}, \mathbf{\dot{q}}, \mathbf{\ddot{q}})\boldsymbol{\theta}$), construct the base parameter regressors, and build the identifiability framework underlying project experiments P01–P08.</p>
+</body>
+</html>

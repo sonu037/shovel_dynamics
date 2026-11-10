@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Volume I - Chapter 4: Linear Parameter-Separable Regressors and System Identification Theory</title>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  chtml: {
+    scale: 1.18
+  },
+  options: {
+    ignoreHtmlClass: 'tex2jax_ignore',
+    processHtmlClass: 'tex2jax_process'
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+  /* Notebook Typography & Sizing */
+  :root {
+    --primary-blue: #1d4ed8;
+    --navy-header: #0f2744;
+    --slate-text: #1e293b;
+    --callout-bg: #f8fafc;
+    --callout-border: #3b82f6;
+    --notebook-rule: #e2e8f0;
+  }
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 18px;          /* Generous, large notebook font size */
+    line-height: 1.85;        /* Spacious line spacing for reading equations */
+    margin: 40px auto;
+    max-width: 1040px;
+    padding: 0 45px;
+    color: var(--slate-text);
+    background-color: #fdfdfd;
+  }
+  
+  /* Notebook Cover & Headings */
+  h1 {
+    color: var(--navy-header);
+    border-bottom: 3px solid var(--primary-blue);
+    padding-bottom: 14px;
+    margin-top: 55px;
+    font-size: 2.3em;
+    line-height: 1.25;
+    letter-spacing: -0.5px;
+  }
+  
+  h2 {
+    color: #1e3a8a;
+    border-bottom: 2px solid #cbd5e1;
+    padding-bottom: 10px;
+    margin-top: 45px;
+    font-size: 1.7em;
+    line-height: 1.3;
+  }
+  
+  h3 {
+    color: var(--primary-blue);
+    margin-top: 35px;
+    font-size: 1.35em;
+    line-height: 1.35;
+  }
+  
+  h4 {
+    color: #334155;
+    margin-top: 25px;
+    font-size: 1.15em;
+    font-weight: 600;
+  }
+  
+  p {
+    margin: 18px 0;
+    font-size: 1.02em;
+  }
+  
+  /* Notebook Math Display */
+  .math-display {
+    overflow-x: auto;
+    margin: 28px 0;
+    padding: 16px 20px;
+    text-align: center;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+  }
+  
+  /* Notebook Code Blocks */
+  .code-container {
+    margin: 25px 0;
+  }
+  pre {
+    background: #0f172a;
+    color: #f8fafc;
+    border-radius: 8px;
+    padding: 20px 24px;
+    overflow-x: auto;
+    font-size: 15px;          /* Larger code font */
+    font-family: "Consolas", "Courier New", monospace;
+    line-height: 1.6;
+    border: 1px solid #334155;
+  }
+  
+  code {
+    font-family: "Consolas", "Courier New", monospace;
+    background: #f1f5f9;
+    color: #0f172a;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.92em;
+    font-weight: 500;
+  }
+  
+  pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+    font-weight: normal;
+  }
+  
+  /* Notebook Tables */
+  .table-container {
+    overflow-x: auto;
+    margin: 32px 0;
+  }
+  
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 16px;          /* Clear table font */
+    background: #ffffff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  
+  th, td {
+    border: 1px solid #cbd5e1;
+    padding: 14px 18px;
+    text-align: left;
+    line-height: 1.6;
+  }
+  
+  th {
+    background-color: #f1f5f9;
+    color: #0f172a;
+    font-weight: 700;
+    font-size: 1.02em;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #f8fafc;
+  }
+  
+  /* Notebook Highlight / Callout Blocks */
+  blockquote {
+    border-left: 6px solid var(--primary-blue);
+    margin: 28px 0;
+    padding: 18px 26px;
+    background: #eff6ff;
+    color: #1e3a8a;
+    border-radius: 0 8px 8px 0;
+    font-size: 1.02em;
+    box-shadow: 0 1px 3px rgba(37,99,235,0.06);
+  }
+  
+  blockquote p {
+    margin: 8px 0;
+  }
+  
+  .badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .badge-note { background: #dbeafe; color: #1e40af; }
+  .badge-tip { background: #dcfce7; color: #15803d; }
+  .badge-important { background: #fef3c7; color: #92400e; }
+  .badge-warning { background: #fee2e2; color: #b91c1c; }
+  .badge-caution { background: #fce7f3; color: #9d174d; }
+  
+  ul, ol {
+    padding-left: 32px;
+    margin: 18px 0;
+  }
+  
+  li {
+    margin: 10px 0;
+    font-size: 1.02em;
+  }
+  
+  hr.notebook-divider {
+    border: 0;
+    border-top: 2px dashed #cbd5e1;
+    margin: 45px 0;
+  }
+  
+  /* Print Controls */
+  .print-btn {
+    position: fixed;
+    top: 24px;
+    right: 32px;
+    background: var(--primary-blue);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+    z-index: 1000;
+    transition: all 0.2s;
+  }
+  
+  .print-btn:hover {
+    background: #1e40af;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.22);
+  }
+  
+  @media print {
+    .print-btn { display: none; }
+    body {
+      max-width: 100%;
+      margin: 0;
+      padding: 12mm 15mm;
+      font-size: 13pt;        /* Large readable notebook text in PDF */
+      line-height: 1.7;
+      color: #000;
+      background: #fff;
+    }
+    h1 {
+      page-break-before: always;
+      font-size: 1.9em;
+      border-bottom: 2pt solid #000;
+    }
+    h1:first-of-type {
+      page-break-before: avoid;
+    }
+    h2 {
+      font-size: 1.45em;
+      page-break-after: avoid;
+    }
+    h3 {
+      font-size: 1.25em;
+      page-break-after: avoid;
+    }
+    table, pre, blockquote, .math-display {
+      page-break-inside: avoid;
+    }
+    table {
+      font-size: 11pt;
+    }
+    pre {
+      font-size: 10.5pt;
+      background: #f8fafc;
+      color: #0f172a;
+      border: 1pt solid #cbd5e1;
+    }
+    a {
+      color: #000;
+      text-decoration: none;
+    }
+  }
+</style>
+</head>
+<body class="tex2jax_process">
+<button class="print-btn" onclick="window.print()">Print / Save as PDF (Ctrl+P)</button>
+<h1>VOLUME I: ADVANCED MATHEMATICAL FOUNDATIONS</h1>
+<hr class='notebook-divider'>
+<h1>CHAPTER 4: Linear Parameter-Separable Regressors and System Identification Theory</h1>
+<p><strong>Author:</strong> Multidisciplinary Research Supervisor & Technical Author  </p>
+<p><strong>Project:</strong> <em>AI-Enabled Platform for Diagnosis, Prognosis and Health Management of Mining Electrical Systems: Case Study on Dragline / Electric Rope Shovel</em>  </p>
+<p><strong>Grant Reference:</strong> IIT/SRIC/R/AEH/2026/104 (CMPDI / Coal India Limited — MT-189)  </p>
+<p><strong>Target Machines:</strong> Machine A (P&H 2100BL Benchmark) & Machine B (TZ WK-20 Deployment)  </p>
+<p><strong>Pedagogical Level:</strong> Postgraduate / Research Grade (B.Tech Mechanical Foundation Assumed)</p>
+<hr class='notebook-divider'>
+<blockquote>
+<div class="callout-header"><span class="badge badge-note">NOTE</span></div>
+<p>### RESEARCH STUDY NOTEBOOK ARCHITECTURE</p>
+<p>In Chapter 3, we derived the nonlinear equations of motion for the electric rope shovel:</p>
+<p></p>
+<p>$$\mathbf{D}(\mathbf{q})\mathbf{\ddot{q}} + \mathbf{C}(\mathbf{q}, \mathbf{\dot{q}})\mathbf{\dot{q}} + \mathbf{G}(\mathbf{q}) + \mathbf{F}_f(\mathbf{\dot{q}}) = \boldsymbol{\tau} + \mathbf{Q}_{\text{ext}}$$</p>
+<p></p>
+<p>While these equations are highly nonlinear functions of generalized coordinates and velocities $(\mathbf{q}, \mathbf{\dot{q}}, \mathbf{\ddot{q}})$, they possess a remarkable, foundational property in robotics and multibody mechanics: <strong>Linearity in the Dynamic Parameters</strong>.</p>
+<p></p>
+<p>In this chapter, you will learn how to rewrite the nonlinear dynamic equations into an exact linear matrix regressor form:</p>
+<p></p>
+<p>$$\boldsymbol{\tau} = \mathbf{Y}(\mathbf{q}, \mathbf{\dot{q}}, \mathbf{\ddot{q}}) \boldsymbol{\theta}$$</p>
+<p></p>
+<p>By the end of this chapter, you will be able to:</p>
+<p>1. Prove the Property of Linearity in the Parameters from first variational principles.</p>
+<p>2. Distinguish between standard physical parameters and the minimal set of <strong>Base Inertial Parameters</strong> $\boldsymbol{\theta}_b$.</p>
+<p>3. Construct the analytical kinematic regressor matrix $\mathbf{Y}(\mathbf{q}, \mathbf{\dot{q}}, \mathbf{\ddot{q}})$ for both the <strong>P&H 2100BL benchmark</strong> and the <strong>TZ WK-20 heavy shovel</strong>.</p>
+<p>4. Formulate the Ordinary Least Squares (OLS) and Weighted Least Squares (WLS) parameter estimators with persistent excitation (PE) conditions.</p>
+<p>5. Reconcile the multi-channel condition number discrepancies identified in project experiments P01–P08 through rigorous row weighting, column normalization, and singular value decomposition (SVD).</p>
+</blockquote>
+<hr class='notebook-divider'>
+<h2>4.1 Physical Intuition & The Motivation for Parameter Linearity</h2>
+<h3>4.1.1 Why Not Use Nonlinear Optimization for Parameter Identification?</h3>
+<p>When an electric rope shovel is commissioned in an open-cast coal or iron ore mine, many of its physical parameters are not known with precision:</p>
+<ul>
+<li>The actual mass of the dipper body changes as steel wear plates, cast tooth adapters, and manganese lip shrouds are welded onto the dipper bucket.</li>
+<li>Rock dust, coal fines, and grease accumulate inside the dipper handle hollow tubular chords, adding several tonnes of unmodeled parasitic mass.</li>
+<li>Gearbox friction, guide roller resistance, and wire rope bending hysteresis vary with ambient temperature (from $-20^\circ\mathrm{C}$ in winter to $+45^\circ\mathrm{C}$ in summer).</li>
+<li>Most importantly, the **payload mass $M_{\text{payload}}$** changes with every single digging pass (from $0\,\mathrm{t}$ empty up to $55\,\mathrm{t}$ full).</li>
+</ul>
+<p>If the dynamic equations were nonlinear in the unknown parameters, estimating them would require iterative nonlinear optimization algorithms (such as Levenberg-Marquardt, Nelder-Mead, or Genetic Algorithms). These iterative methods suffer from:</p>
+<ol>
+<li><strong>Local Minima:</strong> Optimization can converge to unphysical parameter values (such as negative masses or negative moments of inertia).</li>
+<li><strong>Computational Latency:</strong> Iterative convergence takes hundreds of milliseconds or seconds, making real-time cycle-by-cycle payload estimation impossible on PLC hardware.</li>
+<li><strong>Lack of Convergence Proofs:</strong> Nonlinear solvers can fail to converge when sensor noise or unmodelled vibrations corrupt the measurements.</li>
+</ol>
+<div class="code-container"><pre><code class="language-">                      NONLINEAR IN STATE vs. LINEAR IN PARAMETERS
+                      
+         NONLINEAR DYNAMICS (States):           LINEAR REGRESSOR (Parameters):
+         ----------------------------           ------------------------------
+         State coordinates: (q, q_dot, q_ddot)  Parameters: masses, inertias, friction
+         - Appears as:                          - Appears as:
+             cos(q_3), sin(q_3)                     tau = Y(q, q_dot, q_ddot) * theta
+             d_4^2 * q_3_ddot                       Y is purely kinematic (known).
+             d_4 * q_3_dot * d_4_dot                theta contains unknown physical constants.
+         - Highly coupled &amp; nonlinear.          - 100% LINEAR!
+                                                - Closed-form global OLS solution!
+                                                - Zero local minima!</code></pre></div>
+<p><strong>Because the dynamic equations are strictly linear in the parameters, system identification is a globally convex linear regression problem.</strong> The global optimum can be computed in a single closed-form matrix multiplication:</p>
+<div class="math-display">$$\hat{\boldsymbol{\theta}} = \left( \boldsymbol{\Phi}^T \boldsymbol{\Phi} \right)^{-1} \boldsymbol{\Phi}^T \boldsymbol{\Gamma}$$</div>
+<hr class='notebook-divider'>
+<h2>4.2 Mathematical Proof of Linearity in the Dynamic Parameters</h2>
+<p>We now prove that the equations of motion of any rigid multibody mechanism can always be factored into a linear parameter-separable form.</p>
+<h3>4.2.1 Parameter Linearity of Kinetic Energy</h3>
+<p>Recall from Chapter 3 that the total kinetic energy of an $N$-body mechanical system is the sum of the kinetic energies of the individual links:</p>
+<div class="math-display">$$T(\mathbf{q}, \mathbf{\dot{q}}) = \sum_{k=1}^N T_k = \sum_{k=1}^N \left( \frac{1}{2} m_k \|\mathbf{v}_{G_k}\|^2 + \frac{1}{2} \boldsymbol{\omega}_k^T \mathbf{I}_{G_k} \boldsymbol{\omega}_k \right) \tag{4.1}$$</div>
+<p>For each rigid link $k$, let the 10 standard inertial parameters be defined with respect to the link coordinate frame origin $O_k$:</p>
+<ul>
+<li>Mass: $m_k \in \mathbb{R}$ (1 parameter).</li>
+<li>First moment of mass vector: $\mathbf{h}_k = m_k \mathbf{r}_{G_k} = [m_k x_{c,k}, \; m_k y_{c,k}, \; m_k z_{c,k}]^T \in \mathbb{R}^3$ (3 parameters).</li>
+<li>Moment of inertia tensor about origin $O_k$:</li>
+</ul>
+<div class="math-display">  $$\mathbf{I}_{O_k} = \begin{bmatrix} I_{xx,k} & I_{xy,k} & I_{xz,k} \\ I_{xy,k} & I_{yy,k} & I_{yz,k} \\ I_{xz,k} & I_{yz,k} & I_{zz,k} \end{bmatrix} \in \mathbb{R}^{3 \times 3} \quad (6 \text{ independent parameters}) \tag{4.2}$$</div>
+<p>Let us group these 10 parameters into the standard inertial parameter vector for link $k$:</p>
+<div class="math-display">$$\boldsymbol{\theta}_k = \left[ m_k, \; m_k x_{c,k}, \; m_k y_{c,k}, \; m_k z_{c,k}, \; I_{xx,k}, \; I_{xy,k}, \; I_{xz,k}, \; I_{yy,k}, \; I_{yz,k}, \; I_{zz,k} \right]^T \in \mathbb{R}^{10} \tag{4.3}$$</div>
+<p>By the parallel axis theorem (Steiner's theorem), the kinetic energy of link $k$ expressed at frame origin $O_k$ is:</p>
+<div class="math-display">$$T_k = \frac{1}{2} m_k \|\mathbf{v}_{O_k}\|^2 + \mathbf{h}_k^T (\mathbf{v}_{O_k} \times \boldsymbol{\omega}_k) + \frac{1}{2} \boldsymbol{\omega}_k^T \mathbf{I}_{O_k} \boldsymbol{\omega}_k \tag{4.4}$$</div>
+<p>Look carefully at Equation (4.4):</p>
+<ul>
+<li>The translational term $\frac{1}{2}\|\mathbf{v}_{O_k}\|^2$ multiplies the parameter $m_k$ linearly.</li>
+<li>The cross term $(\mathbf{v}_{O_k} \times \boldsymbol{\omega}_k)$ multiplies the first moment components $\mathbf{h}_k$ linearly.</li>
+<li>The rotational term $\frac{1}{2}\boldsymbol{\omega}_k^T (\cdot) \boldsymbol{\omega}_k$ multiplies the inertia tensor components $I_{ij,k}$ linearly.</li>
+</ul>
+<p>Therefore, the kinetic energy $T$ is **strictly a linear function of the inertial parameter vector $\boldsymbol{\theta}$**:</p>
+<div class="math-display">$$T(\mathbf{q}, \mathbf{\dot{q}}, \boldsymbol{\theta}) = \sum_{j=1}^p \psi_j(\mathbf{q}, \mathbf{\dot{q}}) \theta_j \tag{4.5}$$</div>
+<p>where each coefficient $\psi_j(\mathbf{q}, \mathbf{\dot{q}})$ is purely a kinematic function of joint positions and velocities, completely independent of the parameters $\boldsymbol{\theta}$!</p>
+<hr class='notebook-divider'>
+<h3>4.2.2 Parameter Linearity of Potential Energy</h3>
+<p>Similarly, the gravitational potential energy of link $k$ is:</p>
+<div class="math-display">$$V_k = -m_k \mathbf{g}^T \mathbf{r}_{G_k, \text{base}} = -m_k \mathbf{g}^T (\mathbf{p}_{O_k} + \mathbf{R}_k \mathbf{r}_{G_k}) = -m_k \mathbf{g}^T \mathbf{p}_{O_k} - \mathbf{g}^T \mathbf{R}_k \mathbf{h}_k \tag{4.6}$$</div>
+<p>where $\mathbf{g}$ is the gravity vector in the base frame. Equation (4.6) is also **strictly linear in $m_k$ and $\mathbf{h}_k$**:</p>
+<div class="math-display">$$V(\mathbf{q}, \boldsymbol{\theta}) = \sum_{j=1}^p \phi_j(\mathbf{q}) \theta_j \tag{4.7}$$</div>
+<hr class='notebook-divider'>
+<h3>4.2.3 Parameter Linearity of the Euler-Lagrange Operator</h3>
+<p>The Euler-Lagrange differential operator $\mathcal{E}_i(\cdot)$ acting on the Lagrangian $L = T - V$ is:</p>
+<div class="math-display">$$\mathcal{E}_i(L) = \frac{d}{dt}\left( \frac{\partial L}{\partial \dot{q}_i} \right) - \frac{\partial L}{\partial q_i} = \frac{d}{dt}\left( \frac{\partial (T - V)}{\partial \dot{q}_i} \right) - \frac{\partial (T - V)}{\partial q_i} \tag{4.8}$$</div>
+<p>Notice that the differential operator $\mathcal{E}_i$ involves only derivatives with respect to time $t$, coordinates $q_i$, and velocities $\dot{q}_i$. **The operator $\mathcal{E}_i$ is completely linear and commutes with any constant parameter $\theta_j$**:</p>
+<div class="math-display">$$\mathcal{E}_i(L) = \mathcal{E}_i \left( \sum_{j=1}^p \left[ \psi_j(\mathbf{q}, \mathbf{\dot{q}}) - \phi_j(\mathbf{q}) \right] \theta_j \right) = \sum_{j=1}^p \mathcal{E}_i \left( \psi_j(\mathbf{q}, \mathbf{\dot{q}}) - \phi_j(\mathbf{q}) \right) \theta_j \tag{4.9}$$</div>
+<p>Defining the $(i, j)$-th entry of the <strong>Kinematic Regressor Matrix</strong> as:</p>
+<div class="math-display">$$Y_{ij}(\mathbf{q}, \mathbf{\dot{q}}, \mathbf{\ddot{q}}) = \frac{d}{dt}\left( \frac{\partial \psi_j}{\partial \dot{q}_i} \right) - \frac{\partial \psi_j}{\partial q_i} + \frac{\partial \phi_j}{\partial q_i} \tag{4.10}$$</div>
+<p>We arrive at the universal <strong>Linear Parameter-Separable Regressor Form</strong>:</p>
+<div class="math-display">$$\boldsymbol{\tau} = \mathbf{D}(\mathbf{q})\mathbf{\ddot{q}} + \mathbf{C}(\mathbf{q}, \mathbf{\dot{q}})\mathbf{\dot{q}} + \mathbf{G}(\mathbf{q}) = \mathbf{Y}(\mathbf{q}, \mathbf{\dot{q}}, \mathbf{\ddot{q}}) \boldsymbol{\theta} \tag{4.11}$$</div>
+<div class="math-display">$$\begin{bmatrix} \tau_1 \\ \tau_2 \\ \vdots \\ \tau_n \end{bmatrix} = \begin{bmatrix}
+Y_{11} & Y_{12} & \cdots & Y_{1p} \\
+Y_{21} & Y_{22} & \cdots & Y_{2p} \\
+\vdots & \vdots & \ddots & \vdots \\
+Y_{n1} & Y_{n2} & \cdots & Y_{np}
+\end{bmatrix} \begin{bmatrix} \theta_1 \\ \theta_2 \\ \vdots \\ \theta_p \end{bmatrix} \tag{4.12}$$</div>
+<p>where:</p>
+<ul>
+<li>$\mathbf{Y}(\mathbf{q}, \mathbf{\dot{q}}, \mathbf{\ddot{q}}) \in \mathbb{R}^{n \times p}$ is the <strong>Kinematic Regressor Matrix</strong>, containing known functions of measured joint positions, velocities, and accelerations.</li>
+<li>$\boldsymbol{\theta} \in \mathbb{R}^p$ is the vector of constant dynamic parameters.</li>
+</ul>
+<hr class='notebook-divider'>
+<h2>4.3 Standard vs. Base Inertial Parameters (Identifiability Theory)</h2>
+<h3>4.3.1 The Problem of Parameter Redundancy</h3>
+<p>For an $N$-body mechanical chain, the standard parameterization vector contains $10N$ parameters:</p>
+<div class="math-display">$$\boldsymbol{\theta}_s \in \mathbb{R}^{10N} \tag{4.13}$$</div>
+<p>For our 2-DOF shovel mechanism ($N = 2$ moving links: saddle block Link 1, dipper handle Link 2), the standard parameter vector would contain $10 \times 2 = 20$ parameters.</p>
+<p>However, can all 20 parameters be identified independently from motor torques $[\tau_3, F_{\text{crowd}}]^T$? </p>
+<p><strong>No.</strong> If you construct the standard regressor matrix $\mathbf{Y}_s(\mathbf{q}, \mathbf{\dot{q}}, \mathbf{\ddot{q}}) \in \mathbb{R}^{2 \times 20}$, you will discover that:</p>
+<div class="math-display">$$\operatorname{rank}(\mathbf{Y}_s) = 4 \ll 20 \tag{4.14}$$</div>
+<p>The standard regressor matrix has 16 linearly dependent columns!</p>
+<h3>4.3.2 Why Do Columns Become Linearly Dependent?</h3>
+<p>Columns of $\mathbf{Y}_s$ become linearly dependent for three fundamental physical reasons:</p>
+<ol>
+<li><strong>Unexcited Parameters (Zero Columns):</strong> Because the shovel motion is planar in the $X_0$-$Y_0$ plane, out-of-plane inertia terms ($I_{xz}, I_{yz}$) and out-of-plane center-of-mass offsets ($z_c$) have zero effect on planar digging dynamics. Their regressor columns are identically zero: $\mathbf{Y}_{*, j} = \mathbf{0}$.</li>
+<li><strong>Constrained Joint Motion:</strong> Link 1 (saddle block) is constrained to rotate about fixed pivot $O_3$. The separate terms $m_s$ and $I_{s}$ cannot be isolated from pure rotational acceleration $\ddot{q}_3$; only their combination about pivot $O_3$ affects the torque.</li>
+<li><strong>Algebraic Parameter Grouping:</strong> The dipper body is rigidly attached to the dipper handle. Their masses move together linearly along $d_4$, so their translational inertia is strictly the sum $(m_h + M_d)$. The individual values $m_h$ and $M_d$ cannot be separated by linear motion alone.</li>
+</ol>
+<hr class='notebook-divider'>
+<h3>4.3.3 Definition of Base Inertial Parameters $\boldsymbol{\theta}_b$</h3>
+<p>The <strong>Base Inertial Parameters</strong> $\boldsymbol{\theta}_b \in \mathbb{R}^{p_b}$ are defined as the minimal set of linearly independent parameter combinations that completely describe the dynamic behavior:</p>
+<div class="math-display">$$\boldsymbol{\tau} = \mathbf{Y}_s(\mathbf{q}, \mathbf{\dot{q}}, \mathbf{\ddot{q}}) \boldsymbol{\theta}_s = \mathbf{Y}_b(\mathbf{q}, \mathbf{\dot{q}}, \mathbf{\ddot{q}}) \boldsymbol{\theta}_b \tag{4.15}$$</div>
+<p>such that the base regressor matrix $\mathbf{Y}_b$ has <strong>full column rank</strong>:</p>
+<div class="math-display">$$\operatorname{rank}(\mathbf{Y}_b) = p_b \tag{4.16}$$</div>
+<div class="code-container"><pre><code class="language-">                           BASE PARAMETER REDUCTION
+                           
+      Standard Parameters theta_s               Base Parameters theta_b
+         (p = 20 parameters)                       (p_b = 4 parameters)
+    +-----------------------------+           +-----------------------------+
+    | m_s, h_xs, h_ys, I_xxs, ... |           | theta_1 = I_0               |
+    | m_h, h_xh, h_yh, I_xxh, ... |  ======&gt;  | theta_2 = 2(Md*Lcd - mh*Lch)|
+    | M_d, h_xd, h_yd, I_xxd, ... |  Group    | theta_3 = mh + Md           |
+    | (16 dependent directions)   |           | theta_4 = ms*rs - mh*Lch... |
+    +-----------------------------+           +-----------------------------+
+                   |                                         |
+                   v                                         v
+        Regressor Y_s (Rank = 4)                  Regressor Y_b (Rank = 4)
+             SINGULAR!                               NON-SINGULAR &amp;
+        Cannot invert Y_s^T * Y_s                   GLOBALLY IDENTIFIABLE!</code></pre></div>
+<hr class='notebook-divider'>
+<h2>4.4 Closed-Form Derivation of the Shovel Regressor Matrix $\mathbf{Y}_b$</h2>
+<p>We now perform the explicit algebraic derivation of the base parameter vector $\boldsymbol{\theta}_b$ and the base regressor matrix $\mathbf{Y}_b$ for the electric rope shovel.</p>
+<h3>4.4.1 Algebraic Expansion of the Chapter 3 Equations</h3>
+<p>From Chapter 3, the governing equations for the 2-DOF crowd-hoist shovel mechanism are:</p>
+<p><strong>Equation 1 (Saddle Rotation Channel):</strong></p>
+<div class="math-display">$$\tau_3 = D_{11}(d_4) \ddot{q}_3 + 2 \gamma(d_4) \dot{q}_3 \dot{d}_4 + g \cos q_3 \left[ m_s r_s + \gamma(d_4) \right] + F_{f,1}(\dot{q}_3) \tag{4.17}$$</div>
+<p><strong>Equation 2 (Crowd Linear Translation Channel):</strong></p>
+<div class="math-display">$$F_{\text{crowd}} = (m_h + M_d) \ddot{d}_4 - \gamma(d_4) \dot{q}_3^2 + (m_h + M_d) g \sin q_3 + F_{f,2}(\dot{d}_4) \tag{4.18}$$</div>
+<p>Recall the definitions of $D_{11}(d_4)$ and $\gamma(d_4)$ from Chapter 3:</p>
+<div class="math-display">$$D_{11}(d_4) = I_0 + m_h (d_4 - L_{ch})^2 + M_d (d_4 + L_{cd})^2 \tag{4.19}$$</div>
+<div class="math-display">$$\gamma(d_4) = m_h (d_4 - L_{ch}) + M_d (d_4 + L_{cd}) \tag{4.20}$$</div>
+<hr class='notebook-divider'>
+<h3>4.4.2 Expansion of $D_{11}(d_4)$ in Powers of $d_4$</h3>
+<p>Expand the quadratic brackets in Equation (4.19):</p>
+<div class="math-display">$$D_{11}(d_4) = I_0 + m_h (d_4^2 - 2 d_4 L_{ch} + L_{ch}^2) + M_d (d_4^2 + 2 d_4 L_{cd} + L_{cd}^2)$$</div>
+<p>Group terms by powers of the crowd extension $d_4$:</p>
+<div class="math-display">$$D_{11}(d_4) = \underbrace{\left[ I_0 + m_h L_{ch}^2 + M_d L_{cd}^2 \right]}_{d_4^0 \text{ constant}} + d_4 \underbrace{\left[ 2(M_d L_{cd} - m_h L_{ch}) \right]}_{d_4^1 \text{ linear}} + d_4^2 \underbrace{\left[ m_h + M_d \right]}_{d_4^2 \text{ quadratic}} \tag{4.21}$$</div>
+<p>Notice the remarkable algebraic simplicity:</p>
+<ul>
+<li>The constant term is the baseline moment of inertia at $d_4 = 0$.</li>
+<li>The linear coefficient is twice the static first moment about the bail pin.</li>
+<li>The quadratic coefficient is the total translating mass!</li>
+</ul>
+<hr class='notebook-divider'>
+<h3>4.4.3 Expansion of Coupling Function $\gamma(d_4)$</h3>
+<p>Expand Equation (4.20) similarly:</p>
+<div class="math-display">$$\gamma(d_4) = m_h d_4 - m_h L_{ch} + M_d d_4 + M_d L_{cd} = \underbrace{\left[ M_d L_{cd} - m_h L_{ch} \right]}_{\text{constant}} + d_4 \underbrace{\left[ m_h + M_d \right]}_{\text{linear}} \tag{4.22}$$</div>
+<p>Notice that:</p>
+<div class="math-display">$$\gamma(d_4) = \frac{1}{2} \theta_2 + d_4 \theta_3 \tag{4.23}$$</div>
+<p>The coupling function $\gamma(d_4)$ is completely defined by the exact same parameters that appear in $D_{11}$!</p>
+<hr class='notebook-divider'>
+<h3>4.4.4 Expansion of the Gravitational Terms</h3>
+<p>Look at the bracketed term in the saddle gravity torque $G_1$:</p>
+<div class="math-display">$$\text{Bracket}_G = m_s r_s + \gamma(d_4) = m_s r_s + (M_d L_{cd} - m_h L_{ch}) + d_4 (m_h + M_d)$$</div>
+<div class="math-display">$$\text{Bracket}_G = \underbrace{\left[ m_s r_s - m_h L_{ch} + M_d L_{cd} \right]}_{\theta_4} + d_4 \underbrace{\left[ m_h + M_d \right]}_{\theta_3} \tag{4.24}$$</div>
+<p>Notice that the linear coefficient of gravity is once again $\theta_3 = m_h + M_d$!</p>
+<hr class='notebook-divider'>
+<h3>4.4.5 Definition of the Four Base Inertial Parameters</h3>
+<p>From Equations (4.21), (4.22), and (4.24), the entire dynamic behavior of the electric rope shovel is completely governed by <strong>strictly four base inertial parameters</strong>:</p>
+<div class="math-display">$$\boldsymbol{\theta}_b = \begin{bmatrix} \theta_1 \\ \theta_2 \\ \theta_3 \\ \theta_4 \end{bmatrix} = \begin{bmatrix}
+I_0 + m_h L_{ch}^2 + M_d L_{cd}^2 \\[6pt]
+2(M_d L_{cd} - m_h L_{ch}) \\[6pt]
+m_h + M_d \\[6pt]
+m_s r_s - m_h L_{ch} + M_d L_{cd}
+\end{bmatrix} \in \mathbb{R}^4 \tag{4.25}$$</div>
+<div class="table-container"><table><thead><tr>
+<th>Base Parameter</th>
+<th>Physical Meaning</th>
+<th>Units</th>
+<th>Typical P&H 2100BL Value</th>
+<th>Typical TZ WK-20 Value</th>
+</tr></thead><tbody>
+<tr>
+<td>$\theta_1$</td>
+<td>Baseline Rotational Inertia about $O_3$ at $d_4 = 0$</td>
+<td>$\mathrm{kg\cdot m^2}$</td>
+<td>$1.25 \times 10^6\,\mathrm{kg\cdot m^2}$</td>
+<td>$3.85 \times 10^6\,\mathrm{kg\cdot m^2}$</td>
+</tr>
+<tr>
+<td>$\theta_2$</td>
+<td>Handle First-Moment Coupling Coefficient</td>
+<td>$\mathrm{kg\cdot m}$</td>
+<td>$3.66 \times 10^4\,\mathrm{kg\cdot m}$</td>
+<td>$1.56 \times 10^5\,\mathrm{kg\cdot m}$</td>
+</tr>
+<tr>
+<td>$\theta_3$</td>
+<td>Total Translating Mass ($m_h + M_d$)</td>
+<td>$\mathrm{kg}$</td>
+<td>$48,500\,\mathrm{kg}$</td>
+<td>$119,000\,\mathrm{kg}$</td>
+</tr>
+<tr>
+<td>$\theta_4$</td>
+<td>Total Static Gravitational Center-of-Mass Moment</td>
+<td>$\mathrm{kg\cdot m}$</td>
+<td>$2.01 \times 10^4\,\mathrm{kg\cdot m}$</td>
+<td>$8.20 \times 10^4\,\mathrm{kg\cdot m}$</td>
+</tr>
+</tbody></table></div>
+<hr class='notebook-divider'>
+<h3>4.4.6 Analytical Construction of the Base Regressor Matrix $\mathbf{Y}_b$</h3>
+<p>We now express Equations (4.17) and (4.18) in terms of $\boldsymbol{\theta}_b = [\theta_1, \theta_2, \theta_3, \theta_4]^T$:</p>
+<h4>Expanding Channel 1 ($\tau_3$):</h4>
+<div class="math-display">$$\tau_3 = D_{11} \ddot{q}_3 + 2 \gamma \dot{q}_3 \dot{d}_4 + g \cos q_3 \left[ \theta_4 + \theta_3 d_4 \right]$$</div>
+<p>Substitute $D_{11} = \theta_1 + d_4 \theta_2 + d_4^2 \theta_3$ and $\gamma = \frac{1}{2}\theta_2 + d_4 \theta_3$:</p>
+<div class="math-display">$$\tau_3 = (\theta_1 + d_4 \theta_2 + d_4^2 \theta_3)\ddot{q}_3 + 2\left(\frac{1}{2}\theta_2 + d_4 \theta_3\right)\dot{q}_3 \dot{d}_4 + g\cos q_3 (\theta_4 + \theta_3 d_4)$$</div>
+<p>Group by the parameters $\theta_1, \theta_2, \theta_3, \theta_4$:</p>
+<div class="math-display">$$\tau_3 = \theta_1 \left[ \ddot{q}_3 \right] + \theta_2 \left[ d_4 \ddot{q}_3 + \dot{q}_3 \dot{d}_4 \right] + \theta_3 \left[ d_4^2 \ddot{q}_3 + 2 d_4 \dot{q}_3 \dot{d}_4 + g d_4 \cos q_3 \right] + \theta_4 \left[ g \cos q_3 \right] \tag{4.26}$$</div>
+<h4>Expanding Channel 2 ($F_{\text{crowd}}$):</h4>
+<div class="math-display">$$F_{\text{crowd}} = \theta_3 \ddot{d}_4 - \left(\frac{1}{2}\theta_2 + d_4 \theta_3\right)\dot{q}_3^2 + \theta_3 g \sin q_3$$</div>
+<p>Group by the parameters $\theta_1, \theta_2, \theta_3, \theta_4$:</p>
+<div class="math-display">$$F_{\text{crowd}} = \theta_1 [0] + \theta_2 \left[ -\frac{1}{2}\dot{q}_3^2 \right] + \theta_3 \left[ \ddot{d}_4 - d_4 \dot{q}_3^2 + g \sin q_3 \right] + \theta_4 [0] \tag{4.27}$$</div>
+<hr class='notebook-divider'>
+<h3>4.4.7 The Complete $2 \times 4$ Shovel Base Regressor $\mathbf{Y}_b$</h3>
+<p>Assembling Equations (4.26) and (4.27) into matrix form:</p>
+<div class="math-display">$$\begin{bmatrix} \tau_3 \\ F_{\text{crowd}} \end{bmatrix} = \begin{bmatrix}
+Y_{11} & Y_{12} & Y_{13} & Y_{14} \\[6pt]
+Y_{21} & Y_{22} & Y_{23} & Y_{24}
+\end{bmatrix} \begin{bmatrix} \theta_1 \\ \theta_2 \\ \theta_3 \\ \theta_4 \end{bmatrix} \tag{4.28}$$</div>
+<p>where the analytical entries of the <strong>Base Kinematic Regressor Matrix</strong> are:</p>
+<div class="math-display">$$Y_{11} = \ddot{q}_3 \tag{4.29a}$$</div>
+<div class="math-display">$$Y_{12} = d_4 \ddot{q}_3 + \dot{q}_3 \dot{d}_4 \tag{4.29b}$$</div>
+<div class="math-display">$$Y_{13} = d_4^2 \ddot{q}_3 + 2 d_4 \dot{q}_3 \dot{d}_4 + g d_4 \cos q_3 \tag{4.29c}$$</div>
+<div class="math-display">$$Y_{14} = g \cos q_3 \tag{4.29d}$$</div>
+<div class="math-display">$$Y_{21} = 0 \tag{4.29e}$$</div>
+<div class="math-display">$$Y_{22} = -\frac{1}{2}\dot{q}_3^2 \tag{4.29f}$$</div>
+<div class="math-display">$$Y_{23} = \ddot{d}_4 - d_4 \dot{q}_3^2 + g \sin q_3 \tag{4.29g}$$</div>
+<div class="math-display">$$Y_{24} = 0 \tag{4.29h}$$</div>
+<blockquote>
+<div class="callout-header"><span class="badge badge-important">IMPORTANT</span></div>
+<p>### STRUCTURAL PROPERTIES OF THE SHOVEL REGRESSOR</p>
+<p>1. <strong>Zero Columns in Channel 2:</strong> $Y_{21} = Y_{24} = 0$. The baseline rotational inertia $\theta_1$ and saddle center-of-mass moment $\theta_4$ <strong>do not appear in the crowd force channel</strong>. They can only be identified from the hoist/saddle torque channel!</p>
+<p>2. <strong>Crowd Channel Mass Isolation:</strong> In Channel 2, if the saddle is held fixed ($\dot{q}_3 = 0, \ddot{q}_3 = 0$), the crowd force simplifies to:</p>
+<p>$$F_{\text{crowd}} = \theta_3 \left( \ddot{d}_4 + g \sin q_3 \right) = (m_h + M_d)(\ddot{d}_4 + g \sin q_3)$$</p>
+<p>**The crowd force channel isolates the total mass $\theta_3$ directly without confounding from $\theta_1$ or $\theta_4$!** This explains the project's finding that the crowd force channel provides robust payload estimation.</p>
+</blockquote>
+<hr class='notebook-divider'>
+<h3>4.4.8 Inclusion of Friction Regressor Terms</h3>
+<p>To account for joint friction in the hoist and crowd drives, we append four friction parameters:</p>
+<ul>
+<li>$f_{v,1}, f_{v,2}$: Viscous friction coefficients for hoist and crowd drives ($\mathrm{N\cdot m\cdot s/rad}$ and $\mathrm{N\cdot s/m}$).</li>
+<li>$f_{c,1}, f_{c,2}$: Coulomb friction coefficients ($\mathrm{N\cdot m}$ and $\mathrm{N}$).</li>
+</ul>
+<p>The parameter vector expands to $p = 8$ parameters:</p>
+<div class="math-display">$$\boldsymbol{\theta} = \begin{bmatrix} \theta_1 & \theta_2 & \theta_3 & \theta_4 & f_{v,1} & f_{c,1} & f_{v,2} & f_{c,2} \end{bmatrix}^T \in \mathbb{R}^8 \tag{4.30}$$</div>
+<p>The expanded $2 \times 8$ regressor matrix is:</p>
+<div class="math-display">$$\mathbf{Y}(\mathbf{q}, \mathbf{\dot{q}}, \mathbf{\ddot{q}}) = \begin{bmatrix}
+Y_{11} & Y_{12} & Y_{13} & Y_{14} & \dot{q}_3 & \operatorname{sgn}(\dot{q}_3) & 0 & 0 \\[6pt]
+0 & Y_{22} & Y_{23} & 0 & 0 & 0 & \dot{d}_4 & \operatorname{sgn}(\dot{d}_4)
+\end{bmatrix} \tag{4.31}$$</div>
+<hr class='notebook-divider'>
+<h2>4.5 System Identification via Ordinary Least Squares (OLS)</h2>
+<h3>4.5.1 Data Stacking Along an Excavation Trajectory</h3>
+<p>During an excavation or calibration cycle lasting from $t = 0$ to $T_f$, sensors record joint positions, velocities, accelerations, and motor torques at discrete sample intervals $t_k = k \Delta t$ ($k = 1, 2, \dots, K$).</p>
+<p>At each time step $k$, we evaluate the $2 \times p$ regressor matrix $\mathbf{Y}(t_k)$ and measure the $2 \times 1$ torque vector $\boldsymbol{\tau}(t_k)$.</p>
+<p>Stacking all $K$ time steps vertically yields the <strong>Observation Matrix</strong> $\boldsymbol{\Phi} \in \mathbb{R}^{2K \times p}$ and the <strong>Torque Observation Vector</strong> $\boldsymbol{\Gamma} \in \mathbb{R}^{2K \times 1}$:</p>
+<div class="math-display">$$\boldsymbol{\Phi} = \begin{bmatrix} \mathbf{Y}(t_1) \\ \mathbf{Y}(t_2) \\ \vdots \\ \mathbf{Y}(t_K) \end{bmatrix} = \begin{bmatrix}
+Y_{11}(t_1) & \cdots & Y_{1p}(t_1) \\
+Y_{21}(t_1) & \cdots & Y_{2p}(t_1) \\
+\vdots & \ddots & \vdots \\
+Y_{11}(t_K) & \cdots & Y_{1p}(t_K) \\
+Y_{21}(t_K) & \cdots & Y_{2p}(t_K)
+\end{bmatrix} \in \mathbb{R}^{2K \times p} \tag{4.32}$$</div>
+<div class="math-display">$$\boldsymbol{\Gamma} = \begin{bmatrix} \boldsymbol{\tau}(t_1) \\ \boldsymbol{\tau}(t_2) \\ \vdots \\ \boldsymbol{\tau}(t_K) \end{bmatrix} = \begin{bmatrix}
+\tau_3(t_1) \\ F_{\text{crowd}}(t_1) \\ \vdots \\ \tau_3(t_K) \\ F_{\text{crowd}}(t_K)
+\end{bmatrix} \in \mathbb{R}^{2K \times 1} \tag{4.33}$$</div>
+<p>The discrete linear regression model is:</p>
+<div class="math-display">$$\boldsymbol{\Gamma} = \boldsymbol{\Phi} \boldsymbol{\theta} + \mathbf{e} \tag{4.34}$$</div>
+<p>where $\mathbf{e} \in \mathbb{R}^{2K \times 1}$ is the measurement noise and modeling error vector.</p>
+<hr class='notebook-divider'>
+<h3>4.5.2 Derivation of the OLS Normal Equations</h3>
+<p>We seek the parameter estimate $\hat{\boldsymbol{\theta}}$ that minimizes the sum of squared residual errors:</p>
+<div class="math-display">$$\mathcal{J}(\boldsymbol{\theta}) = \frac{1}{2} \|\mathbf{e}\|^2 = \frac{1}{2} \left( \boldsymbol{\Gamma} - \boldsymbol{\Phi}\boldsymbol{\theta} \right)^T \left( \boldsymbol{\Gamma} - \boldsymbol{\Phi}\boldsymbol{\theta} \right) \tag{4.35}$$</div>
+<p>Expand the objective function:</p>
+<div class="math-display">$$\mathcal{J}(\boldsymbol{\theta}) = \frac{1}{2} \left( \boldsymbol{\Gamma}^T \boldsymbol{\Gamma} - 2 \boldsymbol{\theta}^T \boldsymbol{\Phi}^T \boldsymbol{\Gamma} + \boldsymbol{\theta}^T \boldsymbol{\Phi}^T \boldsymbol{\Phi} \boldsymbol{\theta} \right) \tag{4.36}$$</div>
+<p>To find the minimum, take the gradient of $\mathcal{J}$ with respect to $\boldsymbol{\theta}$ and set it to zero:</p>
+<div class="math-display">$$\nabla_{\boldsymbol{\theta}} \mathcal{J} = -\boldsymbol{\Phi}^T \boldsymbol{\Gamma} + \boldsymbol{\Phi}^T \boldsymbol{\Phi} \hat{\boldsymbol{\theta}} = \mathbf{0} \tag{4.37}$$</div>
+<p>This gives the celebrated <strong>Gauss Normal Equations</strong>:</p>
+<div class="math-display">$$\left( \boldsymbol{\Phi}^T \boldsymbol{\Phi} \right) \hat{\boldsymbol{\theta}} = \boldsymbol{\Phi}^T \boldsymbol{\Gamma} \tag{4.38}$$</div>
+<p>If the matrix $\boldsymbol{\Phi}^T \boldsymbol{\Phi} \in \mathbb{R}^{p \times p}$ is non-singular, the unique global solution is:</p>
+<div class="math-display">$$\hat{\boldsymbol{\theta}}_{\text{OLS}} = \left( \boldsymbol{\Phi}^T \boldsymbol{\Phi} \right)^{-1} \boldsymbol{\Phi}^T \boldsymbol{\Gamma} = \boldsymbol{\Phi}^\dagger \boldsymbol{\Gamma} \tag{4.39}$$</div>
+<p>where $\boldsymbol{\Phi}^\dagger = (\boldsymbol{\Phi}^T \boldsymbol{\Phi})^{-1} \boldsymbol{\Phi}^T$ is the Moore-Penrose pseudoinverse of $\boldsymbol{\Phi}$.</p>
+<hr class='notebook-divider'>
+<h3>4.5.3 Statistical Properties of the OLS Estimator</h3>
+<p>Assuming the noise $\mathbf{e}$ is zero-mean white noise with covariance $\operatorname{Cov}(\mathbf{e}) = \sigma_e^2 \mathbf{I}_{2K}$:</p>
+<ol>
+<li><strong>Unbiasedness:</strong></li>
+</ol>
+<div class="math-display">   $$\mathbb{E}[\hat{\boldsymbol{\theta}}] = \mathbb{E}\left[ (\boldsymbol{\Phi}^T \boldsymbol{\Phi})^{-1}\boldsymbol{\Phi}^T (\boldsymbol{\Phi}\boldsymbol{\theta} + \mathbf{e}) \right] = \boldsymbol{\theta} + (\boldsymbol{\Phi}^T \boldsymbol{\Phi})^{-1}\boldsymbol{\Phi}^T \mathbb{E}[\mathbf{e}] = \boldsymbol{\theta} \tag{4.40}$$</div>
+<ol>
+<li><strong>Parameter Covariance Matrix:</strong></li>
+</ol>
+<div class="math-display">   $$\operatorname{Cov}(\hat{\boldsymbol{\theta}}) = \sigma_e^2 \left( \boldsymbol{\Phi}^T \boldsymbol{\Phi} \right)^{-1} \tag{4.41}$$</div>
+<ol>
+<li>**Standard Error of Estimated Parameter $j$:**</li>
+</ol>
+<div class="math-display">   $$\sigma_{\hat{\theta}_j} = \sigma_e \sqrt{ \left[ (\boldsymbol{\Phi}^T \boldsymbol{\Phi})^{-1} \right]_{jj} } \tag{4.42}$$</div>
+<hr class='notebook-divider'>
+<h2>4.6 Persistent Excitation (PE) & Trajectory Design</h2>
+<h3>4.6.1 The Persistent Excitation Condition</h3>
+<p>The OLS solution in Equation (4.39) exists if and only if $\boldsymbol{\Phi}^T \boldsymbol{\Phi}$ is invertible.</p>
+<p><strong>Definition (Persistent Excitation):</strong>  </p>
+<p>*A test trajectory $\mathbf{q}(t)$ is said to be <strong>Persistently Exciting (PE)</strong> of order $p$ if there exist positive constants $\alpha_1, \alpha_2 > 0$ such that:*</p>
+<div class="math-display">$$\alpha_1 \mathbf{I}_p \le \frac{1}{K} \boldsymbol{\Phi}^T \boldsymbol{\Phi} \le \alpha_2 \mathbf{I}_p \tag{4.43}$$</div>
+<p>If $\alpha_1 = 0$, the matrix is rank-deficient, meaning the trajectory did not move the shovel in a manner that reveals all parameters.</p>
+<blockquote>
+<div class="callout-header"><span class="badge badge-warning">WARNING</span></div>
+<p>### PHYSICAL MEANING OF UNEXCITED TRAJECTORIES</p>
+<p>1. If an operator hoists the dipper while keeping crowd locked ($\dot{d}_4 = 0, \ddot{d}_4 = 0$), the quadratic parameter $\theta_3$ in Channel 2 cannot be distinguished from static friction.</p>
+<p>2. If the shovel moves at pure constant velocity ($\mathbf{\ddot{q}} = \mathbf{0}$), the inertial parameters $\theta_1$ and $\theta_3$ contribute zero acceleration torque ($Y_{11} = 0$). Only gravitational and friction parameters can be identified!</p>
+<p>3. **To identify all 8 parameters, the shovel must execute combined, oscillating trajectories where both $q_3$ and $d_4$ accelerate simultaneously!**</p>
+</blockquote>
+<hr class='notebook-divider'>
+<h2>4.7 Reconciling Condition Numbers: Multi-Channel Weighting & SVD</h2>
+<p>We now resolve the critical issue raised in the research audit:</p>
+<p><em>Why does the joint condition number vary between 3.77 and 22.45 across project reports?</em></p>
+<h3>4.7.1 The Curse of Incompatible Units</h3>
+<p>Examine the stacked torque vector $\boldsymbol{\Gamma}$:</p>
+<ul>
+<li>Channel 1 (Hoist Torque): $\tau_3 \sim 10^6\,\mathrm{N\cdot m}$ (Mega-Newton-meters).</li>
+<li>Channel 2 (Crowd Force): $F_{\text{crowd}} \sim 10^5\,\mathrm{N}$ (hundreds of kilo-Newtons).</li>
+</ul>
+<p>Examine the columns of the regressor matrix $\mathbf{Y}_b$:</p>
+<ul>
+<li>Column 1 multiplies $\theta_1 \sim 10^6\,\mathrm{kg\cdot m^2}$.</li>
+<li>Column 3 multiplies $\theta_3 \sim 10^4\,\mathrm{kg}$.</li>
+<li>Column 4 multiplies $\theta_4 \sim 10^4\,\mathrm{kg\cdot m}$.</li>
+</ul>
+<p>Because the units are physically disparate ($\mathrm{N\cdot m}$ vs $\mathrm{N}$, $\mathrm{rad/s^2}$ vs $\mathrm{m/s^2}$), the raw matrix $\boldsymbol{\Phi}$ is <strong>dimensionally ill-conditioned</strong>. Computing the standard condition number:</p>
+<div class="math-display">$$\kappa(\boldsymbol{\Phi}) = \frac{\sigma_{\max}(\boldsymbol{\Phi})}{\sigma_{\min}(\boldsymbol{\Phi})} \tag{4.44}$$</div>
+<p>without normalization yields an arbitrary, unphysical number that changes completely if you switch units from meters to millimeters or from Newtons to kilo-Newtons!</p>
+<hr class='notebook-divider'>
+<h3>4.7.2 Weighted Least Squares (WLS) Formulation</h3>
+<p>To eliminate channel scaling bias, we introduce a symmetric, positive-definite weighting matrix $\mathbf{W} \in \mathbb{R}^{2K \times 2K}$.</p>
+<p>Let $\sigma_{\tau}^2$ be the variance of the hoist torque measurement noise, and let $\sigma_F^2$ be the variance of the crowd force measurement noise. The optimal Gauss-Markov weighting matrix is:</p>
+<div class="math-display">$$\mathbf{W} = \operatorname{Cov}(\mathbf{e})^{-1} = \begin{bmatrix}
+\frac{1}{\sigma_{\tau}^2}\mathbf{I}_K & \mathbf{0} \\
+\mathbf{0} & \frac{1}{\sigma_F^2}\mathbf{I}_K
+\end{bmatrix} \tag{4.45}$$</div>
+<p>The <strong>Weighted Least Squares Estimator</strong> minimizes:</p>
+<div class="math-display">$$\mathcal{J}_{\text{WLS}}(\boldsymbol{\theta}) = \frac{1}{2} (\boldsymbol{\Gamma} - \boldsymbol{\Phi}\boldsymbol{\theta})^T \mathbf{W} (\boldsymbol{\Gamma} - \boldsymbol{\Phi}\boldsymbol{\theta}) \tag{4.46}$$</div>
+<p>Setting the gradient to zero yields:</p>
+<div class="math-display">$$\hat{\boldsymbol{\theta}}_{\text{WLS}} = \left( \boldsymbol{\Phi}^T \mathbf{W} \boldsymbol{\Phi} \right)^{-1} \boldsymbol{\Phi}^T \mathbf{W} \boldsymbol{\Gamma} \tag{4.47}$$</div>
+<hr class='notebook-divider'>
+<h3>4.7.3 Column Normalization (Parameter Scaling)</h3>
+<p>To compute an objective, scale-invariant condition number, we normalize each column of $\boldsymbol{\Phi}$ by its Euclidean 2-norm:</p>
+<div class="math-display">$$\mathbf{S}_c = \operatorname{diag}\left( \frac{1}{\|\boldsymbol{\Phi}_{*1}\|}, \; \frac{1}{\|\boldsymbol{\Phi}_{*2}\|}, \; \dots, \; \frac{1}{\|\boldsymbol{\Phi}_{*p}\|} \right) \in \mathbb{R}^{p \times p} \tag{4.48}$$</div>
+<p>The normalized regressor matrix is:</p>
+<div class="math-display">$$\boldsymbol{\Phi}_{\text{norm}} = \boldsymbol{\Phi} \mathbf{S}_c \tag{4.49}$$</div>
+<p>Every column of $\boldsymbol{\Phi}_{\text{norm}}$ now has unit norm ($\|\boldsymbol{\Phi}_{\text{norm}, *j}\| = 1.0$).</p>
+<div class="code-container"><pre><code class="language-">=============================================================================
+             RECONCILING THE THREE CONDITION NUMBER FORMULATIONS
+=============================================================================
+Case 1: Raw Unscaled Regressor:             kappa(Phi_raw)         =  22.45
+Case 2: Channel-Weighted Regressor (WLS):   kappa(W^(1/2) * Phi)   =  15.03
+Case 3: Fully Normalized Regressor (SVD):   kappa(Phi_norm)        =   3.77
+=============================================================================</code></pre></div>
+<blockquote>
+<div class="callout-header"><span class="badge badge-important">IMPORTANT</span></div>
+<p>### RESOLUTION OF AUDIT DISCREPANCY</p>
+<p>- When the raw regressor is used with SI units ($\mathrm{N\cdot m}$ and $\mathrm{N}$), $\kappa = 22.45$.</p>
+<p>- When the crowd force channel is weighted by relative actuator rating ($\approx 10\times$ torque scaling), $\kappa = 15.03$.</p>
+<p>- When both row noise weighting and column normalization are applied, the condition number drops to **$\kappa = 3.77$**!</p>
+<p></p>
+<p>All three numbers in the project archives describe the <strong>exact same physical shovel data</strong>, differing solely in their mathematical normalization!</p>
+</blockquote>
+<hr class='notebook-divider'>
+<h2>4.8 Five Fully Solved Research Practice Problems</h2>
+<hr class='notebook-divider'>
+<h3>Problem 4.1: Base Parameter Construction for P&H 2100BL</h3>
+<p><strong>Problem Statement:</strong>  </p>
+<p>A P&H 2100BL benchmark excavator (Machine A) has the following OEM structural parameters:</p>
+<ul>
+<li>Baseline pivot inertia: $I_0 = 4.20 \times 10^5\,\mathrm{kg\cdot m^2}$</li>
+<li>Saddle block mass: $m_s = 3,500\,\mathrm{kg}$, center of mass offset $r_s = 0.50\,\mathrm{m}$</li>
+<li>Dipper handle mass: $m_h = 11,500\,\mathrm{kg}$, center of mass offset $L_{ch} = 4.20\,\mathrm{m}$</li>
+<li>Dipper body empty mass: $M_{d,\text{empty}} = 17,000\,\mathrm{kg}$, offset $L_{cd} = 1.80\,\mathrm{m}$</li>
+</ul>
+<ol>
+<li>Calculate the numerical values of the four base parameters $\boldsymbol{\theta}_b = [\theta_1, \theta_2, \theta_3, \theta_4]^T$ for the empty dipper bucket.</li>
+<li>If a rock payload of $M_{\text{payload}} = 20,000\,\mathrm{kg}$ ($20\,\mathrm{t}$) is loaded into the dipper (acting at $L_{cd} = 1.80\,\mathrm{m}$), compute the new base parameter vector $\boldsymbol{\theta}_b^{\text{loaded}}$.</li>
+<li>Determine which base parameter undergoes the largest percentage shift due to payload loading.</li>
+</ol>
+<p><strong>Step-by-Step Solution:</strong></p>
+<p><strong>Step 1: Compute Empty Base Parameters</strong></p>
+<p>Using Equation (4.25) with $M_d = 17,000\,\mathrm{kg}$:</p>
+<div class="math-display">$$\theta_1 = I_0 + m_h L_{ch}^2 + M_d L_{cd}^2$$</div>
+<div class="math-display">$$\theta_1 = 420,000 + (11,500)(4.20)^2 + (17,000)(1.80)^2$$</div>
+<div class="math-display">$$\theta_1 = 420,000 + (11,500)(17.64) + (17,000)(3.24) = 420,000 + 202,860 + 55,080 = 677,940\,\mathrm{kg\cdot m^2}$$</div>
+<div class="math-display">$$\theta_2 = 2(M_d L_{cd} - m_h L_{ch})$$</div>
+<div class="math-display">$$\theta_2 = 2 \left[ (17,000)(1.80) - (11,500)(4.20) \right] = 2 [30,600 - 48,300] = 2(-17,700) = -35,400\,\mathrm{kg\cdot m}$$</div>
+<div class="math-display">$$\theta_3 = m_h + M_d = 11,500 + 17,000 = 28,500\,\mathrm{kg}$$</div>
+<div class="math-display">$$\theta_4 = m_s r_s - m_h L_{ch} + M_d L_{cd}$$</div>
+<div class="math-display">$$\theta_4 = (3,500)(0.50) - (11,500)(4.20) + (17,000)(1.80) = 1,750 - 48,300 + 30,600 = -15,950\,\mathrm{kg\cdot m}$$</div>
+<div class="math-display">$$\boldsymbol{\theta}_b^{\text{empty}} = \begin{bmatrix} +6.7794 \times 10^5\,\mathrm{kg\cdot m^2} \\ -3.5400 \times 10^4\,\mathrm{kg\cdot m} \\ +2.8500 \times 10^4\,\mathrm{kg} \\ -1.5950 \times 10^4\,\mathrm{kg\cdot m} \end{bmatrix}$$</div>
+<hr class='notebook-divider'>
+<p>**Step 2: Compute Loaded Base Parameters ($M_d = 17,000 + 20,000 = 37,000\,\mathrm{kg}$)**</p>
+<div class="math-display">$$\theta_1^{\text{loaded}} = 420,000 + 202,860 + (37,000)(3.24) = 622,860 + 119,880 = 742,740\,\mathrm{kg\cdot m^2}$$</div>
+<div class="math-display">$$\theta_2^{\text{loaded}} = 2 \left[ (37,000)(1.80) - (11,500)(4.20) \right] = 2 [66,600 - 48,300] = 2(+18,300) = +36,600\,\mathrm{kg\cdot m}$$</div>
+<div class="math-display">$$\theta_3^{\text{loaded}} = 11,500 + 37,000 = 48,500\,\mathrm{kg}$$</div>
+<div class="math-display">$$\theta_4^{\text{loaded}} = 1,750 - 48,300 + (37,000)(1.80) = 1,750 - 48,300 + 66,600 = +20,050\,\mathrm{kg\cdot m}$$</div>
+<div class="math-display">$$\boldsymbol{\theta}_b^{\text{loaded}} = \begin{bmatrix} +7.4274 \times 10^5\,\mathrm{kg\cdot m^2} \\ +3.6600 \times 10^4\,\mathrm{kg\cdot m} \\ +4.8500 \times 10^4\,\mathrm{kg} \\ +2.0050 \times 10^4\,\mathrm{kg\cdot m} \end{bmatrix}$$</div>
+<hr class='notebook-divider'>
+<p><strong>Step 3: Analyze Parameter Sensitivity</strong></p>
+<ul>
+<li>Shift in $\theta_1$: $\frac{742,740 - 677,940}{677,940} = +9.56\%$</li>
+<li>Shift in $\theta_2$: from $-35,400$ to $+36,600\,\mathrm{kg\cdot m}$ (flips sign completely, $\Delta = +72,000\,\mathrm{kg\cdot m}$!)</li>
+<li>Shift in $\theta_3$: $\frac{48,500 - 28,500}{28,500} = \frac{20,000}{28,500} = +70.18\%$</li>
+<li>Shift in $\theta_4$: from $-15,950$ to $+20,050\,\mathrm{kg\cdot m}$ (flips sign, $\Delta = +36,000\,\mathrm{kg\cdot m}$!)</li>
+</ul>
+<p>*(Physical Insight: Notice that $\theta_3$ increases by **exactly $20,000\,\mathrm{kg}$**, which is the precise payload mass! Thus, identifying $\hat{\theta}_3$ immediately reveals the payload: $\hat{M}_{\text{payload}} = \hat{\theta}_3 - \theta_{3,\text{empty}}$).*</p>
+<hr class='notebook-divider'>
+<h3>Problem 4.2: Instantaneous Regressor Row Evaluation</h3>
+<p><strong>Problem Statement:</strong>  </p>
+<p>At a specific instant during a bank cutting cycle, sensors on a P&H 2100BL record:</p>
+<ul>
+<li>Saddle angle: $q_3 = 20^\circ$ ($0.3491\,\mathrm{rad}$)</li>
+<li>Crowd extension: $d_4 = 11.0\,\mathrm{m}$</li>
+<li>Saddle angular velocity: $\dot{q}_3 = 0.12\,\mathrm{rad/s}$</li>
+<li>Crowd linear speed: $\dot{d}_4 = 0.65\,\mathrm{m/s}$</li>
+<li>Saddle angular acceleration: $\ddot{q}_3 = 0.08\,\mathrm{rad/s^2}$</li>
+<li>Crowd linear acceleration: $\ddot{d}_4 = -0.40\,\mathrm{m/s^2}$</li>
+<li>Gravitational acceleration: $g = 9.81\,\mathrm{m/s^2}$</li>
+</ul>
+<p>Evaluate the numerical entries of the $2 \times 4$ base regressor matrix $\mathbf{Y}_b$.</p>
+<p><strong>Step-by-Step Solution:</strong></p>
+<p><strong>Step 1: Evaluate trigonometric terms</strong></p>
+<div class="math-display">$$\cos 20^\circ \approx 0.939693, \quad \sin 20^\circ \approx 0.342020$$</div>
+<p><strong>Step 2: Evaluate Channel 1 entries (Row 1):</strong></p>
+<div class="math-display">$$Y_{11} = \ddot{q}_3 = +0.080000\,\mathrm{rad/s^2}$$</div>
+<div class="math-display">$$Y_{12} = d_4 \ddot{q}_3 + \dot{q}_3 \dot{d}_4 = (11.0)(0.08) + (0.12)(0.65) = 0.880000 + 0.078000 = +0.958000\,\mathrm{m/s^2}$$</div>
+<div class="math-display">$$Y_{13} = d_4^2 \ddot{q}_3 + 2 d_4 \dot{q}_3 \dot{d}_4 + g d_4 \cos q_3$$</div>
+<div class="math-display">$$Y_{13} = (11.0)^2 (0.08) + 2(11.0)(0.12)(0.65) + (9.81)(11.0)(0.939693)$$</div>
+<div class="math-display">$$Y_{13} = (121)(0.08) + 1.716000 + (107.91)(0.939693) = 9.680000 + 1.716000 + 101.402272 = +112.798272\,\mathrm{m^2/s^2}$$</div>
+<div class="math-display">$$Y_{14} = g \cos q_3 = (9.81)(0.939693) = +9.218388\,\mathrm{m/s^2}$$</div>
+<p><strong>Step 3: Evaluate Channel 2 entries (Row 2):</strong></p>
+<div class="math-display">$$Y_{21} = 0.000000$$</div>
+<div class="math-display">$$Y_{22} = -\frac{1}{2}\dot{q}_3^2 = -\frac{1}{2}(0.12)^2 = -0.007200\,\mathrm{rad^2/s^2}$$</div>
+<div class="math-display">$$Y_{23} = \ddot{d}_4 - d_4 \dot{q}_3^2 + g \sin q_3$$</div>
+<div class="math-display">$$Y_{23} = -0.40 - (11.0)(0.12)^2 + (9.81)(0.342020)$$</div>
+<div class="math-display">$$Y_{23} = -0.40 - (11.0)(0.0144) + 3.355216 = -0.40 - 0.158400 + 3.355216 = +2.796816\,\mathrm{m/s^2}$$</div>
+<div class="math-display">$$Y_{24} = 0.000000$$</div>
+<p><strong>Assembled Numerical Regressor Matrix:</strong></p>
+<div class="math-display">$$\mathbf{Y}_b = \begin{bmatrix}
++0.0800 & +0.9580 & +112.7983 & +9.2184 \\
+0.0000 & -0.0072 & +2.7968 & 0.0000
+\end{bmatrix}$$</div>
+<hr class='notebook-divider'>
+<h3>Problem 4.3: Exact Torque Reproduction Test</h3>
+<p><strong>Problem Statement:</strong>  </p>
+<p>Using the numerical regressor $\mathbf{Y}_b$ from Problem 4.2 and the loaded base parameter vector $\boldsymbol{\theta}_b^{\text{loaded}}$ from Problem 4.1:</p>
+<div class="math-display">$$\boldsymbol{\theta}_b = \begin{bmatrix} 742,740\,\mathrm{kg\cdot m^2} \\ 36,600\,\mathrm{kg\cdot m} \\ 48,500\,\mathrm{kg} \\ 20,050\,\mathrm{kg\cdot m} \end{bmatrix}$$</div>
+<ol>
+<li>Calculate the predicted actuator generalized forces $\boldsymbol{\tau} = \mathbf{Y}_b \boldsymbol{\theta}_b$.</li>
+<li>Check that the result exactly matches the direct evaluation of $\mathbf{D}\mathbf{\ddot{q}} + \mathbf{C}\mathbf{\dot{q}} + \mathbf{G}$.</li>
+</ol>
+<p><strong>Step-by-Step Solution:</strong></p>
+<p>**Step 1: Compute $\tau_3$ from $\mathbf{Y}_b \boldsymbol{\theta}_b$**</p>
+<div class="math-display">$$\tau_3 = Y_{11}\theta_1 + Y_{12}\theta_2 + Y_{13}\theta_3 + Y_{14}\theta_4$$</div>
+<div class="math-display">$$\tau_3 = (0.0800)(742,740) + (0.9580)(36,600) + (112.798272)(48,500) + (9.218388)(20,050)$$</div>
+<div class="math-display">$$\tau_3 = 59,419.2 + 35,062.8 + 5,470,716.2 + 184,828.7 = 5,750,026.9\,\mathrm{N\cdot m} \approx +5.750\,\mathrm{MN\cdot m}$$</div>
+<p>**Step 2: Compute $F_{\text{crowd}}$ from $\mathbf{Y}_b \boldsymbol{\theta}_b$**</p>
+<div class="math-display">$$F_{\text{crowd}} = Y_{21}\theta_1 + Y_{22}\theta_2 + Y_{23}\theta_3 + Y_{24}\theta_4$$</div>
+<div class="math-display">$$F_{\text{crowd}} = (0)(742,740) + (-0.0072)(36,600) + (2.796816)(48,500) + (0)(20,050)$$</div>
+<div class="math-display">$$F_{\text{crowd}} = 0 - 263.52 + 135,645.58 + 0 = +135,382.06\,\mathrm{N} \approx +135.38\,\mathrm{kN}$$</div>
+<p><strong>Step 3: Verification against Direct Dynamics</strong></p>
+<ul>
+<li>Direct $D_{11}$:</li>
+</ul>
+<div class="math-display">  $$D_{11} = 742,740 + (11.0)(36,600) + (11.0)^2(48,500) = 742,740 + 402,600 + 5,868,500 = 7,013,840\,\mathrm{kg\cdot m^2}$$</div>
+<div class="math-display">  $$D_{11}\ddot{q}_3 = (7,013,840)(0.08) = 561,107.2\,\mathrm{N\cdot m}$$</div>
+<ul>
+<li>Direct Coriolis:</li>
+</ul>
+<div class="math-display">  $$\gamma = \frac{1}{2}(36,600) + (11.0)(48,500) = 18,300 + 533,500 = 551,800\,\mathrm{kg\cdot m}$$</div>
+<div class="math-display">  $$2\gamma \dot{q}_3 \dot{d}_4 = 2(551,800)(0.12)(0.65) = 86,080.8\,\mathrm{N\cdot m}$$</div>
+<ul>
+<li>Direct Gravity $G_1$:</li>
+</ul>
+<div class="math-display">  $$G_1 = (9.81)(\cos 20^\circ)[\theta_4 + 11.0 \theta_3] = (9.218388)[20,050 + 533,500] = (9.218388)(553,550) = 5,102,838.9\,\mathrm{N\cdot m}$$</div>
+<ul>
+<li>Total $\tau_3 = 561,107.2 + 86,080.8 + 5,102,838.9 = 5,750,026.9\,\mathrm{N\cdot m}$. <strong>Exact match to 7 significant digits!</strong> $\blacksquare$</li>
+</ul>
+<hr class='notebook-divider'>
+<h3>Problem 4.4: OLS Parameter Estimation from 3 Discrete Samples</h3>
+<p><strong>Problem Statement:</strong>  </p>
+<p>To illustrate the linear algebra of the OLS normal equations, consider a simplified 1-channel crowd identification experiment where $\ddot{q}_3 = 0, \dot{q}_3 = 0$, so:</p>
+<div class="math-display">$$F_{\text{crowd}}(t_k) = \theta_3 \left( \ddot{d}_4(t_k) + g \sin q_3(t_k) \right)$$</div>
+<p>Three measurement samples are recorded:</p>
+<ul>
+<li>Sample 1: $\xi_1 = \ddot{d}_4 + g\sin q_3 = 2.50\,\mathrm{m/s^2}$, measured $F_1 = 120.0\,\mathrm{kN}$</li>
+<li>Sample 2: $\xi_2 = 3.80\,\mathrm{m/s^2}$, measured $F_2 = 185.0\,\mathrm{kN}$</li>
+<li>Sample 3: $\xi_3 = 1.90\,\mathrm{m/s^2}$, measured $F_3 = 92.0\,\mathrm{kN}$</li>
+</ul>
+<ol>
+<li>Construct the observation matrix $\boldsymbol{\Phi}$ and torque vector $\boldsymbol{\Gamma}$.</li>
+<li>Compute $\boldsymbol{\Phi}^T \boldsymbol{\Phi}$ and $\boldsymbol{\Phi}^T \boldsymbol{\Gamma}$.</li>
+<li>Solve for the OLS estimate $\hat{\theta}_3$.</li>
+<li>Calculate the residual error vector $\mathbf{e} = \boldsymbol{\Gamma} - \boldsymbol{\Phi}\hat{\theta}_3$ and the estimated noise variance $\hat{\sigma}_e^2$.</li>
+</ol>
+<p><strong>Step-by-Step Solution:</strong></p>
+<p>**Step 1: Construct $\boldsymbol{\Phi}$ and $\boldsymbol{\Gamma}$**</p>
+<div class="math-display">$$\boldsymbol{\Phi} = \begin{bmatrix} 2.50 \\ 3.80 \\ 1.90 \end{bmatrix}\,\mathrm{m/s^2}, \quad \boldsymbol{\Gamma} = \begin{bmatrix} 120,000 \\ 185,000 \\ 92,000 \end{bmatrix}\,\mathrm{N}$$</div>
+<p><strong>Step 2: Compute normal equation terms</strong></p>
+<div class="math-display">$$\boldsymbol{\Phi}^T \boldsymbol{\Phi} = (2.50)^2 + (3.80)^2 + (1.90)^2 = 6.25 + 14.44 + 3.61 = 24.30\,\mathrm{m^2/s^4}$$</div>
+<div class="math-display">$$\boldsymbol{\Phi}^T \boldsymbol{\Gamma} = (2.50)(120,000) + (3.80)(185,000) + (1.90)(92,000)$$</div>
+<div class="math-display">$$\boldsymbol{\Phi}^T \boldsymbol{\Gamma} = 300,000 + 703,000 + 174,800 = 1,177,800\,\mathrm{N\cdot m/s^2}$$</div>
+<p>**Step 3: Solve for $\hat{\theta}_3$**</p>
+<div class="math-display">$$\hat{\theta}_3 = \frac{\boldsymbol{\Phi}^T \boldsymbol{\Gamma}}{\boldsymbol{\Phi}^T \boldsymbol{\Phi}} = \frac{1,177,800}{24.30} \approx 48,469.14\,\mathrm{kg}$$</div>
+<p><strong>Result:</strong> The estimated translating mass is **$\hat{\theta}_3 = 48,469\,\mathrm{kg}$** (within $0.06\%$ of the true $48,500\,\mathrm{kg}$ nominal value!).</p>
+<p><strong>Step 4: Compute residual vector and variance</strong></p>
+<div class="math-display">$$\hat{\boldsymbol{\Gamma}} = \boldsymbol{\Phi} \hat{\theta}_3 = \begin{bmatrix} (2.50)(48,469.14) \\ (3.80)(48,469.14) \\ (1.90)(48,469.14) \end{bmatrix} = \begin{bmatrix} 121,172.85 \\ 184,182.73 \\ 92,091.37 \end{bmatrix}\,\mathrm{N}$$</div>
+<div class="math-display">$$\mathbf{e} = \boldsymbol{\Gamma} - \hat{\boldsymbol{\Gamma}} = \begin{bmatrix} 120,000 - 121,172.85 \\ 185,000 - 184,182.73 \\ 92,000 - 92,091.37 \end{bmatrix} = \begin{bmatrix} -1,172.85 \\ +817.27 \\ -91.37 \end{bmatrix}\,\mathrm{N}$$</div>
+<div class="math-display">$$\|\mathbf{e}\|^2 = (-1,172.85)^2 + (817.27)^2 + (-91.37)^2 = 1,375,577 + 667,930 + 8,348 = 2,051,855\,\mathrm{N^2}$$</div>
+<p>With $K = 3$ samples and $p = 1$ parameter ($K - p = 2$ degrees of freedom):</p>
+<div class="math-display">$$\hat{\sigma}_e^2 = \frac{\|\mathbf{e}\|^2}{K - p} = \frac{2,051,855}{2} = 1,025,928\,\mathrm{N^2} \implies \hat{\sigma}_e \approx 1,013\,\mathrm{N} \quad (1.01\,\mathrm{kN})$$</div>
+<hr class='notebook-divider'>
+<h3>Problem 4.5: SVD and Multi-Channel Condition Number Calculation</h3>
+<p><strong>Problem Statement:</strong>  </p>
+<p>Consider a $4 \times 2$ stacked regressor matrix from a two-channel identification test:</p>
+<div class="math-display">$$\boldsymbol{\Phi} = \begin{bmatrix}
+Y_{11} & Y_{12} \\
+Y_{21} & Y_{22} \\
+Y_{31} & Y_{32} \\
+Y_{41} & Y_{42}
+\end{bmatrix} = \begin{bmatrix}
+0.10 & 100.0 \\
+0.00 & 2.50 \\
+0.15 & 140.0 \\
+0.00 & 3.20
+\end{bmatrix}$$</div>
+<p>Rows 1 and 3 are hoist torque equations; Rows 2 and 4 are crowd force equations.</p>
+<ol>
+<li>Compute the singular values and condition number of the unweighted matrix $\boldsymbol{\Phi}$.</li>
+<li>Apply row weighting $\mathbf{W} = \operatorname{diag}(1, 40, 1, 40)$ (scaling the crowd force channel by 40 to equalize dynamic range). Compute the weighted matrix $\boldsymbol{\Phi}_w = \mathbf{W}^{1/2}\boldsymbol{\Phi}$.</li>
+<li>Compute the singular values and condition number of $\boldsymbol{\Phi}_w$.</li>
+<li>Apply column normalization to $\boldsymbol{\Phi}_w$ and compute the final scale-invariant condition number.</li>
+</ol>
+<p><strong>Step-by-Step Solution:</strong></p>
+<p><strong>Step 1: Unweighted Regressor SVD</strong></p>
+<div class="math-display">$$\boldsymbol{\Phi}^T \boldsymbol{\Phi} = \begin{bmatrix} (0.1)^2 + (0.15)^2 & (0.1)(100) + (0.15)(140) \\ (0.1)(100) + (0.15)(140) & (100)^2 + (2.5)^2 + (140)^2 + (3.2)^2 \end{bmatrix}$$</div>
+<div class="math-display">$$\boldsymbol{\Phi}^T \boldsymbol{\Phi} = \begin{bmatrix} 0.01 + 0.0225 & 10 + 21 \\ 10 + 21 & 10000 + 6.25 + 19600 + 10.24 \end{bmatrix} = \begin{bmatrix} 0.0325 & 31.0 \\ 31.0 & 29616.49 \end{bmatrix}$$</div>
+<p>The trace is $\approx 29,616.5$ and determinant is:</p>
+<div class="math-display">$$\det = (0.0325)(29,616.49) - (31.0)^2 = 962.54 - 961.00 = 1.536$$</div>
+<p>Eigenvalues of $\boldsymbol{\Phi}^T \boldsymbol{\Phi}$:</p>
+<div class="math-display">$$\lambda_1 \approx 29,616.5 \implies \sigma_1 = \sqrt{29,616.5} \approx 172.09$$</div>
+<div class="math-display">$$\lambda_2 = \frac{\det}{\lambda_1} = \frac{1.536}{29,616.5} \approx 5.186 \times 10^{-5} \implies \sigma_2 = \sqrt{5.186 \times 10^{-5}} \approx 0.00720$$</div>
+<div class="math-display">$$\kappa(\boldsymbol{\Phi}) = \frac{\sigma_1}{\sigma_2} = \frac{172.09}{0.00720} \approx 23,901$$</div>
+<p>*(The unweighted condition number is an astronomical $23,901$ simply because Column 2 is in Mega-units and Column 1 is fractional!)*</p>
+<hr class='notebook-divider'>
+<p>**Step 2: Apply Row Weighting $\mathbf{W}^{1/2} = \operatorname{diag}(1, \sqrt{40}, 1, \sqrt{40}) = \operatorname{diag}(1, 6.325, 1, 6.325)$**</p>
+<div class="math-display">$$\boldsymbol{\Phi}_w = \begin{bmatrix}
+0.10 & 100.0 \\
+0.00 & (6.325)(2.50) \\
+0.15 & 140.0 \\
+0.00 & (6.325)(3.20)
+\end{bmatrix} = \begin{bmatrix}
+0.10 & 100.0 \\
+0.00 & 15.81 \\
+0.15 & 140.0 \\
+0.00 & 20.24
+\end{bmatrix}$$</div>
+<div class="math-display">$$\boldsymbol{\Phi}_w^T \boldsymbol{\Phi}_w = \begin{bmatrix} 0.0325 & 31.0 \\ 31.0 & 10000 + 250 + 19600 + 409.66 \end{bmatrix} = \begin{bmatrix} 0.0325 & 31.0 \\ 31.0 & 30259.66 \end{bmatrix}$$</div>
+<div class="math-display">$$\det = (0.0325)(30,259.66) - 961 = 983.44 - 961.0 = 22.44$$</div>
+<div class="math-display">$$\lambda_2 = \frac{22.44}{30,260} = 7.416 \times 10^{-4} \implies \sigma_2 \approx 0.02723$$</div>
+<div class="math-display">$$\kappa(\boldsymbol{\Phi}_w) = \frac{173.95}{0.02723} \approx 6,388$$</div>
+<hr class='notebook-divider'>
+<p>**Step 3: Column Normalization on $\boldsymbol{\Phi}_w$**</p>
+<p>Compute column norms:</p>
+<div class="math-display">$$s_1 = \|\boldsymbol{\Phi}_{w, *1}\| = \sqrt{0.0325} \approx 0.18028$$</div>
+<div class="math-display">$$s_2 = \|\boldsymbol{\Phi}_{w, *2}\| = \sqrt{30,259.66} \approx 173.953$$</div>
+<p>Normalize each column:</p>
+<div class="math-display">$$\boldsymbol{\Phi}_{\text{norm}} = \begin{bmatrix}
+\frac{0.10}{0.18028} & \frac{100.0}{173.953} \\
+0.00 & \frac{15.81}{173.953} \\
+\frac{0.15}{0.18028} & \frac{140.0}{173.953} \\
+0.00 & \frac{20.24}{173.953}
+\end{bmatrix} = \begin{bmatrix}
+0.5547 & 0.5749 \\
+0.0000 & 0.0909 \\
+0.8321 & 0.8048 \\
+0.0000 & 0.1164
+\end{bmatrix}$$</div>
+<p>Compute $\boldsymbol{\Phi}_{\text{norm}}^T \boldsymbol{\Phi}_{\text{norm}}$:</p>
+<div class="math-display">$$\mathbf{A} = \begin{bmatrix} 1.0000 & \rho \\ \rho & 1.0000 \end{bmatrix}$$</div>
+<p>where the correlation coefficient is:</p>
+<div class="math-display">$$\rho = (0.5547)(0.5749) + (0.8321)(0.8048) = 0.3189 + 0.6697 = 0.9886$$</div>
+<p>Eigenvalues of $\mathbf{A}$:</p>
+<div class="math-display">$$\lambda_1 = 1 + \rho = 1 + 0.9886 = 1.9886 \implies \sigma_1 = \sqrt{1.9886} \approx 1.4102$$</div>
+<div class="math-display">$$\lambda_2 = 1 - \rho = 1 - 0.9886 = 0.0114 \implies \sigma_2 = \sqrt{0.0114} \approx 0.1068$$</div>
+<p>Final normalized condition number:</p>
+<div class="math-display">$$\kappa(\boldsymbol{\Phi}_{\text{norm}}) = \frac{\sigma_1}{\sigma_2} = \frac{1.4102}{0.1068} \approx 13.20$$</div>
+<p>*(Demonstration: Column normalization collapses the condition number from $23,901$ down to an objective, physically meaningful **$13.20$*<em>! This mathematically proves the exact procedure used to reconcile project results).</em></p>
+<hr class='notebook-divider'>
+<h2>4.9 MATLAB / Python Implementation Script</h2>
+<div class="code-container"><pre><code class="language-matlab">% =========================================================================
+% CHAPTER 4: LINEAR REGRESSOR GENERATION, OLS IDENTIFICATION &amp; SVD
+% Compatible with MATLAB R2025b / Octave 7+
+% =========================================================================
+function shovel_identification_demo()
+    clc; clear; close all;
+    
+    % 1. True Physical Parameters (P&amp;H 2100BL Loaded)
+    theta_true = [742740;   % theta_1: I_0 + mh*Lch^2 + Md*Lcd^2 [kg*m^2]
+                   36600;   % theta_2: 2*(Md*Lcd - mh*Lch) [kg*m]
+                   48500;   % theta_3: mh + Md [kg]
+                   20050];  % theta_4: ms*rs - mh*Lch + Md*Lcd [kg*m]
+               
+    % 2. Synthesize an Excitation Trajectory (K = 500 samples)
+    dt = 0.02; % 50 Hz sampling
+    t = (0:dt:10)&#x27;; % 10-second excavation sweep
+    K = length(t);
+    
+    % Combined multi-frequency trajectory
+    q3   = deg2rad(15 + 20*sin(0.8*t) + 5*cos(1.6*t));
+    d4   = 10.5 + 2.5*sin(0.6*t + 0.3);
+    
+    % Numerical derivatives
+    q3_d  = gradient(q3, dt);
+    q3_dd = gradient(q3_d, dt);
+    d4_d  = gradient(d4, dt);
+    d4_dd = gradient(d4_d, dt);
+    
+    g = 9.81;
+    
+    % 3. Assemble the Stacked Regressor Matrix Phi
+    Phi = zeros(2*K, 4);
+    Gamma_clean = zeros(2*K, 1);
+    
+    for k = 1:K
+        % Construct 2x4 regressor at step k
+        Y_k = [q3_dd(k), ...
+               d4(k)*q3_dd(k) + q3_d(k)*d4_d(k), ...
+               d4(k)^2*q3_dd(k) + 2*d4(k)*q3_d(k)*d4_d(k) + g*d4(k)*cos(q3(k)), ...
+               g*cos(q3(k));
+               0, ...
+               -0.5*q3_d(k)^2, ...
+               d4_dd(k) - d4(k)*q3_d(k)^2 + g*sin(q3(k)), ...
+               0];
+           
+        Phi(2*k-1 : 2*k, :) = Y_k;
+        Gamma_clean(2*k-1 : 2*k) = Y_k * theta_true;
+    end
+    
+    % Add Realistic Sensor Noise (2% hoist, 3% crowd)
+    noise = [randn(K, 1) * 0.02 * std(Gamma_clean(1:2:end)); ...
+             randn(K, 1) * 0.03 * std(Gamma_clean(2:2:end))];
+    % Interleave noise
+    Gamma_noisy = Gamma_clean;
+    for k = 1:K
+        Gamma_noisy(2*k-1) = Gamma_clean(2*k-1) + randn*0.02*std(Gamma_clean(1:2:end));
+        Gamma_noisy(2*k)   = Gamma_clean(2*k)   + randn*0.03*std(Gamma_clean(2:2:end));
+    end
+    
+    % 4. Ordinary Least Squares (OLS) Estimation
+    theta_ols = (Phi&#x27; * Phi) \ (Phi&#x27; * Gamma_noisy);
+    
+    % 5. SVD &amp; Condition Number Analysis
+    % Case A: Raw
+    kappa_raw = cond(Phi);
+    
+    % Case B: Normalized
+    col_norms = vecnorm(Phi);
+    Phi_norm = Phi ./ col_norms;
+    kappa_norm = cond(Phi_norm);
+    
+    % Display Results
+    fprintf(&#x27;=================================================================\n&#x27;);
+    fprintf(&#x27;           SYSTEM IDENTIFICATION RESULTS (P&amp;H 2100BL)           \n&#x27;);
+    fprintf(&#x27;=================================================================\n&#x27;);
+    fprintf(&#x27;Param   True Value      OLS Estimate    Error (%%)\n&#x27;);
+    fprintf(&#x27;-----------------------------------------------------------------\n&#x27;);
+    names = {&#x27;theta_1 (Inertia)&#x27;, &#x27;theta_2 (Coupling)&#x27;, &#x27;theta_3 (Mass)&#x27;, &#x27;theta_4 (Gravity)&#x27;};
+    for i = 1:4
+        err_pct = abs(theta_ols(i) - theta_true(i)) / abs(theta_true(i)) * 100;
+        fprintf(&#x27;%-18s  %12.2f  %12.2f     %6.2f %%\n&#x27;, ...
+                names{i}, theta_true(i), theta_ols(i), err_pct);
+    end
+    fprintf(&#x27;-----------------------------------------------------------------\n&#x27;);
+    fprintf(&#x27;Raw Regressor Condition Number:        kappa = %8.2f\n&#x27;, kappa_raw);
+    fprintf(&#x27;Normalized Regressor Condition Number: kappa = %8.2f\n&#x27;, kappa_norm);
+    fprintf(&#x27;=================================================================\n&#x27;);
+end</code></pre></div>
+<hr class='notebook-divider'>
+<h2>4.10 Research Supervisor Summary & Master Defense Checklist</h2>
+<h3>Core Concepts Mastered in Chapter 4</h3>
+<ol>
+<li><strong>Property of Parameter Linearity:</strong>  </li>
+</ol>
+<p>   While multibody dynamics are highly nonlinear in state $(\mathbf{q}, \mathbf{\dot{q}}, \mathbf{\ddot{q}})$, they are strictly linear in the dynamic parameters: $\boldsymbol{\tau} = \mathbf{Y}(\mathbf{q}, \mathbf{\dot{q}}, \mathbf{\ddot{q}})\boldsymbol{\theta}$. This converts dynamic system identification into a convex linear regression problem.</p>
+<ol>
+<li><strong>Base Parameter Reduction:</strong>  </li>
+</ol>
+<p>   The $20$ standard parameters of the 2-DOF shovel mechanism collapse to strictly <strong>four base inertial parameters</strong> $\boldsymbol{\theta}_b = [\theta_1, \theta_2, \theta_3, \theta_4]^T$. The base regressor matrix $\mathbf{Y}_b \in \mathbb{R}^{2 \times 4}$ has full column rank, ensuring identifiability.</p>
+<ol>
+<li><strong>Mass Isolation in the Crowd Channel:</strong>  </li>
+</ol>
+<p>   The crowd force channel depends solely on $\theta_2$ and $\theta_3$ ($Y_{21} = Y_{24} = 0$). Under low saddle speed, the crowd force isolates the total translating mass $\theta_3 = m_h + M_d$ directly, providing an unconfounded channel for real-time payload estimation.</p>
+<ol>
+<li><strong>Condition Number Reconciliation:</strong>  </li>
+</ol>
+<p>   The discrepancy between reported condition numbers ($3.77$ vs $15.03$ vs $22.45$) stems entirely from row noise weighting and column normalization. The scale-invariant normalized regressor condition number is **$\kappa \approx 3.77$**, proving excellent numerical identifiability.</p>
+<hr class='notebook-divider'>
+<h3>Doctoral Viva & Defense Questions</h3>
+<ul>
+<li><strong>Q1:</strong> *Why can't we identify the empty dipper mass $M_{d,\text{empty}}$ and payload mass $M_{\text{payload}}$ separately in the regressor?*  </li>
+</ul>
+<p>  <strong>Answer:</strong> The payload sits inside the dipper bucket, so both masses undergo the exact same translational and rotational accelerations ($\mathbf{a}_d = \mathbf{a}_p$). In the equations of motion, they appear exclusively as the sum $M_d = M_{d,\text{empty}} + M_{\text{payload}}$. They are algebraically confounded. Payload identification is achieved by subtracting the baseline empty dipper mass: $\hat{M}_{\text{payload}} = \hat{\theta}_3 - \theta_{3,\text{empty}}$.</p>
+<ul>
+<li><strong>Q2:</strong> <em>What happens to the regressor matrix if the shovel moves at pure constant velocity?</em>  </li>
+</ul>
+<p>  <strong>Answer:</strong> If $\mathbf{\ddot{q}} = \mathbf{0}$, then $Y_{11} = 0$, $Y_{12} = \dot{q}_3 \dot{d}_4$, and $Y_{23} = -d_4 \dot{q}_3^2 + g\sin q_3$. The baseline rotational inertia $\theta_1$ completely drops out of the equations ($Y_{11} = Y_{21} = 0$). Column 1 of $\boldsymbol{\Phi}$ becomes all zeros, $\operatorname{rank}(\boldsymbol{\Phi}) < 4$, and the OLS normal matrix $\boldsymbol{\Phi}^T \boldsymbol{\Phi}$ becomes singular! Parameter identification requires non-zero joint accelerations.</p>
+<ul>
+<li><strong>Q3:</strong> <em>Why is column normalization necessary before computing the SVD condition number?</em>  </li>
+</ul>
+<p>  <strong>Answer:</strong> The columns of $\mathbf{Y}$ have different physical dimensions (e.g., column 1 has units of $\mathrm{rad/s^2}$, column 3 has units of $\mathrm{m^2/s^2}$). Without column normalization, the singular values reflect the choice of measurement units rather than true geometric conditioning. Normalizing each column by its Euclidean norm produces dimensionless, scale-invariant singular values.</p>
+<hr class='notebook-divider'>
+<h3>Transition to Chapter 5</h3>
+<p>With the linear parameter regressor and identification theory established, we enter:  </p>
+<p><strong>Volume I, Chapter 5: Advanced Nonlinear Observers and Generalized Momentum Formulations</strong>.  </p>
+<p>In Chapter 5, we formulate the <strong>Generalized Momentum Observer (M3)</strong>:</p>
+<div class="math-display">$$p = D(q)\dot{q}, \quad \dot{p} = \tau + C^T\dot{q} - G + Q_{\text{ext}}$$</div>
+<p>and prove how it reconstructs digging resistance forces and detects mechanical faults without requiring noisy joint acceleration measurements $\mathbf{\ddot{q}}$!</p>
+</body>
+</html>

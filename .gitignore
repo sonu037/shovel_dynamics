@@ -9,7 +9,15 @@ page-*.jpg
 ~$*
 __pycache__/
 desktop.ini
-desktop.ini
 
-*.slxc
-slprj/
+# Transient cache & safety backups
+_safety_backups/
+**/_safety_backups/
+.matlab_pref/
+_temp_audit_head/
+_temp_audit_mod/
+*.log
+M3/slprj/
+M3/*.slxc
+**/slprj/
+**/*.slxc

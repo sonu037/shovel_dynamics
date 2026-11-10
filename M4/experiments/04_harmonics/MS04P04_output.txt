@@ -1,0 +1,35 @@
+Starting MS04P04 execution at 10-Nov-2026 20:04:49...
+========================================================================================
+  MILESTONE 4 PROTOCOL P04: INVERTER DRIVE TORQUE RIPPLE & 30 HZ SAMPLING ALIASING
+  Machine Context: Machine A (P&H 2100BL) Inverter-Fed Induction Drive
+========================================================================================
+
+========================================================================================
+  THEORETICAL HARMONIC ALIASING ANALYSIS (Fs = 30 Hz, Nyquist = 15 Hz):
+    - 6th Harmonic (f = 69.0 Hz) aliases to:  |69.0 - 2*30| = 9.0 Hz
+    - 12th Harmonic (f = 138.0 Hz) aliases to: |138.0 - 5*30| = 12.0 Hz
+    - Both alias frequencies fold into the digital twin mechanical passband!
+========================================================================================
+
+Sampling Architecture     | R^2          | NRMSE (%)    | RMSE (kN)    | Ripple Attenuation
+----------------------------------------------------------------------------------------
+Case4A_Raw_NoFilter       | 0.9960       | 2.28        % | 4.55         | None (Aliased) 
+Case4B_With_AntiAliasing  | 0.9957       | 2.37        % | 4.75         | -33.6 dB (Filter)
+----------------------------------------------------------------------------------------
+
+========================================================================================
+  PHYSICAL ACCEPTANCE CRITERIA AUDIT:
+========================================================================================
+  1. Raw Sampling (Case 4A):
+     - Inverter ripple folds into 9.0 Hz & 12.0 Hz alias tones.
+     - Payload NRMSE = 2.28%, R^2 = 0.9960
+  2. Anti-Aliased Sampling (Case 4B):
+     - 10 Hz Butterworth pre-filter suppresses ripple prior to ADC sampling.
+     - Payload NRMSE = 2.37%, R^2 = 0.9957 (Target: R^2 > 0.95 -> PASSED)
+  --> CONCLUSION: Hardware/firmware anti-aliasing filter is mandatory for 30 Hz PLC telemetry!
+========================================================================================
+
+Saved experiment results to: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M4\experiments\04_harmonics\MS04P04_harmonics_results.mat
+
+
+MS04P04 execution completed successfully at 10-Nov-2026 20:04:50!

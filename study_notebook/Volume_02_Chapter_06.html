@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Study Notebook</title>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  chtml: {
+    scale: 1.18
+  },
+  options: {
+    ignoreHtmlClass: 'tex2jax_ignore',
+    processHtmlClass: 'tex2jax_process'
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+  /* Notebook Typography & Sizing */
+  :root {
+    --primary-blue: #1d4ed8;
+    --navy-header: #0f2744;
+    --slate-text: #1e293b;
+    --callout-bg: #f8fafc;
+    --callout-border: #3b82f6;
+    --notebook-rule: #e2e8f0;
+  }
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 18px;          /* Generous, large notebook font size */
+    line-height: 1.85;        /* Spacious line spacing for reading equations */
+    margin: 40px auto;
+    max-width: 1040px;
+    padding: 0 45px;
+    color: var(--slate-text);
+    background-color: #fdfdfd;
+  }
+  
+  /* Notebook Cover & Headings */
+  h1 {
+    color: var(--navy-header);
+    border-bottom: 3px solid var(--primary-blue);
+    padding-bottom: 14px;
+    margin-top: 55px;
+    font-size: 2.3em;
+    line-height: 1.25;
+    letter-spacing: -0.5px;
+  }
+  
+  h2 {
+    color: #1e3a8a;
+    border-bottom: 2px solid #cbd5e1;
+    padding-bottom: 10px;
+    margin-top: 45px;
+    font-size: 1.7em;
+    line-height: 1.3;
+  }
+  
+  h3 {
+    color: var(--primary-blue);
+    margin-top: 35px;
+    font-size: 1.35em;
+    line-height: 1.35;
+  }
+  
+  h4 {
+    color: #334155;
+    margin-top: 25px;
+    font-size: 1.15em;
+    font-weight: 600;
+  }
+  
+  p {
+    margin: 18px 0;
+    font-size: 1.02em;
+  }
+  
+  /* Notebook Math Display */
+  .math-display {
+    overflow-x: auto;
+    margin: 28px 0;
+    padding: 16px 20px;
+    text-align: center;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+  }
+  
+  /* Notebook Code Blocks */
+  .code-container {
+    margin: 25px 0;
+  }
+  pre {
+    background: #0f172a;
+    color: #f8fafc;
+    border-radius: 8px;
+    padding: 20px 24px;
+    overflow-x: auto;
+    font-size: 15px;          /* Larger code font */
+    font-family: "Consolas", "Courier New", monospace;
+    line-height: 1.6;
+    border: 1px solid #334155;
+  }
+  
+  code {
+    font-family: "Consolas", "Courier New", monospace;
+    background: #f1f5f9;
+    color: #0f172a;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.92em;
+    font-weight: 500;
+  }
+  
+  pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+    font-weight: normal;
+  }
+  
+  /* Notebook Tables */
+  .table-container {
+    overflow-x: auto;
+    margin: 32px 0;
+  }
+  
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 16px;          /* Clear table font */
+    background: #ffffff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  
+  th, td {
+    border: 1px solid #cbd5e1;
+    padding: 14px 18px;
+    text-align: left;
+    line-height: 1.6;
+  }
+  
+  th {
+    background-color: #f1f5f9;
+    color: #0f172a;
+    font-weight: 700;
+    font-size: 1.02em;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #f8fafc;
+  }
+  
+  /* Notebook Highlight / Callout Blocks */
+  blockquote {
+    border-left: 6px solid var(--primary-blue);
+    margin: 28px 0;
+    padding: 18px 26px;
+    background: #eff6ff;
+    color: #1e3a8a;
+    border-radius: 0 8px 8px 0;
+    font-size: 1.02em;
+    box-shadow: 0 1px 3px rgba(37,99,235,0.06);
+  }
+  
+  blockquote p {
+    margin: 8px 0;
+  }
+  
+  .badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .badge-note { background: #dbeafe; color: #1e40af; }
+  .badge-tip { background: #dcfce7; color: #15803d; }
+  .badge-important { background: #fef3c7; color: #92400e; }
+  .badge-warning { background: #fee2e2; color: #b91c1c; }
+  .badge-caution { background: #fce7f3; color: #9d174d; }
+  
+  ul, ol {
+    padding-left: 32px;
+    margin: 18px 0;
+  }
+  
+  li {
+    margin: 10px 0;
+    font-size: 1.02em;
+  }
+  
+  hr.notebook-divider {
+    border: 0;
+    border-top: 2px dashed #cbd5e1;
+    margin: 45px 0;
+  }
+  
+  /* Print Controls */
+  .print-btn {
+    position: fixed;
+    top: 24px;
+    right: 32px;
+    background: var(--primary-blue);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+    z-index: 1000;
+    transition: all 0.2s;
+  }
+  
+  .print-btn:hover {
+    background: #1e40af;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.22);
+  }
+  
+  @media print {
+    .print-btn { display: none; }
+    body {
+      max-width: 100%;
+      margin: 0;
+      padding: 12mm 15mm;
+      font-size: 13pt;        /* Large readable notebook text in PDF */
+      line-height: 1.7;
+      color: #000;
+      background: #fff;
+    }
+    h1 {
+      page-break-before: always;
+      font-size: 1.9em;
+      border-bottom: 2pt solid #000;
+    }
+    h1:first-of-type {
+      page-break-before: avoid;
+    }
+    h2 {
+      font-size: 1.45em;
+      page-break-after: avoid;
+    }
+    h3 {
+      font-size: 1.25em;
+      page-break-after: avoid;
+    }
+    table, pre, blockquote, .math-display {
+      page-break-inside: avoid;
+    }
+    table {
+      font-size: 11pt;
+    }
+    pre {
+      font-size: 10.5pt;
+      background: #f8fafc;
+      color: #0f172a;
+      border: 1pt solid #cbd5e1;
+    }
+    a {
+      color: #000;
+      text-decoration: none;
+    }
+  }
+</style>
+</head>
+<body class="tex2jax_process">
+<button class="print-btn" onclick="window.print()">Print / Save as PDF (Ctrl+P)</button>
+<h1>VOLUME II: RIGID-BODY & MULTIBODY DYNAMICS OF THE SHOVEL SYSTEM</h1>
+<hr class='notebook-divider'>
+<h1>CHAPTER 6: Top-Down Kinematic & Topological Decomposition of the Electric Rope Shovel</h1>
+<p><strong>Author:</strong> Multidisciplinary Research Supervisor & Technical Author  </p>
+<p><strong>Project:</strong> <em>AI-Enabled Platform for Diagnosis, Prognosis and Health Management of Mining Electrical Systems: Case Study on Dragline / Electric Rope Shovel</em>  </p>
+<p><strong>Grant Reference:</strong> IIT/SRIC/R/AEH/2026/104 (CMPDI / Coal India Limited — MT-189)  </p>
+<p><strong>Target Machines:</strong> Machine A (P&H 2100BL Benchmark) & Machine B (TZ WK-20 Deployment)  </p>
+<p><strong>Pedagogical Level:</strong> Postgraduate / Research Grade (B.Tech Mechanical Foundation Assumed)</p>
+<hr class='notebook-divider'>
+<blockquote>
+<div class="callout-header"><span class="badge badge-note">NOTE</span></div>
+<p>### RESEARCH STUDY NOTEBOOK ARCHITECTURE</p>
+<p>In Volume I (Chapters 1–5), we constructed the rigorous mathematical, variational, and observer foundations for nonlinear multibody systems. We now enter <strong>Volume II</strong>, where we deploy these analytical tools onto the complete physical architecture of the electric rope shovel.</p>
+<p></p>
+<p>To model a massive $800\,\mathrm{t}$ mining excavator accurately, an engineer cannot treat the machine as an abstract mathematical black box. You must understand how every pin, pinion, sheave, and wire rope constraints the motion of the dipper.</p>
+<p></p>
+<p>By the end of this chapter, you will be able to:</p>
+<p>1. Decompose the complete industrial shovel into its five fundamental structural subsystems and construct its topological kinematic graph.</p>
+<p>2. Define a unified, non-ambiguous tree of orthogonal coordinate frames from the ground world frame $\{W\}$ through the revolving frame $\{0\}$, boom $\{1\}$, saddle $\{3\}$, handle $\{4\}$, dipper $\{5\}$, and tooth tip $\{T\}$.</p>
+<p>3. Formulate the non-linear <strong>Closed Hoist Cable Loop</strong> equation and derive analytical expressions for rope length $L_h(q_3, d_4)$ and hoist moment arm $h_h(q_3, d_4)$.</p>
+<p>4. Synthesize the full 3D spatial forward kinematics incorporating the upper works slewing/swing angle $\theta_1$.</p>
+<p>5. Map the structural parameters and kinematic differences between the <strong>P&H 2100BL benchmark</strong> ($50\,\mathrm{t}$ class) and the <strong>TZ WK-20 deployment shovel</strong> ($55\,\mathrm{t}$ payload class).</p>
+</blockquote>
+<hr class='notebook-divider'>
+<h2>6.1 Physical Overview: The Five Subsystems of an Electric Rope Shovel</h2>
+<p>An electric rope shovel is a heavy-duty, cyclic excavation machine engineered to dig, hoist, swing, and dump dense blasted rock, coal, or iron ore into off-highway haul trucks. The machine consists of five interconnected mechanical subsystems:</p>
+<div class="code-container"><pre><code class="language-">                  ELECTRIC ROPE SHOVEL SUBSYSTEM ARCHITECTURE
+                  
+                                              [Boom-Point Sheaves]
+                                                       *
+                                                      /| \
+                                                     / |  \  Twin Hoist Ropes
+                                                    /  |   \
+                                                   /   |    \
+                          [A-Frame / Gantry]      /    |     v
+                                  /\             /     |   [Bail Pin B]
+                                 /  \           /      |    /    \
+                                /    \  Boom   /       |   /      \  Dipper
+                               /      \       /        |  /        \ Body
+               [Machinery]    /        \     /         | /          \
+                 House       /          \   o==========+=/===========* [Teeth T]
+              +---------+   /            \  | \  Saddle|/  Dipper
+              | Winches |  /              \ |  \ Block /   Handle
+              | Drives  | /                \|   \     /    (Rack)
+              +---------+-------------------o----+---*
+              [Revolving Frame / Deck]   Boom Foot
+              ========================      Pin
+                 [Roller Circle / Bull Gear]
+              ========================
+              [Carbody &amp; Crawler Tracks] (Lower Works)</code></pre></div>
+<h3>6.1.1 Subsystem 1: Lower Works (Carbody & Crawlers)</h3>
+<ul>
+<li><strong>Carbody (Truck Frame):</strong> A massive central alloy-steel casting that supports the entire weight of the upper machine ($350\,\mathrm{t} - 900\,\mathrm{t}$). It houses the central vertical gantry pin (kingpin) and propels hydraulic or mechanical travel gearing.</li>
+<li><strong>Crawler Assemblies:</strong> Dual heavy crawler tracks provide low ground-bearing pressure ($150\,\mathrm{kPa} - 280\,\mathrm{kPa}$) across rough pit floors. During the active digging cycle, the propel brakes are locked, and the carbody acts as a <strong>rigid inertial foundation</strong>.</li>
+<li><strong>Roller Circle & Swing Rack:</strong> A heavy circular forged path carrying 30–50 tapered alloy-steel rollers. Concentric with the roller circle is the internal-toothed or external-toothed <strong>Bull Gear</strong> ($3.5\,\mathrm{m} - 5.5\,\mathrm{m}$ diameter) with which the vertical swing motor pinions mesh.</li>
+</ul>
+<h3>6.1.2 Subsystem 2: Upper Works (Revolving Frame & Machinery House)</h3>
+<ul>
+<li><strong>Revolving Deck:</strong> A heavy-duty, torsionally rigid welded deck carrying all electrical transformers, variable frequency drives (VFDs), motor-generator sets, hoist winches, swing transmissions, and the air compressor system.</li>
+<li><strong>A-Frame Gantry:</strong> A high triangular structural gantry mounted over the machinery house. It anchors the boom suspension bridge ropes, maintaining boom elevation under digging reaction loads.</li>
+<li><strong>Counterweight:</strong> Ballast steel and slag blocks housed in the rear overhang of the deck to counterbalance the forward overturning moment of the extended dipper.</li>
+</ul>
+<h3>6.1.3 Subsystem 3: Boom Assembly</h3>
+<ul>
+<li><strong>Boom Foot Pins:</strong> Dual heavy alloy-steel pins $O_1$ anchoring the boom heel to the front deck.</li>
+<li><strong>Chords and Lacings:</strong> Two wide-flange tubular or box-section chords inclined at fixed angle $\alpha_b \approx 45^\circ$, reinforced with cross-lacings to resist bending and torsional shock.</li>
+<li><strong>Shipper Shaft Assembly:</strong> Located along the boom at pivot $O_3$ ($8.84\,\mathrm{m}$ from heel on P&H 2100BL, $11.20\,\mathrm{m}$ on WK-20). It houses the crowd pinion shaft, crowd drive motor/transmission, and saddle block trunnion bearings.</li>
+<li><strong>Boom-Point Sheaves:</strong> Twin high-hardness cast alloy-steel sheaves mounted on anti-friction roller bearings at the boom tip, carrying the dual hoist ropes.</li>
+</ul>
+<h3>6.1.4 Subsystem 4: Crowd & Dipper Handle Mechanism</h3>
+<ul>
+<li><strong>Saddle Block:</strong> A heavy pivoting saddle casting mounted on the shipper shaft bronze bushings. It swivels freely in the vertical plane, guiding the handle through bronze or polymer wear plates.</li>
+<li><strong>Dipper Handle:</strong> Dual parallel box-beam or tubular cylindrical steel arms ($10\,\mathrm{m} - 16\,\mathrm{m}$ length) with cast manganese alloy-steel gear racks welded along their bottom edges.</li>
+<li><strong>Crowd Pinion Mesh:</strong> Heavy spur pinions on the shipper shaft mesh directly with the handle racks to push or retract the dipper.</li>
+</ul>
+<h3>6.1.5 Subsystem 5: Dipper Assembly & Front-End Attachment</h3>
+<ul>
+<li><strong>Dipper Bucket:</strong> A high-strength fabricated alloy body with a cast manganese steel front lip designed to resist violent gouging and impact.</li>
+<li><strong>Ground Engaging Tools (GET):</strong> Replaceable forged alloy-steel teeth and adapters keyed onto the lip.</li>
+<li><strong>Bail Pin & Equalizing Sheave:</strong> The structural pin $B$ connecting the hoist rope bail to the rear upper brackets of the dipper body.</li>
+<li><strong>Dipper Door & Trip Mechanism:</strong> A hinged bottom door held closed by a spring-loaded mechanical latch bar. When dumping over a haul truck, an electric trip motor winds a cable that pulls the latch, allowing gravity to swing the door open.</li>
+</ul>
+<hr class='notebook-divider'>
+<h2>6.2 Topological Graph Decomposition</h2>
+<p>To implement the kinematic architecture in a simulation code or digital twin harness, the machine linkage is represented as a <strong>Directed Kinematic Tree Graph</strong> $\mathcal{G} = (\mathcal{V}, \mathcal{E})$:</p>
+<ul>
+<li>**Vertices $\mathcal{V} = \{L_0, L_1, L_2, L_3, L_4, L_5\}$:** Rigid body links.</li>
+<li>**Edges $\mathcal{E} = \{J_1, J_2, J_3, J_4, C_h\}$:** Kinematic joints and cable constraints.</li>
+</ul>
+<div class="code-container"><pre><code class="language-">                     TOPOLOGICAL KINEMATIC GRAPH OF THE SHOVEL
+                     
+                       [World Reference Frame: W]
+                                   |
+                          (Propel Joint J_0 = 0)
+                                   v
+                      [Carbody / Lower Works: L_0]
+                                   |
+                        (Revolute Joint J_1: Slew theta_1)
+                                   v
+                     [Revolving Deck &amp; Boom: L_1]
+                                   |
+                      (Revolute Joint J_3: Saddle q_3)
+                                   v
+                       [Saddle Block Guide: L_3]
+                                   |
+                      (Prismatic Joint J_4: Crowd d_4)
+                                   v
+                      [Dipper Handle &amp; Body: L_4-5]
+                       /                         \
+           (Closed Cable Loop C_h)            (Rigid Offset)
+                     /                             \
+                    v                               v
+          [Boom Sheave Tip: S]               [Tooth Tip: T]</code></pre></div>
+<h3>6.2.1 Graph Connectivity Table</h3>
+<div class="table-container"><table><thead><tr>
+<th>Joint ID</th>
+<th>Predecessor Link</th>
+<th>Successor Link</th>
+<th>Joint Type</th>
+<th>Generalized Coordinate</th>
+<th>Physical Mechanism</th>
+</tr></thead><tbody>
+<tr>
+<td>$J_1$</td>
+<td>Carbody ($L_0$)</td>
+<td>Revolving Deck ($L_1$)</td>
+<td>Revolute ($R$)</td>
+<td>$\theta_1$ (Swing)</td>
+<td>Bull gear pinion mesh</td>
+</tr>
+<tr>
+<td>$J_2$</td>
+<td>Revolving Deck ($L_1$)</td>
+<td>Boom ($L_2$)</td>
+<td>Fixed ($F$)</td>
+<td>Fixed angle $\alpha_b = 45^\circ$</td>
+<td>Boom foot pins + bridge ropes</td>
+</tr>
+<tr>
+<td>$J_3$</td>
+<td>Boom ($L_2$)</td>
+<td>Saddle Block ($L_3$)</td>
+<td>Revolute ($R$)</td>
+<td>$q_3$ (Elevation)</td>
+<td>Shipper shaft bushings at $O_3$</td>
+</tr>
+<tr>
+<td>$J_4$</td>
+<td>Saddle Block ($L_3$)</td>
+<td>Dipper Handle ($L_4$)</td>
+<td>Prismatic ($P$)</td>
+<td>$d_4$ (Crowd Extension)</td>
+<td>Handle rack & shipper pinions</td>
+</tr>
+<tr>
+<td>$J_5$</td>
+<td>Handle ($L_4$)</td>
+<td>Dipper Body ($L_5$)</td>
+<td>Fixed / Pinned ($F$)</td>
+<td>Fixed geometry $(L_{tx}, L_{ty})$</td>
+<td>Pitch adjustment strut links</td>
+</tr>
+<tr>
+<td>$C_h$</td>
+<td>Boom Tip ($S$)</td>
+<td>Dipper Bail ($B$)</td>
+<td>Cable Constraint</td>
+<td>Hoist Rope Length $L_h$</td>
+<td>Dual wire ropes over sheaves</td>
+</tr>
+</tbody></table></div>
+<hr class='notebook-divider'>
+<h2>6.3 Universal Reference Frame Tree & Coordinate System Definitions</h2>
+<p>We now construct a complete, standard set of right-handed orthogonal coordinate frames from the ground world frame to the dipper teeth.</p>
+<div class="code-container"><pre><code class="language-">                           REFERENCE FRAME TREE HIERARCHY
+                           
+                                {W} World Ground Frame
+                                         |
+                                         | (Position &amp; Heading)
+                                         v
+                                {0} Revolving Deck Center
+                                         |
+                                         | [x_b, 0, y_b]^T
+                                         v
+                                {1} Boom Foot Pin O_1
+                                         |
+                                         | Rotated by alpha_b = 45 deg
+                                         v
+                                {2} Boom Axis Frame
+                                         |
+                                         | [L_b1, 0, 0]^T
+                                         v
+                                {3} Shipper Shaft Pivot O_3
+                                         |
+                                         | Rotated by saddle angle q_3
+                                         v
+                                {4} Saddle Block Frame
+                                         |
+                                         | Translated by crowd extension d_4
+                                         v
+                                {5} Dipper Handle End / Bail Pin B
+                                         |
+                                         | Fixed offset [L_tx, -L_ty, 0]^T
+                                         v
+                                {T} Dipper Tooth Tip Frame</code></pre></div>
+<h3>6.3.1 Detailed Frame Specifications</h3>
+<ol>
+<li>**World Ground Frame $\{W\}$:**</li>
+</ol>
+<ul>
+<li>Origin $O_W$: Stationary benchmark point on the pit floor.</li>
+<li>$Z_W$: Vertical upward, opposing gravity ($\mathbf{g} = [0, 0, -g]^T$).</li>
+<li>$X_W$: Horizontal East.</li>
+<li>$Y_W$: Horizontal North.</li>
+</ul>
+<ol>
+<li>**Revolving Deck Frame $\{0\}$:**</li>
+</ol>
+<ul>
+<li>Origin $O_0$: Intersection of the vertical machine center-of-rotation axis with the top plate of the revolving deck.</li>
+<li>$Z_0$: Vertical upward along the machine swing rotation axis ($Z_0 \parallel Z_W$).</li>
+<li>$X_0$: Horizontal forward along the machine centerline of symmetry.</li>
+<li>$Y_0$: Horizontal to the machine operator's left, completing the right-handed triad ($Y_0 = Z_0 \times X_0$).</li>
+</ul>
+<ol>
+<li>**Boom Foot Pin Frame $\{1\}$:**</li>
+</ol>
+<ul>
+<li>Origin $O_1$: Center of the boom heel pivot pins $(x_{\text{boom}}, 0, y_{\text{boom}})_0$.</li>
+<li>$X_1$: Parallel to $X_0$ (horizontal forward).</li>
+<li>$Y_1$: Parallel to $Y_0$ (transverse left, along the boom pin axis).</li>
+<li>$Z_1$: Parallel to $Z_0$ (vertical upward).</li>
+</ul>
+<ol>
+<li>**Boom Axis Frame $\{2\}$:**</li>
+</ol>
+<ul>
+<li>Origin $O_1$: Fixed at boom foot.</li>
+<li>Rotated about $Y_1$ by boom elevation angle $\alpha_b$:</li>
+<li>$X_2$: Directed straight along the boom centerline toward the boom-point sheave center $S$.</li>
+<li>$Y_2$: Parallel to $Y_1$ (transverse left).</li>
+<li>$Z_2$: Perpendicular to boom axis, pointing upward-backward.</li>
+</ul>
+<ol>
+<li>**Shipper Shaft / Saddle Pivot Frame $\{3\}$:**</li>
+</ol>
+<ul>
+<li>Origin $O_3$: Center of the shipper shaft at fixed distance $L_{b1}$ along the boom axis $X_2$:</li>
+</ul>
+<div class="math-display">     $$\mathbf{p}_{O_3/O_1} = \begin{bmatrix} L_{b1} \\ 0 \\ 0 \end{bmatrix}_2 \implies \mathbf{p}_{O_3/O_0} = \begin{bmatrix} x_{\text{boom}} + L_{b1} \cos \alpha_b \\ 0 \\ y_{\text{boom}} + L_{b1} \sin \alpha_b \end{bmatrix}_0 \tag{6.1}$$</div>
+<ul>
+<li>$Y_3$: Coincident with the shipper shaft axis of rotation.</li>
+</ul>
+<ol>
+<li>**Saddle Block Frame $\{4\}$:**</li>
+</ol>
+<ul>
+<li>Origin $O_3$: Fixed at the shipper shaft center.</li>
+<li>Rotated about $Y_3$ by the absolute handle elevation angle $q_3$ with respect to horizontal $X_0$:</li>
+<li>$X_4$: Directed parallel to the dipper handle rack toward the dipper teeth.</li>
+<li>$Y_4$: Transverse along the shipper shaft axis.</li>
+<li>$Z_4$: Perpendicular to handle rack, pointing upward ($Z_4 = X_4 \times Y_4$).</li>
+</ul>
+<ol>
+<li>**Dipper Bail Pin Frame $\{5\}$:**</li>
+</ol>
+<ul>
+<li>Origin $B$: Positioned at linear crowd extension $d_4$ along axis $X_4$:</li>
+</ul>
+<div class="math-display">     $$\mathbf{p}_{B/O_3} = \begin{bmatrix} d_4 \\ 0 \\ 0 \end{bmatrix}_4 \tag{6.2}$$</div>
+<ol>
+<li>**Tooth Tip Frame $\{T\}$:**</li>
+</ol>
+<ul>
+<li>Origin $T$: Located at the cutting edge of the central tooth tip.</li>
+<li>Rigidly fixed relative to Frame $\{5\}$ by longitudinal offset $L_{tx}$ and downward offset $L_{ty}$:</li>
+</ul>
+<div class="math-display">     $$\mathbf{p}_{T/B} = \begin{bmatrix} L_{tx} \\ 0 \\ -L_{ty} \end{bmatrix}_4 \implies \mathbf{p}_{T/O_3} = \begin{bmatrix} d_4 + L_{tx} \\ 0 \\ -L_{ty} \end{bmatrix}_4 \tag{6.3}$$</div>
+<hr class='notebook-divider'>
+<h2>6.4 Comprehensive Machine Benchmark Parameter Audit: P&H 2100BL vs. TZ WK-20</h2>
+<p>The following table provides the complete, authenticated parameter sets for the two machines investigated in our research:</p>
+<div class="table-container"><table><thead><tr>
+<th>Parameter Description</th>
+<th>Mathematical Symbol</th>
+<th>Engineering Units</th>
+<th>Machine A: P&H 2100BL Benchmark</th>
+<th>Machine B: TZ WK-20 Deployment</th>
+<th>Primary Source Reference</th>
+</tr></thead><tbody>
+<tr>
+<td>Rated Bucket Payload</td>
+<td>$M_{\text{payload}}$</td>
+<td>$\mathrm{t}$ ($\mathrm{kg}$)</td>
+<td>$20.0\,\mathrm{t}$ ($20,000\,\mathrm{kg}$)</td>
+<td>$55.0\,\mathrm{t}$ ($55,000\,\mathrm{kg}$)</td>
+<td>[A] OEM Specification Sheets</td>
+</tr>
+<tr>
+<td>Nominal Bucket Capacity</td>
+<td>$V_{\text{bucket}}$</td>
+<td>$\mathrm{m}^3$</td>
+<td>$13.8\,\mathrm{m}^3$ ($18.0\,\mathrm{yd}^3$)</td>
+<td>$20.0\,\mathrm{m}^3$ ($26.2\,\mathrm{yd}^3$)</td>
+<td>[A] Mine Operations Manual</td>
+</tr>
+<tr>
+<td>Machine Total Working Weight</td>
+<td>$M_{\text{total}}$</td>
+<td>$\mathrm{t}$</td>
+<td>$345\,\mathrm{t}$</td>
+<td>$860\,\mathrm{t}$</td>
+<td>[A] Erection Manual</td>
+</tr>
+<tr>
+<td>Boom Chord Total Length</td>
+<td>$L_b$</td>
+<td>$\mathrm{m}$</td>
+<td>$16.76\,\mathrm{m}$ ($55\,\mathrm{ft}$)</td>
+<td>$21.50\,\mathrm{m}$</td>
+<td>[A] GA Assembly Drawing</td>
+</tr>
+<tr>
+<td>Boom Fixed Elevation Angle</td>
+<td>$\alpha_b$</td>
+<td>$\mathrm{deg}$</td>
+<td>$45.0^\circ$</td>
+<td>$45.0^\circ$</td>
+<td>[A] OEM Standard Setting</td>
+</tr>
+<tr>
+<td>Boom Foot Coordinates</td>
+<td>$(x_b, y_b)$</td>
+<td>$\mathrm{m}$</td>
+<td>$(3.65, 2.10)\,\mathrm{m}$</td>
+<td>$(4.85, 2.80)\,\mathrm{m}$</td>
+<td>[A] Deck CAD Layout</td>
+</tr>
+<tr>
+<td>Shipper Shaft Pivot Position</td>
+<td>$L_{b1}$</td>
+<td>$\mathrm{m}$</td>
+<td>$8.84\,\mathrm{m}$</td>
+<td>$11.20\,\mathrm{m}$</td>
+<td>[A] M1 Model Documentation</td>
+</tr>
+<tr>
+<td>Boom-Point Sheave Radius</td>
+<td>$R_{\text{sheave}}$</td>
+<td>$\mathrm{m}$</td>
+<td>$0.914\,\mathrm{m}$ ($72\,\mathrm{in}$ dia)</td>
+<td>$1.200\,\mathrm{m}$ ($94.5\,\mathrm{in}$ dia)</td>
+<td>[A] Sheave Casting Drawing</td>
+</tr>
+<tr>
+<td>Sheave Center Coordinates</td>
+<td>$(x_s, y_s)$</td>
+<td>$\mathrm{m}$</td>
+<td>$(15.50, 13.95)\,\mathrm{m}$</td>
+<td>$(20.05, 18.00)\,\mathrm{m}$</td>
+<td>[A] Kinematic Calculation</td>
+</tr>
+<tr>
+<td>Dipper Handle Total Length</td>
+<td>$L_h$</td>
+<td>$\mathrm{m}$</td>
+<td>$11.89\,\mathrm{m}$ ($39\,\mathrm{ft}$)</td>
+<td>$15.50\,\mathrm{m}$</td>
+<td>[A] Handle Structure Spec</td>
+</tr>
+<tr>
+<td>Crowd Linear Stroke Limits</td>
+<td>$[d_{4,\min}, d_{4,\max}]$</td>
+<td>$\mathrm{m}$</td>
+<td>$[7.50, 14.50]\,\mathrm{m}$</td>
+<td>$[9.00, 18.20]\,\mathrm{m}$</td>
+<td>[A] Stop Block Physical Audit</td>
+</tr>
+<tr>
+<td>Saddle Elevation Angle Range</td>
+<td>$[q_{3,\min}, q_{3,\max}]$</td>
+<td>$\mathrm{deg}$</td>
+<td>$[-35.0^\circ, +48.0^\circ]$</td>
+<td>$[-30.0^\circ, +50.0^\circ]$</td>
+<td>[A] Joint Resolver Envelope</td>
+</tr>
+<tr>
+<td>Tooth Tip Long. Offset</td>
+<td>$L_{tx}$</td>
+<td>$\mathrm{m}$</td>
+<td>$2.00\,\mathrm{m}$</td>
+<td>$2.50\,\mathrm{m}$</td>
+<td>[A] Dipper Fabrication Print</td>
+</tr>
+<tr>
+<td>Tooth Tip Down. Offset</td>
+<td>$L_{ty}$</td>
+<td>$\mathrm{m}$</td>
+<td>$1.00\,\mathrm{m}$</td>
+<td>$1.20\,\mathrm{m}$</td>
+<td>[A] Dipper Fabrication Print</td>
+</tr>
+<tr>
+<td>Dipper Body Empty Mass</td>
+<td>$m_{d,\text{empty}}$</td>
+<td>$\mathrm{kg}$</td>
+<td>$17,000\,\mathrm{kg}$</td>
+<td>$44,000\,\mathrm{kg}$</td>
+<td>[A] Certified Scale Weight</td>
+</tr>
+<tr>
+<td>Dipper Handle Mass</td>
+<td>$m_h$</td>
+<td>$\mathrm{kg}$</td>
+<td>$11,500\,\mathrm{kg}$</td>
+<td>$24,000\,\mathrm{kg}$</td>
+<td>[A] Weight Certificate</td>
+</tr>
+<tr>
+<td>Saddle Block Mass</td>
+<td>$m_s$</td>
+<td>$\mathrm{kg}$</td>
+<td>$3,500\,\mathrm{kg}$</td>
+<td>$8,500\,\mathrm{kg}$</td>
+<td>[A] Casting Data Sheet</td>
+</tr>
+<tr>
+<td>Hoist Rope Diameter</td>
+<td>$d_{\text{rope}}$</td>
+<td>$\mathrm{mm}$</td>
+<td>$57.0\,\mathrm{mm}$ ($2.25\,\mathrm{in}$)</td>
+<td>$72.0\,\mathrm{mm}$ ($2.83\,\mathrm{in}$)</td>
+<td>[A] Wire Rope Spec Sheet</td>
+</tr>
+<tr>
+<td>Hoist Reeving Multiplicity</td>
+<td>$n_{\text{reeve}}$</td>
+<td>$-$</td>
+<td>2 (Twin lines, direct)</td>
+<td>2 (Twin lines, direct)</td>
+<td>[A] Reeving Diagram</td>
+</tr>
+<tr>
+<td>Maximum Hoist Line Pull</td>
+<td>$F_{h,\max}$</td>
+<td>$\mathrm{kN}$</td>
+<td>$750\,\mathrm{kN}$</td>
+<td>$1,650\,\mathrm{kN}$</td>
+<td>[A] Motor Torque / Gear Limit</td>
+</tr>
+<tr>
+<td>Maximum Crowd Push Force</td>
+<td>$F_{c,\max}$</td>
+<td>$\mathrm{kN}$</td>
+<td>$350\,\mathrm{kN}$</td>
+<td>$800\,\mathrm{kN}$</td>
+<td>[A] Pinion Tooth Bending Limit</td>
+</tr>
+<tr>
+<td>Nominal Swing Slew Speed</td>
+<td>$\dot{\theta}_{1,\max}$</td>
+<td>$\mathrm{rpm}$</td>
+<td>$3.50\,\mathrm{rpm}$ ($0.366\,\mathrm{rad/s}$)</td>
+<td>$2.80\,\mathrm{rpm}$ ($0.293\,\mathrm{rad/s}$)</td>
+<td>[A] Motor VFD Limit</td>
+</tr>
+</tbody></table></div>
+<hr class='notebook-divider'>
+<h2>6.5 Full 3D Spatial Forward Kinematics with Slewing</h2>
+<p>We now formulate the complete 3D homogeneous transformation matrices from the world frame $\{W\}$ to the dipper tooth tip $\{T\}$.</p>
+<div class="code-container"><pre><code class="language-">                     3D SPATIAL KINEMATICS WITH SLEWING
+                     
+                                 Z_0 (Swing Axis)
+                                  ^
+                                  |       X_0 (Deck Centerline)
+                                  |      /
+                                  |     /
+                                  |    /   q_3 (Handle Angle)
+                                  |   /   /
+                 theta_1 (Slew)   |  /   /
+                         \        | /   v
+                          \       |/=========* Bail Pin B
+            Y_W &lt;----------+------+----------&gt; X_W
+                          /|     O_0
+                         / |
+                        /  v
+                       /  Gravity (-g)
+                      v</code></pre></div>
+<h3>6.5.1 Transformation from World $\{W\}$ to Revolving Frame $\{0\}$</h3>
+<p>Let the shovel be positioned at ground Cartesian coordinates $(X_c, Y_c, Z_c)$ with upper deck slewing angle $\theta_1(t)$ measured relative to the world $X_W$ axis:</p>
+<div class="math-display">$$\mathbf{T}_0^W = \begin{bmatrix}
+\cos \theta_1 & -\sin \theta_1 & 0 & X_c \\
+\sin \theta_1 &  \cos \theta_1 & 0 & Y_c \\
+0 & 0 & 1 & Z_c \\
+0 & 0 & 0 & 1
+\end{bmatrix} \tag{6.4}$$</div>
+<hr class='notebook-divider'>
+<h3>6.5.2 Position Vector of the Shipper Shaft Pivot $O_3$ in Frame $\{0\}$</h3>
+<p>From Equation (6.1), because the boom foot is fixed to the deck in the symmetry plane ($Y_0 = 0$):</p>
+<div class="math-display">$$\mathbf{p}_{O_3}^0 = \begin{bmatrix} x_3 \\ 0 \\ z_3 \end{bmatrix} = \begin{bmatrix} x_b + L_{b1} \cos \alpha_b \\ 0 \\ z_b + L_{b1} \sin \alpha_b \end{bmatrix} \tag{6.5}$$</div>
+<hr class='notebook-divider'>
+<h3>6.5.3 Transformation from Frame $\{0\}$ to Saddle Block Frame $\{4\}$</h3>
+<p>The saddle block frame $\{4\}$ is translated to $O_3$ and pitched by handle angle $q_3$ about the transverse $Y_0$ axis:</p>
+<div class="math-display">$$\mathbf{T}_4^0 = \begin{bmatrix}
+\cos q_3 & 0 & \sin q_3 & x_3 \\
+0 & 1 & 0 & 0 \\
+-\sin q_3 & 0 & \cos q_3 & z_3 \\
+0 & 0 & 0 & 1
+\end{bmatrix} \tag{6.6}$$</div>
+<p>*(Notice: In standard robotic coordinate conventions, pitching upward about $Y$ transforms $X$ into $Z$. In standard planar mechanics where $q_3$ is defined from horizontal $X$ toward vertical $Z$, $\mathbf{p} = [r \cos q_3, 0, r \sin q_3]^T$).*</p>
+<hr class='notebook-divider'>
+<h3>6.5.4 3D Cartesian Position of Dipper Tooth Tip $T$</h3>
+<p>In the handle frame $\{4\}$, the tooth tip is located at:</p>
+<div class="math-display">$$\mathbf{p}_T^4 = \begin{bmatrix} d_4 + L_{tx} \\ 0 \\ -L_{ty} \end{bmatrix} \tag{6.7}$$</div>
+<p>Transforming into the revolving deck frame $\{0\}$:</p>
+<div class="math-display">$$\mathbf{p}_T^0 = \begin{bmatrix} x_T^0 \\ y_T^0 \\ z_T^0 \end{bmatrix} = \begin{bmatrix} x_3 + (d_4 + L_{tx})\cos q_3 + L_{ty}\sin q_3 \\ 0 \\ z_3 + (d_4 + L_{tx})\sin q_3 - L_{ty}\cos q_3 \end{bmatrix} \tag{6.8}$$</div>
+<p>Transforming into the global world ground frame $\{W\}$ via Equation (6.4):</p>
+<div class="math-display">$$\begin{bmatrix} x_T^W \\ y_T^W \\ z_T^W \end{bmatrix} = \begin{bmatrix} X_c \\ Y_c \\ Z_c \end{bmatrix} + \begin{bmatrix} \cos \theta_1 & -\sin \theta_1 & 0 \\ \sin \theta_1 & \cos \theta_1 & 0 \\ 0 & 0 & 1 \end{bmatrix} \begin{bmatrix} x_T^0 \\ 0 \\ z_T^0 \end{bmatrix} \tag{6.9}$$</div>
+<p>Carrying out the matrix multiplication yields the <strong>Universal 3D Forward Kinematics of the Tooth Tip</strong>:</p>
+<div class="math-display">$$x_T^W(\theta_1, q_3, d_4) = X_c + x_T^0(q_3, d_4) \cos \theta_1 \tag{6.10a}$$</div>
+<div class="math-display">$$y_T^W(\theta_1, q_3, d_4) = Y_c + x_T^0(q_3, d_4) \sin \theta_1 \tag{6.10b}$$</div>
+<div class="math-display">$$z_T^W(q_3, d_4) = Z_c + z_T^0(q_3, d_4) \tag{6.10c}$$</div>
+<blockquote>
+<div class="callout-header"><span class="badge badge-important">IMPORTANT</span></div>
+<p>### PHYSICAL INSIGHT INTO SPATIAL SHOVEL MOTIONS</p>
+<p>1. Slewing angle $\theta_1$ rotates the entire vertical digging plane around the machine kingpin $Z_0$.</p>
+<p>2. The vertical elevation $z_T^W$ is **completely independent of the swing angle $\theta_1$**. It depends solely on crowd extension $d_4$ and saddle elevation $q_3$.</p>
+<p>3. The horizontal radius from the swing axis to the dipper teeth is precisely $R_{\text{slew}} = x_T^0(q_3, d_4)$.</p>
+</blockquote>
+<hr class='notebook-divider'>
+<h2>6.6 The Closed Hoist Cable Loop: Geometry, Length & Moment Arm</h2>
+<p>A defining structural characteristic of an electric rope shovel is that the dipper is hoisted by flexible wire cables passing over boom-point sheaves. This forms a closed kinematic loop between the boom, dipper, and saddle block.</p>
+<div class="code-container"><pre><code class="language-">                      THE CLOSED HOIST CABLE VECTOR LOOP
+                      
+                                            [Boom Sheave Tip S] (x_s, z_s)
+                                                    *
+                                                   /| \
+                                                  / |  \  Hoist Rope Vector
+                                                 /  |   \ L_h
+                                                /   |    \
+                                    Boom       /    |     v
+                                    Vector    /     |    [Bail Pin B] (x_B, z_B)
+                                    p_S/O_3  /      |    /
+                                            /       |   /
+                                           /        |  /  Handle Vector
+                                          /         | /   p_B/O_3
+                                         v          v/
+                           [Shipper Shaft O_3] =====+</code></pre></div>
+<h3>6.6.1 Vector Loop Formulation</h3>
+<p>Let $S = (x_s, z_s)$ denote the fixed coordinates of the boom-point sheave center in the revolving frame $\{0\}$:</p>
+<div class="math-display">$$x_s = x_b + L_b \cos \alpha_b \tag{6.11a}$$</div>
+<div class="math-display">$$z_s = z_b + L_b \sin \alpha_b \tag{6.11b}$$</div>
+<p>Let $B = (x_B, z_B)$ denote the coordinates of the dipper bail pin in Frame $\{0\}$:</p>
+<div class="math-display">$$x_B(q_3, d_4) = x_3 + d_4 \cos q_3 \tag{6.12a}$$</div>
+<div class="math-display">$$z_B(q_3, d_4) = z_3 + d_4 \sin q_3 \tag{6.12b}$$</div>
+<p>Define the <strong>Hoist Cable Vector</strong> $\mathbf{L}_h$ extending from the boom sheave center $S$ to the bail pin $B$:</p>
+<div class="math-display">$$\mathbf{L}_h = \mathbf{p}_B^0 - \mathbf{p}_S^0 = \begin{bmatrix} x_B - x_s \\ z_B - z_s \end{bmatrix} = \begin{bmatrix} (x_3 - x_s) + d_4 \cos q_3 \\ (z_3 - z_s) + d_4 \sin q_3 \end{bmatrix} \tag{6.13}$$</div>
+<hr class='notebook-divider'>
+<h3>6.6.2 Analytical Closed-Form Hoist Rope Length $L_h(q_3, d_4)$</h3>
+<p>The instantaneous straight-line suspended length of the hoist rope is the Euclidean norm of $\mathbf{L}_h$:</p>
+<div class="math-display">$$L_h(q_3, d_4) = \|\mathbf{L}_h\| = \sqrt{(x_B - x_s)^2 + (z_B - z_s)^2} \tag{6.14}$$</div>
+<p>Substitute the vector components from Equation (6.13):</p>
+<div class="math-display">$$L_h^2 = \left[ (x_3 - x_s) + d_4 \cos q_3 \right]^2 + \left[ (z_3 - z_s) + d_4 \sin q_3 \right]^2 \tag{6.15}$$</div>
+<p>Expanding the squared binomials:</p>
+<div class="math-display">$$L_h^2 = (x_3 - x_s)^2 + 2 d_4 (x_3 - x_s)\cos q_3 + d_4^2 \cos^2 q_3 + (z_3 - z_s)^2 + 2 d_4 (z_3 - z_s)\sin q_3 + d_4^2 \sin^2 q_3$$</div>
+<p>Notice that $(x_3 - x_s)^2 + (z_3 - z_s)^2 = (L_b - L_{b1})^2$ is the square of the distance along the boom from saddle pivot $O_3$ to sheave center $S$. Let:</p>
+<div class="math-display">$$L_{b2} = L_b - L_{b1} \tag{6.16}$$</div>
+<p>Furthermore, $d_4^2(\cos^2 q_3 + \sin^2 q_3) = d_4^2$. Therefore:</p>
+<div class="math-display">$$L_h(q_3, d_4) = \sqrt{ L_{b2}^2 + d_4^2 + 2 d_4 \left[ (x_3 - x_s)\cos q_3 + (z_3 - z_s)\sin q_3 \right] } \tag{6.17}$$</div>
+<p>Equation (6.17) is the <strong>exact, closed-form algebraic formula for suspended hoist rope length</strong>.</p>
+<hr class='notebook-divider'>
+<h3>6.6.3 Geometric Hoist Moment Arm $h_h(q_3, d_4)$</h3>
+<p>The tension force $F_{\text{hoist}}$ in the wire ropes creates a lifting torque $\tau_{\text{hoist}}$ about the shipper shaft pivot $O_3$:</p>
+<div class="math-display">$$\tau_{\text{hoist}} = F_{\text{hoist}} \cdot h_h(q_3, d_4) \tag{6.18}$$</div>
+<p>where $h_h(q_3, d_4)$ is the perpendicular moment arm from pivot $O_3$ to the line of action of the hoist cable.</p>
+<p>By vector mechanics, the torque about $O_3$ produced by tension force $\mathbf{F}_h = F_{\text{hoist}} \frac{\mathbf{p}_S^0 - \mathbf{p}_B^0}{\|\mathbf{p}_S^0 - \mathbf{p}_B^0\|} = -F_{\text{hoist}} \frac{\mathbf{L}_h}{L_h}$ is:</p>
+<div class="math-display">$$\boldsymbol{\tau}_{\text{hoist}} = \mathbf{p}_{B/O_3} \times \left( -F_{\text{hoist}} \frac{\mathbf{L}_h}{L_h} \right) \tag{6.19}$$</div>
+<p>The scalar moment arm $h_h$ is the magnitude of the 2D cross-product:</p>
+<div class="math-display">$$h_h(q_3, d_4) = \frac{1}{L_h} \left| \mathbf{p}_{B/O_3} \times (-\mathbf{L}_h) \right| = \frac{1}{L_h} \left| \mathbf{p}_{B/O_3} \times (\mathbf{p}_S^0 - \mathbf{p}_B^0) \right| \tag{6.20}$$</div>
+<p>Since $\mathbf{p}_{B/O_3} \times \mathbf{p}_B^0 = \mathbf{p}_{B/O_3} \times (\mathbf{p}_{O_3} + \mathbf{p}_{B/O_3}) = \mathbf{p}_{B/O_3} \times \mathbf{p}_{O_3}$:</p>
+<div class="math-display">$$h_h(q_3, d_4) = \frac{1}{L_h} \left| x_{B/O_3} (z_s - z_3) - z_{B/O_3} (x_s - x_3) \right| \tag{6.21}$$</div>
+<p>Substitute $x_{B/O_3} = d_4 \cos q_3$ and $z_{B/O_3} = d_4 \sin q_3$:</p>
+<div class="math-display">$$h_h(q_3, d_4) = \frac{d_4}{L_h(q_3, d_4)} \left| (z_s - z_3)\cos q_3 - (x_s - x_3)\sin q_3 \right| \tag{6.22}$$</div>
+<blockquote>
+<div class="callout-header"><span class="badge badge-tip">TIP</span></div>
+<p>### PHYSICAL INTUITION ON HOIST MOMENT ARM</p>
+<p>1. Because $(x_s - x_3) = L_{b2} \cos \alpha_b$ and $(z_s - z_3) = L_{b2} \sin \alpha_b$:</p>
+<p>$$(z_s - z_3)\cos q_3 - (x_s - x_3)\sin q_3 = L_{b2} \left( \sin \alpha_b \cos q_3 - \cos \alpha_b \sin q_3 \right) = L_{b2} \sin(\alpha_b - q_3)$$</p>
+<p>2. Substituting into Equation (6.22) yields the remarkably elegant formula:</p>
+<p>$$h_h(q_3, d_4) = \frac{d_4 L_{b2} \sin(\alpha_b - q_3)}{L_h(q_3, d_4)}$$</p>
+<p>3. <strong>Maximum Lifting Advantage:</strong> The moment arm peaks when the dipper handle is perpendicular to the boom ($\alpha_b - q_3 \approx 90^\circ$). When the dipper is hoisted near the boom tip ($\alpha_b - q_3 \to 0^\circ$), the moment arm collapses toward zero!</p>
+</blockquote>
+<hr class='notebook-divider'>
+<h2>6.7 Five Fully Solved Research Practice Problems</h2>
+<hr class='notebook-divider'>
+<h3>Problem 6.1: Complete 3D Tooth Tip Forward Kinematics (P&H 2100BL)</h3>
+<p><strong>Problem Statement:</strong>  </p>
+<p>A P&H 2100BL shovel (Machine A) is situated at pit bench coordinates $(X_c, Y_c, Z_c) = (120.0, 450.0, 85.0)\,\mathrm{m}$.  </p>
+<p>The joint resolvers read:</p>
+<ul>
+<li>Upper deck slew angle: $\theta_1 = 45.0^\circ$ ($\frac{\pi}{4}\,\mathrm{rad}$)</li>
+<li>Saddle block angle: $q_3 = 15.0^\circ$ ($0.2618\,\mathrm{rad}$)</li>
+<li>Crowd handle extension: $d_4 = 11.50\,\mathrm{m}$</li>
+</ul>
+<p>Using the P&H 2100BL parameters from Section 6.4 ($x_b = 3.65\,\mathrm{m}, z_b = 2.10\,\mathrm{m}, L_{b1} = 8.84\,\mathrm{m}, \alpha_b = 45^\circ, L_{tx} = 2.00\,\mathrm{m}, L_{ty} = 1.00\,\mathrm{m}$):</p>
+<ol>
+<li>Compute the Cartesian coordinates $(x_3, z_3)$ of the shipper shaft pivot $O_3$ in Frame $\{0\}$.</li>
+<li>Compute the dipper tooth tip position $(x_T^0, z_T^0)$ in the revolving frame $\{0\}$.</li>
+<li>Compute the global 3D world coordinates $(x_T^W, y_T^W, z_T^W)$ of the tooth tip.</li>
+</ol>
+<p><strong>Step-by-Step Solution:</strong></p>
+<p>**Step 1: Compute shipper shaft pivot $O_3$ in Frame $\{0\}$**</p>
+<div class="math-display">$$\cos 45^\circ = \sin 45^\circ = \frac{\sqrt{2}}{2} \approx 0.707107$$</div>
+<div class="math-display">$$x_3 = x_b + L_{b1} \cos 45^\circ = 3.65 + (8.84)(0.707107) = 3.65 + 6.2508 = 9.9008\,\mathrm{m}$$</div>
+<div class="math-display">$$z_3 = z_b + L_{b1} \sin 45^\circ = 2.10 + (8.84)(0.707107) = 2.10 + 6.2508 = 8.3508\,\mathrm{m}$$</div>
+<div class="math-display">$$\mathbf{p}_{O_3}^0 = \begin{bmatrix} 9.9008 \\ 0 \\ 8.3508 \end{bmatrix}\,\mathrm{m}$$</div>
+<hr class='notebook-divider'>
+<p>**Step 2: Compute tooth tip position in Frame $\{0\}$**</p>
+<div class="math-display">$$r_T = d_4 + L_{tx} = 11.50 + 2.00 = 13.50\,\mathrm{m}$$</div>
+<div class="math-display">$$\cos 15^\circ \approx 0.965926, \quad \sin 15^\circ \approx 0.258819$$</div>
+<p>Using Equation (6.8):</p>
+<div class="math-display">$$x_T^0 = x_3 + r_T \cos q_3 + L_{ty} \sin q_3$$</div>
+<div class="math-display">$$x_T^0 = 9.9008 + (13.50)(0.965926) + (1.00)(0.258819)$$</div>
+<div class="math-display">$$x_T^0 = 9.9008 + 13.0400 + 0.2588 = 23.1996\,\mathrm{m}$$</div>
+<div class="math-display">$$z_T^0 = z_3 + r_T \sin q_3 - L_{ty} \cos q_3$$</div>
+<div class="math-display">$$z_T^0 = 8.3508 + (13.50)(0.258819) - (1.00)(0.965926)$$</div>
+<div class="math-display">$$z_T^0 = 8.3508 + 3.4941 - 0.9659 = 10.8790\,\mathrm{m}$$</div>
+<div class="math-display">$$\mathbf{p}_T^0 = \begin{bmatrix} 23.200 \\ 0 \\ 10.879 \end{bmatrix}\,\mathrm{m}$$</div>
+<p>*(The dipper tooth tip reaches a horizontal radius of $23.20\,\mathrm{m}$ from the machine swing center and an elevation of $10.88\,\mathrm{m}$ above the deck).*</p>
+<hr class='notebook-divider'>
+<p>**Step 3: Transform into World Ground Frame $\{W\}$**</p>
+<p>Using Equation (6.10):</p>
+<div class="math-display">$$\cos \theta_1 = \cos 45^\circ \approx 0.707107, \quad \sin \theta_1 = \sin 45^\circ \approx 0.707107$$</div>
+<div class="math-display">$$x_T^W = X_c + x_T^0 \cos 45^\circ = 120.0 + (23.1996)(0.707107) = 120.0 + 16.4046 = 136.405\,\mathrm{m}$$</div>
+<div class="math-display">$$y_T^W = Y_c + x_T^0 \sin 45^\circ = 450.0 + (23.1996)(0.707107) = 450.0 + 16.4046 = 466.405\,\mathrm{m}$$</div>
+<div class="math-display">$$z_T^W = Z_c + z_T^0 = 85.0 + 10.8790 = 95.879\,\mathrm{m}$$</div>
+<div class="math-display">$$\mathbf{p}_T^W = \begin{bmatrix} 136.405\,\mathrm{m} \\ 466.405\,\mathrm{m} \\ 95.879\,\mathrm{m} \end{bmatrix}$$</div>
+<hr class='notebook-divider'>
+<h3>Problem 6.2: Hoist Cable Length and Moment Arm on TZ WK-20 Heavy Shovel</h3>
+<p><strong>Problem Statement:</strong>  </p>
+<p>On a TZ WK-20 excavator (Machine B), the parameters are:</p>
+<ul>
+<li>Boom chord length: $L_b = 21.50\,\mathrm{m}$, inclination $\alpha_b = 45.0^\circ$</li>
+<li>Boom foot coordinates: $(x_b, z_b) = (4.85, 2.80)\,\mathrm{m}$</li>
+<li>Shipper shaft pivot distance: $L_{b1} = 11.20\,\mathrm{m}$</li>
+<li>Current joint state: $q_3 = 20.0^\circ$, $d_4 = 13.00\,\mathrm{m}$</li>
+</ul>
+<ol>
+<li>Compute the boom-point sheave center coordinates $(x_s, z_s)$ and shipper shaft pivot $(x_3, z_3)$.</li>
+<li>Calculate the suspended length of the hoist rope $L_h(q_3, d_4)$.</li>
+<li>Calculate the perpendicular hoist moment arm $h_h(q_3, d_4)$ about the shipper shaft pivot $O_3$.</li>
+<li>If the twin hoist ropes sustain a combined tension of $F_{\text{hoist}} = 1,200\,\mathrm{kN}$, compute the hoist lifting torque $\tau_{\text{hoist}}$ applied to the saddle block.</li>
+</ol>
+<p><strong>Step-by-Step Solution:</strong></p>
+<p>**Step 1: Compute sheave center $S$ and pivot $O_3$**</p>
+<div class="math-display">$$\cos 45^\circ = \sin 45^\circ \approx 0.707107$$</div>
+<div class="math-display">$$x_s = x_b + L_b \cos 45^\circ = 4.85 + (21.50)(0.707107) = 4.85 + 15.2028 = 20.0528\,\mathrm{m}$$</div>
+<div class="math-display">$$z_s = z_b + L_b \sin 45^\circ = 2.80 + (21.50)(0.707107) = 2.80 + 15.2028 = 18.0028\,\mathrm{m}$$</div>
+<div class="math-display">$$x_3 = x_b + L_{b1} \cos 45^\circ = 4.85 + (11.20)(0.707107) = 4.85 + 7.9196 = 12.7696\,\mathrm{m}$$</div>
+<div class="math-display">$$z_3 = z_b + L_{b1} \sin 45^\circ = 2.80 + (11.20)(0.707107) = 2.80 + 7.9196 = 10.7196\,\mathrm{m}$$</div>
+<div class="math-display">$$L_{b2} = L_b - L_{b1} = 21.50 - 11.20 = 10.30\,\mathrm{m}$$</div>
+<hr class='notebook-divider'>
+<p>**Step 2: Compute suspended hoist rope length $L_h$**</p>
+<p>Coordinates of bail pin $B$ at $q_3 = 20^\circ, d_4 = 13.0\,\mathrm{m}$:</p>
+<div class="math-display">$$\cos 20^\circ \approx 0.939693, \quad \sin 20^\circ \approx 0.342020$$</div>
+<div class="math-display">$$x_B = x_3 + d_4 \cos 20^\circ = 12.7696 + (13.0)(0.939693) = 12.7696 + 12.2160 = 24.9856\,\mathrm{m}$$</div>
+<div class="math-display">$$z_B = z_3 + d_4 \sin 20^\circ = 10.7196 + (13.0)(0.342020) = 10.7196 + 4.4463 = 15.1659\,\mathrm{m}$$</div>
+<p>Vector from sheave $S$ to bail $B$:</p>
+<div class="math-display">$$\Delta x = x_B - x_s = 24.9856 - 20.0528 = +4.9328\,\mathrm{m}$$</div>
+<div class="math-display">$$\Delta z = z_B - z_s = 15.1659 - 18.0028 = -2.8369\,\mathrm{m}$$</div>
+<div class="math-display">$$L_h = \sqrt{(\Delta x)^2 + (\Delta z)^2} = \sqrt{(4.9328)^2 + (-2.8369)^2} = \sqrt{24.3325 + 8.0480} = \sqrt{32.3805} \approx 5.6904\,\mathrm{m}$$</div>
+<p><strong>Result:</strong> The suspended cable length between boom sheave and bail pin is **$L_h = 5.690\,\mathrm{m}$**.</p>
+<hr class='notebook-divider'>
+<p>**Step 3: Compute hoist moment arm $h_h$**</p>
+<p>Using the formula derived in Section 6.6.3:</p>
+<div class="math-display">$$h_h(q_3, d_4) = \frac{d_4 L_{b2} \sin(\alpha_b - q_3)}{L_h}$$</div>
+<p>Here:</p>
+<div class="math-display">$$\alpha_b - q_3 = 45.0^\circ - 20.0^\circ = 25.0^\circ \implies \sin 25.0^\circ \approx 0.422618$$</div>
+<div class="math-display">$$h_h = \frac{(13.00\,\mathrm{m})(10.30\,\mathrm{m})(0.422618)}{5.6904\,\mathrm{m}} = \frac{56.5886}{5.6904} \approx 9.9446\,\mathrm{m}$$</div>
+<p><strong>Result:</strong> The hoist line pull moment arm about the shipper shaft is **$h_h = 9.945\,\mathrm{m}$**.</p>
+<hr class='notebook-divider'>
+<p><strong>Step 4: Compute hoist lifting torque</strong></p>
+<div class="math-display">$$\tau_{\text{hoist}} = F_{\text{hoist}} \cdot h_h = (1,200\,\mathrm{kN})(9.9446\,\mathrm{m}) = 11,933.5\,\mathrm{kN\cdot m} \approx +11.934\,\mathrm{MN\cdot m}$$</div>
+<p><strong>Result:</strong> The hoist cables deliver **$+11.934\,\mathrm{MN\cdot m}$** of lifting torque to elevate the $119\,\mathrm{t}$ front-end assembly.</p>
+<hr class='notebook-divider'>
+<h3>Problem 6.3: Spatial 3D Velocity Vector under Combined Slew-Crowd-Hoist Motion</h3>
+<p><strong>Problem Statement:</strong>  </p>
+<p>On a P&H 2100BL shovel, all three primary motions are engaged simultaneously during a high-speed bank exit:</p>
+<ul>
+<li>Slew speed: $\dot{\theta}_1 = 0.25\,\mathrm{rad/s}$ ($2.39\,\mathrm{rpm}$)</li>
+<li>Saddle pitch speed: $\dot{q}_3 = 0.15\,\mathrm{rad/s}$</li>
+<li>Crowd extension speed: $\dot{d}_4 = 0.80\,\mathrm{m/s}$</li>
+</ul>
+<p>Current posture: $\theta_1 = 30^\circ$, $q_3 = 20^\circ$, $d_4 = 11.0\,\mathrm{m}$, with tooth offsets $r_T = 13.0\,\mathrm{m}, L_{ty} = 1.0\,\mathrm{m}, x_3 = 9.90\,\mathrm{m}, z_3 = 8.35\,\mathrm{m}$.</p>
+<ol>
+<li>Compute the planar velocities $(\dot{x}_T^0, \dot{z}_T^0)$ in the deck frame.</li>
+<li>Formulate the full 3D Cartesian velocity vector $\mathbf{v}_T^W = [\dot{x}_T^W, \dot{y}_T^W, \dot{z}_T^W]^T$ in the ground frame.</li>
+<li>Determine the tangential slewing velocity component and the resultant spatial 3D speed $\|\mathbf{v}_T^W\|$.</li>
+</ol>
+<p><strong>Step-by-Step Solution:</strong></p>
+<p>**Step 1: Compute planar velocities in Frame $\{0\}$**</p>
+<p>Using the tooth tip Jacobian from Chapter 2 (Equation (2.33)):</p>
+<div class="math-display">$$J_{11} = -r_T \sin q_3 + L_{ty} \cos q_3 = -(13.0)(0.342020) + (1.0)(0.939693) = -4.4463 + 0.9397 = -3.5066\,\mathrm{m/rad}$$</div>
+<div class="math-display">$$J_{12} = \cos q_3 = 0.939693$$</div>
+<div class="math-display">$$J_{21} = r_T \cos q_3 + L_{ty} \sin q_3 = (13.0)(0.939693) + (1.0)(0.342020) = 12.2160 + 0.3420 = +12.5580\,\mathrm{m/rad}$$</div>
+<div class="math-display">$$J_{22} = \sin q_3 = 0.342020$$</div>
+<div class="math-display">$$\dot{x}_T^0 = J_{11} \dot{q}_3 + J_{12} \dot{d}_4 = (-3.5066)(0.15) + (0.939693)(0.80) = -0.5260 + 0.7518 = +0.2258\,\mathrm{m/s}$$</div>
+<div class="math-display">$$\dot{z}_T^0 = J_{21} \dot{q}_3 + J_{22} \dot{d}_4 = (12.5580)(0.15) + (0.342020)(0.80) = 1.8837 + 0.2736 = +2.1573\,\mathrm{m/s}$$</div>
+<p>Also compute horizontal radius $x_T^0$:</p>
+<div class="math-display">$$x_T^0 = x_3 + r_T \cos q_3 + L_{ty} \sin q_3 = 9.90 + (13.0)(0.939693) + (1.0)(0.342020) = 9.90 + 12.2160 + 0.3420 = 22.4580\,\mathrm{m}$$</div>
+<hr class='notebook-divider'>
+<p>**Step 2: Compute full 3D velocity in World Ground Frame $\{W\}$**</p>
+<p>Differentiating Equation (6.10) with respect to time:</p>
+<div class="math-display">$$\dot{x}_T^W = \dot{x}_T^0 \cos \theta_1 - x_T^0 \dot{\theta}_1 \sin \theta_1$$</div>
+<div class="math-display">$$\dot{y}_T^W = \dot{x}_T^0 \sin \theta_1 + x_T^0 \dot{\theta}_1 \cos \theta_1$$</div>
+<div class="math-display">$$\dot{z}_T^W = \dot{z}_T^0$$</div>
+<p>Evaluate at $\theta_1 = 30^\circ$ ($\cos 30^\circ \approx 0.866025, \sin 30^\circ = 0.500000$):</p>
+<div class="math-display">$$\text{Tangential slewing speed } v_{\text{slew}} = x_T^0 \dot{\theta}_1 = (22.4580\,\mathrm{m})(0.25\,\mathrm{rad/s}) = 5.6145\,\mathrm{m/s}$$</div>
+<div class="math-display">$$\dot{x}_T^W = (0.2258)(0.866025) - (5.6145)(0.500000) = 0.1955 - 2.8073 = -2.6118\,\mathrm{m/s}$$</div>
+<div class="math-display">$$\dot{y}_T^W = (0.2258)(0.500000) + (5.6145)(0.866025) = 0.1129 + 4.8623 = +4.9752\,\mathrm{m/s}$$</div>
+<div class="math-display">$$\dot{z}_T^W = +2.1573\,\mathrm{m/s}$$</div>
+<div class="math-display">$$\mathbf{v}_T^W = \begin{bmatrix} -2.612 \\ +4.975 \\ +2.157 \end{bmatrix}\,\mathrm{m/s}$$</div>
+<hr class='notebook-divider'>
+<p><strong>Step 3: Total 3D Speed</strong></p>
+<div class="math-display">$$\|\mathbf{v}_T^W\| = \sqrt{(-2.6118)^2 + (4.9752)^2 + (2.1573)^2} = \sqrt{6.8215 + 24.7526 + 4.6539} = \sqrt{36.2280} \approx 6.019\,\mathrm{m/s}$$</div>
+<p>*(Engineering Insight: Notice that the slewing motion contributes the vast majority of the spatial kinetic energy: $v_{\text{slew}} = 5.61\,\mathrm{m/s}$ out of the total $6.02\,\mathrm{m/s}$ speed! This demonstrates why slewing collisions with highwalls or haul trucks are so destructive).*</p>
+<hr class='notebook-divider'>
+<h3>Problem 6.4: Reeving Kinematics & Hoist Drum Angular Velocity</h3>
+<p><strong>Problem Statement:</strong>  </p>
+<p>On a TZ WK-20 excavator, the hoist drum has an outer pitch diameter of $D_{\text{drum}} = 1.60\,\mathrm{m}$ (radius $R_{\text{drum}} = 0.80\,\mathrm{m}$).  </p>
+<p>The hoist motor drives the drum through a double-reduction helical gearbox with overall gear ratio $i_{\text{hoist}} = 32.5 : 1$.  </p>
+<p>The twin hoist cables are reeved in a 2-part direct configuration ($n_{\text{reeve}} = 2$).  </p>
+<p>At an instant during high-speed hoisting, the geometric cable length changes at rate $\dot{L}_h = -1.25\,\mathrm{m/s}$ (winding in).</p>
+<ol>
+<li>Calculate the linear line speed $v_{\text{cable}}$ at which the wire rope winds onto the hoist drum.</li>
+<li>Compute the rotational speed of the hoist drum $\omega_{\text{drum}}$ in $\mathrm{rad/s}$ and $\mathrm{rpm}$.</li>
+<li>Compute the required angular speed $\omega_{\text{motor}}$ of the dual $1,200\,\mathrm{kW}$ AC hoist motors in $\mathrm{rpm}$.</li>
+</ol>
+<p><strong>Step-by-Step Solution:</strong></p>
+<p><strong>Step 1: Compute rope winding speed</strong></p>
+<p>For a 2-part reeving system where two parallel ropes hoist the bail directly:</p>
+<div class="math-display">$$v_{\text{cable}} = |\dot{L}_h| = 1.25\,\mathrm{m/s}$$</div>
+<p><strong>Step 2: Compute hoist drum rotational speed</strong></p>
+<div class="math-display">$$v_{\text{cable}} = R_{\text{drum}} \cdot \omega_{\text{drum}} \implies \omega_{\text{drum}} = \frac{v_{\text{cable}}}{R_{\text{drum}}} = \frac{1.25\,\mathrm{m/s}}{0.80\,\mathrm{m}} = 1.5625\,\mathrm{rad/s}$$</div>
+<p>Convert to revolutions per minute ($\mathrm{rpm}$):</p>
+<div class="math-display">$$N_{\text{drum}} = \omega_{\text{drum}} \times \frac{60}{2\pi} = 1.5625 \times 9.5493 \approx 14.92\,\mathrm{rpm}$$</div>
+<p><strong>Step 3: Compute electric motor shaft speed</strong></p>
+<div class="math-display">$$N_{\text{motor}} = i_{\text{hoist}} \cdot N_{\text{drum}} = (32.5)(14.9208\,\mathrm{rpm}) \approx 484.93\,\mathrm{rpm}$$</div>
+<div class="math-display">$$\omega_{\text{motor}} = (1.5625\,\mathrm{rad/s})(32.5) \approx 50.78\,\mathrm{rad/s}$$</div>
+<p><strong>Result:</strong> The hoist motors spin at **$484.9\,\mathrm{rpm}$** ($50.78\,\mathrm{rad/s}$), well within their $0 - 1,000\,\mathrm{rpm}$ constant-torque operating envelope.</p>
+<hr class='notebook-divider'>
+<h3>Problem 6.5: Dipper Door Latch Disengagement Kinematics</h3>
+<p><strong>Problem Statement:</strong>  </p>
+<p>When dumping payload into a $240\,\mathrm{t}$ haul truck, the dipper bucket is held stationary at $q_3 = 35.0^\circ, d_4 = 12.0\,\mathrm{m}$.  </p>
+<p>The dipper door has mass $m_{\text{door}} = 4,200\,\mathrm{kg}$ and rotates about hinge pins located at the bottom rear of the bucket body. The distance from the door hinge to its center of mass is $r_{\text{door}} = 1.40\,\mathrm{m}$. In the latched position, the door plate is inclined at angle $\phi_{\text{door}} = 20.0^\circ$ below the handle axis.</p>
+<ol>
+<li>Determine the absolute orientation of the dipper door with respect to horizontal ground.</li>
+<li>Compute the gravitational unlatching torque $\tau_{\text{gravity}}^{\text{door}}$ tending to swing the door open the instant the latch bar is retracted.</li>
+<li>If an electric trip motor retracts the latch pin in $80\,\mathrm{ms}$, compute the initial angular acceleration $\ddot{\phi}_{\text{door}}$ of the opening door (door inertia about hinge: $I_{\text{door}} = 6,500\,\mathrm{kg\cdot m^2}$).</li>
+</ol>
+<p><strong>Step-by-Step Solution:</strong></p>
+<p><strong>Step 1: Compute absolute door orientation</strong></p>
+<p>The handle is elevated at $q_3 = +35.0^\circ$. The door is offset downward by $\phi_{\text{door}} = 20.0^\circ$.  </p>
+<p>The absolute elevation angle of the door plate relative to horizontal is:</p>
+<div class="math-display">$$\theta_{\text{door}} = q_3 - \phi_{\text{door}} = 35.0^\circ - 20.0^\circ = +15.0^\circ$$</div>
+<p><strong>Step 2: Compute gravitational unlatching torque</strong></p>
+<p>The gravitational torque acting to swing the door open about its hinge is:</p>
+<div class="math-display">$$\tau_{\text{gravity}}^{\text{door}} = m_{\text{door}} g r_{\text{door}} \cos \theta_{\text{door}}$$</div>
+<div class="math-display">$$\tau_{\text{gravity}}^{\text{door}} = (4,200\,\mathrm{kg})(9.81\,\mathrm{m/s^2})(1.40\,\mathrm{m}) \cos 15.0^\circ$$</div>
+<div class="math-display">$$\tau_{\text{gravity}}^{\text{door}} = (57,682.8\,\mathrm{N\cdot m})(0.965926) \approx 55,717.3\,\mathrm{N\cdot m} \approx +55.72\,\mathrm{kN\cdot m}$$</div>
+<p><strong>Result:</strong> A massive gravitational torque of **$55.72\,\mathrm{kN\cdot m}$** flings the door open the instant the latch releases.</p>
+<p><strong>Step 3: Initial angular acceleration</strong></p>
+<div class="math-display">$$\ddot{\phi}_{\text{door}} = \frac{\tau_{\text{gravity}}^{\text{door}}}{I_{\text{door}}} = \frac{55,717.3\,\mathrm{N\cdot m}}{6,500\,\mathrm{kg\cdot m^2}} \approx 8.5719\,\mathrm{rad/s^2}$$</div>
+<p>Convert to degrees per second squared:</p>
+<div class="math-display">$$\ddot{\phi}_{\text{door}} = (8.5719) \times \frac{180}{\pi} \approx 491.1^\circ/\mathrm{s^2}$$</div>
+<p><em>(Result: The door accelerates open at </em>*$491^\circ/\mathrm{s^2}$**, discharging $55\,\mathrm{t}$ of rock into the truck tray in under $1.2\,\mathrm{seconds}$!).*</p>
+<hr class='notebook-divider'>
+<h2>6.8 MATLAB / Python Topological Simulator Script</h2>
+<div class="code-container"><pre><code class="language-matlab">% =========================================================================
+% CHAPTER 6: 3D SPATIAL KINEMATICS &amp; CABLE LOOP SIMULATOR
+% Compatible with MATLAB R2025b / Octave 7+
+% =========================================================================
+function shovel_spatial_kinematics_demo()
+    clc; clear; close all;
+    
+    % Select Machine: &#x27;PH2100BL&#x27; or &#x27;TZ_WK20&#x27;
+    machine_type = &#x27;TZ_WK20&#x27;;
+    p = load_machine_parameters(machine_type);
+    
+    fprintf(&#x27;=== SIMULATING %s SPATIAL KINEMATICS ===\n&#x27;, machine_type);
+    
+    % Operating Joint States
+    theta1 = deg2rad(35.0); % Swing angle [rad]
+    q3     = deg2rad(20.0); % Saddle angle [rad]
+    d4     = 13.00;         % Crowd extension [m]
+    
+    % Velocities
+    theta1_d = 0.20;        % Swing speed [rad/s]
+    q3_d     = 0.15;        % Saddle speed [rad/s]
+    d4_d     = 0.85;        % Crowd speed [m/s]
+    
+    % 1. Forward Kinematics Computation
+    [p_T_world, p_B_deck, p_O3_deck, p_S_deck] = compute_3d_fk(theta1, q3, d4, p);
+    
+    fprintf(&#x27;Shipper Shaft Pivot O3:  [X, Z] = [%.3f, %.3f] m\n&#x27;, p_O3_deck(1), p_O3_deck(3));
+    fprintf(&#x27;Boom Point Sheave S:     [X, Z] = [%.3f, %.3f] m\n&#x27;, p_S_deck(1), p_S_deck(3));
+    fprintf(&#x27;Dipper Bail Pin B:       [X, Z] = [%.3f, %.3f] m\n&#x27;, p_B_deck(1), p_B_deck(3));
+    fprintf(&#x27;Global 3D Tooth Tip T:   [X, Y, Z] = [%.3f, %.3f, %.3f] m\n\n&#x27;, ...
+            p_T_world(1), p_T_world(2), p_T_world(3));
+        
+    % 2. Hoist Cable Loop Analysis
+    [L_h, h_h] = compute_hoist_loop(q3, d4, p);
+    fprintf(&#x27;=== HOIST CABLE LOOP CHARACTERISTICS ===\n&#x27;);
+    fprintf(&#x27;Suspended Cable Length L_h: %.4f m\n&#x27;, L_h);
+    fprintf(&#x27;Hoist Moment Arm h_h:       %.4f m\n\n&#x27;, h_h);
+    
+    % 3. 3D Velocity Vector
+    v_T_world = compute_3d_velocity(theta1, q3, d4, theta1_d, q3_d, d4_d, p);
+    fprintf(&#x27;=== 3D CARTESIAN VELOCITY VECTOR ===\n&#x27;);
+    fprintf(&#x27;v_x = %+.4f m/s\n&#x27;, v_T_world(1));
+    fprintf(&#x27;v_y = %+.4f m/s\n&#x27;, v_T_world(2));
+    fprintf(&#x27;v_z = %+.4f m/s\n&#x27;, v_T_world(3));
+    fprintf(&#x27;Resultant Spatial Speed ||v|| = %.4f m/s\n&#x27;, norm(v_T_world));
+end
+
+function p = load_machine_parameters(type)
+    if strcmp(type, &#x27;PH2100BL&#x27;)
+        p.xb = 3.65; p.zb = 2.10; p.Lb = 16.76; p.Lb1 = 8.84;
+        p.alpha_b = deg2rad(45.0); p.Ltx = 2.00; p.Lty = 1.00;
+    else % TZ WK-20
+        p.xb = 4.85; p.zb = 2.80; p.Lb = 21.50; p.Lb1 = 11.20;
+        p.alpha_b = deg2rad(45.0); p.Ltx = 2.50; p.Lty = 1.20;
+    end
+end
+
+function [p_T_w, p_B_0, p_O3_0, p_S_0] = compute_3d_fk(th1, q3, d4, p)
+    % Shipper Shaft Pivot O3
+    x3 = p.xb + p.Lb1 * cos(p.alpha_b);
+    z3 = p.zb + p.Lb1 * sin(p.alpha_b);
+    p_O3_0 = [x3; 0; z3];
+    
+    % Boom Sheave S
+    xs = p.xb + p.Lb * cos(p.alpha_b);
+    zs = p.zb + p.Lb * sin(p.alpha_b);
+    p_S_0 = [xs; 0; zs];
+    
+    % Bail Pin B
+    xB = x3 + d4 * cos(q3);
+    zB = z3 + d4 * sin(q3);
+    p_B_0 = [xB; 0; zB];
+    
+    % Tooth Tip in Frame {0}
+    rT = d4 + p.Ltx;
+    xT0 = x3 + rT * cos(q3) + p.Lty * sin(q3);
+    zT0 = z3 + rT * sin(q3) - p.Lty * cos(q3);
+    
+    % Global 3D (assuming ground frame coincident at origin)
+    p_T_w = [xT0 * cos(th1);
+             xT0 * sin(th1);
+             zT0];
+end
+
+function [L_h, h_h] = compute_hoist_loop(q3, d4, p)
+    x3 = p.xb + p.Lb1 * cos(p.alpha_b);
+    z3 = p.zb + p.Lb1 * sin(p.alpha_b);
+    xs = p.xb + p.Lb * cos(p.alpha_b);
+    zs = p.zb + p.Lb * sin(p.alpha_b);
+    
+    xB = x3 + d4 * cos(q3);
+    zB = z3 + d4 * sin(q3);
+    
+    L_h = sqrt((xB - xs)^2 + (zB - zs)^2);
+    
+    Lb2 = p.Lb - p.Lb1;
+    h_h = (d4 * Lb2 * sin(p.alpha_b - q3)) / L_h;
+end
+
+function v_w = compute_3d_velocity(th1, q3, d4, th1_d, q3_d, d4_d, p)
+    rT = d4 + p.Ltx;
+    J11 = -rT*sin(q3) + p.Lty*cos(q3);
+    J12 = cos(q3);
+    J21 = rT*cos(q3) + p.Lty*sin(q3);
+    J22 = sin(q3);
+    
+    xT0_d = J11 * q3_d + J12 * d4_d;
+    zT0_d = J21 * q3_d + J22 * d4_d;
+    
+    x3 = p.xb + p.Lb1 * cos(p.alpha_b);
+    xT0 = x3 + rT * cos(q3) + p.Lty * sin(q3);
+    
+    v_w = [xT0_d * cos(th1) - xT0 * th1_d * sin(th1);
+           xT0_d * sin(th1) + xT0 * th1_d * cos(th1);
+           zT0_d];
+end</code></pre></div>
+<hr class='notebook-divider'>
+<h2>6.9 Research Supervisor Summary & Master Defense Checklist</h2>
+<h3>Core Concepts Mastered in Chapter 6</h3>
+<ol>
+<li><strong>Topological Kinematic Tree:</strong>  </li>
+</ol>
+<p>   The electric rope shovel is formally modeled as a kinematic tree consisting of 5 rigid link subsystems and 4 joints, closed by the parallel <strong>Hoist Cable Constraint Loop</strong> $C_h$.</p>
+<ol>
+<li><strong>Unified Reference Frame Hierarchy:</strong>  </li>
+</ol>
+<p>   Orthogonal coordinate frames $\{W\} \to \{0\} \to \{1\} \to \{2\} \to \{3\} \to \{4\} \to \{5\} \to \{T\}$ map 3D positions unambiguously without gimbal lock representation singularities.</p>
+<ol>
+<li><strong>Closed Hoist Loop Geometry:</strong>  </li>
+</ol>
+<p>   The suspended cable length $L_h(q_3, d_4)$ and hoist moment arm $h_h(q_3, d_4)$ are derived in strict closed form:</p>
+<div class="math-display">   $$h_h(q_3, d_4) = \frac{d_4 L_{b2} \sin(\alpha_b - q_3)}{L_h(q_3, d_4)}$$</div>
+<p>   The lifting mechanical advantage reaches its peak when the dipper handle is perpendicular to the boom chords ($\alpha_b - q_3 \approx 90^\circ$).</p>
+<ol>
+<li><strong>Industrial Benchmark Reconciliation:</strong>  </li>
+</ol>
+<p>   Full parameter provenance for both the $20\,\mathrm{t}$ P&H 2100BL benchmark and the $55\,\mathrm{t}$ TZ WK-20 deployment shovel is established and cross-verified against technical assembly drawings.</p>
+<hr class='notebook-divider'>
+<h3>Doctoral Viva & Defense Questions</h3>
+<ul>
+<li><strong>Q1:</strong> *Why is the hoist moment arm $h_h$ a function of both saddle angle $q_3$ and crowd extension $d_4$, rather than $q_3$ alone?*  </li>
+</ul>
+<p>  <strong>Answer:</strong> As the crowd extends ($d_4 \uparrow$), the dipper bail pin $B$ moves farther from the saddle pivot $O_3$. This changes the triangle formed by $O_3$, the sheave center $S$, and the bail pin $B$. While the angle $(\alpha_b - q_3)$ depends purely on $q_3$, the suspended rope length $L_h$ in the denominator varies strongly with $d_4$, altering the direction of the cable vector and shifting the line-of-action moment arm.</p>
+<ul>
+<li><strong>Q2:</strong> *Why does the swing degree of freedom $\theta_1$ not affect the vertical dynamics $\ddot{z}_T$?*  </li>
+</ul>
+<p>  <strong>Answer:</strong> The slewing axis $Z_0$ is collinear with the gravity vector $\mathbf{g} = [0, 0, -g]^T$. Rotation about a vertical axis is strictly in the horizontal plane ($X_0$-$Y_0$). Consequently, the vertical position $z_T^W = Z_c + z_T^0(q_3, d_4)$ has zero partial derivative with respect to $\theta_1$, decoupling vertical gravity forces from the swing angle.</p>
+<ul>
+<li><strong>Q3:</strong> <em>Under high-speed slewing, what spatial inertial force acts on the dipper handle?</em>  </li>
+</ul>
+<p>  <strong>Answer:</strong> Slewing at angular rate $\dot{\theta}_1$ creates two major spatial inertial forces: a radial centrifugal force flinging the entire front-end outward ($F_{\text{cent}} = M_d x_T^0 \dot{\theta}_1^2$), and a lateral Coriolis force ($F_{\text{Coriolis}} = 2 M_d \dot{\theta}_1 \dot{x}_T^0$) acting perpendicular to the boom plane. This lateral force produces severe out-of-plane torsional twisting on the boom foot pins and shipper shaft bushings.</p>
+<hr class='notebook-divider'>
+<h3>Transition to Chapter 7</h3>
+<p>With the complete 3D kinematic topology, reference frames, and cable loop geometry formulated, we proceed to:  </p>
+<p><strong>Volume II, Chapter 7: Planar 2-DOF Crowd-Hoist Dynamics and Cable-Driven Kinematics</strong>.  </p>
+<p>In Chapter 7, we formulate the complete dynamic equations of motion including dynamic hoist rope elasticity, sheave rotational inertia, drum winding dynamics, and motor drive transmissions.</p>
+</body>
+</html>

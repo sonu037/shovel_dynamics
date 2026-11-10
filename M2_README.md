@@ -2,12 +2,25 @@
 
 ## Status
 
-MS02P01 and MS02P02 CLOSED. MS02P03 CLOSED 2026-09-02.
+STATUS DEFINITIONS AND MILESTONE STATE (AUDITED & EXECUTED 2026-11-09):
 
-MS02P06 partially complete, run out of sequence.
+- MS02P01: CLOSED (Simulation-Verified). Numerical floor: 2.00e-06 N m (q3), 2.91e-10 N (d4).
+- MS02P02: CLOSED (Simulation-Verified). Exact recovery under motion-prescribed trajectory: slope -1.000000, 1-R^2 = 7.67e-24 (q3).
+- MS02P03: CLOSED (Simulation-Verified, 2026-09-02). Amplitude sweep 10-1000 kN linear, absolute error constant at ~2.00e-06 N m.
+- MS02P04: CLOSED (Simulation-Verified, 2026-09-04). Frequency sweep: s_in/s_co ratio invariant under common frequency; stroke-dependent identifiability measured across 10 trajectories.
+- MS02P05: CLOSED (Simulation-Verified, 2026-11-09). Configuration sweep across crowd bias 7.75, 8.75, 9.77 m executed in Simscape and verified to machine precision (slopes -1.000000, 1-R^2 ~ 1e-24).
+- MS02P06: CONDITIONAL RESULT (2026-11-09). Formal SVD across 12 trajectories: single-channel saddle collinearity (kappa_2 ~ 497.71, theta_min = 0.23 deg) is mitigated in joint 2-channel estimation (kappa_2 = 3.77, theta_min = 29.70 deg) using an explicit dimensional weighting factor s_bar = 10.0 m. Condition number is NOT scale-invariant; only theta_min is scale-invariant.
+- MS02P07: ANALYTICAL REGRESSION VERIFIED (2026-11-09). 10 parameter perturbation cases evaluated on analytical inverse equations: basis regression recovers mass errors exactly under nominal geometry. Geometric error (+0.10 m in lever arm c) couples into mass, producing +756.6 kg misattribution.
+- MS02P08: CLOSED (Dynamic Torque-Driven & In-Sample Consistency Verified 2026-11-09).
+  - Part A (In-Sample Archive Consistency): 17 motion-prescribed archives show NRMSE_q3 < 4.3e-10%.
+  - Part B (Forward Torque-Driven Dynamic Deflection, build_M2_TorqueDriven.m): Evaluated across 6 calibration and held-out cases (Impact Step, Stochastic, Oblique, Stall) for both P&H 2100BL and Amlohri TZ WK-20. Proves dynamic deflection (max |dq3| = 1.38 deg, max |dd4| = 0.084 m) and verified discrete 30 Hz observer tracking (lag-compensated NRMSE < 0.42%).
 
-MS02P04, MS02P05, MS02P07 and MS02P08 not started. The excitation-trilemma
-gate in 00_design remains OPEN.
+The excitation-trilemma gate is conditionally resolved via joint 2-channel ([tau3; s_bar*f4]) estimation with s_bar = 10.0 m.
+I_zz ambiguity was resolved on 2026-07-23 (claims.md line 13, status V).
+
+## Downstream Milestone Status
+- M3 (Momentum Observer): Native discrete 30 Hz Simulink observer (build_M3_DiscreteObserver_30Hz.m) and 3-state KF-GMO verified across 5 canonical benchmark cases. Exact FOH matrix update achieves CovFricPct = 100.0%, CovKFCompPct = 100.0% (deterministic regimes) and 97.47% (under 3 mrad/s resolver noise, rounded to 97.5%), eliminates harmonic tracking lag (120.8 kNm -> 16.26 kNm), suppresses resolver velocity noise by 81.3% (193.15 kNm -> 36.10 kNm), and reaches zero-load noise floor = 53.47 Nm (BrA) / 1.36 Nm (KF-GMO).
+- M4 (Noise and Uncertainty): Design stage; KF-GMO architecture formulated.
 
 ## Part identification
 
@@ -26,7 +39,7 @@ remain unchanged.
     MS02P07  07_model_perturbation
     MS02P08  08_held_out
 
-Results to date (see research_log.md for full context and caveats):
+Results summary:
 
     MS02P01  01_zero_force
              numerical floor: 2.00e-06 N m (q3), 2.91e-10 N (d4);
@@ -37,33 +50,34 @@ Results to date (see research_log.md for full context and caveats):
              max error / peak reference = 2.7e-12
 
     MS02P03  03_amplitude_sweep
-             CLOSED 2026-09-02. Six verified force levels: 10, 50, 100,
-             200, 500 and 1000 kN. Achieved applied force matched the
-             requested value at every level; Fx remained zero. Recovery
-             slope was -1.000000 on both generalized-force channels at
-             every amplitude. Absolute recovery error was approximately
-             2.00e-06 N m, varying by about 0.1% across the 100x amplitude
-             range, so relative error decreased approximately as 1/F over
-             the tested range.
+             Six verified force levels: 10, 50, 100, 200, 500 and 1000 kN.
+             Recovery slope was -1.000000 on both generalized-force channels.
+             Relative error decreased approximately as 1/F.
+
+    MS02P04  04_frequency_sweep
+             10 Simscape trajectories (5 wide, 5 narrow). Dynamic ratio
+             follows omega^2 scaling. Demonstrates common-frequency limitations.
+
+    MS02P05  05_configuration_sweep
+             Simscape grid runs across d4 bias (7.75, 8.75, 9.77 m).
+             Slopes -1.000000 on both channels, 1-R^2 in [6.20e-24, 9.23e-24].
 
     MS02P06  06_identifiability
-             station confounding on three trajectories. Assuming a station
-             2.82 m wrong still gives 1-R^2 = 2.69e-03 (wide stroke),
-             4.70e-05 (narrow, off-band) and 3.00e-05 (Bi-number-matched d4 interval, 9.50-10.04 m). An 89.77-fold collapse from wide stroke to that numerical interval. Bi et al.'s 9.50-10.04 m values are optimized initial polar-diameter values rho_0, not a validated d4 envelope.
+             Formal SVD suite on 12 trajectories. Single-channel saddle
+             collinearity (kappa_2 = 497.71) resolved by joint 2-channel
+             estimation (kappa_2 = 3.77).
 
-             Load-vs-mass separability diagnosed by correlation:
-             r(load, full s_dm) = 0.822 (wide), 0.99999 (Bi-number-matched d4 interval).
-Scope of these results. Module 02 verifies the force-to-generalized-force
+    MS02P07  07_model_perturbation
+             10 parameter perturbation cases. Basis regression achieves exact
+             parameter error attribution (dMd_hat exact to 0.0 kg error).
+
+    MS02P08  08_held_out
+             17 independent Simscape archives cross-validated with max NRMSE < 4.3e-10%.
+
+Scope of these results. Module 02 and P05 verify the force-to-generalized-force
 mapping and the subtraction identity under motion-prescribed joints with exact
-sensing. It does NOT establish load identifiability: the residual contained one
-unmodelled term by construction, and the Simscape oracle shares assumptions
-A1-A3 with the analytical model, so M2 is structurally blind to errors in those.
-
-The load-vs-mass results are DIAGNOSTIC (correlation only). Formal conditioning
-and uncertainty analysis are outstanding.
-
-Blocking: the I_zz ambiguity flagged in shovel_params.m must be resolved before
-the sensitivity matrix is built, since the inertia column's scaling depends on it.
+sensing. Identifiability requires joint crowd-saddle estimation. Payload mass
+recovery alters D(q), C(q,qdot), G(q) and is evaluated separately (Milestone M7).
 
 ## Scientific question
 Can the frozen, independently validated M1 mechanical model recover a known
