@@ -3,7 +3,7 @@
 **Project:** AI-Enabled Platform for Diagnosis, Prognosis and Health Management of Mining Electrical Systems: Case Study on Dragline / Electric Rope Shovel  
 **Grant Reference:** IIT/SRIC/R/AEH/2026/104 | CMPDI MT-189 (Coal India Limited)  
 **Author:** Multidisciplinary Research Supervisor, Systems Identification & Control Lead  
-**Date:** November 2026 | **Status:** **FROZEN & EMPIRICALLY VALIDATED (ALL 6 PROTOCOLS PASSED)**
+**Date:** November 2026 | **Status:** **EXPERIMENTALLY AUDITED & BENCHMARKED (GATES RECONCILED WITH PHYSICAL BOUNDARIES)**
 
 ---
 
@@ -11,27 +11,38 @@
 
 Milestone 4 (M4) investigates how sensor resolution, discrete quantization, numerical differentiation noise laws, inverter switching harmonics, sampling aliasing at 30 Hz, and Errors-in-Variables (EIV) parameter bias affect the electric rope shovel digital twin and dynamic load estimation pipeline.
 
-Following a rigorous multi-tier audit that identified five critical foundational defects (**DEF-01** through **DEF-05**), the experimental pipeline was completely redesigned and executed on the physical models in **MATLAB R2025b**. All six formal experimental protocols (**MS04P01** through **MS04P06**) have now been executed, logged, and archived with $100\%$ reproducible physical evidence.
+Following a thorough multi-tier research audit that resolved five foundational defects (**DEF-01** through **DEF-05**), the complete experimental suite was implemented and executed against physical plant models in **MATLAB R2025b**. 
+
+> [!IMPORTANT]
+> ### SCIENTIFIC ACCEPTANCE VERDICT ON MILESTONE 4
+> Milestone 4 is **not treated as a closed, dogmatically "frozen" milestone**. Rather, it establishes the **rigorous, empirical noise and uncertainty baseline** for the project. 
+> Pushing code to Git records our experimental findings, but true scientific acceptance requires that every protocol gate is physically and statistically justified. As established by our audit, real-world 30 Hz industrial telemetry introduces hard physical trade-offs (quantization noise vs. observer bandwidth; algebraic decoupling vs. EIV bias) that must not be masked by superficial "pass" labels.
 
 ```
-====================================================================================================
-                        MILESTONE 4: COMPLETE EXPERIMENTAL SUITE AUDIT VERDICT
-====================================================================================================
-  Protocol   Description                               Key Finding / Quantitative Proof     Status
-  --------------------------------------------------------------------------------------------------
-  MS04P01    Two-Tier Resolver Quantization            Case 1B Motor-Shaft cuts variance by  PASSED
-                                                       57,600x; RMS gravity error = 5.16 Nm
-  MS04P02    Fu-Style Proportional AWGN Sweep          Inverse dynamics collapses at 10%     PASSED
-                                                       noise (R^2 = 0.02); KF-GMO R^2 = 0.73
-  MS04P03    100-Trial Monte Carlo EIV Bias            OLS inertia bias = -1460% (negative); PASSED
-                                                       IDIM-IV eliminates bias (bias = +2.3%)
-  MS04P04    Inverter Ripple & 30 Hz Aliasing          6th/12th harmonics fold into 9 & 12   PASSED
-                                                       Hz; 10 Hz Butterworth cuts by 33.6 dB
-  MS04P05    Estimator Filtering Ablation Study        Zero-phase filtfilt R^2 = 0.93;       PASSED
-                                                       KF-GMO provides causal optimal (0.73)
-  MS04P06    Held-Out Machine Scalability              Machine A impact tracked (NRMSE 26%); PASSED
-                                                       Machine B WK-20 120t tracked (NRMSE 10%)
-====================================================================================================
+====================================================================================================================
+                        MILESTONE 4: RECONCILED EXPERIMENTAL SUITE AUDIT VERDICT
+====================================================================================================================
+  Protocol   Description                   Key Empirical Finding                    Audit Finding & Caveat
+  ------------------------------------------------------------------------------------------------------------------
+  MS04P01    Two-Tier Resolver             Case 1B Motor-Shaft cuts variance by     Static gravity error = 5.16 Nm;
+             Quantization                  57,600x; RMS residual = 2,442.7 Nm       Relative dynamic floor = 0.087%
+                                                                                    (< 0.10% nominal torque gate).
+  MS04P02    Fu-Style Proportional         Branch A collapses at 10% (R^2 = 0.02);  Fu's R^2 > 0.95 was deep-net;
+             AWGN Sweep                    KF-GMO maintains R^2 = 0.73 (10% noise)  KF-GMO achieves 0.73 (causal);
+                                           and R^2 = 0.36 (20%), 0.13 (25%).        Only positive arm at >= 20%.
+  MS04P03    100-Trial Monte Carlo         OLS inertia bias = -1459.9% (negative);  IDIM-IV eliminates asymptotic
+             EIV Bias Audit                IDIM-IV eliminates bias (+2.34% error);  EIV bias (mass bias +0.01%,
+                                           Mass bias drops from -14.9% to +0.01%.   lever offset bias -1.05%).
+  MS04P04    Inverter Ripple & 30 Hz       6th/12th harmonics fold into 9.0 Hz &    Analog 10 Hz Butterworth pre-
+             Sampling Aliasing             12.0 Hz alias tones; 2nd-order analog    filter mandatory for 30 Hz PLC
+                                           pre-filter provides -33.6 dB cut.        telemetry to prevent false load.
+  MS04P05    Estimator Filtering           Offline zero-phase filtfilt achieves     Offline bound R^2 = 0.93;
+             Ablation Study                R^2 = 0.93; Causal 3-State KF-GMO        Causal KF-GMO provides online
+                                           achieves R^2 = 0.73 (10% noise).         optimality without IIR phase lag.
+  MS04P06    Held-Out Machine              Machine A impact steps: NRMSE = 26.2%;   Linear KF has step-edge lag on
+             Scalability Assessment        Machine B WK-20 prior: NRMSE = 10.5%.    rock impact (motivates M5);
+                                                                                    WK-20 uses scaled priors!
+====================================================================================================================
 ```
 
 ---
@@ -71,10 +82,10 @@ Case 1B (Motor-Shaft)| 16   | 0.00002         |    0.32          |        996.1 
 ====================================================================================================
 ```
 
-**Key Physical Insight:**
+**Reconciled Acceptance Analysis:**
 - In Case 1A (direct joint sensing), the 12-bit position step of $0.088^\circ$ causes static gravity torque jumps of **$1,238.9\,\mathrm{N}\cdot\mathrm{m}$ RMS**. Double differentiating this signal in Branch A produces an astronomical **$3.88\,\mathrm{MN}\cdot\mathrm{m}$ RMS noise**, swamping the true dynamic torque!
-- In Case 1B (motor-shaft sensing with $N_{\mathrm{gear}} = 240$), the gear reduction divides the joint quantization step by 240 ($0.000366^\circ = 6.39\,\mu\mathrm{rad}$), reducing position variance by $240^2 = 57,600\times$. Gravity error drops to **$5.16\,\mathrm{N}\cdot\mathrm{m}$**.
-- Dynamic observer residual floor: On a machine with $2,800,000\,\mathrm{N}\cdot\mathrm{m}$ peak hoist torque, Branch C achieves an RMS residual of $2,442.68\,\mathrm{N}\cdot\mathrm{m}$, which is **$0.087\%$ of full scale** (strictly below the $0.1\%$ digital twin tolerance gate).
+- In Case 1B (motor-shaft sensing with $N_{\mathrm{gear}} = 240$), the gear reduction divides the joint quantization step by 240 ($0.000366^\circ = 6.39\,\mu\mathrm{rad}$), reducing position variance by $240^2 = 57,600\times$. Static gravity error drops to **$5.16\,\mathrm{N}\cdot\mathrm{m}$**.
+- **Dynamic Observer Floor Clarification:** An earlier draft conflated the static gravity step error ($5.16\,\mathrm{N}\cdot\mathrm{m}$) with the dynamic observer torque floor ($2,442.68\,\mathrm{N}\cdot\mathrm{m}$). When high rotational inertia ($D_{11} \approx 3.285 \times 10^6\,\mathrm{kg}\cdot\mathrm{m}^2$) is differentiated at 30 Hz, momentum fluctuations produce an RMS observer noise of $2.44\,\mathrm{kN}\cdot\mathrm{m}$. Relative to the shovel's nominal hoist torque of $2,797,000\,\mathrm{N}\cdot\mathrm{m}$, this represents **$0.0873\%$ relative noise floor**, successfully meeting the project requirement of $< 0.10\%$ full-scale tolerance.
 
 ---
 
@@ -109,9 +120,9 @@ Noise Tier  | Metric       | Branch A (Finite Diff) | Branch B (FOH GMO) | Branc
 ====================================================================================================
 ```
 
-**Key Physical Insight:**
-- At $10\%$ noise, Branch A (finite-difference inverse dynamics) collapses completely to $R^2 = 0.0200$ and NRMSE = $35.73\%$, proving Fu et al.'s theorem that inverse dynamics cannot be deployed without state filtering.
-- Branch C (3-State KF-GMO) is the **only estimator in the literature that maintains positive correlation ($R^2 > 0$) up to $25\%$ noise**, achieving $R^2 = 0.7333$ at $10\%$ noise and $R^2 = 0.3580$ at $20\%$ noise.
+**Reconciled Acceptance Analysis:**
+- At $10\%$ noise, Branch A (finite-difference inverse dynamics) collapses completely to $R^2 = 0.0200$ and NRMSE = $35.73\%$, replicating Fu et al.'s finding that raw inverse dynamics fails under industrial sensor noise.
+- **The Fu Benchmark Trade-off:** Fu et al. (2022) reported $R^2 \approx 0.97$ using a multi-layer Physics-Informed Deep Neural Network trained on large datasets. Expecting a causal, linear 3-State Kalman filter on 30 Hz discrete telemetry to hit $R^2 > 0.95$ without deep data-driven training was uncalibrated. Our empirical result of **$R^2 = 0.7333$** ($\text{NRMSE} = 18.64\%$) represents a realistic physical performance boundary for a purely analytical recursive observer, and KF-GMO is the **only estimator capable of maintaining positive tracking ($R^2 > 0$) up to 25% noise**.
 
 ---
 
@@ -191,28 +202,34 @@ Arm 5: 3-State KF-GMO      | 0.7287  | 18.80%    | 37.59     | 33.06     | 300 m
 ---
 
 ### 2.6 Protocol MS04P06: Held-Out Machine Scalability & Generalization
-**Objective:** Verify seamless generalization from Machine A ($54\,\mathrm{t}$) to Machine B ($120\,\mathrm{t}$ TZ WK-20) without retuning.
+**Objective:** Verify seamless generalization from Machine A ($54\,\mathrm{t}$) to Machine B (TZ WK-20) without retuning.
 
 ```
-====================================================================================================
+====================================================================================================================
                         MS04P06 HELD-OUT GENERALIZATION SUMMARY
-====================================================================================================
-Test Scenario                   | Machine Scale  | R^2    | NRMSE (%) | RMSE (kN) | Verification
-----------------------------------------------------------------------------------------------------
-Test 1: Machine A Unseen Impact | 54-tonne       | 0.1755 | 26.23%    | 55.07     | Sharp 50 kN steps
-Test 2: Machine B (TZ WK-20)    | 120-tonne      | 0.9094 | 10.46%    | 73.19     | Heavy 350 kN dig
-====================================================================================================
+====================================================================================================================
+Test Scenario                          | R^2      | NRMSE (%)    | RMSE (kN)    | MAE (kN)     | Audit Finding
+--------------------------------------------------------------------------------------------------------------------
+Machine A: Discontinuous Impact Steps  | 0.1755   | 26.23%       | 55.07        | 45.54        | STEP_LAG_WARN
+Machine B: TZ WK-20 (56.5t Prior)      | 0.9094   | 10.46%       | 73.19        | 65.08        | PASSED (PRIOR)
+====================================================================================================================
 ```
 
-**Key Physical Insight:**
-- On the $120$-tonne TZ WK-20 deployment target at NCL Amlohri, the KF-GMO achieves an outstanding **$R^2 = 0.9094$** and **NRMSE = $10.46\%$** on a massive $350\,\mathrm{kN}$ digging resistance cycle!
-- Because the heavier machine has much larger physical rotational inertia ($1.45 \times 10^6\,\mathrm{kg}\cdot\mathrm{m}^2$ vs $2.88 \times 10^5\,\mathrm{kg}\cdot\mathrm{m}^2$), the low-frequency digging signal is even stronger relative to high-frequency noise, proving that our digital twin architecture performs even better at full mining scale!
+**Reconciled Physical Findings:**
+1. **Machine A Discontinuous Impact Tracking ($R^2 = 0.1755$, NRMSE = $26.23\%$):**
+   - The linear constant-acceleration Kalman filter acts as a low-pass filter on rapid cutting transients. When dipper teeth hit sudden rectangular $50\,\mathrm{kN}$ rock impact steps, the filter exhibits transient lag at the step edges.
+   - This defines the **precise technical motivation for Milestone 5**: a multi-rate, adaptive-covariance state observer is needed to detect step discontinuities and switch bandwidth dynamically.
+2. **Machine B (TZ WK-20) Scalability & Critical Parameter Caveat:**
+   - On the larger shovel under $350\,\mathrm{kN}$ digging resistance, the observer achieves **$R^2 = 0.9094$** and **NRMSE = $10.46\%$**.
+   - **CRITICAL PARAMETER CAVEAT:** As mandated by claims integrity, the parameters for Machine B ($M_d = 56,500\,\mathrm{kg}$, $I_{zz} = 305,000\,\mathrm{kg}\cdot\mathrm{m}^2$) are **engineering priors scaled from Rasuli (2014)** based on the Amlohri specification sheet. They are NOT verified OEM CAD data. True field validation requires free-swing parameter identification on site at NCL Amlohri.
 
 ---
 
-## 3. Formal Sign-Off & Progression to Milestone 5
+## 3. Claims Integrity & Status Table
 
-With all five defects resolved and all six experimental protocols successfully executed:
-1. **Milestone 4 (Measurement Noise, Uncertainty & Errors-in-Variables) is officially COMPLETED, AUDITED, and FROZEN.**
-2. All experimental scripts, logs, and `.mat` data archives are preserved in `M4/`.
-3. The platform is cleared to progress to **Milestone 5 (M5: Multi-Rate State Observers & Co-Simulation Architecture)**.
+| Area | Current Verified State | Audit Caveat / Ongoing Work |
+| :--- | :--- | :--- |
+| **Study Notebook** | Chapters 1–7 fully authored ($>320$ pages, 7,695 lines committed). | Chapters 8–34 remain declared Future Work. Web diff truncation must be noted. |
+| **Milestone 4** | All 6 protocols executed and archived in `M4/`. | Gates reconciled with physical limits; not dogmatically frozen. Baseline for M5. |
+| **Machine B (WK-20)** | Gearing, dimensions, and motor nameplates verified from Amlohri specs. | Inertial parameters ($M_d, I_{zz}$) are scaled engineering estimates, not OEM CAD. |
+| **Paper 1 Manuscript** | Working draft submitted to internal review (`paper1_tmech.tex`). | Not yet publication-ready; claims being aligned with verified data in `claims.md`. |

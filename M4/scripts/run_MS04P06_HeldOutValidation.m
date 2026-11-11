@@ -50,20 +50,24 @@ function RESULTS = run_MS04P06_HeldOutValidation(varargin)
     if ~isfield(PA, 'eps3'), PA.eps3 = 1e-4; end
     if ~isfield(PA, 'eps4'), PA.eps4 = 1e-4; end
 
-    % Load Machine B (TZ WK-20) parameters
+    % Load Machine B (TZ WK-20) parameters from single source of truth
     if exist(fullfile(repo_root, 'M1', 'scripts', 'shovel_params_wk20.m'), 'file')
+        addpath(fullfile(repo_root, 'M1', 'scripts'));
         PB = shovel_params_wk20();
     else
-        % Verified TZ WK-20 parameters for NCL Amlohri
+        % Engineering estimate prior scaled from Amlohri spec sheet (Pending Field ID)
         PB.g     = 9.80665;
-        PB.m     = 120000.0;         % 120 tonne empty dipper + stick
-        PB.c     = -2.1000;          % COG offset (m)
-        PB.Izz   = 1450000.0;        % Rotational inertia (kg*m^2)
-        PB.fv3   = 8500.0;           % Viscous friction (N*m*s/rad)
-        PB.fv4   = 3200.0;           % Viscous crowd friction (N*s/m)
-        PB.fc3   = 850.0;            % Coulomb hoist friction (N*m)
-        PB.fc4   = 1200.0;           % Coulomb crowd friction (N)
+        PB.m     = 56500.0;          % [ESTIMATE] 56.5 tonne empty dipper + handle
+        PB.c     = -1.3200;          % [ESTIMATE] Net COG offset (m)
+        PB.Izz   = 305000.0;         % [ESTIMATE] Rotational inertia (kg*m^2)
+        PB.fv3   = 4100.0;           % [ESTIMATE] Viscous friction (N*m*s/rad)
+        PB.fv4   = 1600.0;           % [ESTIMATE] Viscous crowd friction (N*s/m)
+        PB.fc3   = 380.0;            % [ESTIMATE] Coulomb hoist friction (N*m)
+        PB.fc4   = 520.0;            % [ESTIMATE] Coulomb crowd friction (N)
     end
+    if ~isfield(PB, 'Md'), PB.Md = PB.m; end
+    if ~isfield(PB, 'eps3'), PB.eps3 = 3e-4; end
+    if ~isfield(PB, 'eps4'), PB.eps4 = 3e-4; end
     if ~isfield(PB, 'Md'), PB.Md = PB.m; end
     if ~isfield(PB, 'eps3'), PB.eps3 = 1e-4; end
     if ~isfield(PB, 'eps4'), PB.eps4 = 1e-4; end
@@ -214,23 +218,32 @@ function RESULTS = run_MS04P06_HeldOutValidation(varargin)
     fprintf('\n========================================================================================\n');
     fprintf('  HELD-OUT EXPERIMENTAL EVALUATION SUMMARY:\n');
     fprintf('========================================================================================\n');
-    fprintf('%-30s | %-10s | %-12s | %-12s | %-12s | %-10s\n', ...
-            'Test Scenario', 'R^2', 'NRMSE (%)', 'RMSE (kN)', 'MAE (kN)', 'Status');
-    fprintf('----------------------------------------------------------------------------------------------------\n');
-    fprintf('%-30s | %-10.4f | %-11.2f%% | %-12.2f | %-12.2f | %-10s\n', ...
-            'Machine A: Unseen Impact Profile', r2_A, nrmse_A, rmse_A/1e3, mae_A/1e3, 'PASSED');
-    fprintf('%-30s | %-10.4f | %-11.2f%% | %-12.2f | %-12.2f | %-10s\n', ...
-            'Machine B: TZ WK-20 (120t Dipper)', r2_B, nrmse_B, rmse_B/1e3, mae_B/1e3, 'PASSED');
-    fprintf('----------------------------------------------------------------------------------------------------\n');
+    fprintf('%-38s | %-8s | %-12s | %-12s | %-12s | %-12s\n', ...
+            'Test Scenario', 'R^2', 'NRMSE (%)', 'RMSE (kN)', 'MAE (kN)', 'Audit Finding');
+    fprintf('--------------------------------------------------------------------------------------------------------------------\n');
+    audit_A = 'STEP_LAG_WARN';
+    if r2_A > 0.50, audit_A = 'PASSED'; end
+    audit_B = 'SCALED_PRIOR';
+    if r2_B > 0.85, audit_B = 'PASSED (PRIOR)'; end
+    fprintf('%-38s | %-8.4f | %-11.2f%% | %-12.2f | %-12.2f | %-12s\n', ...
+            'Machine A: Discontinuous Impact Steps', r2_A, nrmse_A, rmse_A/1e3, mae_A/1e3, audit_A);
+    fprintf('%-38s | %-8.4f | %-11.2f%% | %-12.2f | %-12.2f | %-12s\n', ...
+            'Machine B: TZ WK-20 (56.5t Prior)', r2_B, nrmse_B, rmse_B/1e3, mae_B/1e3, audit_B);
+    fprintf('--------------------------------------------------------------------------------------------------------------------\n');
 
     fprintf('\n========================================================================================\n');
     fprintf('  PHYSICAL ACCEPTANCE CRITERIA AUDIT (HELD-OUT GENERALIZATION):\n');
     fprintf('========================================================================================\n');
-    fprintf('  1. Machine A Unseen Impact Tracking:\n');
-    fprintf('     - Successfully tracks sharp 50 kN impact transitions with NRMSE = %.2f%%, R^2 = %.4f\n', nrmse_A, r2_A);
-    fprintf('  2. Machine B (TZ WK-20) 120-Tonne Scalability:\n');
-    fprintf('     - Reconstructs 350 kN mining shovel digging resistance with NRMSE = %.2f%%, R^2 = %.4f\n', nrmse_B, r2_B);
-    fprintf('  --> CONCLUSION: Algorithm generalizes seamlessly across both machine scales without manual retuning!\n');
+    fprintf('  1. Machine A Discontinuous Impact Step Tracking:\n');
+    fprintf('     - NRMSE = %.2f%%, R^2 = %.4f.\n', nrmse_A, r2_A);
+    fprintf('     - AUDIT FINDING: Linear constant-acceleration KF-GMO acts as low-pass filter;\n');
+    fprintf('       experiences transient overshoot/lag at sharp 50 kN rectangular impact edges.\n');
+    fprintf('       Motivates multi-rate adaptive covariance observer in Milestone 5.\n\n');
+    fprintf('  2. Machine B (TZ WK-20 Scaled Prior Simulation):\n');
+    fprintf('     - Digging force recovery: NRMSE = %.2f%%, R^2 = %.4f.\n', nrmse_B, r2_B);
+    fprintf('     - AUDIT FINDING: High-inertia machine filters high-frequency noise naturally.\n');
+    fprintf('       CRITICAL CAVEAT: Parameters Md=56.5t, Izz=305k are engineering priors scaled\n');
+    fprintf('       from Rasuli 2014, NOT verified OEM CAD. Must be identified at Amlohri.\n');
     fprintf('========================================================================================\n\n');
 
     % Save results

@@ -37,3 +37,44 @@ Saved experiment results to: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M4\ex
 
 
 MS04P01 execution completed successfully at 10-Nov-2026 19:54:25!
+Starting MS04P01 execution at 11-Nov-2026 11:26:45...
+========================================================================================
+  MILESTONE 4 PROTOCOL P01: TWO-TIER RESOLVER QUANTIZATION SWEEP
+  Target Machines: Machine A (P&H 2100BL) & Machine B (TZ WK-20 Gearing Context)
+========================================================================================
+
+Sensor Topology        | Bits   | q3 LSB (deg) | Gravity Err  | BrA RMS (Nm) | BrC RMS (Nm) | Noise Cut 
+----------------------------------------------------------------------------------------------------
+Case1A_JointSide       | 10     | 0.35156      | 4955.46      | 15199687.6   | 35972.10     | 52.5       dB
+Case1A_JointSide       | 12     | 0.08789      | 1238.86      | 3875692.1    | 19603.03     | 45.9       dB
+Case1A_JointSide       | 14     | 0.02197      | 309.72       | 858621.5     | 14664.01     | 35.4       dB
+Case1A_JointSide       | 16     | 0.00549      | 77.43        | 253555.0     | 7975.85      | 30.0       dB
+----------------------------------------------------------------------------------------------------
+Case1B_MotorShaft      | 10     | 0.00146      | 20.65        | 58492.0      | 4907.93      | 21.5       dB
+Case1B_MotorShaft      | 12     | 0.00037      | 5.16         | 13966.0      | 2442.68      | 15.1       dB
+Case1B_MotorShaft      | 14     | 0.00009      | 1.29         | 3917.4       | 1367.70      | 9.1        dB
+Case1B_MotorShaft      | 16     | 0.00002      | 0.32         | 996.1        | 639.41       | 3.9        dB
+----------------------------------------------------------------------------------------------------
+
+========================================================================================
+  PHYSICAL VERIFICATION & ACCEPTANCE CRITERIA AUDIT:
+========================================================================================
+  1. Subcase 1A (Joint-Side Resolver at 12-bit):
+     - Theoretical Gravity RMS Error: 1238.86 N*m  (Target: > 1,000 N*m -> CONFIRMED)
+     - Branch A (Finite Diff) RMS Noise: 3875692.1 N*m
+     - CONCLUSION: Direct joint sensing produces excessive noise, validating rejection.
+
+  2. Subcase 1B (Motor-Shaft Resolver at 12-bit, N_gear = 240):
+     - Joint Position LSB: 0.000366 deg (6.39 micro-rad)
+     - Static Gravity RMS Error: 5.16 N*m (Down by 240x from 1,238.86 N*m!)
+     - Branch C (3-State KF-GMO) Dynamic RMS Noise Floor: 2442.68 N*m (Relative Floor: 0.0873% of 2.8 MN*m)
+     - Dynamic Noise Floor Gate: PASSED (Relative floor 0.0873% < 0.10% nominal torque tolerance)
+     - Total Noise Attenuation over Finite Difference: 15.1 dB
+     - PHYSICAL CONCLUSION: High-speed motor-shaft sensing reduces quantization variance by 57,600x,
+       limiting static gravity steps to ~5.2 N*m and maintaining dynamic observer noise strictly < 0.1% of full scale.
+========================================================================================
+
+Saved experiment results to: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M4\experiments\01_quantization\MS04P01_quantization_results.mat
+
+
+MS04P01 execution completed successfully at 11-Nov-2026 11:26:45!
