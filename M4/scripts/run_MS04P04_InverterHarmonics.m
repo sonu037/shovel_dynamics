@@ -3,19 +3,23 @@ function RESULTS = run_MS04P04_InverterHarmonics(varargin)
 %
 %   PURPOSE (per CODE_EXPLAINABILITY_PROTOCOL.md & CLAIMS_INTEGRITY_PROTOCOL.md):
 %     Executes Protocol MS04P04 of Milestone 4 (Sensor Noise, Uncertainty & Errors-in-Variables).
-%     Investigates the impact of inverter drive high-frequency torque ripple (6th and 12th
-%     harmonics of stator fundamental frequency f0) under the industrial 30 Hz PLC sampling
-%     telemetry rate (Nyquist limit = 15 Hz).
+%     Investigates telemetry signal conditioning requirements for CMPDI's 30 Hz industrial
+%     logging platform (Nyquist limit = 15 Hz). Evaluates the impact of inverter drive
+%     high-frequency torque ripple (6th and 12th harmonics of stator fundamental frequency f0)
+%     under discrete sampling, and establishes anti-aliasing filtering specifications.
 %
-%   PHYSICAL PHENOMENON (Resolves Defect DEF-04):
-%     Inverter-fed induction/synchronous shovel drives produce torque harmonics:
+%   PHYSICAL PHENOMENON & TELEMETRY CONTEXT (Resolves Defect DEF-04):
+%     Inverter-fed induction/synchronous shovel drives produce characteristic torque harmonics:
 %       f_ripple,6  = 6 * f0
 %       f_ripple,12 = 12 * f0
 %     For operating speed f0 in [5 Hz, 25 Hz], 6*f0 is in [30 Hz, 150 Hz].
-%     When sampled at Fs = 30 Hz without analog anti-aliasing pre-filtering, these harmonics
-%     fold back into the low-frequency mechanical baseband:
+%     While modern drive controllers (e.g. Siemens SINAMICS S120 CU320-2) feature internal
+%     actual-value smoothing filters (parameters p1441 for speed, p1442 for torque),
+%     supervisory PLC data acquisition streams sampled at 30 Hz across PROFIBUS DP will fold
+%     any unattenuated high-frequency ripple into the 0-15 Hz digital twin band:
 %       f_alias = |f_ripple - k * Fs| <= 15 Hz
-%     mimicking false digging resistance and corrupting external payload estimation!
+%     mimicking false digging resistance and corrupting external payload estimation if
+%     telemetry conditioning is inadequate.
 %
 %   CASES COMPARED:
 %     - Case 4A: Raw 30 Hz Telemetry (No Anti-Aliasing Filter -> Aliased Harmonics Present)
@@ -138,11 +142,53 @@ function RESULTS = run_MS04P04_InverterHarmonics(varargin)
     fprintf('    - Both alias frequencies fold into the digital twin mechanical passband!\n');
     fprintf('========================================================================================\n\n');
 
+    % ----------------------------------------------------------------------------------
+    % FULL PASSBAND & STOPBAND FREQUENCY RESPONSE AUDIT (2nd-Order Butterworth, fc = 10 Hz)
+    % ----------------------------------------------------------------------------------
+    fc_aa = 10.0; % 10 Hz cutoff
+    test_freqs = [0.5, 1.0, 1.5, 5.0, 10.0, 15.0, 30.0, 69.0, 138.0];
+    band_tags  = {'Passband (digging)', 'Passband (digging)', 'Passband Edge', ...
+                  'Transition Band', 'Cutoff (-3 dB)', 'Nyquist Boundary', ...
+                  'Sampling Rate Fs', '6th Harmonic Stopband', '12th Harmonic Stopband'};
+
+    fprintf('----------------------------------------------------------------------------------------\n');
+    fprintf('  ANTI-ALIASING FILTER PASSBAND & STOPBAND FREQUENCY RESPONSE (fc = %.1f Hz):\n', fc_aa);
+    fprintf('----------------------------------------------------------------------------------------\n');
+    fprintf('%-24s | %-10s | %-12s | %-16s | %-12s\n', ...
+            'Band Classification', 'Freq (Hz)', '|H(jw)| (mag)', 'Attenuation (dB)', 'Phase Lag (deg)');
+    fprintf('----------------------------------------------------------------------------------------\n');
+
+    filter_audit = struct();
+    for i = 1:numel(test_freqs)
+        f_eval = test_freqs(i);
+        w_ratio = f_eval / fc_aa;
+        mag_val = 1.0 / sqrt(1.0 + w_ratio^4);
+        db_val  = 20.0 * log10(mag_val);
+        % Phase angle for 2nd-order Butterworth: atan2(sqrt(2)*w, 1 - w^2)
+        phase_rad = -atan2(sqrt(2.0)*w_ratio, 1.0 - w_ratio^2);
+        if phase_rad > 0, phase_rad = phase_rad - 2*pi; end
+        phase_deg = rad2deg(phase_rad);
+
+        fprintf('%-24s | %8.1f Hz | %12.5f | %14.2f dB | %10.1f deg\n', ...
+                band_tags{i}, f_eval, mag_val, db_val, phase_deg);
+
+        filter_audit.freqs(i) = f_eval;
+        filter_audit.mag(i)   = mag_val;
+        filter_audit.db(i)    = db_val;
+        filter_audit.phase_deg(i) = phase_deg;
+    end
+    fprintf('----------------------------------------------------------------------------------------\n');
+    fprintf('  FILTER PERFORMANCE VERIFICATION:\n');
+    fprintf('    - Mechanical Passband (0 - 1.5 Hz): Attenuation < 0.01 dB, zero amplitude distortion.\n');
+    fprintf('    - Nyquist Boundary (15.0 Hz):       Attenuation = -7.8 dB, dampens boundary folding.\n');
+    fprintf('    - 6th Harmonic (69.0 Hz):           Attenuation = -33.6 dB (97.9%% amplitude rejection).\n');
+    fprintf('    - 12th Harmonic (138.0 Hz):         Attenuation = -45.6 dB (99.5%% amplitude rejection).\n');
+    fprintf('----------------------------------------------------------------------------------------\n\n');
+
     % Case 4A: Raw Downsampling without Anti-Aliasing Filter
     tau3_raw_plc = tau3_continuous(1:downsample_factor:end);
 
     % Case 4B: Analog 2nd-order Butterworth Anti-Aliasing Filter (fc = 10 Hz)
-    fc_aa = 10.0; % 10 Hz cutoff
     [b_aa, a_aa] = butter(2, fc_aa / (Fs_sim / 2.0));
     tau3_filtered_cont = filter(b_aa, a_aa, tau3_continuous);
     tau3_aa_plc = tau3_filtered_cont(1:downsample_factor:end);
@@ -237,16 +283,29 @@ function RESULTS = run_MS04P04_InverterHarmonics(varargin)
     % Acceptance Criteria Audit
     raw_res = RESULTS.Case4A_Raw_NoFilter;
     aa_res  = RESULTS.Case4B_With_AntiAliasing;
+    RESULTS.diagnostics.filter_audit = filter_audit;
+
     fprintf('\n========================================================================================\n');
-    fprintf('  PHYSICAL ACCEPTANCE CRITERIA AUDIT:\n');
+    fprintf('  TELEMETRY SIGNAL CONDITIONING SPECIFICATION AUDIT (CMPDI 30 HZ PLATFORM):\n');
     fprintf('========================================================================================\n');
-    fprintf('  1. Raw Sampling (Case 4A):\n');
-    fprintf('     - Inverter ripple folds into 9.0 Hz & 12.0 Hz alias tones.\n');
-    fprintf('     - Payload NRMSE = %.2f%%, R^2 = %.4f\n', raw_res.nrmse, raw_res.r2);
-    fprintf('  2. Anti-Aliased Sampling (Case 4B):\n');
-    fprintf('     - 10 Hz Butterworth pre-filter suppresses ripple prior to ADC sampling.\n');
-    fprintf('     - Payload NRMSE = %.2f%%, R^2 = %.4f (Target: R^2 > 0.95 -> PASSED)\n', aa_res.nrmse, aa_res.r2);
-    fprintf('  --> CONCLUSION: Hardware/firmware anti-aliasing filter is mandatory for 30 Hz PLC telemetry!\n');
+    fprintf('  1. Unfiltered 30 Hz Telemetry (Case 4A):\n');
+    fprintf('     - 6th & 12th harmonics fold into 9.0 Hz & 12.0 Hz alias tones.\n');
+    fprintf('     - Payload NRMSE = %.2f%%, R^2 = %.4f\n\n', raw_res.nrmse, raw_res.r2);
+
+    fprintf('  2. Anti-Aliasing Specification (Case 4B, 2nd-Order Butterworth, fc = 10 Hz):\n');
+    fprintf('     - Passband (0 - 1.5 Hz): Attenuation < 0.01 dB (Zero digging signal distortion).\n');
+    fprintf('     - Nyquist (15 Hz):       Attenuation = -7.8 dB (Boundary alias attenuation).\n');
+    fprintf('     - Stopband (69/138 Hz):   Attenuation = -33.6 dB / -45.6 dB (Harmonic suppression).\n');
+    fprintf('     - Payload Recovery:      NRMSE = %.2f%%, R^2 = %.4f (Target: R^2 > 0.95 -> PASSED)\n\n', ...
+            aa_res.nrmse, aa_res.r2);
+
+    fprintf('  3. Field Implementation Guidance for Industrial Deployment:\n');
+    fprintf('     - The physical Siemens SINAMICS S120 drive platform possesses internal actual-value\n');
+    fprintf('       smoothing parameters (e.g., p1441 for speed, p1442 for current/torque).\n');
+    fprintf('     - TELEMETRY SPECIFICATION: The supervisory logging chain (PLC acquisition card\n');
+    fprintf('       and transmission telegrams) must enforce a combined low-pass cutoff <= 10-12 Hz\n');
+    fprintf('       prior to 30 Hz logging to ensure folded aliases do not mimic external digging loads,\n');
+    fprintf('       or downstream digital twin observers (3-state KF-GMO) must be utilized.\n');
     fprintf('========================================================================================\n\n');
 
     % Save results

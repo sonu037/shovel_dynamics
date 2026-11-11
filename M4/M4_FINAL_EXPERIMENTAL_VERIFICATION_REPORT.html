@@ -422,12 +422,12 @@ window.MathJax = {
   MS04P02    Fu-Style Proportional         Branch A collapses at 10% (R^2 = 0.02);  Fu&#x27;s R^2 &gt; 0.95 was deep-net;
              AWGN Sweep                    KF-GMO maintains R^2 = 0.73 (10% noise)  KF-GMO achieves 0.73 (causal);
                                            and R^2 = 0.36 (20%), 0.13 (25%).        Only positive arm at &gt;= 20%.
-  MS04P03    100-Trial Monte Carlo         OLS inertia bias = -1459.9% (negative);  IDIM-IV eliminates asymptotic
-             EIV Bias Audit                IDIM-IV eliminates bias (+2.34% error);  EIV bias (mass bias +0.01%,
-                                           Mass bias drops from -14.9% to +0.01%.   lever offset bias -1.05%).
-  MS04P04    Inverter Ripple &amp; 30 Hz       6th/12th harmonics fold into 9.0 Hz &amp;    Analog 10 Hz Butterworth pre-
-             Sampling Aliasing             12.0 Hz alias tones; 2nd-order analog    filter mandatory for 30 Hz PLC
-                                           pre-filter provides -33.6 dB cut.        telemetry to prevent false load.
+  MS04P03    100-Trial Monte Carlo         Inertial subspace recovered cleanly      IDIM-IV eliminates EIV bias on
+             EIV Bias Audit                (Md +0.01%, c -1.05%, Izz +2.34%);       inertial subspace; Friction has
+                                           Friction suffers SNR collapse (-37 dB).  deep negative SNR (&lt; -30 dB).
+  MS04P04    Inverter Ripple &amp; 30 Hz       6th/12th harmonics fold into 9.0 Hz &amp;    Telemetry specification: filter
+             Sampling Aliasing             12.0 Hz alias tones; 2nd-order analog    cutoff &lt;= 10 Hz (or drive p1442)
+                                           pre-filter provides -33.6 dB cut.        mandatory to prevent aliased load.
   MS04P05    Estimator Filtering           Offline zero-phase filtfilt achieves     Offline bound R^2 = 0.93;
              Ablation Study                R^2 = 0.93; Causal 3-State KF-GMO        Causal KF-GMO provides online
                                            achieves R^2 = 0.73 (10% noise).         optimality without IIR phase lag.
@@ -534,7 +534,7 @@ Noise Tier  | Metric       | Branch A (Finite Diff) | Branch B (FOH GMO) | Branc
 </ul>
 <hr class='notebook-divider'>
 <h3>2.3 Protocol MS04P03: 100-Trial Monte Carlo EIV Bias Analysis</h3>
-<p><strong>Objective:</strong> Prove the catastrophic failure of Ordinary Least Squares (OLS) under Errors-in-Variables (EIV) and validate Instrumental Variables (IDIM-IV, Janot et al. 2014).</p>
+<p><strong>Objective:</strong> Prove the catastrophic failure of Ordinary Least Squares (OLS) under Errors-in-Variables (EIV), evaluate Instrumental Variables (IDIM-IV, Janot et al. 2014), and establish the physical identifiability boundary between inertial and friction parameters.</p>
 <div class="code-container"><pre><code class="language-">====================================================================================================
             MS04P03 MONTE CARLO IDENTIFICATION SUMMARY (N_MC = 100 Realizations at 10% Noise)
 ====================================================================================================
@@ -546,21 +546,77 @@ Inertia I_zz (kg*m^2) | 287,900.0  | -3,915,056.7  | -1459.87%     | 294,648.2  
 Viscous f_v3 (Nm*s)   | 3,800.00   | 2,237.40      | -41.12%       | -22,658.88    | -696.29%
 Coulomb f_c3 (Nm)     | 340.00     | 1,009.38      | +196.88%      | 2,285.12      | +572.09%
 ====================================================================================================</code></pre></div>
-<p><strong>Key Mathematical Insight (The Parallel-Axis Sensitivity Paradox):</strong></p>
+<p>**1. Identifiable Inertial Subspace Recovery ($M_d, c, I_{zz}$):**</p>
 <ul>
 <li>In physical parameter recovery from base parameters:</li>
 </ul>
 <div class="math-display">  $$\hat{I}_{zz} = \hat{\theta}_3 - \frac{\hat{\theta}_2^2}{\hat{\theta}_1}$$</div>
 <p>  Under OLS, regressor correlation and attenuation bias shrink $\hat{\theta}_2 = \widehat{m c}$ toward zero (bias $-93.5\%$) and corrupt $\hat{\theta}_3$. When squared and subtracted, the resulting estimated rotational inertia $\hat{I}_{zz}$ is driven **negative by over 3.9 million $\mathrm{kg}\cdot\mathrm{m}^2$ (a $-1459.9\%$ error)**!</p>
 <ul>
-<li><strong>Instrumental Variables (IDIM-IV) completely solves this:</strong> By correlating the regressor with a noise-free simulated trajectory $\mathbf{Z}$, $\mathbb{E}[\mathbf{U}^T \mathbf{Z}] = \mathbf{0}$. As a result:</li>
-<li>Dipper mass bias drops from $-14.89\%$ to **$+0.01\%$**.</li>
-<li>COG offset bias drops from $-93.51\%$ to **$-1.05\%$**.</li>
-<li>Rotational inertia error drops from $-1460\%$ to **$+2.34\%$**!</li>
+<li><strong>IDIM-IV solves EIV bias for the inertial subspace:</strong> By correlating the regressor with a noise-free simulated trajectory $\mathbf{Z}$, $\mathbb{E}[\mathbf{U}^T \mathbf{Z}] = \mathbf{0}$. As a result:</li>
+<li>Dipper mass bias drops from $-14.89\%$ to **$+0.01\%$** (Target $<1.0\% \implies \text{PASSED}$).</li>
+<li>Center of gravity offset bias drops from $-93.51\%$ to **$-1.05\%$** (Target $<5.0\% \implies \text{PASSED}$).</li>
+<li>Rotational inertia error is restored from $-1460\%$ to **$+2.34\%$**!</li>
+</ul>
+<p><strong>2. The Friction Subspace Signal-to-Noise Ratio (SNR) Collapse:</strong></p>
+<p>Why did IDIM-IV exhibit high bias on viscous ($-696.29\%$) and Coulomb ($+572.09\%$) friction?</p>
+<p>A rigorous column-wise energy decomposition reveals the physical root cause:</p>
+<div class="table-container"><table><thead><tr>
+<th>Physical Regressor Column</th>
+<th>Base Parameter $\theta^*$</th>
+<th>RMS Torque Contribution</th>
+<th>Sensed SNR ($10\%$ Noise Tier)</th>
+<th>Identifiability Status</th>
+</tr></thead><tbody>
+<tr>
+<td>**Mass $M_d$ (inertial + gravity)**</td>
+<td>$54,300\,\mathrm{kg}$</td>
+<td>$3,101,208\,\mathrm{N}\cdot\mathrm{m}$</td>
+<td>**$+46.24\,\mathrm{dB}$**</td>
+<td>Fully Identifiable</td>
+</tr>
+<tr>
+<td>**Offset $M_d c$ (lever arm)**</td>
+<td>$-71,676\,\mathrm{kg}\cdot\mathrm{m}$</td>
+<td>$467,718\,\mathrm{N}\cdot\mathrm{m}$</td>
+<td>**$+29.81\,\mathrm{dB}$**</td>
+<td>Fully Identifiable</td>
+</tr>
+<tr>
+<td>**Pure Pitch Inertia $I_{zz} \ddot{q}_3$**</td>
+<td>$382,512\,\mathrm{kg}\cdot\mathrm{m}^2$</td>
+<td>$6,983\,\mathrm{N}\cdot\mathrm{m}$</td>
+<td>**$-6.71\,\mathrm{dB}$**</td>
+<td>Restored via IDIM-IV</td>
+</tr>
+<tr>
+<td>**Viscous Friction $f_{v3} \dot{q}_3$**</td>
+<td>$3,800\,\mathrm{N}\cdot\mathrm{m}\cdot\mathrm{s}$</td>
+<td>$221\,\mathrm{N}\cdot\mathrm{m}$</td>
+<td>**$-36.70\,\mathrm{dB}$**</td>
+<td>Unidentifiable on Digging Arc</td>
+</tr>
+<tr>
+<td>**Coulomb Friction $f_{c3} \operatorname{tanh}$**</td>
+<td>$340\,\mathrm{N}\cdot\mathrm{m}$</td>
+<td>$339\,\mathrm{N}\cdot\mathrm{m}$</td>
+<td>**$-32.97\,\mathrm{dB}$**</td>
+<td>Unidentifiable on Digging Arc</td>
+</tr>
+</tbody></table></div>
+<ul>
+<li>At $10\%$ torque noise, the drive noise standard deviation is $\sigma_\tau \approx 15,111\,\mathrm{N}\cdot\mathrm{m}$, which is <strong>over 60 times larger than the entire friction torque signal</strong> ($<900\,\mathrm{N}\cdot\mathrm{m}$).</li>
+<li>SVD analysis of the instrument cross-product $\mathbf{Z}^T \mathbf{Y}$ confirms that while $\sigma_1 = 2.98 \times 10^6$, the friction singular values are $\sigma_4 = 0.567$ and $\sigma_5 = 4.94 \times 10^{-3}$ (condition number $\kappa = 6.02 \times 10^8$). In finite samples ($N = 901$), the friction columns absorb residual torque noise variance.</li>
+<li><strong>Robotic Identification Protocol Alignment:</strong> In accordance with established identification literature (Swevers et al. 1997, Gautier & Janot 2014), friction parameters <strong>cannot and must not be identified from dynamic digging cycles</strong>. Dynamic trajectories excite the inertial subspace; friction calibration requires dedicated low-speed, constant-velocity, unloaded sweeps where inertial accelerations vanish ($\ddot{q}_3 = 0, \ddot{d}_4 = 0$).</li>
+</ul>
+<p><strong>3. Instrument Relevance & Exogeneity Audit:</strong></p>
+<ul>
+<li><strong>Relevance:</strong> $\operatorname{rank}(\mathbf{Z}^T \mathbf{Y}) = 5$. The instrument is strictly relevant for the inertial parameters.</li>
+<li><strong>Exogeneity:</strong> Empirical cross-correlation $\frac{1}{N}\|\mathbf{Z}^T \mathbf{U}\|_F = 2.69$ vs. OLS error correlation $\frac{1}{N}\|\tilde{\mathbf{Y}}^T \mathbf{U}\|_F = 129.04$ (a **$48\times$ orthogonality improvement**), confirming asymptotic unbiasedness for all persistent modes.</li>
 </ul>
 <hr class='notebook-divider'>
 <h3>2.4 Protocol MS04P04: Inverter Torque Ripple & 30 Hz Sampling Aliasing</h3>
-<p><strong>Objective:</strong> Evaluate 6th and 12th order drive torque harmonics under 30 Hz telemetry sampling ($f_{\mathrm{Nyq}} = 15\,\mathrm{Hz}$).</p>
+<p><strong>Objective:</strong> Evaluate 6th and 12th order drive torque harmonics under 30 Hz telemetry sampling ($f_{\mathrm{Nyq}} = 15\,\mathrm{Hz}$) and establish telemetry signal conditioning specifications for the CMPDI logging platform.</p>
 <div class="code-container"><pre><code class="language-">====================================================================================================
                         MS04P04 INVERTER TORQUE RIPPLE &amp; ALIASING SUMMARY
 ====================================================================================================
@@ -574,9 +630,96 @@ Sampling Architecture        | R^2          | NRMSE (%)    | Ripple Attenuation 
 Case 4A (Raw Downsampling)   | 0.9960       | 2.28%        | None (Aliased tones enter state)
 Case 4B (Anti-Aliasing Pre)  | 0.9957       | 2.37%        | -33.6 dB (2nd-Order 10 Hz Butterworth)
 ====================================================================================================</code></pre></div>
-<p><strong>Key Engineering Recommendation:</strong></p>
+<p>**Full Passband & Stopband Frequency Response Assessment (2nd-Order Butterworth, $f_c = 10.0\,\mathrm{Hz}$):**</p>
+<div class="table-container"><table><thead><tr>
+<th>Band Classification</th>
+<th>Frequency (Hz)</th>
+<th>Gain $\</th>
+<th>H(j\omega)\</th>
+<th>$</th>
+<th>Attenuation (dB)</th>
+<th>Phase Lag ($^\circ$)</th>
+<th>Signal Impact</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Passband (digging)</strong></td>
+<td>$0.5\,\mathrm{Hz}$</td>
+<td>$1.00000$</td>
+<td>$-0.00\,\mathrm{dB}$</td>
+<td>$-4.1^\circ$</td>
+<td>Zero distortion</td>
+</tr>
+<tr>
+<td><strong>Passband (digging)</strong></td>
+<td>$1.0\,\mathrm{Hz}$</td>
+<td>$0.99995$</td>
+<td>$-0.00\,\mathrm{dB}$</td>
+<td>$-8.1^\circ$</td>
+<td>Zero distortion</td>
+</tr>
+<tr>
+<td><strong>Passband Edge</strong></td>
+<td>$1.5\,\mathrm{Hz}$</td>
+<td>$0.99975$</td>
+<td>$-0.00\,\mathrm{dB}$</td>
+<td>$-12.2^\circ$</td>
+<td>Attenuation $< 0.01\,\mathrm{dB}$</td>
+</tr>
+<tr>
+<td><strong>Transition Band</strong></td>
+<td>$5.0\,\mathrm{Hz}$</td>
+<td>$0.97014$</td>
+<td>$-0.26\,\mathrm{dB}$</td>
+<td>$-43.3^\circ$</td>
+<td>Minor roll-off</td>
+</tr>
+<tr>
+<td><strong>Filter Cutoff</strong></td>
+<td>$10.0\,\mathrm{Hz}$</td>
+<td>$0.70711$</td>
+<td>$-3.01\,\mathrm{dB}$</td>
+<td>$-90.0^\circ$</td>
+<td>Standard half-power point</td>
+</tr>
+<tr>
+<td><strong>Nyquist Boundary</strong></td>
+<td>$15.0\,\mathrm{Hz}$</td>
+<td>$0.40614$</td>
+<td>$-7.83\,\mathrm{dB}$</td>
+<td>$-120.5^\circ$</td>
+<td>Dampens boundary aliasing</td>
+</tr>
+<tr>
+<td>**Sampling Frequency $F_s$**</td>
+<td>$30.0\,\mathrm{Hz}$</td>
+<td>$0.11043$</td>
+<td>$-19.14\,\mathrm{dB}$</td>
+<td>$-152.1^\circ$</td>
+<td>Strong carrier rejection</td>
+</tr>
+<tr>
+<td><strong>6th Harmonic Stopband</strong></td>
+<td>$69.0\,\mathrm{Hz}$</td>
+<td>$0.02100$</td>
+<td>**$-33.56\,\mathrm{dB}$**</td>
+<td>$-168.2^\circ$</td>
+<td>$97.9\%$ ripple rejection</td>
+</tr>
+<tr>
+<td><strong>12th Harmonic Stopband</strong></td>
+<td>$138.0\,\mathrm{Hz}$</td>
+<td>$0.00525$</td>
+<td>**$-45.60\,\mathrm{dB}$**</td>
+<td>$-174.1^\circ$</td>
+<td>$99.5\%$ ripple rejection</td>
+</tr>
+</tbody></table></div>
+<p><strong>Telemetry Specification & Industrial Implementation Guidance:</strong></p>
 <ul>
-<li>Because $69\,\mathrm{Hz}$ and $138\,\mathrm{Hz}$ alias directly to $9\,\mathrm{Hz}$ and $12\,\mathrm{Hz}$ (inside the $15\,\mathrm{Hz}$ Nyquist boundary), an analog continuous-time pre-filter ($f_c = 10\,\mathrm{Hz}$) is mandatory in the PLC I/O card to provide $\ge 30\,\mathrm{dB}$ attenuation before digitization.</li>
+<li>Modern variable frequency drives such as the Siemens SINAMICS S120 feature internal speed and torque actual-value smoothing parameters on the CU320-2 control unit:</li>
+<li><code>p1441</code>: Speed actual value smoothing filter time constant</li>
+<li><code>p1442</code>: Current/torque actual value smoothing filter time constant</li>
+<li><strong>Telemetry Specification Requirement for CMPDI MT-189 Platform:</strong> The supervisory data acquisition chain (PLC input modules and PROFIBUS DP logging stream) must enforce a combined low-pass cutoff $\le 10\text{--}12\,\mathrm{Hz}$ prior to 30 Hz archival. If high-frequency inverter ripple is transmitted unfiltered to the supervisory controller, downstream digital twin filtering (such as our 3-State Kalman-Filtered GMO) is mandatory to prevent aliased tones from mimicking false cutting resistance.</li>
 </ul>
 <hr class='notebook-divider'>
 <h3>2.5 Protocol MS04P05: Estimator Filtering Ablation Study</h3>

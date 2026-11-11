@@ -44,3 +44,103 @@ Saved experiment results to: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M4\ex
 
 
 MS04P03 execution completed successfully at 10-Nov-2026 20:02:37!
+Starting MS04P03 execution at 11-Nov-2026 11:44:29...
+========================================================================================
+  MILESTONE 4 PROTOCOL P03: MONTE CARLO EIV BIAS & INSTRUMENTAL VARIABLES (IDIM-IV)
+  Benchmark: Janot et al. (2014) & Söderström (2007) on Machine A (P&H 2100BL)
+========================================================================================
+
+----------------------------------------------------------------------------------------
+  REGRESSOR SUBSPACE ENERGY & SNR ANALYSIS (10% Torque Noise Tier: sigma_tau = 15111.3 N*m)
+----------------------------------------------------------------------------------------
+Physical Component       | Base Param theta* | RMS Torque (N*m) | SNR (10% Noise)   
+----------------------------------------------------------------------------------------
+Mass M_d (dynamic+grav)  |         54300.00 |     3101208.09 |          46.24 dB
+Offset M_d*c (lever)     |        -71676.00 |      467717.90 |          29.81 dB
+Pure Inertia I_zz*qdd    |        382512.32 |        6983.14 |          -6.71 dB
+Viscous Friction f_v3    |          3800.00 |         221.07 |         -36.70 dB
+Coulomb Friction f_c3    |           340.00 |         339.43 |         -32.97 dB
+----------------------------------------------------------------------------------------
+  CRITICAL AUDIT INSIGHT:
+    - Inertial/gravity terms operate at HIGH SNR (+29.8 dB to +46.3 dB).
+    - Friction terms operate at DEEP NEGATIVE SNR (-33.0 dB to -36.7 dB).
+    - Physical consequence: Sensed torque noise (15111.3 N*m) is >60x LARGER
+      than total friction torque (<900 N*m). In finite samples, friction columns
+      absorb residual torque noise variance (Swevers 1997, Gautier & Janot 2014)!
+----------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------
+  INSTRUMENT RELEVANCE AUDIT: svd(Z^T * Y) & CONDITIONING
+----------------------------------------------------------------------------------------
+    sigma_1(Z^T * Y) =     2.9760e+06   (Relative to sigma_1:   1.00e+00)
+    sigma_2(Z^T * Y) =     1.2515e+03   (Relative to sigma_1:   4.21e-04)
+    sigma_3(Z^T * Y) =     9.0043e+02   (Relative to sigma_1:   3.03e-04)
+    sigma_4(Z^T * Y) =     5.6742e-01   (Relative to sigma_1:   1.91e-07)
+    sigma_5(Z^T * Y) =     4.9426e-03   (Relative to sigma_1:   1.66e-09)
+    Condition Number kappa(Z^T * Y) = 6.0212e+08
+    Relevance Verdict: Full rank (rank = 5). Inertial subspace is strongly relevant;
+                       Friction subspace singular values are 10^7 - 10^8x smaller!
+----------------------------------------------------------------------------------------
+
+
+----------------------------------------------------------------------------------------
+  RUNNING MONTE CARLO EXPERIMENT: 100 TRIALS AT 5% NOISE
+----------------------------------------------------------------------------------------
+Parameter              | True Value   | OLS Mean     | OLS Bias (%) | IV Mean      | IV Bias (%) 
+----------------------------------------------------------------------------------------------------
+Mass M_d (kg)          | 54300.00     | 46762.71     | -13.88     % | 54204.79     | -0.18      %
+Offset c (m)           | -1.32        | -0.17        | -87.22     % | -1.30        | -1.15      %
+Inertia I_zz (kg*m^2)  | 287900.00    | -3872661.68  | -1445.14   % | 233750.58    | -18.81     %
+Viscous f_v3 (Nm*s)    | 3800.00      | 16673.52     | 338.78     % | -1139.19     | -129.98    %
+Coulomb f_c3 (Nm)      | 340.00       | -301.00      | -188.53    % | 739.43       | 117.48     %
+----------------------------------------------------------------------------------------------------
+  EXOGENEITY AUDIT AT 5% NOISE:
+    - Empirical EIV Violation (1/N)*||Y_tilde^T * U||_F = 3.2240e+01  (Biases OLS)
+    - Empirical Instrument Error (1/N)*||Z^T * U||_F       = 1.3592e+00  (Asymptotically 0)
+    - Orthogonality Improvement Factor: 23.72x
+
+----------------------------------------------------------------------------------------
+  RUNNING MONTE CARLO EXPERIMENT: 100 TRIALS AT 10% NOISE
+----------------------------------------------------------------------------------------
+Parameter              | True Value   | OLS Mean     | OLS Bias (%) | IV Mean      | IV Bias (%) 
+----------------------------------------------------------------------------------------------------
+Mass M_d (kg)          | 54300.00     | 46213.56     | -14.89     % | 54304.61     | 0.01       %
+Offset c (m)           | -1.32        | -0.09        | -93.51     % | -1.31        | -1.05      %
+Inertia I_zz (kg*m^2)  | 287900.00    | -3915056.68  | -1459.87   % | 294648.22    | 2.34       %
+Viscous f_v3 (Nm*s)    | 3800.00      | 2237.40      | -41.12     % | -22658.88    | -696.29    %
+Coulomb f_c3 (Nm)      | 340.00       | 1009.38      | 196.88     % | 2285.12      | 572.09     %
+----------------------------------------------------------------------------------------------------
+  EXOGENEITY AUDIT AT 10% NOISE:
+    - Empirical EIV Violation (1/N)*||Y_tilde^T * U||_F = 1.2904e+02  (Biases OLS)
+    - Empirical Instrument Error (1/N)*||Z^T * U||_F       = 2.6901e+00  (Asymptotically 0)
+    - Orthogonality Improvement Factor: 47.97x
+
+========================================================================================
+  PHYSICAL ACCEPTANCE CRITERIA AUDIT (EIV BIAS VS INSTRUMENTAL VARIABLES):
+========================================================================================
+  1. OLS Errors-in-Variables Attenuation Bias:
+     - At 10% noise, OLS inertia I_zz bias: -1459.87%  (Catastrophic Parallel-Axis EIV Bias)
+     - At 10% noise, OLS offset c bias:    -93.51%
+     - At 10% noise, OLS mass M_d bias:     -14.89%
+
+  2. IDIM-IV Recovery on Identifiable Inertial Subspace (M_d, c, I_zz):
+     - Mass M_d bias:        +0.01%  (Target: < 1.0%   -> PASSED)
+     - Offset c bias:        -1.05%  (Target: < 5.0%   -> PASSED)
+     - Rotational I_zz bias: +2.34%  (OLS: -1459.87%   -> PASSED / RESTORED)
+     --> VERDICT: IDIM-IV eliminates asymptotic EIV bias on the identifiable inertial subspace!
+
+  3. Friction Subspace Analysis (Scientific Limitation on Dynamic Digging Trajectories):
+     - Viscous friction f_v3 IV bias: -696.29%
+     - Coulomb friction f_c3 IV bias: +572.09%
+     - Physical Diagnosis: High torque noise (15111.3 N*m) swamped the friction signal
+       (SNR = -36.7 dB for f_v3, -33.0 dB for f_c3). Under 30 Hz dynamic excavation,
+       friction parameters are weakly identifiable in finite samples.
+     --> REQUIREMENT: Friction parameters must be calibrated via dedicated low-speed,
+         constant-velocity trajectories where inertial forces vanish (Swevers 1997,
+         Gautier & Janot 2014), not from dynamic digging cycles.
+========================================================================================
+
+Saved experiment results to: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M4\experiments\03_eiv_bias\MS04P03_eiv_results.mat
+
+
+MS04P03 execution completed successfully at 11-Nov-2026 11:44:29!

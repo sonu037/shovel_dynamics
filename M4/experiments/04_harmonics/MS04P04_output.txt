@@ -33,3 +33,70 @@ Saved experiment results to: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M4\ex
 
 
 MS04P04 execution completed successfully at 10-Nov-2026 20:04:50!
+Starting MS04P04 execution at 11-Nov-2026 11:47:21...
+========================================================================================
+  MILESTONE 4 PROTOCOL P04: INVERTER DRIVE TORQUE RIPPLE & 30 HZ SAMPLING ALIASING
+  Machine Context: Machine A (P&H 2100BL) Inverter-Fed Induction Drive
+========================================================================================
+
+========================================================================================
+  THEORETICAL HARMONIC ALIASING ANALYSIS (Fs = 30 Hz, Nyquist = 15 Hz):
+    - 6th Harmonic (f = 69.0 Hz) aliases to:  |69.0 - 2*30| = 9.0 Hz
+    - 12th Harmonic (f = 138.0 Hz) aliases to: |138.0 - 5*30| = 12.0 Hz
+    - Both alias frequencies fold into the digital twin mechanical passband!
+========================================================================================
+
+----------------------------------------------------------------------------------------
+  ANTI-ALIASING FILTER PASSBAND & STOPBAND FREQUENCY RESPONSE (fc = 10.0 Hz):
+----------------------------------------------------------------------------------------
+Band Classification      | Freq (Hz)  | |H(jw)| (mag) | Attenuation (dB) | Phase Lag (deg)
+----------------------------------------------------------------------------------------
+Passband (digging)       |      0.5 Hz |      1.00000 |          -0.00 dB |       -4.1 deg
+Passband (digging)       |      1.0 Hz |      0.99995 |          -0.00 dB |       -8.1 deg
+Passband Edge            |      1.5 Hz |      0.99975 |          -0.00 dB |      -12.2 deg
+Transition Band          |      5.0 Hz |      0.97014 |          -0.26 dB |      -43.3 deg
+Cutoff (-3 dB)           |     10.0 Hz |      0.70711 |          -3.01 dB |      -90.0 deg
+Nyquist Boundary         |     15.0 Hz |      0.40614 |          -7.83 dB |     -120.5 deg
+Sampling Rate Fs         |     30.0 Hz |      0.11043 |         -19.14 dB |     -152.1 deg
+6th Harmonic Stopband    |     69.0 Hz |      0.02100 |         -33.56 dB |     -168.2 deg
+12th Harmonic Stopband   |    138.0 Hz |      0.00525 |         -45.60 dB |     -174.1 deg
+----------------------------------------------------------------------------------------
+  FILTER PERFORMANCE VERIFICATION:
+    - Mechanical Passband (0 - 1.5 Hz): Attenuation < 0.01 dB, zero amplitude distortion.
+    - Nyquist Boundary (15.0 Hz):       Attenuation = -7.8 dB, dampens boundary folding.
+    - 6th Harmonic (69.0 Hz):           Attenuation = -33.6 dB (97.9% amplitude rejection).
+    - 12th Harmonic (138.0 Hz):         Attenuation = -45.6 dB (99.5% amplitude rejection).
+----------------------------------------------------------------------------------------
+
+Sampling Architecture     | R^2          | NRMSE (%)    | RMSE (kN)    | Ripple Attenuation
+----------------------------------------------------------------------------------------
+Case4A_Raw_NoFilter       | 0.9960       | 2.28        % | 4.55         | None (Aliased) 
+Case4B_With_AntiAliasing  | 0.9957       | 2.37        % | 4.75         | -33.6 dB (Filter)
+----------------------------------------------------------------------------------------
+
+========================================================================================
+  TELEMETRY SIGNAL CONDITIONING SPECIFICATION AUDIT (CMPDI 30 HZ PLATFORM):
+========================================================================================
+  1. Unfiltered 30 Hz Telemetry (Case 4A):
+     - 6th & 12th harmonics fold into 9.0 Hz & 12.0 Hz alias tones.
+     - Payload NRMSE = 2.28%, R^2 = 0.9960
+
+  2. Anti-Aliasing Specification (Case 4B, 2nd-Order Butterworth, fc = 10 Hz):
+     - Passband (0 - 1.5 Hz): Attenuation < 0.01 dB (Zero digging signal distortion).
+     - Nyquist (15 Hz):       Attenuation = -7.8 dB (Boundary alias attenuation).
+     - Stopband (69/138 Hz):   Attenuation = -33.6 dB / -45.6 dB (Harmonic suppression).
+     - Payload Recovery:      NRMSE = 2.37%, R^2 = 0.9957 (Target: R^2 > 0.95 -> PASSED)
+
+  3. Field Implementation Guidance for Industrial Deployment:
+     - The physical Siemens SINAMICS S120 drive platform possesses internal actual-value
+       smoothing parameters (e.g., p1441 for speed, p1442 for current/torque).
+     - TELEMETRY SPECIFICATION: The supervisory logging chain (PLC acquisition card
+       and transmission telegrams) must enforce a combined low-pass cutoff <= 10-12 Hz
+       prior to 30 Hz logging to ensure folded aliases do not mimic external digging loads,
+       or downstream digital twin observers (3-state KF-GMO) must be utilized.
+========================================================================================
+
+Saved experiment results to: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M4\experiments\04_harmonics\MS04P04_harmonics_results.mat
+
+
+MS04P04 execution completed successfully at 11-Nov-2026 11:47:21!

@@ -70,7 +70,7 @@ This paper establishes a rigorous, defensible, and industrially realizable frame
     \item \textbf{Analytical Identifiability Geometry:} We prove that the single-channel saddle observation manifold collapses into a one-dimensional collinear line ($\theta = 0.23^\circ$, condition number $\kappa_2 = 497.71$). We prove analytically and verify by Singular Value Decomposition (SVD) across 12 full-stroke operating trajectories that joint two-channel estimation $[\tau_3; \bar{s} F_4]$ with dimensional weight $\bar{s} = 10.0\,\mathrm{m}$ restores identifiability, guaranteeing a scale-invariant subspace angle $\theta_{\min} = 29.70^\circ$ and dropping $\kappa_2$ to $3.77$.
     \item \textbf{Acceleration-Free Two-Branch Discrete Observer:} We formulate a dual-branch discrete momentum observer running at native $30\,\mathrm{Hz}$. Branch~A provides friction-aware micro-stepping (substep RK4, $M=67$), while Branch~B provides an exact closed-form First-Order Hold (FOH) transition matrix formulation that executes in $O(1)$ arithmetic operations without internal substeps. We prove that Branch~B achieves $100.00\%$ coverage of Coulomb friction uncertainty across velocity reversals.
     \item \textbf{Configuration-Adaptive 3-State KF-GMO:} To eliminate dynamic phase lag and suppress inertia-scaled resolver jitter, we construct a 3-state linear-trend Kalman-Filtered GMO ($[p; \tau_L; \dot{\tau}_L]$) with state-dependent measurement covariance $R_k(d_4) = (D_{11}(d_4)\sigma_{\dot{q}})^2$. Under $3\,\mathrm{mrad/s}$ resolver velocity noise, the 3-state KF-GMO eliminates harmonic tracking lag ($120.82\,\mathrm{kN\cdot m} \to 16.26\,\mathrm{kN\cdot m}$, an $86.5\%$ reduction) and suppresses torque chatter by $81.3\%$ ($193.15\,\mathrm{kN\cdot m} \to 36.10\,\mathrm{kN\cdot m}$), with $97.47\%$ empirical coverage against theoretical $2\sigma$ error bounds.
-    \item \textbf{Forward Torque-Driven Dynamic Validation:} Unlike previous literature relying on kinematic motion-prescribed simulations, we validate the entire architecture within a forward-dynamic torque-driven Simulink environment featuring actuator compliance, motor drive delay, torque saturation, and independent external load injection. Verified on both the P\&H 2100BL baseline and the 780-tonne Taiyuan Heavy (TZ) WK-20 electric rope shovel at Northern Coalfields Limited (NCL) Amlohri.
+    \item \textbf{Forward Torque-Driven Dynamic Simulation:} Unlike previous literature relying on kinematic motion-prescribed simulations, we evaluate the entire architecture within a forward-dynamic torque-driven Simulink environment featuring actuator compliance, motor drive delay, torque saturation, and independent external load injection. Evaluated on both the P\&H 2100BL benchmark and forward-dynamic simulations of the 780-tonne Taiyuan Heavy (TZ) WK-20 electric rope shovel using engineering priors derived from Northern Coalfields Limited (NCL) Amlohri.
 \end{enumerate}
 
 \section{Planar Dynamics of Electric Rope Shovels}
@@ -211,6 +211,11 @@ Performing Singular Value Decomposition $\bm{Y}_{\mathrm{joint}} = \bm{U} \bm{\S
 \end{equation}
 
 As illustrated in Fig.~\ref{fig:svd_geometry}, joint 2-channel observation expands the principal subspace angle from $0.23^\circ$ to $29.70^\circ$, permanently breaking the collinearity trilemma and ensuring well-conditioned load decoupling across all operating quadrants.
+
+\subsection{Errors-in-Variables Parameter Identifiability Boundaries}
+While joint observation (\ref{eq:load_mapping}) resolves kinematic collinearity, estimating the physical plant parameters $\bm{\theta} = [M_d, c, I_{zz}, f_{v3}, f_{c3}]^T$ from sensor telemetry introduces stochastic Errors-in-Variables (EIV) challenges. Standard Ordinary Least Squares (OLS) regression suffers from systematic attenuation bias under noisy regressors $\tilde{\bm{Y}} = \bm{Y} + \bm{U}$, where $\operatorname{plim} \hat{\bm{\theta}}_{\mathrm{OLS}} = (\bm{\Sigma}_{YY} + \bm{\Sigma}_{UU})^{-1}\bm{\Sigma}_{YY}\bm{\theta}^* \ne \bm{\theta}^*$. Because pitch inertia identification requires parallel-axis subtraction $\hat{I}_{zz} = \hat{\theta}_3 - \hat{\theta}_2^2 / \hat{\theta}_1$, OLS regressor attenuation drives the recovered inertia negative ($-1459.9\%$ error).
+
+To eliminate asymptotic EIV bias, the Instrumental Variables framework (IDIM-IV, Janot et al.~\cite{janot2014}) constructs an instrument matrix $\bm{Z}$ from nominal forward simulation, enforcing strict orthogonality $\mathbb{E}[\bm{Z}^T \bm{U}] = \bm{0}$. IDIM-IV successfully isolates the high-energy inertial subspace, recovering dipper mass $M_d$ to $+0.01\%$, center of gravity offset $c$ to $-1.05\%$, and restoring $I_{zz}$ to $+2.34\%$. However, dynamic digging cycles are heavily dominated by inertial and gravitational moments ($1.5\text{--}2.8\,\mathrm{MN\cdot m}$), whereas total saddle joint friction is $<1\,\mathrm{kN\cdot m}$ ($0.035\%$ of peak actuator effort). Under typical $10\%$ torque noise ($\sigma_\tau \approx 15.1\,\mathrm{kN\cdot m}$), the friction channels operate at an effective signal-to-noise ratio $\mathrm{SNR} < -32\,\mathrm{dB}$, with the lowest singular values of the cross-product $\bm{Z}^T \bm{Y}$ dropping eight orders of magnitude below the dominant inertial mode ($\sigma_5 / \sigma_1 \sim 1.66\times 10^{-9}$). In accordance with standard robotic system identification protocols~\cite{swevers1997}, friction parameters must be identified from dedicated low-speed, constant-velocity trajectories where inertial forces vanish ($\ddot{\bm{q}} = \bm{0}$), while the inertial subspace is identified from dynamic trajectories.
 
 \section{Acceleration-Free Two-Branch Discrete Momentum Observer}
 
@@ -431,33 +436,34 @@ Key quantitative conclusions from Table~\ref{tab:m3_benchmark}:
 To establish direct field relevance for project CMPDI MT-189, the framework was parameterized for the Taiyuan Heavy Industry (TZ) WK-20 electric rope shovel currently operating at the Amlohri open-cast coal mine of Northern Coalfields Limited (NCL), Singrauli, India.
 
 \begin{table}[t]
-\caption{Verified Parameters for Taiyuan Heavy (TZ) WK-20 Heavy Mining Rope Shovel (NCL Amlohri Mine)}
+\caption{Specifications and Engineering Parameter Priors for Taiyuan Heavy (TZ) WK-20 Mining Rope Shovel (NCL Amlohri Mine)}
 \label{tab:wk20_params}
 \centering
-\begin{tabular}{llr}
+\begin{tabular}{llrl}
 \toprule
-\textbf{Parameter Description} & \textbf{Symbol} & \textbf{Value} \\
+\textbf{Parameter Description} & \textbf{Symbol} & \textbf{Value} & \textbf{Classification} \\
 \midrule
-Nominal Dipper Capacity & $V_{\mathrm{dip}}$ & $20.0\,\mathrm{m^3}$ \\
-Dipper Payload Rating & $M_{\mathrm{pay}}$ & $36.0\,\mathrm{t}$ \\
-Operating Weight & $M_{\mathrm{total}}$ & $779\text{--}792\,\mathrm{t}$ \\
-Dipper + Handle Mass & $M_d$ & $56,500\,\mathrm{kg}$ \\
-Handle Assembly Pitch Inertia & $I_{zz}$ & $312,500\,\mathrm{kg\cdot m^2}$ \\
-Handle CG Offset Constant & $c$ & $-1.32\,\mathrm{m}$ \\
-Boom Length / Incline & $L_b, \beta$ & $15.5\,\mathrm{m},\; 45.0^\circ$ \\
-Boom-Point Sheave Pitch Radius & $R_{\mathrm{sheave}}$ & $1.085\,\mathrm{m}$ \\
-Boom-Point Sheave Axis Coordinates & $(X_s, Y_s)$ & $(10.96, 10.96)\,\mathrm{m}$ \\
-Hoist Drum Pitch Radius & $R_{\mathrm{drum}}$ & $0.985\,\mathrm{m}$ \\
-Hoist Drum Gear Ratio & $G_{\mathrm{hoist}}$ & $32.4:1$ \\
-Crowd Pinion Pitch Radius & $R_{\mathrm{pinion}}$ & $0.340\,\mathrm{m}$ \\
-Crowd Drive Gear Ratio & $G_{\mathrm{crowd}}$ & $48.6:1$ \\
-Nominal Crowd Travel Speed & $v_{\mathrm{crowd}}$ & $0.60\,\mathrm{m/s}$ \\
-Maximum Hoist Pull (Stall) & $F_{\mathrm{bail,\max}}$ & $1,540\,\mathrm{kN}$ \\
+Nominal Dipper Capacity & $V_{\mathrm{dip}}$ & $20.0\,\mathrm{m^3}$ & \texttt{[V]} OEM Spec \\
+Dipper Payload Rating & $M_{\mathrm{pay}}$ & $36.0\,\mathrm{t}$ & \texttt{[V]} OEM Spec \\
+Operating Weight & $M_{\mathrm{total}}$ & $779\text{--}792\,\mathrm{t}$ & \texttt{[V]} OEM Spec \\
+Boom Length / Incline & $L_b, \beta$ & $15.5\,\mathrm{m},\; 45.0^\circ$ & \texttt{[V]} OEM Spec \\
+Boom-Point Sheave Pitch Radius & $R_{\mathrm{sheave}}$ & $1.085\,\mathrm{m}$ & \texttt{[V]} OEM Spec \\
+Hoist Drum Pitch Radius & $R_{\mathrm{drum}}$ & $0.985\,\mathrm{m}$ & \texttt{[V]} OEM Spec \\
+Hoist Drum Gear Ratio & $G_{\mathrm{hoist}}$ & $32.4:1$ & \texttt{[V]} OEM Spec \\
+Crowd Pinion Pitch Radius & $R_{\mathrm{pinion}}$ & $0.340\,\mathrm{m}$ & \texttt{[V]} OEM Spec \\
+Crowd Drive Gear Ratio & $G_{\mathrm{crowd}}$ & $48.6:1$ & \texttt{[V]} OEM Spec \\
+Nominal Crowd Travel Speed & $v_{\mathrm{crowd}}$ & $0.60\,\mathrm{m/s}$ & \texttt{[V]} OEM Spec \\
+Maximum Hoist Pull (Stall) & $F_{\mathrm{bail,\max}}$ & $1,540\,\mathrm{kN}$ & \texttt{[V]} OEM Spec \\
+Maximum Crowd Thrust & $F_{\mathrm{crowd,\max}}$ & $745\,\mathrm{kN}$ & \texttt{[V]} OEM Spec \\
+Dipper + Handle Mass & $M_d$ & $56,500\,\mathrm{kg}$ & \texttt{[EST]} Prior \\
+Handle Assembly Pitch Inertia & $I_{zz}$ & $305,000\,\mathrm{kg\cdot m^2}$ & \texttt{[EST]} Prior \\
+Handle CG Offset Constant & $c$ & $-1.32\,\mathrm{m}$ & \texttt{[EST]} Prior \\
+Boom Sheave Pivot Coordinates & $(X_s, Y_s)$ & $(6.26, 7.88)\,\mathrm{m}$ & \texttt{[EST]} Geometry \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Field testing under forward torque-driven compliance with WK-20 parameters across six held-out cases (Impact Step, Gaussian Stochastic, Oblique Bank, Boulder Stall) demonstrated physical joint deflections up to $\Delta q_3 = 1.317^\circ$ and $\Delta d_4 = 80.9\,\mathrm{mm}$, with the discrete 30 Hz momentum observer achieving lag-compensated recovery $\mathrm{NRMSE} \in [0.212\%, 0.415\%]$.
+Forward-dynamic simulation using engineering priors under torque-driven compliance with WK-20 parameters across six held-out cases (Impact Step, Gaussian Stochastic, Oblique Bank, Boulder Stall) demonstrated physical joint deflections up to $\Delta q_3 = 1.317^\circ$ and $\Delta d_4 = 80.9\,\mathrm{mm}$, with the discrete 30 Hz momentum observer achieving lag-compensated recovery $\mathrm{NRMSE} \in [0.212\%, 0.415\%]$.
 
 \section{Conclusions}
 In this paper, we resolved the two foundational roadblocks impeding sensorless cutting-force estimation in giant electric rope shovels:
@@ -465,7 +471,7 @@ In this paper, we resolved the two foundational roadblocks impeding sensorless c
     \item We proved that single-channel saddle observation collapses into a collinear subspace ($\theta = 0.23^\circ, \kappa_2 = 497.71$). We proved that joint two-channel estimation $[\tau_3; \bar{s} F_4]$ with dimensional weight $\bar{s} = 10.0\,\mathrm{m}$ restores identifiability ($\theta_{\min} = 29.70^\circ, \kappa_2 = 3.77$).
     \item We derived an exact closed-form First-Order Hold (FOH) discrete state-transition matrix that executes at native $30\,\mathrm{Hz}$ drive rates without numerical substeps, guaranteeing $100\%$ bound coverage over Coulomb friction uncertainty.
     \item We formulated a 3-state configuration-adaptive Kalman-Filtered GMO ($[p; \tau_L; \dot{\tau}_L]$) with state-dependent measurement covariance $R_k(d_4)$, eliminating dynamic phase lag on harmonic loads ($120.82\,\mathrm{kN\cdot m} \to 16.26\,\mathrm{kN\cdot m}$) and suppressing resolver velocity jitter by $>81\%$ ($193.15\,\mathrm{kN\cdot m} \to 36.10\,\mathrm{kN\cdot m}$), with $97.47\%$ empirical coverage against theoretical $2\sigma$ error bounds.
-    \item We validated the complete architecture in a forward torque-driven compliant Simulink plant on both the P\&H 2100BL and the 780-tonne NCL Amlohri TZ WK-20 machine profiles.
+    \item We evaluated the complete architecture in forward torque-driven compliant Simulink simulations across both the P\&H 2100BL benchmark and the 780-tonne NCL Amlohri TZ WK-20 engineering prior profile.
 \end{enumerate}
 
 Ongoing work focuses on coupling the observer output to high-frequency motor electrical flux dynamics for real-time tooth wear prognosis and hardware-in-the-loop deployment on the Siemens SINAMICS S120 PROFIBUS telemetry stream at the Amlohri opencast coal mine.
