@@ -1,0 +1,41 @@
+Loading model: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M1\model\ShovelSimulatorr2025b_M1C.slx
+Model loaded successfully: ShovelSimulatorr2025b_M1C
+Total blocks: 40
+  Block: ShovelSimulatorr2025b_M1C/Prismatic
+Joint | Type: SimscapeMultibodyBlock
+    SenseConstraintForce: off
+    SenseTotalForce: off
+    DampingCoefficient: 1473.0
+    DampingCoefficient_conf: compiletime
+    DampingCoefficientUnits: N/(m/s)
+    LowerLimitDamping: 1e3
+    LowerLimitDamping_conf: compiletime
+    LowerLimitDampingUnits: N/(m/s)
+    UpperLimitDamping: 1e3
+    UpperLimitDamping_conf: compiletime
+    UpperLimitDampingUnits: N/(m/s)
+    SenseTorqueForce: on
+    SenseLowerLimitTorqueForce: off
+    SenseUpperLimitTorqueForce: off
+  Block: ShovelSimulatorr2025b_M1C/Revolute Joint | Type: SimscapeMultibodyBlock
+    SenseConstraintForce: off
+    SenseTotalForce: on
+    DampingCoefficient: 66.322512
+    DampingCoefficient_conf: compiletime
+    DampingCoefficientUnits: N*m/(deg/s)
+    LowerLimitDamping: 10
+    LowerLimitDamping_conf: compiletime
+    LowerLimitDampingUnits: N*m/(deg/s)
+    UpperLimitDamping: 10
+    UpperLimitDamping_conf: compiletime
+    UpperLimitDampingUnits: N*m/(deg/s)
+    SenseTorqueForce: on
+    SenseLowerLimitTorqueForce: off
+    SenseUpperLimitTorqueForce: off
+  Block: ShovelSimulatorr2025b_M1C/Rotational Friction | Type: SimscapeBlock
+    brkwy_trq: 340
+    brkwy_trq_unit: N*m
+    brkwy_trq_conf: compiletime
+    Col_trq: 340
+    Col_trq_unit: N*m
+    Col_trq_conf: compiletime

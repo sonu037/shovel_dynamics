@@ -1,0 +1,8 @@
+Created safety backup at: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\_safety_backups\ShovelSimulatorr2025b_M1C_before_adding_fc4.slx
+Loaded model: ShovelSimulatorr2025b_M1C
+Adding Translational Friction block from fl_lib...
+Block added: ShovelSimulatorr2025b_M1C/Translational Friction
+Error: Translational
+Friction block (mask) does not have a parameter named 'Col_force'
+  File: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M1\scripts\execute_add_prismatic_coulomb.m, Line: 29, Name: execute_add_prismatic_coulomb
+  File: C:\Program Files\MATLAB\R2025b\toolbox\matlab\lang\run.m, Line: 112, Name: run
