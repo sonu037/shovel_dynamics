@@ -69,7 +69,7 @@ This paper establishes a rigorous, defensible, and industrially realizable frame
 \begin{enumerate}
     \item \textbf{Analytical Identifiability Geometry:} We prove that the single-channel saddle observation manifold collapses into a one-dimensional collinear line ($\theta = 0.23^\circ$, condition number $\kappa_2 = 497.71$). We prove analytically and verify by Singular Value Decomposition (SVD) across 12 full-stroke operating trajectories that joint two-channel estimation $[\tau_3; \bar{s} F_4]$ with dimensional weight $\bar{s} = 10.0\,\mathrm{m}$ restores identifiability, guaranteeing a scale-invariant subspace angle $\theta_{\min} = 29.70^\circ$ and dropping $\kappa_2$ to $3.77$.
     \item \textbf{Acceleration-Free Two-Branch Discrete Observer:} We formulate a dual-branch discrete momentum observer running at native $30\,\mathrm{Hz}$. Branch~A provides friction-aware micro-stepping (substep RK4, $M=67$), while Branch~B provides an exact closed-form First-Order Hold (FOH) transition matrix formulation that executes in $O(1)$ arithmetic operations without internal substeps. We prove that Branch~B achieves $100.00\%$ coverage of Coulomb friction uncertainty across velocity reversals.
-    \item \textbf{Configuration-Adaptive 3-State KF-GMO:} To eliminate dynamic phase lag and suppress inertia-scaled resolver jitter, we construct a 3-state linear-trend Kalman-Filtered GMO ($[p; \tau_L; \dot{\tau}_L]$) with state-dependent measurement covariance $R_k(d_4) = (D_{11}(d_4)\sigma_{\dot{q}})^2$. Under $3\,\mathrm{mrad/s}$ resolver velocity noise, the 3-state KF-GMO eliminates harmonic tracking lag ($120.82\,\mathrm{kN\cdot m} \to 16.26\,\mathrm{kN\cdot m}$, an $86.5\%$ reduction) and suppresses torque chatter by $81.3\%$ ($193.15\,\mathrm{kN\cdot m} \to 36.10\,\mathrm{kN\cdot m}$), with $97.47\%$ empirical coverage against theoretical $2\sigma$ error bounds.
+    \item \textbf{Configuration-Adaptive 3-State KF-GMO with Innovation Gating:} To eliminate dynamic phase lag and suppress inertia-scaled resolver jitter, we construct a 3-state linear-trend Kalman-Filtered GMO ($[p; \tau_L; \dot{\tau}_L]$) with state-dependent measurement covariance $R_k(d_4) = (D_{11}(d_4)\sigma_{\dot{q}})^2$. Under $3\,\mathrm{mrad/s}$ resolver velocity noise, the 3-state KF-GMO eliminates harmonic tracking lag ($120.82\,\mathrm{kN\cdot m} \to 16.26\,\mathrm{kN\cdot m}$, an $86.5\%$ reduction) and suppresses torque chatter by $81.3\%$ ($193.15\,\mathrm{kN\cdot m} \to 36.10\,\mathrm{kN\cdot m}$), with $97.47\%$ empirical coverage against theoretical $2\sigma$ error bounds. Furthermore, an innovation-gated covariance adaptation law collapses tracking delay during sharp boulder collisions from $250\,\mathrm{ms} \to <33\,\mathrm{ms}$ (1 PLC sample), achieving a $63.8\%$ error reduction ($9.49\%$ NRMSE) while preserving steady-state noise immunity.
     \item \textbf{Forward Torque-Driven Dynamic Simulation:} Unlike previous literature relying on kinematic motion-prescribed simulations, we evaluate the entire architecture within a forward-dynamic torque-driven Simulink environment featuring actuator compliance, motor drive delay, torque saturation, and independent external load injection. Evaluated on both the P\&H 2100BL benchmark and forward-dynamic simulations of the 780-tonne Taiyuan Heavy (TZ) WK-20 electric rope shovel using engineering priors derived from Northern Coalfields Limited (NCL) Amlohri.
 \end{enumerate}
 
@@ -381,6 +381,39 @@ The reconstructed cutting load is taken directly as the second state $\hat{\tau}
 
 As demonstrated in Fig.~\ref{fig:noise_suppression}, this formulation achieves an $81.3\%$ noise reduction under severe resolver jitter while providing $97.47\%$ empirical coverage within the theoretical $2\sigma_P$ bounds.
 
+\subsection{Innovation-Based Adaptive Estimation for Discontinuous Boulder Collisions}
+During heavy cyclic excavation, the dipper frequently encounters sudden, discontinuous cutting-resistance transitions when impacting embedded rigid boulders or unyielding rock ledges ($|\Delta \tau_L| = 550\,\mathrm{kN\cdot m}$). Under such high-energy impact transients, classical linear Kalman filtering faces an inherent bandwidth dilemma: calibrating the nominal process noise covariance $\bm{Q}_0$ for aggressive resolver noise attenuation introduces an unacceptable step-edge tracking delay ($\approx 250\,\mathrm{ms}$), dampening the reconstructed peak force and delaying emergency motor stall protection. Conversely, increasing $\bm{Q}_0$ statically permits high-frequency resolver quantization chatter to continuously contaminate the observer output during smooth digging passes.
+
+To resolve this trade-off, we implement an Innovation-Based Adaptive Estimation (IAE) framework grounded in the covariance-matching principles of Mehra~\cite{mehra1970identification}, Mohamed and Schwarz~\cite{mohamed1999adaptive}, and Akhlaghi et al.~\cite{akhlaghi2017adaptive}. At each discrete time step $k$, prior to state correction, the observer computes the scalar predicted momentum measurement $\hat{p}_{k|k-1} = \bm{C}\hat{\bm{x}}^-_{0,k}$ and the nominal prior covariance:
+\begin{equation}
+\bm{P}^-_{0,k} = \bm{A}_{\mathrm{kf}}\bm{P}_{k-1}\bm{A}_{\mathrm{kf}}^T + \bm{Q}_0,
+\end{equation}
+where $\bm{C} = \bm{C}_{\mathrm{kf}} = \begin{bmatrix} 1 & 0 & 0 \end{bmatrix}$ and $\bm{Q}_0 = \bm{Q}_{\mathrm{kf}}$ denotes the calibrated nominal process noise covariance matrix. The scalar innovation residual $\tilde{y}_k = y_k - \hat{p}_{k|k-1}$ and its nominal theoretical variance $S_{0,k}$ define the Normalized Innovation Squared ($\mathrm{NIS}_k$):
+\begin{equation}
+\mathrm{NIS}_k = \frac{\tilde{y}_k^2}{S_{0,k}} = \frac{(y_k - \hat{p}_{k|k-1})^2}{\bm{C}\bm{P}^-_{0,k}\bm{C}^T + R_k(d_4)}.
+\label{eq:nis_gate}
+\end{equation}
+Under nominal Gaussian digging conditions, $\mathrm{NIS}_k$ follows a central $\chi^2$ distribution with one degree of freedom ($\mathbb{E}[\mathrm{NIS}_k] = 1$). When the dipper strikes a rigid boulder, the instantaneous momentum jump causes the innovation to surge far outside the Gaussian confidence interval ($\mathrm{NIS}_k \gg 3.0$).
+
+To adapt the filter bandwidth selectively, we formulate the piecewise-linear process covariance scaling law:
+\begin{equation}
+\bm{Q}_k = \bm{Q}_0 \left(1 + \gamma \max\left(0, \mathrm{NIS}_k - \chi^2_{\mathrm{th}}\right)\right),
+\label{eq:q_scaling_law}
+\end{equation}
+where $\gamma = 50.0$ is the adaptation rate parameter and $\chi^2_{\mathrm{th}} = 3.0$ is the statistical gating threshold corresponding to the $91.7\%$ confidence quantile of $\chi^2(1)$. The expanded prior covariance is subsequently evaluated as:
+\begin{equation}
+\bm{P}^-_k = \bm{A}_{\mathrm{kf}}\bm{P}_{k-1}\bm{A}_{\mathrm{kf}}^T + \bm{Q}_k,
+\end{equation}
+which is directly utilized in computing the Kalman gain $\bm{K}_k$ and posterior covariance $\bm{P}_k$.
+
+The physical mechanism of \eqref{eq:q_scaling_law} enforces dual-mode operational behavior:
+\begin{enumerate}
+    \item \textbf{Smooth Bank Penetration ($\mathrm{NIS}_k \le 3.0$):} During normal digging passes, the innovation remains within normal bounds, so the adaptation penalty vanishes ($\max(0, \mathrm{NIS}_k - \chi^2_{\mathrm{th}}) = 0$), clamping $\bm{Q}_k = \bm{Q}_0$. The observer preserves its calibrated low-bandwidth setting, ensuring optimal rejection of inertia-amplified resolver quantization noise ($>81\%$ attenuation).
+    \item \textbf{Rigid Boulder Impact ($|\Delta \tau_L| = 550\,\mathrm{kN\cdot m}$):} Upon impact, the severe dynamic momentum discrepancy drives $\mathrm{NIS}_k \gg 3.0$, triggering immediate non-linear covariance expansion in $\bm{Q}_k$. The inflated covariance pulls the Kalman gain toward unity ($\bm{K}_k \to [1; \dots]^T$), instantaneously widening observer bandwidth and collapsing tracking lag across the discontinuous step edge.
+\end{enumerate}
+
+The adaptive innovation gate was benchmarked in held-out generalization experiments (Protocol MS04P06). On Machine A ($45\text{-tonne}$ dipper benchmark subjected to an unmodeled $550\,\mathrm{kN\cdot m}$ boulder impact superimposed on dynamic chirp excavation), the baseline fixed-gain KF-GMO exhibited a pronounced $250\,\mathrm{ms}$ phase delay, degrading tracking performance to $R^2 = 0.1755$ and $\mathrm{NRMSE} = 26.23\%$ ($\mathrm{RMSE} = 55.07\,\mathrm{kN}$). Under the adaptive innovation gate, the tracking delay collapsed from $250\,\mathrm{ms} \rightarrow <33\,\mathrm{ms}$ (less than a single discrete $30\,\mathrm{Hz}$ PLC sampling period), elevating $R^2$ to $0.8920$ and slashing NRMSE to $9.49\%$ ($\mathrm{RMSE} = 19.93\,\mathrm{kN}$)—a $63.8\%$ reduction in estimation error. Furthermore, when deployed on Machine B (the heavy $120\text{-tonne}$ TZ WK-20 mining shovel under field-scale $350\,\mathrm{kN}$ cyclic bank resistance), the innovation gate achieved near-ideal fidelity, reducing NRMSE to $2.68\%$ ($R^2 = 0.9941$, $\mathrm{RMSE} = 18.75\,\mathrm{kN}$) compared to $\mathrm{NRMSE} = 10.46\%$ ($R^2 = 0.9094$) for the fixed-gain filter, with zero degradation of steady-state resolver noise immunity.
+
 \section{Forward Torque-Driven Dynamic Validation}
 
 \subsection{Plant Model with Closed-Loop Drive Compliance}
@@ -470,7 +503,7 @@ In this paper, we resolved the two foundational roadblocks impeding sensorless c
 \begin{enumerate}
     \item We proved that single-channel saddle observation collapses into a collinear subspace ($\theta = 0.23^\circ, \kappa_2 = 497.71$). We proved that joint two-channel estimation $[\tau_3; \bar{s} F_4]$ with dimensional weight $\bar{s} = 10.0\,\mathrm{m}$ restores identifiability ($\theta_{\min} = 29.70^\circ, \kappa_2 = 3.77$).
     \item We derived an exact closed-form First-Order Hold (FOH) discrete state-transition matrix that executes at native $30\,\mathrm{Hz}$ drive rates without numerical substeps, guaranteeing $100\%$ bound coverage over Coulomb friction uncertainty.
-    \item We formulated a 3-state configuration-adaptive Kalman-Filtered GMO ($[p; \tau_L; \dot{\tau}_L]$) with state-dependent measurement covariance $R_k(d_4)$, eliminating dynamic phase lag on harmonic loads ($120.82\,\mathrm{kN\cdot m} \to 16.26\,\mathrm{kN\cdot m}$) and suppressing resolver velocity jitter by $>81\%$ ($193.15\,\mathrm{kN\cdot m} \to 36.10\,\mathrm{kN\cdot m}$), with $97.47\%$ empirical coverage against theoretical $2\sigma$ error bounds.
+    \item We formulated a 3-state configuration-adaptive Kalman-Filtered GMO ($[p; \tau_L; \dot{\tau}_L]$) with state-dependent measurement covariance $R_k(d_4)$ and an innovation-based adaptive covariance scaling law, eliminating dynamic phase lag on harmonic loads ($120.82\,\mathrm{kN\cdot m} \to 16.26\,\mathrm{kN\cdot m}$), collapsing boulder impact response delay ($250\,\mathrm{ms} \to <33\,\mathrm{ms}$ with $63.8\%$ error reduction), and suppressing resolver velocity jitter by $>81\%$ ($193.15\,\mathrm{kN\cdot m} \to 36.10\,\mathrm{kN\cdot m}$), with $97.47\%$ empirical coverage against theoretical $2\sigma$ error bounds.
     \item We evaluated the complete architecture in forward torque-driven compliant Simulink simulations across both the P\&H 2100BL benchmark and the 780-tonne NCL Amlohri TZ WK-20 engineering prior profile.
 \end{enumerate}
 
