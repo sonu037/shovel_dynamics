@@ -68,3 +68,49 @@ Saved experiment results to: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M4\ex
 
 
 MS04P06 execution completed successfully at 11-Nov-2026 11:27:49!
+Starting MS04P06 execution at 13-Nov-2026 18:35:52...
+
+ERROR in MS04P06: Error: File: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M4\scripts\run_MS04P06_HeldOutValidation.m Line: 268 Column: 13
+Character vector is not terminated properly.
+  File: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M4\scripts\execute_MS04P06.m, Line: 9, Name: execute_MS04P06
+  File: C:\Program Files\MATLAB\R2025b\toolbox\matlab\lang\run.m, Line: 112, Name: run
+Starting MS04P06 execution at 13-Nov-2026 18:36:51...
+========================================================================================
+  MILESTONE 4 PROTOCOL P06: HELD-OUT MACHINE VERIFICATION & FIELD READINESS
+  Generalization: Machine A Unseen Impact Profile & Machine B (TZ WK-20 Deployment)
+  Evaluating: Baseline Linear KF-GMO vs Adaptive Innovation-Gated Observer (M5)
+========================================================================================
+
+>>> EXECUTING TEST 1: Machine A under Unseen Impact & Chirp Excavation Load...
+>>> EXECUTING TEST 2: Machine B (TZ WK-20) 120-Tonne Scaled Field Target...
+
+====================================================================================================
+  HELD-OUT EXPERIMENTAL EVALUATION SUMMARY (BASELINE vs ADAPTIVE INNOVATION GATE):
+====================================================================================================
+Test Scenario & Observer Architecture | R^2      | NRMSE (%)    | RMSE (kN)    | MAE (kN)     | Audit Status  
+----------------------------------------------------------------------------------------------------
+Machine A: Baseline Fixed-Gain KF-GMO | 0.1755   | 26.23      % | 55.07        | 45.54        | STEP_LAG_WARN 
+Machine A: M5 Adaptive Innovation Gate | 0.8920   | 9.49       % | 19.93        | 16.39        | PASSED (M5)   
+----------------------------------------------------------------------------------------------------
+Machine B: Baseline Fixed-Gain KF-GMO | 0.9094   | 10.46      % | 73.19        | 65.08        | PASSED (PRIOR)
+Machine B: M5 Adaptive Innovation Gate | 0.9941   | 2.68       % | 18.75        | 15.60        | PASSED (EXCEL)
+====================================================================================================
+
+========================================================================================
+  PHYSICAL ACCEPTANCE CRITERIA AUDIT (HELD-OUT GENERALIZATION & M5 UPGRADE):
+========================================================================================
+  1. Machine A Boulder Impact Tracking (Error Collapse):
+     - Baseline Fixed-Gain:   NRMSE = 26.23%, R^2 = 0.1755 (250 ms phase lag).
+     - Adaptive Gate (M5):    NRMSE = 9.49%, R^2 = 0.8920 (<33 ms response).
+     --> ERROR REDUCTION: 63.8% drop in tracking error during sharp boulder collision!
+
+  2. Machine B (TZ WK-20 Scaled Prior Simulation):
+     - Baseline Fixed-Gain:   NRMSE = 10.46%, R^2 = 0.9094.
+     - Adaptive Gate (M5):    NRMSE = 2.68%, R^2 = 0.9941.
+     --> Digging resistance tracking improves from 10.5% to 2.68% without sensor noise leak.
+========================================================================================
+
+Saved experiment results to: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M4\experiments\06_heldout\MS04P06_heldout_results.mat
+
+
+MS04P06 execution completed successfully at 13-Nov-2026 18:36:52!

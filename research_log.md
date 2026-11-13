@@ -1405,6 +1405,44 @@ not deleted, with the supersession recorded in place.
 - Structure and write the complete LaTeX manuscript for Paper 1 (*IEEE/ASME Transactions on Mechatronics* / *MSSP*).
 - Formulate Milestone M4 / M5 specifications incorporating tooth wear and drive train flexibility.
 
+
+## 2026-11-13 — M1C Prismatic Friction Physical Realization & M5 Adaptive Innovation-Gated Observer Verification
+
+**What was done:**
+
+- Audited and resolved the open prismatic Coulomb friction issue on the `ShovelSimulatorr2025b_M1C.slx` Simscape Multibody canvas:
+  1. Identified that `MATLAB Function1` (SID 72) was actively computing $F_c = -480 	anh(\dot{d}_4/0.002)$ and converting to physical domain via `Simulink-PS Converter3` (SID 73), but the final connection to the mechanism was floating.
+  2. Wired `73#rconn:1` into `External Force and Torque1` (SID 74, configured for $X$-axis translational force) and wired `74#rconn:1` into `Prismatic Joint` follower frame (`37#rconn:1`).
+  3. Cleaned up 6 orphaned disconnected blocks (SID 62, 63, 64, 68, 75, 76), leaving zero floating blocks on the canvas.
+  4. Preserved pre-wiring baseline at `_safety_backups/ShovelSimulatorr2025b_M1C_before_wiring_fc4.slx`.
+- Designed, formulated, and verified the Milestone M5 **Adaptive Innovation-Gated Kalman Filter Observer (IAE)** based on Mehra (1970) and Mohamed & Schwarz (1999) to solve the Protocol MS04P06 boulder impact phase delay:
+  1. Formulated the Normalized Innovation Squared metric: $\mathrm{NIS}_k = \tilde{y}_k^2 / S_{0,k}$.
+  2. Implemented the covariance scaling law: $Q_k = Q_0 \cdot (1 + \gamma \max(0, \mathrm{NIS}_k - \chi^2_{\mathrm{th}}))$ with $\gamma = 50.0, \chi^2_{\mathrm{th}} = 3.0$.
+  3. Upgraded `M4/scripts/run_MS04P06_HeldOutValidation.m` to execute side-by-side comparative evaluations of Baseline Linear KF-GMO vs. M5 Adaptive Innovation-Gated Observer.
+  4. Appended 7 peer-reviewed theoretical anchors (`Tafazoli1999Parameter`, `Schuderer2024Friction`, `Boschetti2024Digital`, `Mehra1970Identification`, `Mohamed1999Adaptive`, `Wahrburg2018MotorCurrent`, `Akhlaghi2017Adaptive`) to `papers_library/papers_library.bib` (total 76 entries).
+- Executed official verification run in MATLAB R2025b and archived results to `M4/experiments/06_heldout/MS04P06_heldout_results.mat`.
+
+**Key result:**
+
+1. **Boulder Impact Step Tracking Collapse (Protocol MS04P06 Machine A):**
+   - Baseline Fixed-Gain KF-GMO: $R^2 = 0.1755$, $\mathrm{NRMSE} = 26.23\%$, $\mathrm{RMSE} = 55.07\ \mathrm{kN}$, exhibiting a $250\ \mathrm{ms}$ low-pass phase lag during $50\ \mathrm{kN}$ rock collisions.
+   - M5 Adaptive Innovation Gate: $R^2 = 0.8920$, $\mathrm{NRMSE} = 9.49\%$, $\mathrm{RMSE} = 19.93\ \mathrm{kN}$.
+   - **Performance Gain:** **$63.8\%$ error reduction**, with phase delay collapsing from $250\ \mathrm{ms}$ to $< 33\ \mathrm{ms}$ (a single sample cycle at $30\ \mathrm{Hz}$).
+2. **Heavy Shovel Scalability (Protocol MS04P06 Machine B - TZ WK-20 120-Tonne Scaled Prior):**
+   - Baseline Fixed-Gain KF-GMO: $R^2 = 0.9094$, $\mathrm{NRMSE} = 10.46\%$, $\mathrm{RMSE} = 73.19\ \mathrm{kN}$.
+   - M5 Adaptive Innovation Gate: $R^2 = 0.9941$, $\mathrm{NRMSE} = 2.68\%$, $\mathrm{RMSE} = 18.75\ \mathrm{kN}$.
+   - **Performance Gain:** Tracking error improved from $10.5\%$ to $2.68\%$ without amplifying resolver quantization jitter.
+
+**Decisions & why:**
+
+- Used continuous $\tanh(\dot{d}_4/0.002)$ regularization on `External Force and Torque1` to prevent variable-step ODE solver chattering during crowd reversals, in direct alignment with `Schuderer2024Friction` and `Rill2023Lugre`.
+- Selected Innovation-Based Adaptive Estimation (IAE) over fixed gain expansion because scaling $Q_k$ only when $\mathrm{NIS}_k > 3.0$ preserves high-frequency sensor noise rejection during steady digging while providing instantaneous bandwidth expansion during rigid boulder collisions.
+
+**Next step:**
+
+- Package M1–M5 results into the Paper 1 manuscript draft for *IEEE/ASME Transactions on Mechatronics* / *MSSP*.
+- Prepare the updated slide graphics for the PI presentation comparing the 250 ms baseline lag vs the 33 ms adaptive response.
+
 ## TEMPLATE — copy for each new session
 
 ## YYYY-MM-DD — <one-line title>
