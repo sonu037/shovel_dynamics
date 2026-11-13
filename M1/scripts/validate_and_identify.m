@@ -201,8 +201,9 @@ fprintf('  %-12s %14.1f %14.1f %14g\n','m [kg]',      m_hat,   1.96*seT(1), P.m)
 fprintf('  %-12s %14.4f %14.4f %14g\n','c [m]',       c_hat,   1.96*se_c,   P.c);
 fprintf('  %-12s %14.0f %14.0f %14g\n','Izz [kgm^2]', Izz_hat, 1.96*se_I,   P.Izz);
 fprintf('  %-12s %14.1f %14.1f %14g\n','fv3 [Nms/rad]',fv3_hat, ci95(4),    P.fv3);   % [G7]
+has_coulomb_rev = (isfield(P, 'model_has_coulomb_rev') && P.model_has_coulomb_rev) || P.model_has_coulomb;
 fprintf('  %-12s %14.1f %14.1f %14s\n','fc3 [Nm]',    fc3_hat, ci95(5), ...
-        local_tern(P.model_has_coulomb, num2str(P.fc3), '0 (not in model)'));
+        local_tern(has_coulomb_rev, num2str(P.fc3), '0 (not in model)'));
 fprintf(['\n  Read the CIs, not the point estimates: a CI spanning the truth\n' ...
          '  AND a CI comparable to the estimate itself both mean "this\n' ...
          '  trajectory cannot identify that parameter". Expect m and c to be\n' ...
@@ -222,8 +223,9 @@ F4_pred = P.m.*d_dd ...                         % linear inertia
         - P.m.*r.*q_d.^2 ...                    % centrifugal
         + P.m*P.g.*sin(q) ...                   % gravity along slide
         + P.fv4.*d_d;                           % viscous (1473 N*s/m, in model)
-if P.model_has_coulomb
-    F4_pred = F4_pred + P.fc4*sign(d_d);
+has_coulomb_pris = (isfield(P, 'model_has_coulomb_pris') && P.model_has_coulomb_pris) || P.model_has_coulomb;
+if has_coulomb_pris
+    F4_pred = F4_pred + P.fc4*tanh(d_d / 0.002);
 end
 
 % Sign-convention check: detect a flipped sensing convention explicitly.

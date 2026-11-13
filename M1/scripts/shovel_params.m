@@ -42,10 +42,12 @@ P.fv3      = 3800;         % N*m*s/rad  revolute (saddle) viscous
 P.fv3_degs = P.fv3*pi/180; % = 66.3225 N*m/(deg/s), the unit the Simscape
                            %   Revolute Joint dialog expects (VERIFIED in
                            %   .slx: DampingCoefficient = 66.322512)
-P.fc3      = 340;          % N*m        revolute Coulomb  (NOT yet in model)
+P.fc3      = 340;          % N*m        revolute Coulomb  (NOT yet wired in Simscape)
 P.fv4      = 1473;         % N*s/m      prismatic (crowd) viscous (in model)
-P.fc4      = 480;          % N          prismatic Coulomb (NOT yet in model)
+P.fc4      = 480;          % N          prismatic Coulomb (WIRED in M1C: -480*tanh(v/0.002))
 
 % ---- Flags describing what the .slx actually contains -----------------
-P.model_has_coulomb = false;   % flip to true once fc3/fc4 are wired in
+P.model_has_coulomb_rev  = false; % revolute Coulomb fc3 (not yet wired in Simscape)
+P.model_has_coulomb_pris = true;  % prismatic Coulomb fc4 (wired in M1C via External Force/Torque1)
+P.model_has_coulomb      = false; % legacy flag: true only when BOTH joints have Coulomb friction
 end
