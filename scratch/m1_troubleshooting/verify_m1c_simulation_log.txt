@@ -1,0 +1,199 @@
+1. Loading model: ShovelSimulatorr2025b_M1C...
+2. Simulating model for 5.0 seconds with active prismatic Coulomb friction...
+[Warning: 'Input Port 1' of block 'ShovelSimulatorr2025b_M1C/MATLAB Function1' is not connected.] 
+[> In verify_m1c_simulation (line 16)
+In run (line 112)] 
+
+--------------------------------------------------------------------------------
+             Access violation detected at 2026-11-13 18:43:54 +0530
+--------------------------------------------------------------------------------
+
+Configuration:
+  Crash Decoding           : Disabled - No sandbox or build area path
+  Crash Mode               : continue (default)
+  Default Encoding         : UTF-8
+  Deployed                 : false
+  Graphics Driver          : Uninitialized hardware 
+  Graphics card 1          : Intel Corporation ( 0x8086 ) Intel(R) UHD Graphics 770 Version 32.0.101.7088 (2026-6-17)
+  Graphics card 2          : NVIDIA ( 0x10de ) NVIDIA T1000 8GB Version 32.0.15.9671 (2026-6-9)
+  Java Version             : Java 1.8.0_202-b08 with Oracle Corporation Java HotSpot(TM) 64-Bit Server VM mixed mode
+  MATLAB Architecture      : win64
+  MATLAB Entitlement ID    : 3639842
+  MATLAB Root              : C:\Program Files\MATLAB\R2025b
+  MATLAB Version           : 25.2.0.3177638 (R2025b) Update 5
+  OpenGL                   : hardware
+  Operating System         : Microsoft Windows 11 Pro
+  Process ID               : 25624
+  Processor ID             : x86 Family 6 Model 183 Stepping 1, GenuineIntel
+  Session Key              : 9rxzpabo8dsh18bspvte3c9fp
+  Window System            : Version 10.0 (Build 26300)
+
+Fault Count: 1
+
+
+Abnormal termination:
+Access violation
+
+Current Thread: 'MCR 0 interpreter thread' id 25708
+
+Register State (from fault):
+  RAX = 0000024c4a3edd10  RBX = 0000000000000000
+  RCX = 0000000000000000  RDX = 0000024c4a3edd10
+  RSP = 000000e1185f1ab8  RBP = 0000000000000000
+  RSI = 000000e1185f1c28  RDI = 0000000000000000
+ 
+   R8 = 0000000000000000   R9 = 0000000000000008
+  R10 = 0000024c92687248  R11 = 000000e1185f1b40
+  R12 = 0000024c977dc080  R13 = 0000024c67b0d5c0
+  R14 = 0000000000000000  R15 = 000000e1185f1cd0
+ 
+  RIP = 00007ffd2ba86570  EFL = 00010202
+ 
+   CS = 0033   FS = 0053   GS = 002b
+
+Stack Trace (from fault):
+[  0] 0x00007ffd2ba86570 C:\Program Files\MATLAB\R2025b\bin\win64\SimulinkBlock.dll+02647408 slPort::getGrOwnerBlock+00000000
+[  1] 0x00007ffd095dc73e C:\Program Files\MATLAB\R2025b\bin\win64\sl_compile.dll+01623870 PartitionSort::Partition::getID+00003182
+[  2] 0x00007ffd0997fe3a C:\Program Files\MATLAB\R2025b\bin\win64\sl_compile.dll+05439034 slcomp::sleUpdateLineStylesToShowCompiledAttributes+00001754
+[  3] 0x00007ffd0997f6b3 C:\Program Files\MATLAB\R2025b\bin\win64\sl_compile.dll+05437107 slcomp::ErrLevelEnforcedInMdlAdvisor+00004723
+[  4] 0x00007ffd0997f7d1 C:\Program Files\MATLAB\R2025b\bin\win64\sl_compile.dll+05437393 slcomp::sleUpdateLineStylesToShowCompiledAttributes+00000113
+[  5] 0x00007ffd0974e777 C:\Program Files\MATLAB\R2025b\bin\win64\sl_compile.dll+03139447 SlCallSysSort::operator=+00004759
+[  6] 0x00007ffd0976342f C:\Program Files\MATLAB\R2025b\bin\win64\sl_compile.dll+03224623 VarHiddenConnectionInfo::setNIForRemoval+00006559
+[  7] 0x00007ffd097635b0 C:\Program Files\MATLAB\R2025b\bin\win64\sl_compile.dll+03225008 VarHiddenConnectionInfo::setNIForRemoval+00006944
+[  8] 0x00007ffd09720d70 C:\Program Files\MATLAB\R2025b\bin\win64\sl_compile.dll+02952560 SLCompDiagramImpl+00020336
+[  9] 0x00007ffd0971c20f C:\Program Files\MATLAB\R2025b\bin\win64\sl_compile.dll+02933263 SLCompDiagramImpl+00001039
+[ 10] 0x00007ffd0f98b4ae C:\Program Files\MATLAB\R2025b\bin\win64\sl_link_bd.dll+01160366 slink::CreateSlModelForLink+00000558
+[ 11] 0x00007ffd0f98b2a3 C:\Program Files\MATLAB\R2025b\bin\win64\sl_link_bd.dll+01159843 slink::CreateSlModelForLink+00000035
+[ 12] 0x00007ffd10f05326 C:\Program Files\MATLAB\R2025b\bin\win64\libmwsimulink.dll+14635814 slsim::setUIControlOverrideToInactive+00066406
+[ 13] 0x00007ffd10f0ae65 C:\Program Files\MATLAB\R2025b\bin\win64\libmwsimulink.dll+14659173 slsim::setUIControlOverrideToInactive+00089765
+[ 14] 0x00007ffd10f13643 C:\Program Files\MATLAB\R2025b\bin\win64\libmwsimulink.dll+14693955 slsim::setUIControlOverrideToInactive+00124547
+[ 15] 0x00007ffd10f12a53 C:\Program Files\MATLAB\R2025b\bin\win64\libmwsimulink.dll+14690899 slsim::setUIControlOverrideToInactive+00121491
+[ 16] 0x00007ffd10f4e050 C:\Program Files\MATLAB\R2025b\bin\win64\libmwsimulink.dll+14934096 slsim::setUIControlOverrideToInactive+00364688
+[ 17] 0x00007ffd108dd287 C:\Program Files\MATLAB\R2025b\bin\win64\libmwsimulink.dll+08180359 RTWCGGetParenRule+00008375
+[ 18] 0x00007ffd10826e8c C:\Program Files\MATLAB\R2025b\bin\win64\libmwsimulink.dll+07433868 slFullSimulate+00000556
+[ 19] 0x00007ffd11e61768 C:\Program Files\MATLAB\R2025b\bin\win64\sl_proxy_interface.dll+00071528 wrapper_matl_sim+00000136
+[ 20] 0x00007ffd6df7f57d C:\Program Files\MATLAB\R2025b\bin\win64\builtin.dll+00193917 MathWorks::builtin::BuiltinFcn::invoke+00001581
+[ 21] 0x00007ffd6d17638a C:\Program Files\MATLAB\R2025b\bin\win64\m_dispatcher.dll+00353162 mdLoadModuleForPackageOrClass+00007610
+[ 22] 0x00007ffd6d176455 C:\Program Files\MATLAB\R2025b\bin\win64\m_dispatcher.dll+00353365 mdLoadModuleForPackageOrClass+00007813
+[ 23] 0x00007ffd6d12cbc4 C:\Program Files\MATLAB\R2025b\bin\win64\m_dispatcher.dll+00052164
+[ 24] 0x00007ffd6d14ca1d C:\Program Files\MATLAB\R2025b\bin\win64\m_dispatcher.dll+00182813 Mfh_MATLAB_fn_impl::dispatch+00000045
+[ 25] 0x00007ffd6c6685bd C:\Program Files\MATLAB\R2025b\bin\win64\libmwlxemainservices.dll+00427453 coretypes::array::Array<MathWorks::String::detail::StringArrayVariant,MathWorks::String::detail::StringArrayPolicy,coretypes::array::ArrayTypeList<MathWorks::String::detail::StringArrayVariant> >::resize+00350461
+[ 26] 0x00007ffd6c6773d4 C:\Program Files\MATLAB\R2025b\bin\win64\libmwlxemainservices.dll+00488404 coretypes::array::Array<MathWorks::String::detail::StringArrayVariant,MathWorks::String::detail::StringArrayPolicy,coretypes::array::ArrayTypeList<MathWorks::String::detail::StringArrayVariant> >::resize+00411412
+[ 27] 0x00007ffd66fa2cf6 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+06499574 MathWorks::lxe::ObservableXvaluePtr::~ObservableXvaluePtr+00006662
+[ 28] 0x00007ffd66fa4b7b C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+06507387 MathWorks::lxe::ObservableXvaluePtr::~ObservableXvaluePtr+00014475
+[ 29] 0x00007ffd66eb6888 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+05531784 MathWorks::lxe::XvalueFactory::XvalueDeleter::XvalueDeleter+00267432
+[ 30] 0x00007ffd66ed5fe9 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+05660649 MathWorks::lxe::XvalueFactory::XvalueDeleter::XvalueDeleter+00396297
+[ 31] 0x00007ffd66c687c6 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+03114950 MathWorks::lxe::LXEConstants::IsIfElse+00548550
+[ 32] 0x00007ffd66c6c9d2 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+03131858 MathWorks::lxe::LXEConstants::IsY+00012018
+[ 33] 0x00007ffd66c6a1f3 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+03121651 MathWorks::lxe::LXEConstants::IsY+00001811
+[ 34] 0x00007ffd66c6dad5 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+03136213 MathWorks::lxe::LXEConstants::IsY+00016373
+[ 35] 0x00007ffd66c6dd83 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+03136899 MathWorks::lxe::LXEConstants::IsY+00017059
+[ 36] 0x00007ffd66c6d6ee C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+03135214 MathWorks::lxe::LXEConstants::IsY+00015374
+[ 37] 0x00007ffd66c69916 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+03119382 MathWorks::lxe::LxeTypes::GetTypeXvalueOf+00000262
+[ 38] 0x00007ffd66d62cf2 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+04140274 MathWorks::lxe::SetEngineImplUnlinkFlagForAllCallsOnStack+00048594
+[ 39] 0x00007ffd66d66885 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+04155525 MathWorks::lxe::SetEngineImplUnlinkFlagForAllCallsOnStack+00063845
+[ 40] 0x00007ffd6c7754e6 C:\Program Files\MATLAB\R2025b\bin\win64\libmwlxemainservices.dll+01529062 FeatureTestObservableWorkspace+00216246
+[ 41] 0x00007ffd6c660cf3 C:\Program Files\MATLAB\R2025b\bin\win64\libmwlxemainservices.dll+00396531 coretypes::array::Array<MathWorks::String::detail::StringArrayVariant,MathWorks::String::detail::StringArrayPolicy,coretypes::array::ArrayTypeList<MathWorks::String::detail::StringArrayVariant> >::resize+00319539
+[ 42] 0x00007ffd6c660323 C:\Program Files\MATLAB\R2025b\bin\win64\libmwlxemainservices.dll+00394019 coretypes::array::Array<MathWorks::String::detail::StringArrayVariant,MathWorks::String::detail::StringArrayPolicy,coretypes::array::ArrayTypeList<MathWorks::String::detail::StringArrayVariant> >::resize+00317027
+[ 43] 0x00007ffd6c662f12 C:\Program Files\MATLAB\R2025b\bin\win64\libmwlxemainservices.dll+00405266 coretypes::array::Array<MathWorks::String::detail::StringArrayVariant,MathWorks::String::detail::StringArrayPolicy,coretypes::array::ArrayTypeList<MathWorks::String::detail::StringArrayVariant> >::resize+00328274
+[ 44] 0x00007ffd6d2499d9 C:\Program Files\MATLAB\R2025b\bin\win64\m_dispatcher.dll+01219033 Mfh_error::lookup+00012729
+[ 45] 0x00007ffd6d24a81d C:\Program Files\MATLAB\R2025b\bin\win64\m_dispatcher.dll+01222685 Mfh_file::dispatch+00000045
+[ 46] 0x00007ffd6c6685bd C:\Program Files\MATLAB\R2025b\bin\win64\libmwlxemainservices.dll+00427453 coretypes::array::Array<MathWorks::String::detail::StringArrayVariant,MathWorks::String::detail::StringArrayPolicy,coretypes::array::ArrayTypeList<MathWorks::String::detail::StringArrayVariant> >::resize+00350461
+[ 47] 0x00007ffd6c6773d4 C:\Program Files\MATLAB\R2025b\bin\win64\libmwlxemainservices.dll+00488404 coretypes::array::Array<MathWorks::String::detail::StringArrayVariant,MathWorks::String::detail::StringArrayPolicy,coretypes::array::ArrayTypeList<MathWorks::String::detail::StringArrayVariant> >::resize+00411412
+[ 48] 0x00007ffd66fa2cf6 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+06499574 MathWorks::lxe::ObservableXvaluePtr::~ObservableXvaluePtr+00006662
+[ 49] 0x00007ffd66fa43c5 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+06505413 MathWorks::lxe::ObservableXvaluePtr::~ObservableXvaluePtr+00012501
+[ 50] 0x00007ffd66eb6888 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+05531784 MathWorks::lxe::XvalueFactory::XvalueDeleter::XvalueDeleter+00267432
+[ 51] 0x00007ffd66ed5bd9 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+05659609 MathWorks::lxe::XvalueFactory::XvalueDeleter::XvalueDeleter+00395257
+[ 52] 0x00007ffd66c687c6 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+03114950 MathWorks::lxe::LXEConstants::IsIfElse+00548550
+[ 53] 0x00007ffd66c6c9d2 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+03131858 MathWorks::lxe::LXEConstants::IsY+00012018
+[ 54] 0x00007ffd66c6a1f3 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+03121651 MathWorks::lxe::LXEConstants::IsY+00001811
+[ 55] 0x00007ffd66c6dad5 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+03136213 MathWorks::lxe::LXEConstants::IsY+00016373
+[ 56] 0x00007ffd66c6dd83 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+03136899 MathWorks::lxe::LXEConstants::IsY+00017059
+[ 57] 0x00007ffd66c6d6ee C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+03135214 MathWorks::lxe::LXEConstants::IsY+00015374
+[ 58] 0x00007ffd66c69916 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+03119382 MathWorks::lxe::LxeTypes::GetTypeXvalueOf+00000262
+[ 59] 0x00007ffd66d62cf2 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+04140274 MathWorks::lxe::SetEngineImplUnlinkFlagForAllCallsOnStack+00048594
+[ 60] 0x00007ffd66d66885 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+04155525 MathWorks::lxe::SetEngineImplUnlinkFlagForAllCallsOnStack+00063845
+[ 61] 0x00007ffd6c7754e6 C:\Program Files\MATLAB\R2025b\bin\win64\libmwlxemainservices.dll+01529062 FeatureTestObservableWorkspace+00216246
+[ 62] 0x00007ffd6c6acef6 C:\Program Files\MATLAB\R2025b\bin\win64\libmwlxemainservices.dll+00708342 mwboost::archive::detail::pointer_oserializer<mwboost::archive::xml_oarchive,MathWorks::lxe::PreLineExecutionEvent>::save_object_ptr+00078390
+[ 63] 0x00007ffd6c6aea04 C:\Program Files\MATLAB\R2025b\bin\win64\libmwlxemainservices.dll+00715268 mwboost::archive::detail::pointer_oserializer<mwboost::archive::xml_oarchive,MathWorks::lxe::PreLineExecutionEvent>::save_object_ptr+00085316
+[ 64] 0x00007ffd6c755499 C:\Program Files\MATLAB\R2025b\bin\win64\libmwlxemainservices.dll+01397913 FeatureTestObservableWorkspace+00085097
+[ 65] 0x00007ffd6c7551ae C:\Program Files\MATLAB\R2025b\bin\win64\libmwlxemainservices.dll+01397166 FeatureTestObservableWorkspace+00084350
+[ 66] 0x00007ffd6cfda00e C:\Program Files\MATLAB\R2025b\bin\win64\m_interpreter.dll+00761870 inEvalIn+00000062
+[ 67] 0x00007ffd6df7f57d C:\Program Files\MATLAB\R2025b\bin\win64\builtin.dll+00193917 MathWorks::builtin::BuiltinFcn::invoke+00001581
+[ 68] 0x00007ffd6d17638a C:\Program Files\MATLAB\R2025b\bin\win64\m_dispatcher.dll+00353162 mdLoadModuleForPackageOrClass+00007610
+[ 69] 0x00007ffd6d176455 C:\Program Files\MATLAB\R2025b\bin\win64\m_dispatcher.dll+00353365 mdLoadModuleForPackageOrClass+00007813
+[ 70] 0x00007ffd6d12cbc4 C:\Program Files\MATLAB\R2025b\bin\win64\m_dispatcher.dll+00052164
+[ 71] 0x00007ffd6d14ca1d C:\Program Files\MATLAB\R2025b\bin\win64\m_dispatcher.dll+00182813 Mfh_MATLAB_fn_impl::dispatch+00000045
+[ 72] 0x00007ffd6c6685bd C:\Program Files\MATLAB\R2025b\bin\win64\libmwlxemainservices.dll+00427453 coretypes::array::Array<MathWorks::String::detail::StringArrayVariant,MathWorks::String::detail::StringArrayPolicy,coretypes::array::ArrayTypeList<MathWorks::String::detail::StringArrayVariant> >::resize+00350461
+[ 73] 0x00007ffd6c6773d4 C:\Program Files\MATLAB\R2025b\bin\win64\libmwlxemainservices.dll+00488404 coretypes::array::Array<MathWorks::String::detail::StringArrayVariant,MathWorks::String::detail::StringArrayPolicy,coretypes::array::ArrayTypeList<MathWorks::String::detail::StringArrayVariant> >::resize+00411412
+[ 74] 0x00007ffd66fa2cf6 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+06499574 MathWorks::lxe::ObservableXvaluePtr::~ObservableXvaluePtr+00006662
+[ 75] 0x00007ffd66fa43c5 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+06505413 MathWorks::lxe::ObservableXvaluePtr::~ObservableXvaluePtr+00012501
+[ 76] 0x00007ffd66eb6888 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+05531784 MathWorks::lxe::XvalueFactory::XvalueDeleter::XvalueDeleter+00267432
+[ 77] 0x00007ffd66ed5bd9 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+05659609 MathWorks::lxe::XvalueFactory::XvalueDeleter::XvalueDeleter+00395257
+[ 78] 0x00007ffd66c687c6 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+03114950 MathWorks::lxe::LXEConstants::IsIfElse+00548550
+[ 79] 0x00007ffd66c6c9d2 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+03131858 MathWorks::lxe::LXEConstants::IsY+00012018
+[ 80] 0x00007ffd66c6a1f3 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+03121651 MathWorks::lxe::LXEConstants::IsY+00001811
+[ 81] 0x00007ffd66c6dad5 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+03136213 MathWorks::lxe::LXEConstants::IsY+00016373
+[ 82] 0x00007ffd66c6dd83 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+03136899 MathWorks::lxe::LXEConstants::IsY+00017059
+[ 83] 0x00007ffd66c6d6ee C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+03135214 MathWorks::lxe::LXEConstants::IsY+00015374
+[ 84] 0x00007ffd66c69916 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+03119382 MathWorks::lxe::LxeTypes::GetTypeXvalueOf+00000262
+[ 85] 0x00007ffd66d62cf2 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+04140274 MathWorks::lxe::SetEngineImplUnlinkFlagForAllCallsOnStack+00048594
+[ 86] 0x00007ffd66d66885 C:\Program Files\MATLAB\R2025b\bin\win64\m_lxe.dll+04155525 MathWorks::lxe::SetEngineImplUnlinkFlagForAllCallsOnStack+00063845
+[ 87] 0x00007ffd6c7754e6 C:\Program Files\MATLAB\R2025b\bin\win64\libmwlxemainservices.dll+01529062 FeatureTestObservableWorkspace+00216246
+[ 88] 0x00007ffd6c6acef6 C:\Program Files\MATLAB\R2025b\bin\win64\libmwlxemainservices.dll+00708342 mwboost::archive::detail::pointer_oserializer<mwboost::archive::xml_oarchive,MathWorks::lxe::PreLineExecutionEvent>::save_object_ptr+00078390
+[ 89] 0x00007ffd6c6aea04 C:\Program Files\MATLAB\R2025b\bin\win64\libmwlxemainservices.dll+00715268 mwboost::archive::detail::pointer_oserializer<mwboost::archive::xml_oarchive,MathWorks::lxe::PreLineExecutionEvent>::save_object_ptr+00085316
+[ 90] 0x00007ffd6c7378c7 C:\Program Files\MATLAB\R2025b\bin\win64\libmwlxemainservices.dll+01276103 mwboost::archive::detail::oserializer<mwboost::archive::text_oarchive,MathWorks::MatlabComponents::ComponentIdentifier>::save_object_data+00360295
+[ 91] 0x00007ffd6c7396c7 C:\Program Files\MATLAB\R2025b\bin\win64\libmwlxemainservices.dll+01283783 mwboost::archive::detail::oserializer<mwboost::archive::text_oarchive,MathWorks::MatlabComponents::ComponentIdentifier>::save_object_data+00367975
+[ 92] 0x00007ffd6c738664 C:\Program Files\MATLAB\R2025b\bin\win64\libmwlxemainservices.dll+01279588 mwboost::archive::detail::oserializer<mwboost::archive::text_oarchive,MathWorks::MatlabComponents::ComponentIdentifier>::save_object_data+00363780
+[ 93] 0x00007ffd6cfc910c C:\Program Files\MATLAB\R2025b\bin\win64\m_interpreter.dll+00692492 inEvalCmdWithLocalReturnInDesiredWSAndPublishEvents+00000076
+[ 94] 0x00007ffd6d7331f5   C:\Program Files\MATLAB\R2025b\bin\win64\iqm.dll+00799221 iqm::InternalEvalPlugin::inEvalCmdWithLocalReturn+00000101
+[ 95] 0x00007ffd6d732c4c   C:\Program Files\MATLAB\R2025b\bin\win64\iqm.dll+00797772 iqm::InternalEvalPlugin::execute+00000236
+[ 96] 0x00007ffd6d71267f   C:\Program Files\MATLAB\R2025b\bin\win64\iqm.dll+00665215 iqm::Iqm::setupIqmFcnPtrs+00111535
+[ 97] 0x00007ffd6d6e5977   C:\Program Files\MATLAB\R2025b\bin\win64\iqm.dll+00481655 iqm::Iqm::create+00038679
+[ 98] 0x00007ffd6d680cd3   C:\Program Files\MATLAB\R2025b\bin\win64\iqm.dll+00068819 iqm::BaseIqmPlugin::processMFileError+00001763
+[ 99] 0x00007ffd6f717b4c C:\Program Files\MATLAB\R2025b\bin\win64\mlutil.dll+03242828 cmddistributor::IIPRunNowMessage::deliver+00000028
+[100] 0x00007ffda09f0497 C:\Program Files\MATLAB\R2025b\bin\win64\libmwms.dll+01836183 foundation::msg_svc::exchange::MessageQueue::deliver+00000455
+[101] 0x00007ffda09f1f91 C:\Program Files\MATLAB\R2025b\bin\win64\libmwms.dll+01843089 foundation::msg_svc::exchange::NoOpMessage::deliver+00003121
+[102] 0x00007ffda09db3c2 C:\Program Files\MATLAB\R2025b\bin\win64\libmwms.dll+01749954 foundation::msg_svc::exchange::TerminatedException::operator=+00029202
+[103] 0x00007ffda09e846d C:\Program Files\MATLAB\R2025b\bin\win64\libmwms.dll+01803373 foundation::msg_svc::exchange::TerminatedException::operator=+00082621
+[104] 0x00007ffda09e69ac C:\Program Files\MATLAB\R2025b\bin\win64\libmwms.dll+01796524 foundation::msg_svc::exchange::TerminatedException::operator=+00075772
+[105] 0x00007ffd6f57a991 C:\Program Files\MATLAB\R2025b\bin\win64\mlutil.dll+01550737 cmddistributor::IIP::EventMgrBypass::operator=+00042113
+[106] 0x00007ffd6f54f8c4 C:\Program Files\MATLAB\R2025b\bin\win64\mlutil.dll+01374404 cmddistributor::DebugLoopEvent::serializeExplicit+00020196
+[107] 0x00007ffda87f36bc   C:\Program Files\MATLAB\R2025b\bin\win64\mvm.dll+00538300 mvm::MVM::setClientCapabilities+00010316
+[108] 0x00007ffd6d515fe1   C:\Program Files\MATLAB\R2025b\bin\win64\mcr.dll+00221153 mwboost::archive::codecvt_null<wchar_t>::do_out+00003617
+[109] 0x00007ffd6d515858   C:\Program Files\MATLAB\R2025b\bin\win64\mcr.dll+00219224 mwboost::archive::codecvt_null<wchar_t>::do_out+00001688
+[110] 0x00007ffd6d4f5e2e   C:\Program Files\MATLAB\R2025b\bin\win64\mcr.dll+00089646 mcrFunctionSignature::set_signature+00066462
+[111] 0x00007ffd6d50f572   C:\Program Files\MATLAB\R2025b\bin\win64\mcr.dll+00193906 mwboost::archive::codecvt_null<wchar_t>::`default constructor closure'+00015762
+[112] 0x00007ffd6d7402da   C:\Program Files\MATLAB\R2025b\bin\win64\iqm.dll+00852698 iqm::PackagedTaskPlugin::execute+00000074
+[113] 0x00007ffd6d71267f   C:\Program Files\MATLAB\R2025b\bin\win64\iqm.dll+00665215 iqm::Iqm::setupIqmFcnPtrs+00111535
+[114] 0x00007ffd6d6de516   C:\Program Files\MATLAB\R2025b\bin\win64\iqm.dll+00451862 iqm::Iqm::create+00008886
+[115] 0x00007ffd6cc697e6 C:\Program Files\MATLAB\R2025b\bin\win64\libmwbridge.dll+00104422 ioReadLine+00000406
+[116] 0x00007ffd6cc69615 C:\Program Files\MATLAB\R2025b\bin\win64\libmwbridge.dll+00103957 ioReadLine+00000165
+[117] 0x00007ffd6cc9a3a0 C:\Program Files\MATLAB\R2025b\bin\win64\libmwbridge.dll+00304032 mnGetCommandLineBuffer+00000288
+[118] 0x00007ffd6cc9a847 C:\Program Files\MATLAB\R2025b\bin\win64\libmwbridge.dll+00305223 mnParser+00000487
+[119] 0x00007ffd6d54c57f   C:\Program Files\MATLAB\R2025b\bin\win64\mcr.dll+00443775 mcr::runtime::initializeIqm+00002623
+[120] 0x00007ffd6d4f5e2e   C:\Program Files\MATLAB\R2025b\bin\win64\mcr.dll+00089646 mcrFunctionSignature::set_signature+00066462
+[121] 0x00007ffd6d50f572   C:\Program Files\MATLAB\R2025b\bin\win64\mcr.dll+00193906 mwboost::archive::codecvt_null<wchar_t>::`default constructor closure'+00015762
+[122] 0x00007ffd6d7402da   C:\Program Files\MATLAB\R2025b\bin\win64\iqm.dll+00852698 iqm::PackagedTaskPlugin::execute+00000074
+[123] 0x00007ffd6d71267f   C:\Program Files\MATLAB\R2025b\bin\win64\iqm.dll+00665215 iqm::Iqm::setupIqmFcnPtrs+00111535
+[124] 0x00007ffd6d6df49a   C:\Program Files\MATLAB\R2025b\bin\win64\iqm.dll+00455834 iqm::Iqm::create+00012858
+[125] 0x00007ffd6d6df981   C:\Program Files\MATLAB\R2025b\bin\win64\iqm.dll+00457089 iqm::Iqm::create+00014113
+[126] 0x00007ffd6d6dee0d   C:\Program Files\MATLAB\R2025b\bin\win64\iqm.dll+00454157 iqm::Iqm::create+00011181
+[127] 0x00007ffd6d52921c   C:\Program Files\MATLAB\R2025b\bin\win64\mcr.dll+00299548 mcrInstantiationError::operator=+00010668
+
+** This crash report has been saved to disk as C:\Users\IITKGP~1\AppData\Local\Temp\matlab_crash_dump.25624-1 **
+
+
+
+MATLAB is exiting because of fatal error
+1. Loading model: ShovelSimulatorr2025b_M1C...
+2. Simulating model for 5.0 seconds with active prismatic Coulomb friction...
+[Warning: 'Input Port 1' of block 'ShovelSimulatorr2025b_M1C/MATLAB Function1' is not connected.] 
+[> In verify_m1c_simulation (line 16)
+In run (line 112)] 
+[Warning: 'Input Port 1' of block 'ShovelSimulatorr2025b_M1C/Math Function' is not connected.] 
+[> In verify_m1c_simulation (line 16)
+In run (line 112)] 
+[Warning: 'Output Port 1' of block 'ShovelSimulatorr2025b_M1C/Math Function' is not connected.] 
+[> In verify_m1c_simulation (line 16)
+In run (line 112)] 
