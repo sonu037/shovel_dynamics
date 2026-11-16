@@ -14,6 +14,8 @@ desktop.ini
 _safety_backups/
 **/_safety_backups/
 .matlab_pref/
+.matlab_prefs/
+scratch/
 _temp_audit_head/
 _temp_audit_mod/
 *.log

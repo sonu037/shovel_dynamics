@@ -198,6 +198,9 @@ function RESULTS = run_MS04P05_FilterAblation(varargin)
     beta0 = (1.0 - phi_d) / kO - beta1;
 
     z_curr = [ (P.Izz + P.Md*r_fd(1)^2) * q3d_meas(1); P.Md * d4d_meas(1) ];
+    p_prev   = zeros(2, 1);
+    h_A_prev = zeros(2, 1);
+    h_B_prev = zeros(2, 1);
     Q_est_4 = zeros(2, N);
     Q_est_5 = zeros(2, N);
 
@@ -226,24 +229,27 @@ function RESULTS = run_MS04P05_FilterAblation(varargin)
         Fc_k = [ P.fc3 * tanh(q3d_meas(k) / P.eps3); P.fc4 * tanh(d4d_meas(k) / P.eps4) ];
 
         h_B_k = [tau3_meas(k); f4_meas(k)] - G_k - Fv_k + CT_k;
+        h_A_k = h_B_k - Fc_k;
 
         if k == 1
             Q_est_4(:, 1) = [0; 0];
             Q_est_5(:, 1) = [0; 0];
         else
             % Arm 4 update
-            z_curr = phi_d * z_curr + beta0 * h_B_prev + beta1 * h_B_k + (1.0 - phi_d) * p_k;
+            uB_prev = h_B_prev + kO * p_prev;
+            uB_k = h_B_k + kO * p_k;
+            z_curr = phi_d * z_curr + beta0 * uB_prev + beta1 * uB_k;
             Q_est_4(:, k) = kO * (p_k - z_curr);
 
             % Arm 5 update
-            x_pred3 = A_kf * x_kf3 + B_kf * h_B_k(1);
+            x_pred3 = A_kf * x_kf3 + B_kf * (0.5 * (h_A_prev(1) + h_A_k(1)));
             P_pred3 = A_kf * P_kf3 * A_kf' + Q_kf3;
             R_k3    = max((D11 * sigma_v3)^2, 1e-4);
             K_gain3 = (P_pred3 * C_kf') / (C_kf * P_pred3 * C_kf' + R_k3);
             x_kf3   = x_pred3 + K_gain3 * (p_k(1) - C_kf * x_pred3);
             P_kf3   = (eye(3) - K_gain3 * C_kf) * P_pred3;
 
-            x_pred4 = A_kf * x_kf4 + B_kf * h_B_k(2);
+            x_pred4 = A_kf * x_kf4 + B_kf * (0.5 * (h_A_prev(2) + h_A_k(2)));
             P_pred4 = A_kf * P_kf4 * A_kf' + Q_kf4;
             R_k4    = max((D22 * sigma_v4)^2, 1e-4);
             K_gain4 = (P_pred4 * C_kf') / (C_kf * P_pred4 * C_kf' + R_k4);
@@ -253,6 +259,8 @@ function RESULTS = run_MS04P05_FilterAblation(varargin)
             Q_est_5(1, k) = x_kf3(2);
             Q_est_5(2, k) = x_kf4(2);
         end
+        p_prev   = p_k;
+        h_A_prev = h_A_k;
         h_B_prev = h_B_k;
     end
 

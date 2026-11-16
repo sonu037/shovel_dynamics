@@ -228,6 +228,8 @@ function RESULTS = run_MS04P04_InverterHarmonics(varargin)
         end
 
         z_curr = [ (P.Izz + P.Md*(d4_plc(1)+P.c)^2) * q3d_plc(1); P.Md * d4d_plc(1) ];
+        p_prev = zeros(2, 1);
+        h_prev = zeros(2, 1);
         Q_est  = zeros(2, N_plc);
 
         for k = 1:N_plc
@@ -245,9 +247,12 @@ function RESULTS = run_MS04P04_InverterHarmonics(varargin)
             if k == 1
                 Q_est(:, 1) = [0; 0];
             else
-                z_curr = phi_d * z_curr + beta0 * h_prev + beta1 * h_k + (1.0 - phi_d) * p_k;
+                uB_prev = h_prev + kO * p_prev;
+                uB_k = h_k + kO * p_k;
+                z_curr = phi_d * z_curr + beta0 * uB_prev + beta1 * uB_k;
                 Q_est(:, k) = kO * (p_k - z_curr);
             end
+            p_prev = p_k;
             h_prev = h_k;
         end
 

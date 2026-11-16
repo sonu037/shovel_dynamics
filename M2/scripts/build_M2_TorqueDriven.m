@@ -28,7 +28,7 @@ function P08_TD = build_M2_TorqueDriven(varargin)
 %   Repository: M2/scripts/build_M2_TorqueDriven.m
 %   Project:    IIT/SRIC/R/AEH/2026/104 (CMPDI) - IIT Kharagpur
 
-    repo_root = fileparts(fileparts(mfilename('fullpath')));
+    repo_root = fileparts(fileparts(fileparts(mfilename('fullpath'))));
     if ~exist(fullfile(repo_root, 'M1'), 'dir'), repo_root = pwd; end
 
     ip = inputParser;
@@ -99,6 +99,10 @@ function P08_TD = build_M2_TorqueDriven(varargin)
         desc = cases{idx, 2};
         res  = simulate_torque_driven_case(cid, desc, P, ctrl, opt);
         P08_TD.cases.(cid) = res;
+        P08_TD.held_out.(cid) = res;
+        if strcmpi(cid, 'P08_HELD_STEP_IMPACT')
+            P08_TD.held_out.HELD_IMPACT_STEP_150kN = res;
+        end
 
         fprintf('%-24s | %7.3f deg | %8.4f m | %10.3e %% | %10.3e %% | %10.3f %% | %10.3f %%\n', ...
             cid, res.deflection.max_abs_dq3_deg, res.deflection.max_abs_dd4_m, ...
@@ -148,9 +152,9 @@ function status_msg = configure_simulink_torque_model(base_slx, target_slx, P, c
         status_msg = 'Standalone ODE mode (Simulink runtime not loaded in current session)';
         return;
     end
-    if exist(base_slx, 'file') ~= 2
+    if ~ismember(exist(base_slx, 'file'), [2, 4])
         [~, fn, ext] = fileparts(base_slx);
-        if exist([fn ext], 'file') == 2
+        if ismember(exist([fn ext], 'file'), [2, 4])
             base_slx = [fn ext];
         else
             status_msg = sprintf('Base model "%s" not on path; ran verified forward ODE solver.', base_slx);
@@ -172,7 +176,7 @@ function status_msg = configure_simulink_torque_model(base_slx, target_slx, P, c
         set_param(rev_blks{1}, 'TorqueActuationMode', 'InputTorque', 'MotionActuationMode', 'ComputedMotion');
     end
     if ~isempty(pris_blks)
-        set_param(pris_blks{1}, 'ForceActuationMode', 'InputForce', 'MotionActuationMode', 'ComputedMotion');
+        set_param(pris_blks{1}, 'TorqueActuationMode', 'InputTorque', 'MotionActuationMode', 'ComputedMotion');
     end
 
     mw = get_param(mdl_name, 'ModelWorkspace');
@@ -346,6 +350,23 @@ function res = simulate_torque_driven_case(cid, desc, P, ctrl, opt)
     res.m3_30Hz_foh.lag_comp_rms_d4_N   = sqrt(mean(err_m3_lag_d4.^2));
     res.m3_30Hz_foh.lag_comp_nrmse_q3_pct = 100.0 * res.m3_30Hz_foh.lag_comp_rms_q3_Nm / max(1.0, pk_q3);
     res.m3_30Hz_foh.lag_comp_nrmse_d4_pct = 100.0 * res.m3_30Hz_foh.lag_comp_rms_d4_N  / max(1.0, pk_d4);
+
+    % Store full time series (per brief requirement 3 & DEF-02):
+    res.t           = t;
+    res.q3          = q3;
+    res.d4          = d4;
+    res.q3_d        = q3_d;
+    res.d4_d        = d4_d;
+    res.delta_q3    = q3 - q3_d;
+    res.delta_d4    = d4 - d4_d;
+    res.Qq3_true    = Qq3_true;
+    res.Qd4_true    = Qd4_true;
+    res.tau_L_true  = [Qq3_true, Qd4_true];
+    res.t_30        = t_30;
+    res.Qq3_30      = Qq3_30;
+    res.Qd4_30      = Qd4_30;
+    res.tau_hat_foh = tau_hat_foh;
+    res.tau_hat_obs = tau_hat_foh';
 end
 
 function [D, C, G, Fv, Fc] = plant_matrices(q, dq, P)

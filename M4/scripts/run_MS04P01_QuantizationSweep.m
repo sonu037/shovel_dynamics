@@ -192,6 +192,9 @@ function RESULTS = run_MS04P01_QuantizationSweep(varargin)
             sigma_v4 = delta_d4 / (sqrt(12) * Ts);
 
             z_curr = [D11_fd(1) * q3d_fd(1); P.Md * d4d_fd(1)];
+            p_prev   = zeros(2, 1);
+            h_A_prev = zeros(2, 1);
+            h_B_prev = zeros(2, 1);
 
             for k = 1:N
                 r_k  = d4_meas(k) + P.c;
@@ -210,6 +213,7 @@ function RESULTS = run_MS04P01_QuantizationSweep(varargin)
                          P.fc4 * tanh(d4d_fd(k) / P.eps4) ];
 
                 h_B_k = [tau3_act(k); f4_act(k)] - G_k - Fv_k + CT_k;
+                h_A_k = h_B_k - Fc_k;
 
                 if k == 1
                     z_B(:, 1) = p_k;
@@ -217,13 +221,15 @@ function RESULTS = run_MS04P01_QuantizationSweep(varargin)
                     tau_hat_KF(:, 1) = [0; 0];
                 else
                     % Exact discrete FOH update for Branch B
-                    z_curr = phi_d * z_curr + beta0 * h_B_prev + beta1 * h_B_k + (1.0 - phi_d) * p_k;
+                    uB_prev = h_B_prev + kO * p_prev;
+                    uB_k = h_B_k + kO * p_k;
+                    z_curr = phi_d * z_curr + beta0 * uB_prev + beta1 * uB_k;
                     z_B(:, k) = z_curr;
                     tau_hat_B(:, k) = kO * (p_k - z_curr);
 
                     % Branch C: 3-State Kalman-Filtered GMO
                     % Channel 3
-                    x_pred3 = A_kf * x_kf3 + B_kf * h_B_k(1);
+                    x_pred3 = A_kf * x_kf3 + B_kf * (0.5 * (h_A_prev(1) + h_A_k(1)));
                     P_pred3 = A_kf * P_kf3 * A_kf' + Q_kf3;
                     R_k3    = max((D11 * sigma_v3)^2, 1e-4);
                     K_gain3 = (P_pred3 * C_kf') / (C_kf * P_pred3 * C_kf' + R_k3);
@@ -231,7 +237,7 @@ function RESULTS = run_MS04P01_QuantizationSweep(varargin)
                     P_kf3   = (eye(3) - K_gain3 * C_kf) * P_pred3;
 
                     % Channel 4
-                    x_pred4 = A_kf * x_kf4 + B_kf * h_B_k(2);
+                    x_pred4 = A_kf * x_kf4 + B_kf * (0.5 * (h_A_prev(2) + h_A_k(2)));
                     P_pred4 = A_kf * P_kf4 * A_kf' + Q_kf4;
                     R_k4    = max((D22 * sigma_v4)^2, 1e-4);
                     K_gain4 = (P_pred4 * C_kf') / (C_kf * P_pred4 * C_kf' + R_k4);
@@ -241,6 +247,8 @@ function RESULTS = run_MS04P01_QuantizationSweep(varargin)
                     tau_hat_KF(1, k) = x_kf3(2);
                     tau_hat_KF(2, k) = x_kf4(2);
                 end
+                p_prev   = p_k;
+                h_A_prev = h_A_k;
                 h_B_prev = h_B_k;
             end
 

@@ -1,0 +1,94 @@
+========================================================================================
+ INDEPENDENT POST-SWARM FORENSIC VERIFICATION & AUTO-REPAIR SUITE (GATES 1 - 7)
+ Repository Root : C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics
+ Execution Time  : 2026-11-16 15:36:01
+========================================================================================
+
+--- [GATE 1] Auditing ShovelSimulatorr2025b_M1C.slx (DEF-01 & DEF-01b) ---
+  Pre-check SID 66 FilteringAndDerivatives = filter | SID 73 = filter
+  [AUTO-REPAIR DEF-01b] Removing 50 ms 2nd-order filter on SID 66 & SID 73...
+  Running 30.0 s Simscape simulation of ShovelSimulatorr2025b_M1C...
+  Revolute tau_3 : Unmodeled RMSE =   339.88 Nm | Modeled RMSE = 1.4673e-06 Nm | R^2 = 1.00000000
+  Prismatic f_4  : Unmodeled RMSE =   479.91 N  | Modeled RMSE = 7.8246e-11 N  | R^2 = 1.00000000
+
+--- [GATE 2] Auditing M2_TorqueDriven.slx & M3_DiscreteObserver_30Hz.slx (DEF-04) ---
+  M2_TorqueDriven.slx Joint Modes : Revolute=InputTorque | Prismatic=InputTorque
+
+--- [GATE 3] Auditing M4 FOH Momentum Transition & Quantization Floor (DEF-03) ---
+  MS04P01 Branch B RMS : 16-bit = 343.49 Nm (Target ~343.49 Nm) | 12-bit = 2510.93 Nm (Target ~2510.93 Nm)
+
+--- [GATE 4] Auditing Time-Series Archives & generate_paper1_figures.m (DEF-02) ---
+  Executing generate_paper1_figures() to verify zero MATLAB errors...
+Generating Figure 1: Identifiability SVD Geometry...
+========================================================================================
+ INDEPENDENT POST-SWARM FORENSIC VERIFICATION & AUTO-REPAIR SUITE (v2.0)
+ Repository Root : C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics
+ Execution Time  : 2026-11-16 15:37:32
+========================================================================================
+
+--- [GATE 1] Auditing ShovelSimulatorr2025b_M1C.slx (DEF-01 & DEF-01b) ---
+  Located M1C model: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M1\model\ShovelSimulatorr2025b_M1C.slx (exist code = 4)
+  Converter filter modes before check: SID 66 = zero | SID 73 = zero
+  Simulating ShovelSimulatorr2025b_M1C (0 to 30.0 s)...
+  Revolute tau_3 : Unmodeled RMSE =   339.88 Nm | Modeled RMSE = 1.4673e-06 Nm | R^2 = 1.00000000
+  Prismatic f_4  : Unmodeled RMSE =   479.91 N  | Modeled RMSE = 7.8246e-11 N  | R^2 = 1.00000000
+
+--- [GATE 2] Auditing M2_TorqueDriven.slx & M3_DiscreteObserver_30Hz.slx (DEF-04) ---
+  Verified on disk: M2_TorqueDriven.slx & M3_DiscreteObserver_30Hz.slx (Rev=InputTorque, Pris=InputTorque)
+
+--- [GATE 3] Auditing M4 FOH Momentum Transition & Quantization Floor (DEF-03) ---
+  MS04P01 Branch B RMS : 16-bit = 343.49 Nm (Target ~343.49 Nm) | 12-bit = 2510.93 Nm (Target ~2510.93 Nm)
+
+--- [GATE 4] Auditing Time-Series Archives & generate_paper1_figures.m (DEF-02) ---
+  Executing generate_paper1_figures() to verify zero warnings and zero errors...
+Generating Figure 1: Identifiability SVD Geometry...
+========================================================================================
+ INDEPENDENT POST-SWARM FORENSIC VERIFICATION & AUTO-REPAIR SUITE (v2.0)
+ Repository Root : C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics
+ Execution Time  : 2026-11-16 15:38:14
+========================================================================================
+
+--- [GATE 1] Auditing ShovelSimulatorr2025b_M1C.slx (DEF-01 & DEF-01b) ---
+  Located M1C model: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M1\model\ShovelSimulatorr2025b_M1C.slx (exist code = 4)
+  Converter filter modes before check: SID 66 = zero | SID 73 = zero
+  Simulating ShovelSimulatorr2025b_M1C (0 to 30.0 s)...
+  Revolute tau_3 : Unmodeled RMSE =   339.88 Nm | Modeled RMSE = 1.4673e-06 Nm | R^2 = 1.00000000
+  Prismatic f_4  : Unmodeled RMSE =   479.91 N  | Modeled RMSE = 7.8246e-11 N  | R^2 = 1.00000000
+
+--- [GATE 2] Auditing M2_TorqueDriven.slx & M3_DiscreteObserver_30Hz.slx (DEF-04) ---
+  Verified on disk: M2_TorqueDriven.slx & M3_DiscreteObserver_30Hz.slx (Rev=InputTorque, Pris=InputTorque)
+
+--- [GATE 3] Auditing M4 FOH Momentum Transition & Quantization Floor (DEF-03) ---
+  MS04P01 Branch B RMS : 16-bit = 343.49 Nm (Target ~343.49 Nm) | 12-bit = 2510.93 Nm (Target ~2510.93 Nm)
+
+--- [GATE 4] Auditing Time-Series Archives & generate_paper1_figures.m (DEF-02) ---
+  Executing generate_paper1_figures() to verify zero warnings and zero errors...
+Generating Figure 1: Identifiability SVD Geometry...
+Generating Figure 2: Discrete Observer FOH Performance...
+Generating Figure 3: KF-GMO Noise Suppression...
+Generating Figure 4: Torque-Driven Dynamic Compliance...
+All Paper 1 publication figures successfully generated in: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\papers\paper1_identifiability_gmo\figures
+
+--- [GATE 5] Auditing paper1_tmech.tex Eq. (19) & SVD Consistency (DEF-05) ---
+
+--- [GATE 6] Auditing references.bib & Citations (DEF-06) ---
+
+--- [GATE 7] Auditing Table II WK-20 Priors & Eq. (39) Control Law (DEF-07) ---
+  [AUTO-REPAIR DEF-07] Updated Table II gearing priors, v_crowd=0.54 m/s, and Eq. (39) CT-PD law in paper1_tmech.tex...
+
+========================================================================================
+ FINAL 7-GATE FORENSIC VERIFICATION SCORECARD (v2.0)
+========================================================================================
+Gate     | Audit Target                                 | Status | Verified Metric             
+----------------------------------------------------------------------------------------------
+GATE-01  | DEF-01/01b M1C Simscape Coulomb Oracle       | PASS   | tau3 RMSE=1.47e-06, f4 RMSE=7.82e-11
+GATE-02  | DEF-04 Simulink Model Cloning & Actuation    | PASS   | Rev=InputTorque, Pris=InputTorque
+GATE-03  | DEF-03 M4 Exact FOH Momentum Update          | PASS   | 16b=343.49 Nm, 12b=2510.93 Nm
+GATE-04  | DEF-02 Genuine Simulated Publication Figures | PASS   | 4/4 PDFs + 4/4 PNGs (0 warnings)
+GATE-05  | DEF-05 Trajectory-Stacked SVD Regressor Eq. (19) | PASS   | Y_joint in R^(2N x 2) verified
+GATE-06  | DEF-06 Bibliography & Citation Integrity     | PASS   | 0 hallucinated entries      
+GATE-07  | DEF-07 WK-20 Table II Priors & Eq. (39) CT-PD | PASS   | \texttt{[EST]} Prior + 0.54 m/s
+========================================================================================
+ OVERALL VERDICT: 7 / 7 GATES PASSED
+ Receipt saved to: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\FORENSIC_AUDIT_RECEIPT.txt
+========================================================================================

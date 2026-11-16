@@ -32,7 +32,7 @@ function M3_DISC = build_M3_DiscreteObserver_30Hz(varargin)
 %   Repository: M3/scripts/build_M3_DiscreteObserver_30Hz.m
 %   Project:    IIT/SRIC/R/AEH/2026/104 (CMPDI) - IIT Kharagpur
 
-    repo_root = fileparts(fileparts(mfilename('fullpath')));
+    repo_root = fileparts(fileparts(fileparts(mfilename('fullpath'))));
     if ~exist(fullfile(repo_root, 'M1'), 'dir'), repo_root = pwd; end
 
     ip = inputParser;
@@ -43,7 +43,7 @@ function M3_DISC = build_M3_DiscreteObserver_30Hz(varargin)
     ip.addParameter('SubSteps',     67,     @(x) isscalar(x) && x >= 1);
     ip.addParameter('StopTime',     30.0,   @(x) isscalar(x) && x > 5);
     ip.addParameter('TrimStart',    5.0,    @(x) isscalar(x) && x >= 0);
-    ip.addParameter('OutFile',      fullfile(repo_root, 'M3', '06_RESULTS_MAT', 'M3_discrete_30Hz_verification.mat'), @ischar);
+    ip.addParameter('OutFile',      fullfile(repo_root, 'M3', 'experiments', 'M3_discrete_30Hz_verification.mat'), @ischar);
     ip.addParameter('Save',         true,   @islogical);
     ip.parse(varargin{:});
     opt = ip.Results;
@@ -115,6 +115,12 @@ function M3_DISC = build_M3_DiscreteObserver_30Hz(varargin)
         if ~isempty(out_dir) && ~exist(out_dir, 'dir'), mkdir(out_dir); end
         save(opt.OutFile, 'M3_DISC');
         fprintf('\nSaved M3 30 Hz Discrete Observer verification struct to: %s\n', opt.OutFile);
+
+        % Synchronize with M3/06_RESULTS_MAT/M3_discrete_30Hz_verification.mat
+        mat_dir = fullfile(repo_root, 'M3', '06_RESULTS_MAT');
+        if ~exist(mat_dir, 'dir'), mkdir(mat_dir); end
+        copyfile(opt.OutFile, fullfile(mat_dir, 'M3_discrete_30Hz_verification.mat'), 'f');
+        fprintf('Synchronized archive to: %s\n', fullfile(mat_dir, 'M3_discrete_30Hz_verification.mat'));
     end
 end
 
@@ -126,7 +132,7 @@ function status_msg = build_simulink_discrete_observer_model(base_slx, target_sl
         status_msg = 'Standalone discrete execution mode (Simulink runtime not loaded in current session)';
         return;
     end
-    if exist(base_slx, 'file') ~= 2
+    if ~ismember(exist(base_slx, 'file'), [2, 4])
         status_msg = sprintf('Base model "%s" not found; executed native discrete difference equations.', base_slx);
         return;
     end
@@ -380,6 +386,14 @@ function res = execute_discrete_30Hz_case(cid, desc, P, Ts, kO, phi_d, beta0, be
     res.coverage.CovCompPct_d4 = 100.0 * mean(double(raw_err_4   <= P.fc4 + 2.0*sigma_kf(2, mask) + 1e-6));
     res.coverage.CovKFCompPct_q3 = 100.0 * mean(double(abs(errKF_3) <= 2.0*sigma_kf(1, mask) + 1e-6));
     res.coverage.CovKFCompPct_d4 = 100.0 * mean(double(abs(errKF_4) <= 2.0*sigma_kf(2, mask) + 1e-6));
+
+    % Store full time-series vectors (per brief requirement 2 & DEF-02):
+    res.t_30        = t_30;
+    res.tau_L_true  = tau_L_true;
+    res.tau_hat_A   = tau_hat_A;
+    res.tau_hat_B   = tau_hat_B;
+    res.tau_hat_KF  = tau_hat_KF;
+    res.sigma_kf    = sigma_kf;
 end
 
 function [z1, z2] = park_miller_gaussian(N, seed)

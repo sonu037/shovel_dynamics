@@ -43,9 +43,9 @@ Electric rope shovel, generalized momentum observer, identifiability geometry, K
 \end{IEEEkeywords}
 
 \section{Introduction}
-\IEEEPARstart{E}{lectric} rope shovels are the primary excavating machinery in ultra-large opencast mining, loading haul trucks with payloads exceeding $50\text{--}100\,\mathrm{tonnes}$ per pass~\cite{frimpong2004, rasuli2014}. Driven by multi-megawatt AC induction motors operating through heavy planetary transmissions and wire-rope hoist reevings, these machines endure violent dynamic shock loads as the dipper teeth impact heterogeneous rock formations, boulder inclusions, and hard face banks~\cite{frimpong2008}. Cyclic shock loading produces premature boom fatigue cracking, sheave bearing failure, and hoist-rope snapping, costing mining operations millions of dollars annually in unscheduled downtime~\cite{fu2022}.
+\IEEEPARstart{E}{lectric} rope shovels are the primary excavating machinery in ultra-large opencast mining, loading haul trucks with payloads exceeding $50\text{--}100\,\mathrm{tonnes}$ per pass~\cite{frimpong2004, rasuli2014}. Driven by multi-megawatt AC induction motors operating through heavy planetary transmissions and wire-rope hoist reevings, these machines endure violent dynamic shock loads as the dipper teeth impact heterogeneous rock formations, boulder inclusions, and hard face banks~\cite{frimpong2008}. Cyclic shock loading produces premature boom fatigue cracking, sheave bearing failure, and hoist-rope snapping, costing mining operations millions of dollars annually in unscheduled downtime~\cite{Fu2022Novel}.
 
-Real-time estimation of external cutting resistance and payload mass is therefore essential for structural load limiting, intelligent hoist-crowd coordinated control, and predictive drive health monitoring~\cite{rosoli2014, wu2021}. However, direct cutting-force instrumentation using multi-axis load pins at the dipper-handle interface or boom-point sheave is notoriously unreliable: sensor electronics, wiring harnesses, and strain gauges fail rapidly under severe mining shock and vibration ($>15\,g$). Consequently, industrial practice demands \emph{sensorless} or drive-telemetry-based load monitoring, utilizing existing motor currents and motor resolver velocity feedback~\cite{wahrburg2015, hu2017}.
+Real-time estimation of external cutting resistance and payload mass is therefore essential for structural load limiting, intelligent hoist-crowd coordinated control, and predictive drive health monitoring~\cite{rasuli2014, wu2021}. However, direct cutting-force instrumentation using multi-axis load pins at the dipper-handle interface or boom-point sheave is notoriously unreliable: sensor electronics, wiring harnesses, and strain gauges fail rapidly under severe mining shock and vibration ($>15\,g$). Consequently, industrial practice demands \emph{sensorless} or drive-telemetry-based load monitoring, utilizing existing motor currents and motor resolver velocity feedback~\cite{wahrburg2015, hu2017}.
 
 Historically, drive-based load torque estimation has relied on algebraic inverse dynamics~\cite{rasuli2014, spong2005}:
 \begin{equation}
@@ -180,9 +180,9 @@ Because both channels share the common dominant harmonic $\cos q_3(t)$, the subs
 \begin{equation}
 \rho(d_4) \triangleq \frac{d_4 + s_0}{d_4 + c} = \frac{d_4 + 1.50}{d_4 - 1.32}.
 \end{equation}
-Over a typical digging pass where crowd extension varies between $8.5\,\mathrm{m}$ and $9.5\,\mathrm{m}$, the variation in $\rho(d_4)$ is under $4.2\%$. Consequently:
+Over a typical digging pass where crowd extension varies between $8.5\,\mathrm{m}$ and $9.5\,\mathrm{m}$, the variation in $\rho(d_4)$ is under $4.2\%$. Consequently, $r = 0.9999919$, which corresponds to a near-zero principal subspace angle:
 \begin{equation}
-r = 0.9999919 \implies \theta = \arccos(r) = 0.2302^\circ.
+\theta = \arccos(r) = 0.2302^\circ.
 \end{equation}
 
 \begin{figure}[t]
@@ -197,20 +197,19 @@ This near-zero subspace angle causes severe ill-conditioning: the regressor Gram
 \subsection{Two-Channel Subspace Restoration}
 To restore identifiability, the crowd force channel $F_4(t)$ must be jointly incorporated. From (\ref{eq:load_mapping}), the external crowd thrust is $F_{L,4} = F_y \sin q_3$, which exhibits a spatial $90^\circ$ phase shift relative to the gravity term $\cos q_3$.
 
-Because $\tau_3$ is measured in $\mathrm{N\cdot m}$ and $F_4$ in $\mathrm{N}$, joint observation requires an explicit dimensional scaling factor $\bar{s}$:
+Because $\tau_3$ is measured in $\mathrm{N\cdot m}$ and $F_4$ in $\mathrm{N}$, joint observation requires an explicit dimensional scaling factor $\bar{s} = 10.0\,\mathrm{m}$ to balance channel units in $\bm{y}_{\mathrm{joint}} = [\bm{\tau}_3; \bar{s} \bm{F}_4] \in \mathbb{R}^{2N}$. The resulting $2N \times 2$ trajectory-stacked joint regressor matrix $\bm{Y}_{\mathrm{joint}}$ ($Y_{\mathrm{joint}}$) across $N$ discrete trajectory samples evaluates to:
 \begin{equation}
-\bm{y}_{\mathrm{joint}} = \begin{bmatrix} \tau_3 \\ \bar{s} F_4 \end{bmatrix} \in \mathbb{R}^2, \qquad \bar{s} = 10.0\,\mathrm{m}.
+\bm{Y}_{\mathrm{joint}} = \begin{bmatrix} \bm{\phi}_{\mathrm{grav},3} & \bm{\phi}_{\mathrm{load},3} \\ \bar{s}\bm{\phi}_{\mathrm{grav},4} & \bar{s}\bm{\phi}_{\mathrm{load},4} \end{bmatrix} \in \mathbb{R}^{2N \times 2},
+\label{eq:joint_regressor}
 \end{equation}
-The joint regressor matrix $\bm{Y}_{\mathrm{joint}}$ over crowd extension $d_4$ evaluates to:
-\begin{equation}
-\bm{Y}_{\mathrm{joint}}(d_4) = \begin{bmatrix} d_4 + c & d_4 + s_0 \\ \bar{s} \cdot 0 & \bar{s} \cdot 1 \end{bmatrix} = \begin{bmatrix} d_4 - 1.32 & d_4 + 1.50 \\ 0 & 10.0 \end{bmatrix}.
-\end{equation}
+where $\bm{\phi}_{\mathrm{grav},3} = [g(d_4(t_k)+c)\cos q_3(t_k)]_{k=1}^N$, $\bm{\phi}_{\mathrm{load},3} = [(d_4(t_k)+s_0)\cos q_3(t_k)]_{k=1}^N$, $\bm{\phi}_{\mathrm{grav},4} = [g\sin q_3(t_k)]_{k=1}^N$, and $\bm{\phi}_{\mathrm{load},4} = [\sin q_3(t_k)]_{k=1}^N$.
+
 Performing Singular Value Decomposition $\bm{Y}_{\mathrm{joint}} = \bm{U} \bm{\Sigma} \bm{V}^T$ yields:
 \begin{equation}
 \theta_{\min} = \arctan\left(\frac{\sigma_2}{\sigma_1}\right) = 29.70^\circ, \qquad \kappa_2 = \frac{\sigma_1}{\sigma_2} = 3.77.
 \end{equation}
 
-As illustrated in Fig.~\ref{fig:svd_geometry}, joint 2-channel observation expands the principal subspace angle from $0.23^\circ$ to $29.70^\circ$, permanently breaking the collinearity trilemma and ensuring well-conditioned load decoupling across all operating quadrants.
+Across dynamic digging trajectories, joint 2-channel observation permanently breaks the collinearity collapse: the matrix condition number collapses from the single-channel ill-conditioned value $\kappa_2 = 497.71$ down to $\kappa_2 = 22.45$ under low-frequency excitation ($\omega = 0.314\,\mathrm{rad/s}$), and reaches $\kappa_2 = 3.77$ under dynamic excavation at $\omega = 1.36\,\mathrm{rad/s}$ with characteristic crowd weighting $\bar{s} = 10.0\,\mathrm{m}$. As illustrated in Fig.~\ref{fig:svd_geometry}, joint 2-channel observation expands the principal subspace angle from $0.23^\circ$ to $29.70^\circ$, ensuring well-conditioned load decoupling across all operating quadrants.
 
 \subsection{Errors-in-Variables Parameter Identifiability Boundaries}
 While joint observation (\ref{eq:load_mapping}) resolves kinematic collinearity, estimating the physical plant parameters $\bm{\theta} = [M_d, c, I_{zz}, f_{v3}, f_{c3}]^T$ from sensor telemetry introduces stochastic Errors-in-Variables (EIV) challenges. Standard Ordinary Least Squares (OLS) regression suffers from systematic attenuation bias under noisy regressors $\tilde{\bm{Y}} = \bm{Y} + \bm{U}$, where $\operatorname{plim} \hat{\bm{\theta}}_{\mathrm{OLS}} = (\bm{\Sigma}_{YY} + \bm{\Sigma}_{UU})^{-1}\bm{\Sigma}_{YY}\bm{\theta}^* \ne \bm{\theta}^*$. Because pitch inertia identification requires parallel-axis subtraction $\hat{I}_{zz} = \hat{\theta}_3 - \hat{\theta}_2^2 / \hat{\theta}_1$, OLS regressor attenuation drives the recovered inertia negative ($-1459.9\%$ error).
@@ -417,16 +416,16 @@ The adaptive innovation gate was benchmarked in held-out generalization experime
 \section{Forward Torque-Driven Dynamic Validation}
 
 \subsection{Plant Model with Closed-Loop Drive Compliance}
-Unlike previous literature where observers were evaluated against idealized motion-prescribed kinematics, we constructed a forward-dynamic torque-driven plant in Simulink. The plant receives commanded actuator torque $\bm{\tau}_{\mathrm{cmd}}$ through closed-loop PD drive controllers:
+Unlike previous literature where observers were evaluated against idealized motion-prescribed kinematics, we constructed a forward-dynamic torque-driven plant in Simulink. The plant receives commanded actuator torque $\bm{\tau}_{\mathrm{cmd}}$ through a Computed-Torque control law with PD tracking feedback:
 \begin{equation}
-\bm{\tau}_{\mathrm{cmd}} = \bm{K}_p (\bm{q}_{\mathrm{ref}} - \bm{q}) + \bm{K}_d (\dot{\bm{q}}_{\mathrm{ref}} - \dot{\bm{q}}),
+\bm{\tau}_{\mathrm{cmd}} = \bm{D}(\bm{q})\left[\ddot{\bm{q}}_{\mathrm{ref}} + \bm{K}_v (\dot{\bm{q}}_{\mathrm{ref}} - \dot{\bm{q}}) + \bm{K}_p (\bm{q}_{\mathrm{ref}} - \bm{q})\right] + \bm{C}(\bm{q},\dot{\bm{q}})\dot{\bm{q}} + \bm{G}(\bm{q}) + \bm{F}_v \dot{\bm{q}},
 \end{equation}
-passes through physical saturation blocks ($\tau_{3,\max} = 9.50\,\mathrm{MN\cdot m}$, $F_{4,\max} = 1.80\,\mathrm{MN}$), and undergoes drive lag dynamics ($\tau_{\mathrm{drive}} = 50\,\mathrm{ms}$).
+passes through physical saturation blocks ($\tau_{3,\max} = 9.50\,\mathrm{MN\cdot m}$, $F_{4,\max} = 0.745\,\mathrm{MN}$), and undergoes drive lag dynamics ($\tau_{\mathrm{drive}} = 50\,\mathrm{ms}$).
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.48\textwidth]{fig_torquedriven_deflection.pdf}
-\caption{Forward torque-driven dynamic validation under a 150 kN cutting impact: (a) Compliant joint deflection ($\Delta q_3$ reaching $1.38^\circ$, $\Delta d_4$ reaching $84.1\,\mathrm{mm}$); (b) Acceleration-free load recovery by the discrete 30 Hz momentum observer tracking deflected compliant motion with $\mathrm{NRMSE} = 0.20\%$.}
+\caption{Forward torque-driven dynamic validation under a 450 kN cutting impact: (a) Compliant joint deflection ($\Delta q_3$ reaching $1.38^\circ$, $\Delta d_4$ reaching $84.1\,\mathrm{mm}$); (b) Acceleration-free load recovery by the discrete 30 Hz momentum observer tracking deflected compliant motion with $\mathrm{NRMSE} = 0.20\%$.}
 \label{fig:torquedriven_deflection}
 \end{figure}
 
@@ -481,16 +480,16 @@ Dipper Payload Rating & $M_{\mathrm{pay}}$ & $36.0\,\mathrm{t}$ & \texttt{[V]} O
 Operating Weight & $M_{\mathrm{total}}$ & $779\text{--}792\,\mathrm{t}$ & \texttt{[V]} OEM Spec \\
 Boom Length / Incline & $L_b, \beta$ & $15.5\,\mathrm{m},\; 45.0^\circ$ & \texttt{[V]} OEM Spec \\
 Boom-Point Sheave Pitch Radius & $R_{\mathrm{sheave}}$ & $1.085\,\mathrm{m}$ & \texttt{[V]} OEM Spec \\
-Hoist Drum Pitch Radius & $R_{\mathrm{drum}}$ & $0.985\,\mathrm{m}$ & \texttt{[V]} OEM Spec \\
-Hoist Drum Gear Ratio & $G_{\mathrm{hoist}}$ & $32.4:1$ & \texttt{[V]} OEM Spec \\
-Crowd Pinion Pitch Radius & $R_{\mathrm{pinion}}$ & $0.340\,\mathrm{m}$ & \texttt{[V]} OEM Spec \\
-Crowd Drive Gear Ratio & $G_{\mathrm{crowd}}$ & $48.6:1$ & \texttt{[V]} OEM Spec \\
-Nominal Crowd Travel Speed & $v_{\mathrm{crowd}}$ & $0.60\,\mathrm{m/s}$ & \texttt{[V]} OEM Spec \\
+Hoist Drum Pitch Radius & $R_{\mathrm{drum}}$ & $0.985\,\mathrm{m}$ & [EST] Prior \\
+Hoist Drum Gear Ratio & $G_{\mathrm{hoist}}$ & $32.4:1$ & [EST] Prior \\
+Crowd Pinion Pitch Radius & $R_{\mathrm{pinion}}$ & $0.340\,\mathrm{m}$ & [EST] Prior \\
+Crowd Drive Gear Ratio & $G_{\mathrm{crowd}}$ & $48.6:1$ & [EST] Prior \\
+Nominal Crowd Travel Speed & $v_{\mathrm{crowd}}$ & $0.54\,\mathrm{m/s}$ & \texttt{[V]} OEM Spec \\
 Maximum Hoist Pull (Stall) & $F_{\mathrm{bail,\max}}$ & $1,540\,\mathrm{kN}$ & \texttt{[V]} OEM Spec \\
 Maximum Crowd Thrust & $F_{\mathrm{crowd,\max}}$ & $745\,\mathrm{kN}$ & \texttt{[V]} OEM Spec \\
-Dipper + Handle Mass & $M_d$ & $56,500\,\mathrm{kg}$ & \texttt{[EST]} Prior \\
-Handle Assembly Pitch Inertia & $I_{zz}$ & $305,000\,\mathrm{kg\cdot m^2}$ & \texttt{[EST]} Prior \\
-Handle CG Offset Constant & $c$ & $-1.32\,\mathrm{m}$ & \texttt{[EST]} Prior \\
+Dipper + Handle Mass & $M_d$ & $56,500\,\mathrm{kg}$ & [EST] Prior \\
+Handle Assembly Pitch Inertia & $I_{zz}$ & $305,000\,\mathrm{kg\cdot m^2}$ & [EST] Prior \\
+Handle CG Offset Constant & $c$ & $-1.32\,\mathrm{m}$ & [EST] Prior \\
 Boom Sheave Pivot Coordinates & $(X_s, Y_s)$ & $(6.26, 7.88)\,\mathrm{m}$ & \texttt{[EST]} Geometry \\
 \bottomrule
 \end{tabular}

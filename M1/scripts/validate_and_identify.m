@@ -131,8 +131,9 @@ tau_pred = (P.Izz + P.m.*r.^2).*q_dd ...        % inertia (parallel axis)
          + 2*P.m.*r.*d_d.*q_d ...               % Coriolis
          + P.m*P.g.*r.*cos(q) ...               % gravity
          + P.fv3.*q_d;                          % viscous [G3]
-if P.model_has_coulomb
-    tau_pred = tau_pred + P.fc3*sign(q_d);
+has_coulomb_rev = (isfield(P, 'model_has_coulomb_rev') && P.model_has_coulomb_rev) || P.model_has_coulomb;
+if has_coulomb_rev
+    tau_pred = tau_pred + P.fc3*tanh(q_d / 0.0003);
 end
 
 [R2_f, RMSE_f, NRMSE_f] = local_fit_metrics(tau, tau_pred);
