@@ -137,39 +137,82 @@ function [P, geom_table] = shovel_params_wk20(q3_eval, d4_eval)
     P.Fs_observer    = 30.0;                    % [Hz]    Standard 30 Hz observer sampling rate
     P.Ts_observer    = 1.0 / P.Fs_observer;     % [s]     33.3333 ms sample period
 
-    % Motor Power Ratings [V: Amlohri WK-20 Spec Sheet]:
+    % Hoist Motor Nameplate [V: Verified from Field Photos IMG20261009104119/23/24.jpg]:
     P.hoist_motor.make        = 'CRRC Yongji Electric Co., Ltd.';
+    P.hoist_motor.model       = 'YJ56B1';       % [V] Verified from nameplate photos
     P.hoist_motor.count       = 2;              % Dual hoist motors driving common hoist drum
     P.hoist_motor.P_rated_kW  = 600.0;          % [kW]    2 x 600 kW = 1,200 kW continuous rated power [V]
     P.hoist_motor.P_peak_kW   = 750.0;          % [kW]    2 x 750 kW = 1,500 kW peak power [V]
     P.hoist_motor.V_rated_V   = 690.0;          % [V]     Rated stator voltage [V]
+    P.hoist_motor.I_rated_A   = 628.0;          % [A]     Rated stator current [V]
+    P.hoist_motor.f_rated_Hz  = 25.4;           % [Hz]    Rated base electrical frequency [V]
+    P.hoist_motor.p_poles     = 2;              % [-]     4-pole machine (2 pole pairs)
+    P.hoist_motor.n_sync_rpm  = 60 * P.hoist_motor.f_rated_Hz / P.hoist_motor.p_poles; % = 762.0 rpm [D]
+    P.hoist_motor.omega_m_base= P.hoist_motor.n_sync_rpm * (2 * pi / 60);              % = 79.796 rad/s [D]
+    P.hoist_motor.tau_rated_Nm= 1e3 * P.hoist_motor.P_rated_kW / P.hoist_motor.omega_m_base; % = 7,519-7,640 Nm [D]
+    P.hoist_motor.mass_kg     = 4850.0;         % [kg]    Motor bare mass [V]
+    P.hoist_motor.serials     = {'196B1120009', '356B1120009'}; % [V] Serial numbers (Date: 2016-09)
+    P.hoist_motor.bearing_DE  = 'NU332 ECM/C4VA301';  % [V] Drive-end cylindrical roller bearing
+    P.hoist_motor.bearing_NDE = 'NJ320 ECM/C4VA3091'; % [V] Non-drive-end cylindrical roller bearing
 
+    % Crowd Motor Power Ratings [V: Amlohri WK-20 Spec Sheet]:
     P.crowd_motor.make        = 'CRRC Yongji Electric Co., Ltd.';
     P.crowd_motor.count       = 1;
     P.crowd_motor.P_rated_kW  = 350.0;          % [kW]    350 kW continuous rated power [V]
-    P.crowd_motor.P_peak_kW   = 437.5;          % [kW]    437.5 kW peak power [V]
+    P.crowd_motor.P_peak_kW   = 437.5;          % [kW]    437.5 kW peak power (1.25x) [V]
     P.crowd_motor.V_rated_V   = 690.0;          % [V]     Rated stator voltage [V]
+    P.crowd_motor.p_poles     = 2;              % [-]     4-pole machine (2 pole pairs)
+    P.crowd_motor.omega_m_base= 77.0;           % [rad/s] ~735 rpm base speed [D]
+    P.crowd_motor.tau_rated_Nm= 1e3 * P.crowd_motor.P_rated_kW / P.crowd_motor.omega_m_base; % = 4,545.5 Nm [D]
 
-    % Swing Motor Nameplate [V: Verified from Oct 2026 Field Photo IMG20261009104021_01.jpg]:
+    % Swing Motor Nameplate [V: Verified from Field Photos IMG20261009104020/21.jpg]:
     P.swing_motor.make        = 'CRRC Yongji Electric Co., Ltd.';
-    P.swing_motor.model       = 'YI80A1';       % [V]     Read directly from nameplate photo
-    P.swing_motor.serial_1    = '290A1120018';  % [V]     Motor 1 serial (Date: 2016-09)
-    P.swing_motor.serial_2    = '380A1120018';  % [V]     Motor 2 serial (Date: 2016-09)
+    P.swing_motor.model       = 'YJ80A1';       % [V] Verified from nameplate photos
     P.swing_motor.count       = 2;
     P.swing_motor.P_rated_kW  = 260.0;          % [kW]    2 x 260 kW rated output [V]
     P.swing_motor.P_peak_kW   = 325.0;          % [kW]    2 x 325 kW peak power [V]
     P.swing_motor.I_rated_A   = 281.0;          % [A]     Rated stator current [V]
     P.swing_motor.V_rated_V   = 690.0;          % [V]     Rated voltage [V]
+    P.swing_motor.f_rated_Hz  = 53.0;           % [Hz]    Rated frequency [V]
+    P.swing_motor.mass_kg     = 1955.0;         % [kg]    Motor mass [V]
+    P.swing_motor.serials     = {'290A1120018', '380A1120018', '390A1120019'}; % [V] (Date: 2016-09)
     P.swing_motor.bearing_DE  = 'NU324 ECM/C3 VL0241'; % [V] Drive-end cylindrical roller bearing
     P.swing_motor.bearing_NDE = 'NU224 ECM/C3';        % [V] Non-drive-end bearing
     P.swing_motor.grease      = 'Mobilith SHC 100 (25 g / 8000 h)'; % [V]
+
+    % Inverter & Auxiliary Transformer [V: Verified from Photos IMG20261009104321/27, 111026.jpg]:
+    P.inverter.make           = 'Siemens SINAMICS S120 Powerblock';
+    P.inverter.part_numbers   = {'6SL3352-1AG35-8CA1', '6SL3352-1AG35-8EA1'}; % [V]
+    P.inverter.V_dc_nom       = 1050.0;         % [VDC]   Active Line Module DC link bus [V]
+    P.inverter.V_dc_range     = [675.0, 1080.0];% [VDC]   DC link operating range [V]
+    P.inverter.I_out_rated_A  = 575.0;          % [A]     Rated inverter output current [V]
+    P.inverter.I_out_slm_A    = 757.0;          % [A]     Smart Line Module current [V]
+
+    P.transformer.make        = 'Hainan Jinpan Smart Grid Industry Co., Ltd.';
+    P.transformer.model       = 'ZLSC-300/6.6'; % [V] Auxiliary dry-type transformer
+    P.transformer.S_rated_kVA = 300.0;          % [kVA]   Rated capacity [V]
+    P.transformer.V_primary_V = 6600.0;         % [V]     Primary winding [V]
+    P.transformer.V_sec_V     = 415.0;          % [V]     Secondary auxiliary bus [V]
+    P.transformer.mass_kg     = 2350.0;         % [kg]    Transformer mass [V]
 
     P.propel_motor.make       = 'CRRC Yongji Electric Co., Ltd.';
     P.propel_motor.count      = 2;
     P.propel_motor.P_rated_kW = 450.0;          % [kW]    2 x 450 kW rated power [V]
     P.propel_motor.P_peak_kW  = 562.5;          % [kW]    2 x 562.5 kW peak power [V]
 
-    %% 8. Evaluate Hoist-Rope Sheave Geometry Mapping if Requested
+    %% 8. Drivetrain Transmission, Gearing & Efficiency [Table II Verified Prior]
+    P.drivetrain.G_hoist      = 32.4;           % [-]     Hoist drum overall gearbox ratio [Table II Prior]
+    P.drivetrain.R_drum       = 0.985;          % [m]     Hoist drum pitch radius [Table II Prior]
+    P.drivetrain.n_falls      = P.n_falls;      % [-]     Twin-fall bail reeving factor = 2
+    P.drivetrain.G_crowd      = 48.6;           % [-]     Crowd shipper shaft overall gear ratio [Table II Prior]
+    P.drivetrain.R_pinion     = 0.340;          % [m]     Crowd pinion pitch radius [Table II Prior]
+    P.drivetrain.eta_mot      = 0.93;           % [-]     Forward motoring mechanical efficiency [Verstraten 2016]
+    P.drivetrain.eta_gen      = 0.90;           % [-]     Reverse regenerative lowering efficiency [Verstraten 2016]
+    P.drivetrain.P_eps_W      = 5000.0;         % [W]     Smooth tanh transition deadband (5 kW)
+    P.drivetrain.J_m_hoist    = 26.5;           % [kg*m^2] Rotor inertia per YJ56B1 hoist motor [ESTIMATE]
+    P.drivetrain.J_m_crowd    = 14.8;           % [kg*m^2] Rotor inertia crowd motor [ESTIMATE]
+
+    %% 9. Evaluate Hoist-Rope Sheave Geometry Mapping if Requested
     if nargin < 1 || isempty(q3_eval)
         q3_eval = deg2rad([-45, -30, -15, 0, 15, 25]);
     end
