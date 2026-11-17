@@ -38,15 +38,25 @@ function M3_DISC = build_M3_DiscreteObserver_30Hz(varargin)
     ip = inputParser;
     ip.addParameter('BaseModel',    fullfile(repo_root, 'M2', 'model', 'M2_TorqueDriven.slx'),          @ischar);
     ip.addParameter('TargetModel',  fullfile(repo_root, 'M3', 'model', 'M3_DiscreteObserver_30Hz.slx'), @ischar);
+    ip.addParameter('Machine',      'A',    @(x) any(validatestring(upper(x), {'A', 'B'})));
     ip.addParameter('ObserverGain', 20.0,   @(x) isscalar(x) && x > 0);
     ip.addParameter('Fs',           30.0,   @(x) isscalar(x) && x > 0);
     ip.addParameter('SubSteps',     67,     @(x) isscalar(x) && x >= 1);
     ip.addParameter('StopTime',     30.0,   @(x) isscalar(x) && x > 5);
     ip.addParameter('TrimStart',    5.0,    @(x) isscalar(x) && x >= 0);
-    ip.addParameter('OutFile',      fullfile(repo_root, 'M3', 'experiments', 'M3_discrete_30Hz_verification.mat'), @ischar);
+    ip.addParameter('OutFile',      '',     @ischar);
     ip.addParameter('Save',         true,   @islogical);
     ip.parse(varargin{:});
     opt = ip.Results;
+
+    mach_id = upper(opt.Machine);
+    if isempty(opt.OutFile)
+        if strcmpi(mach_id, 'B')
+            opt.OutFile = fullfile(repo_root, 'M3', 'experiments', 'M3_discrete_30Hz_wk20_verification.mat');
+        else
+            opt.OutFile = fullfile(repo_root, 'M3', 'experiments', 'M3_discrete_30Hz_verification.mat');
+        end
+    end
 
     Ts = 1.0 / opt.Fs;
     kO = opt.ObserverGain;
@@ -59,17 +69,29 @@ function M3_DISC = build_M3_DiscreteObserver_30Hz(varargin)
     fprintf('  Ts = %.6f s (%.1f Hz) | k_O = %.1f s^-1 | Phi = %.6f\n', Ts, opt.Fs, kO, phi_d);
     fprintf('======================================================================\n\n');
 
-    %% 1. Load Locked M1 Parameters
-    if exist('shovel_params', 'file') == 2
-        P = shovel_params();
+    %% 1. Load Parameters for Selected Machine (Strictly Decoupled)
+    if strcmpi(mach_id, 'B')
+        wk20_file = fullfile(repo_root, 'M1', 'scripts', 'shovel_params_wk20.m');
+        if exist(wk20_file, 'file') == 2
+            addpath(fullfile(repo_root, 'M1', 'scripts'));
+            P = shovel_params_wk20();
+        else
+            error('build_M3_DiscreteObserver_30Hz:MissingWK20', 'shovel_params_wk20.m not found at %s', wk20_file);
+        end
+        fprintf('  [CONFIG] Target Machine: MACHINE B — Taiyuan (TZ) WK-20 (780–792 t class, Amlohri MT-189)\n');
     else
-        P = struct('g', 9.80665, 'm', 54300, 'L_COG', 2.82, 'x_ref', 1.50, ...
-                   'c', -1.32, 'Izz', 287900, 'fv3', 3800, 'fc3', 340, ...
-                   'fv4', 1473, 'fc4', 480, 'model_has_coulomb', false);
+        if exist('shovel_params', 'file') == 2
+            P = shovel_params();
+        else
+            P = struct('g', 9.80665, 'm', 54300, 'L_COG', 2.82, 'x_ref', 1.50, ...
+                       'c', -1.32, 'Izz', 287900, 'fv3', 3800, 'fc3', 340, ...
+                       'fv4', 1473, 'fc4', 480, 'model_has_coulomb', false);
+        end
+        fprintf('  [CONFIG] Target Machine: MACHINE A — P&H 2100BL (120–180 t class, Rasuli 2014 Benchmark)\n');
     end
-    P.Md   = P.m;
-    P.eps3 = 3e-4;
-    P.eps4 = 3e-4;
+    if ~isfield(P, 'Md'), P.Md = P.m; end
+    if ~isfield(P, 'eps3'), P.eps3 = 3e-4; end
+    if ~isfield(P, 'eps4'), P.eps4 = 3e-4; end
 
     %% 2. Programmatically Construct M3_DiscreteObserver_30Hz.slx (if Simulink loaded)
     slx_status = build_simulink_discrete_observer_model(opt.BaseModel, opt.TargetModel, P, Ts, kO, phi_d, beta0, beta1);
@@ -116,11 +138,12 @@ function M3_DISC = build_M3_DiscreteObserver_30Hz(varargin)
         save(opt.OutFile, 'M3_DISC');
         fprintf('\nSaved M3 30 Hz Discrete Observer verification struct to: %s\n', opt.OutFile);
 
-        % Synchronize with M3/06_RESULTS_MAT/M3_discrete_30Hz_verification.mat
+        % Synchronize with M3/06_RESULTS_MAT
         mat_dir = fullfile(repo_root, 'M3', '06_RESULTS_MAT');
         if ~exist(mat_dir, 'dir'), mkdir(mat_dir); end
-        copyfile(opt.OutFile, fullfile(mat_dir, 'M3_discrete_30Hz_verification.mat'), 'f');
-        fprintf('Synchronized archive to: %s\n', fullfile(mat_dir, 'M3_discrete_30Hz_verification.mat'));
+        [~, fname, fext] = fileparts(opt.OutFile);
+        copyfile(opt.OutFile, fullfile(mat_dir, [fname fext]), 'f');
+        fprintf('Synchronized archive to: %s\n', fullfile(mat_dir, [fname fext]));
     end
 end
 

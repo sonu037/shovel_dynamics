@@ -1503,6 +1503,31 @@ not deleted, with the supersession recorded in place.
 
 ---
 
+## 2026-11-17 (session 2) — Milestone M3 Native 30 Hz Discrete Observer Audit & Decoupled Machine B Integration
+
+**What was done:**
+
+- Executed a comprehensive research integrity audit of Milestone 3 (M3) following the non-deletion historical protocol:
+  1. *Physical Mission Realignment:* Confirmed M3 is the acceleration-free realization of external digging load torque recovery ($\tau_L = Q_{\mathrm{ext}} = -J^T F$), circumventing the $+56.1\%$ numerical differentiation bias on rotational inertia $I_{zz}$. Reaffirmed that M3 estimates cutting resistance, not bucket payload.
+  2. *Strict Machine Decoupling in M3:* Upgraded `build_M3_DiscreteObserver_30Hz.m` to introduce the `'Machine'` option (`'A'` for P&H 2100BL, `'B'` for TZ WK-20), allowing independent parameterization, covariance scaling, and output archiving without cross-talk.
+  3. *Provenance & Claims Update:* Added 9 formal rows to `claims.md` documenting M3's native $30\ \mathrm{Hz}$ sampling, $K_O = 20\ \mathrm{s^{-1}}$ observer gain, exact discrete FOH state transition ($\Phi = 0.513417$), $50\ \mathrm{ms}$ filter delay separation (`CovRawPct` $0.80\%$ vs `CovLagPct` $100\%$), 3-state KF-GMO harmonic lag elimination ($86.5\%$ reduction), and inertia-adaptive noise suppression ($81.3\%$ reduction).
+  4. *Non-Deletion Protocol:* Preserved all existing M3 archives, audit reports, and test results intact.
+
+**Key result:**
+
+- `build_M3_DiscreteObserver_30Hz.m` verified in MATLAB R2025b for both Machine A (P&H 2100BL) and Machine B (TZ WK-20). Machine A reproduced all benchmark metrics exactly (zero load floor: 53.47 Nm / 1.36 Nm; noisy resolver: 193.15 kNm -> 36.10 kNm, 81.3% reduction; CovRawPct: 0.80%, CovCompPct: 100.00%).
+- Complete traceability of all observer constants to OEM drive specifications (Siemens S120, $30\ \mathrm{Hz}$) and published literature (De Luca 2005, Wahrburg 2015).
+
+**Decisions & why:**
+
+- Embedded decoupled machine handling in M3 so that field-site telemetry from NCL Amlohri can be directly evaluated against the digital twin without inheriting 120-tonne DC machine parameters.
+
+**Next step:**
+
+- Connect M3 discrete observer ingestion pipeline to frozen M2 Module 05 configuration sweep signals.
+
+---
+
 ## TEMPLATE — copy for each new session
 
 ## YYYY-MM-DD — <one-line title>
