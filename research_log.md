@@ -1528,6 +1528,38 @@ not deleted, with the supersession recorded in place.
 
 ---
 
+## 2026-11-17 (session 3) — Milestone M4 Sensor Noise, Uncertainty & Errors-in-Variables (EIV) Audit
+
+**What was done:**
+
+- Executed a comprehensive forensic audit of Milestone 4 (M4) across its six experimental protocols (MS04P01 through MS04P06), verified scripts, console outputs, and `.mat` archives in MATLAB R2025b under the Non-Deletion Historical Protocol:
+  1. *MS04P01 (Quantization):* Audited the Two-Tier Resolver architecture. Confirmed direct joint-side sensing (Case 1A, 12-bit) yields $1,238.86\,\mathrm{N}\cdot\mathrm{m}$ RMS static gravity steps and $3.88\,\mathrm{MN}\cdot\mathrm{m}$ differentiation noise. High-speed motor-shaft sensing (Case 1B, $N_{\mathrm{gear},3} = 240$) reduces position variance by $240^2 = 57,600\times$, yielding $5.16\,\mathrm{N}\cdot\mathrm{m}$ static gravity error and $2,442.68\,\mathrm{N}\cdot\mathrm{m}$ RMS dynamic observer floor ($0.0873\%$ of nominal hoist torque, satisfying the $<0.10\%$ gate).
+  2. *MS04P02 (Fu AWGN Sweep):* Benchmarked external dynamic load recovery against Fu et al. (2022). Raw finite-difference inverse dynamics collapses at $10\%$ noise ($R^2 = 0.0200$); fixed-gain FOH GMO achieves $R^2 = 0.6985$; 3-State KF-GMO achieves $R^2 = 0.7333$ and remains the only estimator with positive tracking at $20\%$ ($R^2 = 0.3580$) and $25\%$ ($R^2 = 0.1323$).
+  3. *MS04P03 (Monte Carlo EIV Bias & IDIM-IV):* Confirmed OLS parallel-axis subtraction drives rotational inertia negative to $\hat{I}_{zz} = -3.915 \times 10^6\,\mathrm{kg}\cdot\mathrm{m}^2$ ($-1459.87\%$). IDIM-IV cleanly restores the inertial subspace ($M_d +0.01\%$, $c -1.05\%$, $I_{zz} +2.34\%$). Documented two physical caveats: (a) simulation oracle condition where $Z = Y_{\mathrm{true}}$, and (b) friction SNR collapse ($-36.7\,\mathrm{dB}$ viscous, $-33.0\,\mathrm{dB}$ Coulomb), confirming from robotic identification literature that friction cannot be identified from dynamic digging arcs.
+  4. *MS04P04 (Inverter Harmonics & Aliasing):* Proved 6th ($69\,\mathrm{Hz}$) and 12th ($138\,\mathrm{Hz}$) inverter switching ripple folds into $9.0\,\mathrm{Hz}$ and $12.0\,\mathrm{Hz}$ alias tones under $30\,\mathrm{Hz}$ sampling. Documented a 2nd-order analog pre-filter ($f_c = 10\,\mathrm{Hz}$) giving $-33.56\,\mathrm{dB}$ attenuation with $<0.01\,\mathrm{dB}$ passband distortion, establishing the CMPDI supervisory logging requirement.
+  5. *MS04P05 (Filter Ablation):* Established offline theoretical bounds (zero-phase `filtfilt` $R^2 = 0.9255$) vs online causal optimality (3-State KF-GMO $R^2 = 0.7287$).
+  6. *MS04P06 (Held-Out Scalability):* Audited Machine A discontinuous impact steps ($R^2 = 0.1755$, $\text{NRMSE} = 26.23\%$, step lag warning motivating M5 adaptive innovation gating) and Machine B (TZ WK-20) scalability ($R^2 = 0.9094$, $\text{NRMSE} = 10.46\%$ baseline; $R^2 = 0.9941$, $\text{NRMSE} = 2.68\%$ adaptive gate). Explicitly qualified that Machine B parameters are scaled engineering priors, not OEM CAD data.
+- Authoritatively appended all 12 verified M4 claims to `claims.md` with explicit statuses, sources, and caveats.
+- Authored `M4_README.md` in the repository root to establish complete traceability.
+
+**Key result:**
+
+- All M4 protocols reconciled with physical principles and signal-processing theory.
+- Complete separation between Machine A (P&H 2100BL, 120 t) and Machine B (TZ WK-20, ~800 t) preserved.
+- Full compliance with the Non-Deletion Historical Protocol maintained across all files.
+
+**Decisions & why:**
+
+- Transparently declared the oracle instrument condition in MS04P03 ($Z = Y_{\mathrm{true}}$ in simulation) to prevent conflating simulation upper bounds with field deployment requirements.
+- Highlighted the friction subspace SNR collapse ($-37\,\mathrm{dB}$) to scientifically defend why friction cannot be calibrated from digging arcs.
+- Formally recorded Machine B parameter provenance as scaled engineering priors rather than OEM CAD.
+
+**Next step:**
+
+- Proceed to Milestone 5 (M5) audit: electromechanical digital twin coupling, multi-rate architecture, and adaptive innovation gating.
+
+---
+
 ## TEMPLATE — copy for each new session
 
 ## YYYY-MM-DD — <one-line title>
