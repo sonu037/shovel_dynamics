@@ -1556,7 +1556,38 @@ not deleted, with the supersession recorded in place.
 
 **Next step:**
 
-- Proceed to Milestone 5 (M5) audit: electromechanical digital twin coupling, multi-rate architecture, and adaptive innovation gating.
+- Reconcile Milestone 2 audit feedback and execute frozen Module 05 configuration maps.
+
+---
+
+## 2026-11-17 (session 4) — Comprehensive M2 Audit Reconciliation, Claims Supersession & Rasuli PDF Verification
+
+**What was done:**
+
+- Conducted a rigorous audit reconciliation of Milestone 2 (M2) addressing all reviewer critique points under the Non-Deletion Historical Protocol:
+  1. *Claims Supersession Audit:* Formally marked legacy claims rows 94 (P05 pilot runs), 95 (P06 mixed-frequency headline), 96 (P07 partial mass error reporting), and 98 (P08 forward torque-driven code check) as `SUPERSEDED` or `DOWNGRADED` with explicit pointers to superseding rows (Row 121 for P06 matched-frequency; Row 136 for P07 full leakage table).
+  2. *P05 Grid & Domain Correction in M2_README:* Corrected the P05 objective text to distinguish the computation domain ($q_3 \in [-60, +70]^\circ$, $d_4 \in [4.0, 11.0]\,\mathrm{m}$) from the overlaid operational envelopes (E0 pilot, E1 field lifting $[-21, -3]^\circ$, E2 Machine B $[-45, +25]^\circ$).
+  3. *Excitation Trilemma Gate Nuance:* Restored language from "trilemma resolved" to "trilemma conditionally resolved; fails near $q_3 = 0^\circ$ where quasi-static separability vanishes ($\det = 13.83 \sin(2 q_3) = 0$)."
+  4. *Dimensional Weighting Sourcing in Repo:* Authored and executed `M2/experiments/06_identifiability/m2_check_kappa_repro.m` in MATLAB R2025b. Computed and archived `M2_kappa_sbar_sensitivity.mat`, proving that for Narrow Bi ($\omega = 0.314\,\mathrm{rad/s}$), joint condition number $\kappa_{\mathrm{joint}}$ and subspace angle $\theta_{\mathrm{joint}}$ vary with row weight $\bar{s}$: $\theta = 1.08^\circ$ at $\bar{s} = 1\,\mathrm{m}$, $5.10^\circ$ at $\bar{s} = 10\,\mathrm{m}$, and $1.30^\circ$ at $\bar{s} = 100\,\mathrm{m}$.
+  5. *Direct PDF Verification of Rasuli (2014):* Directly inspected `papers_library/01_payload_dynamic_rosoli2014.pdf`. Confirmed that Rasuli's angle $\theta_3$ is measured CCW from horizontal (+x axis), identical to project variable $q_3$. Confirmed dipper lifting telemetry spans $\theta_3 \in [-21^\circ, -3^\circ]$ (reaching near the horizontal singularity $q_3 = 0^\circ$) and swing spans $\theta_3 \in [-22^\circ, -18^\circ]$. Dated and tagged E1 rows in `claims.md`.
+  6. *Machine B Geometry Decoupling Clarification:* Updated `shovel_params_wk20.m`, `claims.md`, and `M2_README.md` to explicitly declare that $L_{\mathrm{COG}} = 2.82\,\mathrm{m}$ and $x_{\mathrm{ref}} = 1.50\,\mathrm{m}$ are assumed from Machine A pending OEM CAD drawing B2.
+  7. *P08 Wording & Classification:* Replaced "17 independent Simscape archives cross-validated" with "17 in-sample Simscape archives cross-checked", and clarified that torque-driven Simscape closed-loop sensor re-run is planned.
+  8. *CMPDI Review Deck Alignment:* Formally agreed to retitle Slide 7 from "Payload from drive torques" to "Cutting Load from Drive Torques" per Revision V22/V27.
+
+**Key result:**
+
+- Zero contradictions between `claims.md`, `M2_README.md`, and MATLAB source code.
+- Every number cited in documentation now possesses a dedicated, executable MATLAB script and `.mat` file in the repository.
+- Complete audit trail preserved without deleting a single historical line.
+
+**Decisions & why:**
+
+- Replaced all adjectives ("robust", "airtight") with strictly neutral, descriptive scientific statements.
+- Preserved historical rows in `claims.md` while marking them superseded with forward pointers, maintaining full audit traceability for funding agencies and reviewers.
+
+**Next step:**
+
+- Execute frozen Module 05 (`05_configuration_sweep`): compute the 2D configuration maps across $q_3 \in [-60, +70]^\circ$ and $d_4 \in [4.0, 11.0]\,\mathrm{m}$ with E0, E1, E2 overlays.
 
 ---
 

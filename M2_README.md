@@ -8,11 +8,11 @@ STATUS DEFINITIONS AND MILESTONE STATE (AUDITED 2026-11-17):
 - MS02P02: CLOSED (Simulation-Verified). Exact recovery under motion-prescribed trajectory: slope -1.000000, 1-R^2 = 7.67e-24 (q3).
 - MS02P03: CLOSED (Simulation-Verified, 2026-09-02). Amplitude sweep 10-1000 kN linear (slope -1.000000). Absolute error is approximately 2.00e-06 N m, varying by 0.1% across a 100x amplitude range due to finite-precision round-off; relative error scales as 1/F (2.7e-11 to 2.7e-13). Matches claims.md.
 - MS02P04: CLOSED (Simulation-Verified, 2026-09-04). Frequency sweep: s_in/s_co ratio invariant under common frequency; stroke-dependent identifiability measured across 10 trajectories.
-- MS02P05: SPECIFICATION FROZEN (2026-11-17, Commit 2dd61f7). The 9 Nov runs (d4_bias 7.75, 8.75, 9.77 m at q3 = 45 deg) were pilot spot-checks. The complete P05 objective is the full 2D configuration sensitivity and quasi-static determinant map across q3 in [-45, +25] deg and d4 in [4.2, 8.8] m, explicitly investigating the horizontal handle singularity locus at q3 = 0 deg (det = 13.83*sin(2*q3) = 0).
+- MS02P05: SPECIFICATION FROZEN (2026-11-17, Commit 2dd61f7). The 9 Nov runs (d4_bias 7.75, 8.75, 9.77 m at q3 = 45 deg) were pilot spot-checks. The complete P05 objective is the full 2D configuration sensitivity and quasi-static determinant map computed on the grid q3 in [-60, +70] deg (1 deg steps) and d4 in [4.0, 11.0] m (0.1 m steps), with operational envelopes E0 (pilot), E1 (Machine A field lifting [-21, -3] deg), and E2 (Machine B [-45, +25] deg, [4.2, 8.8] m) overlaid, explicitly investigating the horizontal handle singularity locus at q3 = 0 deg (det = 13.83*sin(2*q3) = 0).
 - MS02P06: RE-EVALUATED SAME-MOTION CONDITIONING (2026-11-17). Formal SVD across 12 trajectories resolves single-channel saddle collinearity (theta = 0.23 deg) via joint 2-channel estimation:
-  - Like-for-Like at Normal Operating Speed (omega_traj = 0.314 rad/s): Single-channel kappa_2 = 497.71 -> Joint 2-channel kappa_2 = 22.45 (a fair, robust 22x reduction).
+  - Like-for-Like at Normal Operating Speed (omega_traj = 0.314 rad/s): Single-channel kappa_2 = 497.71 -> Joint 2-channel kappa_2 = 22.45 (a 22x reduction at s_bar = 10 m, provisional until noise-based weighting via P05 Map 3).
   - Fast Trajectory Stress Test (omega_traj = 1.36 rad/s, 4.4x field speed): Single-channel kappa_2 = 153.71 -> Joint 2-channel kappa_2 = 3.77 (41x reduction).
-  - Note on Dimensional Weighting: Both kappa_2 and the joint subspace angle depend on crowd weighting s_bar = 10.0 m (ratio of N m to N); angle theta changes with s_bar (1.1 deg at s_bar=1, 5.1 deg at s_bar=10).
+  - Note on Dimensional Weighting: Both kappa_2 and the joint subspace angle depend on crowd weighting s_bar (ratio of N m to N): for Narrow Bi at omega_traj = 0.314 rad/s, theta_joint changes with s_bar (1.08 deg at s_bar=1 m, 5.10 deg at s_bar=10 m, 1.30 deg at s_bar=100 m; verified in m2_check_kappa_repro.m).
 - MS02P07: FULL PARAMETER LEAKAGE REPORTED (2026-11-17). Basis regression on analytical inverse equations confirms that a +0.10 m error in COG lever arm c leaks severely into all parameters:
   - Rotational Inertia: +415,995 kg m^2 (+144.5% leakage)
   - Viscous Friction: +7,294 N m s/rad (+191.9% leakage)
@@ -21,16 +21,17 @@ STATUS DEFINITIONS AND MILESTONE STATE (AUDITED 2026-11-17):
   - Scientific Takeaway: Front-end geometry and COG lever arms must be calibrated accurately before rotational inertia or friction identification can be trusted.
 - MS02P08: AUDITED & RECLASSIFIED (2026-11-17):
   - Part A (In-Sample Archive Cross-Check): 17 motion-prescribed Simscape archives cross-checked; algebraic recovery holds to numerical precision (NRMSE_q3 < 4.3e-10%).
-  - Part B (Forward Torque-Driven Code Verification): Initial execution in build_M2_TorqueDriven.m used an internal forward ODE solver with identical plant and observer parameters (code verification, not independent Simscape sensor validation). Upgraded for re-run against compliant Simscape Multibody plant.
+  - Part B (Forward Torque-Driven Code Verification): Initial execution in build_M2_TorqueDriven.m used an internal forward ODE solver with identical plant and observer parameters (code verification, not independent Simscape sensor validation). Planned for re-run against compliant Simscape Multibody plant with deliberately perturbed estimator parameters.
 
-The excitation-trilemma gate is resolved via joint 2-channel ([tau3; s_bar*f4]) estimation.
+The excitation-trilemma gate is conditionally resolved; fails near q3 = 0 deg where quasi-static separability vanishes.
 I_zz ambiguity was resolved on 2026-07-23 (claims.md line 13, status V).
 
-## Downstream Milestone Status (Current State)
-- M3 (Momentum Observer): Native discrete 30 Hz observer and 3-state KF-GMO verified for both Machine A (P&H 2100BL) and Machine B (TZ WK-20). Eliminates harmonic tracking lag (120.8 -> 16.26 kNm) and suppresses resolver velocity noise by 81.3% (193.15 -> 36.10 kNm).
-- M4 (Noise and Uncertainty): Six stress protocols (MS04P01-P06) verified across parameter drift, 14-bit quantization, and held-out impact profiles.
-- M5 (Electromechanical Twin & Adaptive Gate): Innovation-based adaptive estimation (IAE) verified, collapsing boulder collision phase lag from 250 ms to <33 ms (63.8% error reduction).
-- M6 (4-DOF 3D Coupling & Wire Rope): 3D swing-saddle-crowd Euler-Lagrange equations, sheave kinematics, and hoist rope compliance formulated.
+## Downstream Milestone References
+For downstream implementations and verified results, refer to their respective milestone documentation:
+- **M3 (Momentum Observer):** Acceleration-free 30 Hz discrete observer suite in [M3/](file:///c:/Users/IIT%20KGP/MATLAB%20Drive/shovel-dynamics/M3/).
+- **M4 (Noise and Uncertainty):** Six sensor stress and EIV protocols audited in [M4_README.md](file:///c:/Users/IIT%20KGP/MATLAB%20Drive/shovel-dynamics/M4_README.md).
+- **M5 (Electromechanical Digital Twin):** Multi-rate drive model and adaptive innovation gating in [M5/](file:///c:/Users/IIT%20KGP/MATLAB%20Drive/shovel-dynamics/M5/).
+- **M6 (3D Kinematics & Compliance):** 4-DOF Euler-Lagrange front-end model in [M6/](file:///c:/Users/IIT%20KGP/MATLAB%20Drive/shovel-dynamics/M6/).
 
 ## Part identification
 
@@ -84,8 +85,8 @@ Results summary:
              under lever arm error dc = +0.10 m (+144% inertia, +192% viscous).
 
     MS02P08  08_held_out
-             Part A: 17 independent Simscape archives cross-validated (NRMSE < 4.3e-10%).
-             Part B: Torque-driven forward ODE code verification.
+             Part A: 17 in-sample Simscape archives cross-checked (NRMSE < 4.3e-10%).
+             Part B: Torque-driven forward ODE code verification (planned for Simscape re-run).
 
 Scope of these results. Module 02 and P05 verify the force-to-generalized-force
 mapping and the subtraction identity under motion-prescribed joints with exact

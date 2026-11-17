@@ -100,7 +100,7 @@ function [P, geom_table] = shovel_params_wk20(q3_eval, d4_eval)
     P.q3_dig_max_deg =  25.0;                   % [deg]   Bank exit / upper pitch limit before boom interference [D]
 
     % Admissible crowd stroke in project datum (d_4 measured to reference datum x_ref = 1.50 m upstream of bail):
-    P.x_ref          = 1.50;                    % [m]     Project datum offset upstream of bail pin [D: locked to M1/M2]
+    P.x_ref          = 1.50;                    % [m]     Project datum offset upstream of bail pin [ESTIMATE: Machine A geometry assumed pending OEM CAD drawing B2]
     P.d4_min         = 4.20;                    % [m]     Minimum retracted crowd extension in project datum [ESTIMATE]
     P.d4_max         = 8.80;                    % [m]     Maximum extended crowd extension in project datum [ESTIMATE]
     P.x_tip          = 2.65;                    % [m]     Tooth-tip station offset (s_tip = d_4 + 2.65 m) [ESTIMATE]
@@ -108,8 +108,8 @@ function [P, geom_table] = shovel_params_wk20(q3_eval, d4_eval)
     %% 5. Dipper + Handle Inertial & Friction Priors [ESTIMATE: Scaled from Rasuli 2014 Pending Field ID]
     P.m              = 56500.0;                 % [kg]        [ESTIMATE] Empty dipper + handle mass M_d
     P.Md             = P.m;                     % [kg]        Alias for M3 scripts
-    P.L_COG          = 2.82;                    % [m]         [ESTIMATE] Distance from bail pin to empty COM
-    P.c              = P.x_ref - P.L_COG;       % [m]         -1.32 m net lever offset: r_COG(t) = d_4(t) + c
+    P.L_COG          = 2.82;                    % [m]         [ESTIMATE: Machine A geometry assumed (2.82 m from bail pin to empty COM) pending OEM CAD drawing B2]
+    P.c              = P.x_ref - P.L_COG;       % [m]         -1.32 m net lever offset: r_COG(t) = d_4(t) + c [ESTIMATE: Machine A geometry assumed]
     P.Izz            = 305000.0;                % [kg*m^2]    [ESTIMATE] Rotational inertia about COM
     P.fv3            = 4100.0;                  % [N*m*s/rad] [ESTIMATE] Saddle revolute viscous damping
     P.fv3_degs       = P.fv3 * pi / 180.0;      % [N*m/(deg/s)] Simscape Revolute Joint dialog unit
