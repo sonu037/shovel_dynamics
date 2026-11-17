@@ -10,7 +10,7 @@ STATUS DEFINITIONS AND MILESTONE STATE (AUDITED 2026-11-17):
 - MS02P04: CLOSED (Simulation-Verified, 2026-09-04). Frequency sweep: s_in/s_co ratio invariant under common frequency; stroke-dependent identifiability measured across 10 trajectories.
 - MS02P05: SPECIFICATION FROZEN (2026-11-17, Commit 2dd61f7). The 9 Nov runs (d4_bias 7.75, 8.75, 9.77 m at q3 = 45 deg) were pilot spot-checks. The complete P05 objective is the full 2D configuration sensitivity and quasi-static determinant map computed on the grid q3 in [-60, +70] deg (1 deg steps) and d4 in [4.0, 11.0] m (0.1 m steps), with operational envelopes E0 (pilot), E1 (Machine A field lifting [-21, -3] deg), and E2 (Machine B [-45, +25] deg, [4.2, 8.8] m) overlaid, explicitly investigating the horizontal handle singularity locus at q3 = 0 deg (det = 13.83*sin(2*q3) = 0).
 - MS02P06: RE-EVALUATED SAME-MOTION CONDITIONING (2026-11-17). Formal SVD across 12 trajectories resolves single-channel saddle collinearity (theta = 0.23 deg) via joint 2-channel estimation:
-  - Like-for-Like at Normal Operating Speed (omega_traj = 0.314 rad/s): Single-channel kappa_2 = 497.71 -> Joint 2-channel kappa_2 = 22.45 (a 22x reduction at s_bar = 10 m, provisional until noise-based weighting via P05 Map 3).
+  - Like-for-Like at handle rate comparable to Rasuli field data (omega_traj = 0.314 rad/s, peak q3dot ~ 0.082 rad/s): Single-channel kappa_2 = 497.71 -> Joint 2-channel kappa_2 = 22.45 (a 22x reduction at s_bar = 10 m, provisional until noise-based weighting via P05 Map 3).
   - Fast Trajectory Stress Test (omega_traj = 1.36 rad/s, 4.4x field speed): Single-channel kappa_2 = 153.71 -> Joint 2-channel kappa_2 = 3.77 (41x reduction).
   - Note on Dimensional Weighting: Both kappa_2 and the joint subspace angle depend on crowd weighting s_bar (ratio of N m to N): for Narrow Bi at omega_traj = 0.314 rad/s, theta_joint changes with s_bar (1.08 deg at s_bar=1 m, 5.10 deg at s_bar=10 m, 1.30 deg at s_bar=100 m; verified in m2_check_kappa_repro.m).
 - MS02P07: FULL PARAMETER LEAKAGE REPORTED (2026-11-17). Basis regression on analytical inverse equations confirms that a +0.10 m error in COG lever arm c leaks severely into all parameters:
@@ -28,10 +28,10 @@ I_zz ambiguity was resolved on 2026-07-23 (claims.md line 13, status V).
 
 ## Downstream Milestone References
 For downstream implementations and verified results, refer to their respective milestone documentation:
-- **M3 (Momentum Observer):** Acceleration-free 30 Hz discrete observer suite in [M3/](file:///c:/Users/IIT%20KGP/MATLAB%20Drive/shovel-dynamics/M3/).
-- **M4 (Noise and Uncertainty):** Six sensor stress and EIV protocols audited in [M4_README.md](file:///c:/Users/IIT%20KGP/MATLAB%20Drive/shovel-dynamics/M4_README.md).
-- **M5 (Electromechanical Digital Twin):** Multi-rate drive model and adaptive innovation gating in [M5/](file:///c:/Users/IIT%20KGP/MATLAB%20Drive/shovel-dynamics/M5/).
-- **M6 (3D Kinematics & Compliance):** 4-DOF Euler-Lagrange front-end model in [M6/](file:///c:/Users/IIT%20KGP/MATLAB%20Drive/shovel-dynamics/M6/).
+- **M3 (Momentum Observer):** Acceleration-free 30 Hz discrete observer suite in [M3/](M3/).
+- **M4 (Noise and Uncertainty):** Six sensor stress and EIV protocols audited in [M4_README.md](M4_README.md).
+- **M5 (Electromechanical Digital Twin):** Multi-rate drive model and adaptive innovation gating in [M5/](M5/).
+- **M6 (3D Kinematics & Compliance):** 4-DOF Euler-Lagrange front-end model in [M6/](M6/).
 
 ## Part identification
 

@@ -3,8 +3,12 @@ function RESULTS = m2_check_kappa_repro()
 %
 %   PURPOSE (per CLAIMS_INTEGRITY_PROTOCOL.md & research_integrity.md Rule 5):
 %     Provides the authoritative, reproducible MATLAB script in the repository for:
-%       1) Computing condition number kappa and subspace angle theta across all 12
-%          benchmark trajectories from M2_formal_svd_summary.mat.
+%       1) Analytically reconstructing the 12 benchmark trajectories using the
+%          2nd-order motion-converter gain G = 1/(1+(w*tau)^2) (tau = 0.05 s) to
+%          independently verify the condition numbers reported in M2_formal_svd_summary.mat
+%          without loading that file. Matches archived Simscape values within 0.4%
+%          (e.g., cond_saddle = 495.87 vs 497.71 for Narrow Bi at w = 0.314 rad/s;
+%           cond_saddle = 153.27 vs 153.71 at w = 1.360 rad/s).
 %       2) Demonstrating that matrix condition number kappa_joint AND subspace angle
 %          theta_joint depend directly on the chosen dimensional weighting s_bar (m).
 %       3) Sourcing the verified values: theta = 1.08 deg at s_bar = 1,

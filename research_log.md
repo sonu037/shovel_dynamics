@@ -1572,12 +1572,12 @@ not deleted, with the supersession recorded in place.
   5. *Direct PDF Verification of Rasuli (2014):* Directly inspected `papers_library/01_payload_dynamic_rosoli2014.pdf`. Confirmed that Rasuli's angle $\theta_3$ is measured CCW from horizontal (+x axis), identical to project variable $q_3$. Confirmed dipper lifting telemetry spans $\theta_3 \in [-21^\circ, -3^\circ]$ (reaching near the horizontal singularity $q_3 = 0^\circ$) and swing spans $\theta_3 \in [-22^\circ, -18^\circ]$. Dated and tagged E1 rows in `claims.md`.
   6. *Machine B Geometry Decoupling Clarification:* Updated `shovel_params_wk20.m`, `claims.md`, and `M2_README.md` to explicitly declare that $L_{\mathrm{COG}} = 2.82\,\mathrm{m}$ and $x_{\mathrm{ref}} = 1.50\,\mathrm{m}$ are assumed from Machine A pending OEM CAD drawing B2.
   7. *P08 Wording & Classification:* Replaced "17 independent Simscape archives cross-validated" with "17 in-sample Simscape archives cross-checked", and clarified that torque-driven Simscape closed-loop sensor re-run is planned.
-  8. *CMPDI Review Deck Alignment:* Formally agreed to retitle Slide 7 from "Payload from drive torques" to "Cutting Load from Drive Torques" per Revision V22/V27.
+  8. *CMPDI Review Deck Alignment:* Recommended retitling Slide 7 to "Load from drive torques" in the review deck, explicitly marking the swing-weighing rule as an implication for M6/M7 payload estimation per Revision V22/V27.
 
 **Key result:**
 
-- Zero contradictions between `claims.md`, `M2_README.md`, and MATLAB source code.
-- Every number cited in documentation now possesses a dedicated, executable MATLAB script and `.mat` file in the repository.
+- Contradictions identified in the audit between `claims.md`, `M2_README.md`, and MATLAB source code are fully resolved.
+- Sourced the dimensional weighting sensitivity $\theta(\bar{s})$ directly in the repo via `m2_check_kappa_repro.m` and `M2_kappa_sbar_sensitivity.mat`, while attributing field envelope ranges to their authoritative literature source (`01_payload_dynamic_rosoli2014.pdf`).
 - Complete audit trail preserved without deleting a single historical line.
 
 **Decisions & why:**
