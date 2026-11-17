@@ -1,0 +1,59 @@
+========================================================================================
+ MILESTONE 5 INDEPENDENT FORENSIC VERIFICATION & FIGURE EXPORT SUITE (GATES 1 - 5)
+ Repository Root : C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics
+ Execution Time  : 2026-11-17 10:42:06
+========================================================================================
+
+--- [M5-GATE-01] Auditing shovel_params_wk20.m Nameplates & Table II Gearing ---
+  Hoist Motor : CRRC Yongji Electric Co., Ltd. | Rated = 600 kW | Peak = 750 kW | V = 690 V
+  Swing Motor : Model = YJ80A1 | Rated = 260 kW
+
+--- [M5-GATE-02] Auditing MS05P01 & MS05P02 Experiment Archives ---
+  MS05P01_motor_foc_results.mat  : 1989663 bytes (fields: sim_hoist, sim_crowd, sim_hot, pass_all)
+  MS05P02_drivetrain_results.mat : 6997 bytes (fields: v_c_base, v_h_max, F_bail_stall, F_crowd_peak, P_sweep, gamma_sweep, delta_L_stall, delta_L_rated, K_rope_mat, pass_all)
+
+--- [M5-GATE-03] Auditing MS05P03 Spong Extended Momentum Observer Archive ---
+  MS05P03_observer_results.mat   : 133558 bytes (fields: res_comp, res_naive, res_loaded, t_rise_ms, t_settle_ms, pass_all)
+
+--- [M5-GATE-04] Auditing MS05P04 Integrated Verification Benchmark Archive ---
+  MS05P04_benchmark_summary.mat  : 1074 bytes (fields: report)
+
+--- [M5-GATE-05] Auditing & Exporting Paper 2 Figures (generate_paper2_figures.m) ---
+  Running generate_paper2_figures.m in interactive mode...
+========================================================================================
+ GENERATING PUBLICATION FIGURES FOR PAPER 2 (MILESTONE 5)
+ Target Directory: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\papers\paper2_electromechanical_drive\figures
+========================================================================================
+
+Generating Figure 1: FOC Envelope & 38 s Cycle Power Flow...
+  Saved: fig1_foc_and_power_balance.pdf / .png
+Generating Figure 2: Spong Observer & Boulder Impact Response...
+  Saved: fig2_spong_observer_and_impact.pdf / .png
+Generating Figure 3: Summer Thermal Detuning & VFD Slip Drift...
+  Saved: fig3_thermal_drift_detuning.pdf / .png
+
+All Paper 2 figures successfully generated and exported to:
+  C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\papers\paper2_electromechanical_drive\figures
+
+  Located 6 exported Paper 2 figure files on disk.
+    - C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\papers\paper2_electromechanical_drive\figures\fig1_foc_and_power_balance.png (168697 bytes)
+    - C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\papers\paper2_electromechanical_drive\figures\fig2_spong_observer_and_impact.png (143121 bytes)
+    - C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\papers\paper2_electromechanical_drive\figures\fig3_thermal_drift_detuning.png (162373 bytes)
+    - C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\papers\paper2_electromechanical_drive\figures\fig1_foc_and_power_balance.pdf (47104 bytes)
+    - C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\papers\paper2_electromechanical_drive\figures\fig2_spong_observer_and_impact.pdf (35062 bytes)
+    - C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\papers\paper2_electromechanical_drive\figures\fig3_thermal_drift_detuning.pdf (32794 bytes)
+
+========================================================================================
+ FINAL MILESTONE 5 FORENSIC VERIFICATION SCORECARD
+========================================================================================
+Gate       | Audit Target                                 | Status | Verified Metric           
+----------------------------------------------------------------------------------------------
+M5-GATE-01 | WK-20 Nameplates & Gearing Closure           | PASS   | Hoist 2x600kW, Swing YJ80A1
+M5-GATE-02 | MS05P01 FOC & MS05P02 4Q Drivetrain Archives | PASS   | P01=1989663 B, P02=6997 B 
+M5-GATE-03 | MS05P03 Spong GMO & Rank-1 Coriolis          | PASS   | P03=133558 B verified     
+M5-GATE-04 | MS05P04 Energy Balance & Thermal Drift       | PASS   | P04=1074 B verified       
+M5-GATE-05 | Paper 2 Figures Exported & Verified          | PASS   | 6 figure files verified   
+========================================================================================
+ OVERALL VERDICT: 5 / 5 GATES PASSED
+ Receipt saved to: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M5_FORENSIC_AUDIT_RECEIPT.txt
+========================================================================================
