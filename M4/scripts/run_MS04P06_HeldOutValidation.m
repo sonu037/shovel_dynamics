@@ -6,8 +6,8 @@ function RESULTS = run_MS04P06_HeldOutValidation(varargin)
 %     Validates the generalization capability of the digital twin estimation pipeline on:
 %       - Dataset 1: Machine A (P&H 2100BL) under an unseen non-sinusoidal excavation profile
 %                    with impact steps and frequency chirps (rock-tooth interaction).
-%       - Dataset 2: Machine B (TZ WK-20) 120-tonne field deployment target at NCL Amlohri,
-%                    evaluating scalability from 54 t to 120 t heavy machinery under field noise.
+%       - Dataset 2: Machine B (TZ WK-20) ~800-tonne field deployment target at NCL Amlohri,
+%                    evaluating scalability to field machinery under industrial drive noise.
 %
 %   ESTIMATORS TESTED:
 %     1. Baseline Linear 3-State Kalman-Filtered GMO (KF-GMO) with fixed Q_0
@@ -147,7 +147,7 @@ function RESULTS = run_MS04P06_HeldOutValidation(varargin)
     % ====================================================================================
     % TEST 2: MACHINE B (TZ WK-20 HEAVY MINING SHOVEL AT NCL AMLOHRI)
     % ====================================================================================
-    fprintf('>>> EXECUTING TEST 2: Machine B (TZ WK-20) 120-Tonne Scaled Field Target...\n');
+    fprintf('>>> EXECUTING TEST 2: Machine B (TZ WK-20) ~800-Tonne Field Target...\n');
     delta_q3_B = (2.0 * pi) / (312.0 * 4096);
     delta_d4_B = (2.0 * pi) / (125.4 * 4096);
 

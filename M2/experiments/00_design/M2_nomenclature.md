@@ -192,3 +192,11 @@ Until 2026-09-04 these were conflated. The 'Frequency' argument of recover_load
 sets omega_F only; the trajectory blocks held pi/10 as a literal, so no M2
 experiment before MS02P04 varied the mechanism frequency. Both are now
 model-workspace variables and must be reported separately in every result.
+
+## Operational Envelopes (M2 Module 05 & Identifiability)
+
+| envelope | machine | q3 range [deg] | d4 range [m] | velocity limits | status & provenance |
+|---|---|---|---|---|---|
+| E0 | Pilot Test | [+30, +60] | [6.75, 10.75] (wide)<br>[9.50, 10.04] (Bi band) | omega_traj in [0.314, 1.36] rad/s | [D: Legacy Default] Idealized upward simulation; avoided q3=0 singularity. Bi band width from Bi 2020 Table 7. |
+| E1 | Machine A (P&H 2100BL) | [-21, -3] (lifting)<br>[-22, -18] (swing) | [7.05, 7.60] (project datum)<br>[8.55, 9.10] (sensor datum) | \|q3dot\| <= 0.080 rad/s<br>\|d4dot\| <= 0.27 m/s | [V: Source Fact] Rasuli 2014 Figs. 7, 8, 9 telemetry. 120 t class, DC drive. |
+| E2 | Machine B (TZ WK-20) | [-45, +25] | [4.20, 8.80] | \|d4dot\| <= 0.54 m/s [V]<br>\|q3dot\| <= 0.45 rad/s [D]<br>F_crowd <= 745 kN [V] | [V: OEM Sheet & D] NCL Amlohri WK-20 spec sheet. 800 t class, Siemens S120 AC VFD. |

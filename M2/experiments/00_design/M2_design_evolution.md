@@ -494,3 +494,42 @@ are especially important to the scientific contribution:
 
    A held-out experiment remains required before claiming generalisation of
    the identification procedure.
+
+---
+
+**V26. Operational Envelope Provenance Protocol (E0, E1, E2).**
+
+To eliminate uncited parameters and historical confusion, all future configuration
+and identifiability evaluations must explicitly state the source and status tag
+for every operational coordinate boundary:
+
+- E0 (Pilot Simulation): q3 in [30, 60] deg [D: legacy upward default], d4 in
+  [6.75, 10.75] m [D] and [9.50, 10.04] m [LIT: Bi 2020 initial polar diameter rho_0].
+- E1 (Machine A - P&H 2100BL): q3 in [-21, -3] deg (lifting) and [-22, -18] deg
+  (swing) [V: Rasuli 2014 Figs. 7, 9]; d4 in [7.05, 7.60] m in project datum
+  (derived from [8.55, 9.10] m sensor reading minus 1.50 m datum offset [V: Rasuli Fig. 8]);
+  peak q3dot ~ 0.080 rad/s, peak d4dot ~ 0.27 m/s.
+- E2 (Machine B - TZ WK-20): q3 in [-45, +25] deg [D: bank toe entry to boom lower
+  chord clearance]; d4 in [4.20, 8.80] m [EST: mechanical retraction to OEM max reach];
+  |d4dot| <= 0.54 m/s [V: OEM spec sheet]; F_crowd <= 745 kN [V: OEM spec sheet];
+  F_hoist <= 1540 kN [V: OEM spec sheet]; |d4ddot| <= 0.50 m/s^2 [LIT: Bi 2020 Table 2].
+
+---
+
+**V27. M2 Load Torque vs. Swing Payload Boundary.**
+
+Reaffirmed as an inviolable project boundary: M2 validates the external cutting
+load torque recovery (Q_ext = -J^T F) during the digging phase. M2 does NOT
+validate payload recovery (m_payload), which is an accreted rigid-body mass change
+operating in the swing-to-truck phase (Milestones 6/7/8). All project documentation
+must maintain this exact terminology.
+
+---
+
+**V28. Strict Decoupling of Machine Classes.**
+
+Machine A (P&H 2100BL, ~120-180 t class, DC drive, Rasuli dataset) and Machine B
+(TZ WK-20, ~800 t class, AC Siemens S120 drive, NCL Amlohri target) must be modeled
+and evaluated strictly independently. Never scale Machine A parameters into Machine B,
+and never apply super-heavy literature limits (WK-35/WK-40/WK-55) without explicit [LIT]
+attribution.

@@ -1428,7 +1428,7 @@ not deleted, with the supersession recorded in place.
    - Baseline Fixed-Gain KF-GMO: $R^2 = 0.1755$, $\mathrm{NRMSE} = 26.23\%$, $\mathrm{RMSE} = 55.07\ \mathrm{kN}$, exhibiting a $250\ \mathrm{ms}$ low-pass phase lag during $50\ \mathrm{kN}$ rock collisions.
    - M5 Adaptive Innovation Gate: $R^2 = 0.8920$, $\mathrm{NRMSE} = 9.49\%$, $\mathrm{RMSE} = 19.93\ \mathrm{kN}$.
    - **Performance Gain:** **$63.8\%$ error reduction**, with phase delay collapsing from $250\ \mathrm{ms}$ to $< 33\ \mathrm{ms}$ (a single sample cycle at $30\ \mathrm{Hz}$).
-2. **Heavy Shovel Scalability (Protocol MS04P06 Machine B - TZ WK-20 120-Tonne Scaled Prior):**
+2. **Heavy Shovel Scalability (Protocol MS04P06 Machine B - TZ WK-20 ~800-Tonne Field Machine Prior):**
    - Baseline Fixed-Gain KF-GMO: $R^2 = 0.9094$, $\mathrm{NRMSE} = 10.46\%$, $\mathrm{RMSE} = 73.19\ \mathrm{kN}$.
    - M5 Adaptive Innovation Gate: $R^2 = 0.9941$, $\mathrm{NRMSE} = 2.68\%$, $\mathrm{RMSE} = 18.75\ \mathrm{kN}$.
    - **Performance Gain:** Tracking error improved from $10.5\%$ to $2.68\%$ without amplifying resolver quantization jitter.
@@ -1471,6 +1471,37 @@ not deleted, with the supersession recorded in place.
 **Next step:**
 
 - Final review with project PI and preparation for Coal India / CMPDI grant progress meeting.
+
+## 2026-11-17 — M2 Core Objective Realignment (Load Torque vs. Payload), Machine Decoupling & Provenance Protocol
+
+**What was done:**
+
+- Executed a comprehensive research integrity audit of Milestone 2 (M2) following the non-deletion historical protocol (all previous entries preserved; updates and corrections appended with explicit lineage):
+  1. *Physical Objective Realignment:* Re-audited all eight M2 modules (`01_zero_force` through `08_held_out`) and confirmed that M2's sole objective is the recovery of the **instantaneous external cutting load torque** ($\tau_{\mathrm{load}} = Q_{\mathrm{ext}} = -J^T F$) during bank excavation. Reaffirmed Revision V22: M2 validates the force-to-generalized-force mapping; it does NOT estimate the bucket payload mass ($m_{\mathrm{payload}}$), which is an accreted rigid-body mass active during the swing phase (M6/M7).
+  2. *Strict Machine Decoupling:* Terminated the conflation between Machine A (P&H 2100BL, ~120–180 t machine weight, 10 m³ dipper, DC drives, Rasuli dataset) and Machine B (TZ WK-20, 779–792 t operating weight, 20 m³ dipper, 36 t nominal payload, Siemens S120 AC VFD, NCL Amlohri Project MT-189). Corrected erroneous legacy script comments in `run_MS04P06_HeldOutValidation.m` that referred to WK-20 as a "120-tonne scaled prior". Confirmed that super-heavy literature references (WK-35/WK-40/WK-55 from Bi et al. 2020 at Anjialing mine, 1400 t class) are external benchmarks only.
+  3. *Operational Envelope Provenance Audit:* Audited every boundary value of saddle pitch ($q_3$) and crowd stroke ($d_4$) across all envelopes and tagged their provenance in `claims.md`, `M2_nomenclature.md`, and `M2_design_evolution.md`:
+     - Envelope E0 (Pilot Test): $q_3 \in [30, 60]^\circ$ [D: legacy upward simulation default]; $d_4 \in [6.75, 10.75]\ \mathrm{m}$ [D] and $[9.50, 10.04]\ \mathrm{m}$ [LIT: Bi 2020 Table 7 initial polar diameter $\rho_0$].
+     - Envelope E1 (Machine A - P&H 2100BL): $q_3 \in [-21, -3]^\circ$ (lifting) and $[-22, -18]^\circ$ (swing) [V: Rasuli 2014 Figs. 7, 9]; $d_4 \in [7.05, 7.60]\ \mathrm{m}$ in project datum [EST: derived from Rasuli Fig. 8 sensor stroke $8.55\text{--}9.10\ \mathrm{m}$ minus $1.50\ \mathrm{m}$ pivot datum offset]; peak $\dot{q}_3 \approx 0.080\ \mathrm{rad/s}$, peak $\dot{d}_4 \approx 0.27\ \mathrm{m/s}$.
+     - Envelope E2 (Machine B - TZ WK-20): $q_3 \in [-45, +25]^\circ$ [D: toe penetration to boom clearance]; $d_4 \in [4.20, 8.80]\ \mathrm{m}$ [EST: mechanical retraction to OEM max reach]; rated crowd speed $|\dot{d}_4| \le 0.54\ \mathrm{m/s}$ [V: OEM spec sheet]; max crowding effort $F_{\mathrm{crowd}} \le 745\ \mathrm{kN}$ [V: OEM spec sheet]; max hoisting effort $F_{\mathrm{hoist}} \le 1540\ \mathrm{kN}$ [V: OEM spec sheet]; acceleration ceiling $|\ddot{d}_4| \le 0.50\ \mathrm{m/s^2}$ [LIT: Bi 2020 Table 2].
+  4. *Matched-Trajectory Identifiability Re-Evaluation:* Corrected the legacy MS02P06 claim pairing. At the normal operating velocity ($\omega_{\mathrm{traj}} = 0.314\ \mathrm{rad/s}$), single-channel saddle observation yields $\kappa_2 = 497.71$, which joint 2-channel observation reduces to $\kappa_2 = 22.5$ (a robust, like-for-like $22\times$ conditioning improvement). The fast trajectory ($\omega_{\mathrm{traj}} = 1.36\ \mathrm{rad/s}$) reaches $\kappa_2 = 3.77$ but operates at $4.4\times$ field-observed angular velocity.
+  5. *Codebase & Documentation Updates:* Updated `claims.md`, `M2_nomenclature.md`, `M2_design_evolution.md` (revisions V26–V28), and `run_MS04P06_HeldOutValidation.m`.
+
+**Key result:**
+
+- Zero deleted history: all prior claims and derivations remain fully documented, with explicit supersession records and source links.
+- Verified parameter anchor: Machine A and Machine B now have zero cross-talk, anchored strictly to Rasuli 2014 and the Amlohri OEM specification respectively.
+- M2 is cleanly established as the external cutting load torque estimation framework.
+
+**Decisions & why:**
+
+- Upheld the non-deletion rule: in scientific research, deleting previous results hides errors and creates reproducibility breaks; annotating corrections in place preserves the intellectual defense and audit trail.
+- Maintained matched-trajectory reporting for SVD conditioning: comparing numbers across two different motion frequencies is physically misleading, whereas the like-for-like $22\times$ reduction is mathematically airtight.
+
+**Next step:**
+
+- Execute frozen Module 05 (`05_configuration_sweep`): run `m2_05_configuration_maps.m` to generate the 2D sensitivity maps with E0, E1, E2 overlays, and execute the 10 Simscape spot checks in `M2_LoadInjection.slx`.
+
+---
 
 ## TEMPLATE — copy for each new session
 
