@@ -170,10 +170,181 @@ The existing wide and Bi-source trajectories also differ in d4 range and crowd
 velocity, so their difference cannot be attributed to excitation frequency alone.
 
 ## 05_configuration_sweep
-[same fields]
 Note: produce TWO maps, one per generalized coordinate. Observability
 redistributes between coordinates rather than vanishing - at q3 -> 90 deg,
 Q_q3 -> 0 but Q_d4 -> -F.
+
+STATUS:                 FILLED 2026-11-17 (drafted with Claude; every input
+                        checked against claims.md, shovel_params.m,
+                        shovel_params_wk20.m and Rasuli 2014 Figs. 7-9).
+                        FROZEN 2026-11-17 by Suhail.
+                        The 2026-11-09 runs (M2_05_d4bias_{7p75,8p75,9p77}m.mat)
+                        were RUN before these fields were filled - PROCESS
+                        DEFECT, same as modules 01, 02 and 04. They are kept as
+                        a PILOT: they show exact recovery (slope -1.000000) at
+                        three d4 biases at q3 = 45 +/- 15 deg, and nothing more.
+                        They are not this module's result.
+
+Question:               Across the configurations a working shovel actually
+                        occupies, where does each generalized coordinate observe
+                        a vertical load at the bail station, and where can that
+                        load be separated from an error in the empty-dipper
+                        mass M_d when both channels are used together?
+
+Hypothesis:             Observability of the load redistributes between the two
+                        channels but never vanishes (note above). SEPARABILITY
+                        of load from mass error does vanish: in the quasi-static
+                        limit the two unknowns load the two channels in the same
+                        ratio wherever sin q3 cos q3 = 0, i.e. on q3 = 0 (handle
+                        horizontal), which lies inside every working envelope
+                        below. Near q3 = 0 the only separating information is
+                        the dynamic crowd-channel term d4ddot - r q3dot^2, which
+                        is small at field-observed rates.
+
+Setup:                  PART 1 - analytic maps (the main result).
+                        Grid: q3 in [-60, +70] deg, 1 deg steps; d4 in
+                        [4.0, 11.0] m, 0.1 m steps (project datum: s = d4 + 1.5,
+                        r = d4 - 1.32). Parameters from shovel_params.m
+                        (Machine A). The maps depend on the geometry
+                        (x_ref = 1.50, L_COG = 2.82) and not on M_d, so they
+                        hold for the WK-20 while its estimated geometry equals
+                        Machine A's (as set in shovel_params_wk20.m).
+
+                        Three envelopes are overlaid, each with its status:
+                        E0  M2 test region [design choice, modules 02-04]:
+                            q3 = 30-60 deg; d4 = 6.75-10.75 m (wide) and
+                            9.50-10.04 m (Bi band).
+                        E1  Field-observed, Machine A [source fact, read from
+                            figures - mark V only after reading the PDF
+                            yourself]: Rasuli 2014 Fig. 7 (dipper lifting)
+                            theta3 ~ -21 to -3 deg, peak q3dot ~ 4.6 deg/s
+                            (0.080 rad/s), peak q3ddot ~ 3.5 deg/s^2;
+                            Fig. 9 (swing) theta3 ~ -18 to -22 deg;
+                            Fig. 8 d4 ~ 8.55-9.10 m in his datum = 7.05-7.60 m
+                            in ours, peak d4dot ~ 0.27 m/s, |d4ddot| ~ 0.2 m/s^2.
+                            Lifting and swing only - Rasuli recorded digging
+                            but did not use it, because the external forces
+                            during digging were not measurable.
+                        E2  WK-20 declared envelope [design choice/estimate]:
+                            q3 in [-45, +25] deg [D]; d4 in [4.2, 8.8] m
+                            [ESTIMATE]; |d4dot| <= 0.54 m/s [V, OEM sheet];
+                            |d4ddot| <= 0.5 m/s^2 [D, Bi 2020, WK-55];
+                            |q3dot| <= 0.45 rad/s [D, no source].
+                            CITATION DEFECT: shovel_params_wk20.m tags the
+                            -45 deg bound "Rasuli 2014 Fig. 6", but Fig. 6 is
+                            the estimated-payload plot. Corrected 2026-11-17.
+
+                        PART 2 - Simscape spot checks (independent validation of
+                        the analytic sensitivities). M2_LoadInjection.slx,
+                        100 kN vertical at the bail station, motion-prescribed.
+                        Requires the q3 Sine Wave Bias and Amplitude to be
+                        parameterised (B_q3, A_q3) exactly as A_d4/B_d4 were on
+                        2026-09-07: a read-back at 45/15 deg must reproduce
+                        M2_100kN_0p1111Hz_sp1p50 to every printed digit, and a
+                        control run must differ.
+                        Spot centres: q3 = -40, -20, -10, -3, 0, +10, +20, +45
+                        deg at d4 = 7.3 m; plus q3 = 0 deg at d4 = 4.5 and 8.5 m.
+                        Excitation about each centre: A_q3 = 2 deg,
+                        A_d4 = 0.25 m, omega_traj = 0.5 rad/s (peak
+                        q3dot 0.017 rad/s, d4dot 0.125 m/s, d4ddot
+                        0.0625 m/s^2 - inside both E1 and E2).
+
+Variables:              Independent: configuration centre (q3, d4); envelope
+                        (E0/E1/E2) for overlays only.
+                        Held fixed: model file, parameter file, force amplitude,
+                        force frequency (2*pi/9), force station, solver, trim
+                        (0 s, claims.md 2026-09-02), noise-free sensing, Fx = 0.
+
+Equations:              Load columns (per unit Fy):
+                          s_F3 = (d4 + 1.5) cos q3                    [m]
+                          s_F4 = sin q3                               [-]
+                        Mass-error columns (per unit dM_d), r = d4 - 1.32:
+                          s_M3 = r^2 q3ddot + 2 r d4dot q3dot + g r cos q3
+                                                                      [m^2/s^2]
+                          s_M4 = d4ddot - r q3dot^2 + g sin q3        [m/s^2]
+                        Quasi-static determinant (static columns only):
+                          det = s_F3 s_M4 - s_M3 s_F4
+                              = (s - r) g sin q3 cos q3
+                              = 2.82 g sin q3 cos q3 = 13.83 sin(2 q3)  [m^2/s^2]
+                        Whitened column angle: theta_W = angle between
+                        W^(1/2) s_F and W^(1/2) s_M, W = diag(sigma_tau3^-2,
+                        sigma_f4^-2). The ZERO SET of theta_W does not depend
+                        on W; its size does.
+
+Metric:                 Map 1: |s_F3|(q3, d4).
+                        Map 2: |s_F4|(q3, d4).
+                        Map 3: quasi-static |det| and theta_W, for noise ratios
+                          L_n = sigma_tau3 / sigma_f4 = 1, 3, 10 m [design
+                          choice; replace with measured drive noise when
+                          available]. L_n = 10 m reproduces the earlier s_bar
+                          for comparability.
+                        Map 4: dynamic separability bound near q3 = 0,
+                          max |d4ddot - r q3dot^2| / g, under E1 and E2 rates.
+                        Spot checks: slope, intercept, 1-R^2, max err / peak ref,
+                          per channel (as module 02).
+                        Code check: the new map script reproduces the 12-case
+                          table of m2_formal_identifiability_svd.m.
+
+Prediction:             Written before running; hand calculation.
+                        P1  Map 1 never vanishes inside E1 or E2:
+                            min |s_F3| >= (4.2 + 1.5) cos 45 deg = 4.03 m.
+                        P2  Map 2 is zero on the line q3 = 0 for every d4;
+                            at q3 = -3 deg, |s_F4| = 0.052.
+                        P3  The quasi-static det is zero on q3 = 0 for every d4
+                            and every weighting, and does not depend on d4.
+                            Relative to the E0 centre (q3 = 45 deg) it is
+                            0.67 at -21 deg, 0.34 at -10 deg, 0.10 at -3 deg,
+                            0 at 0 deg.
+                        P4  Rasuli's own lifting trajectory (E1, -21 to -3 deg)
+                            runs from 0.67 to 0.10 of the E0 separability,
+                            heading to zero.
+                        P5  Dynamic rescue near q3 = 0 is at most
+                            0.2 + 6.28 x 0.080^2 = 0.24 m/s^2 (2.4 % of g) at E1
+                            rates, and at most 0.5 + 7.48 x 0.45^2 = 2.0 m/s^2
+                            (20 % of g) at the E2 limits. At field-observed
+                            rates the collapse at q3 = 0 is predicted to stand.
+                        P6  Spot checks recover slope -1.000000 on both channels
+                            at every centre, including q3 = 0, where the
+                            d4-channel load signal is small but exactly recovered.
+
+Acceptance criterion:   Validity of the module (NOT the hypothesis):
+                        (a) B_q3/A_q3 read-back reproduces the baseline to every
+                            printed digit, and the control run differs;
+                        (b) spot checks: slope -1.000000 to six decimals and
+                            1-R^2 at the Module-01 floor, both channels, every
+                            centre;
+                        (c) the numeric zero locus of the det map lies within
+                            one grid step (1 deg) of q3 = 0 for every d4;
+                        (d) the code check reproduces the 12-case table, with
+                            cond_joint within 1 % (NarrowBI omega 1.36 -> 3.77).
+                        P1-P5 may be refuted. A refutation is a result and is
+                        recorded as one.
+
+Failure interpretation: (a) fails -> parameter not connected (silent-override
+                            class, 2026-09-02). STOP.
+                        (b) fails only near q3 = 0 -> check the q3 datum (from
+                            horizontal?), gravity axis and force axis before any
+                            physical explanation.
+                        (c) fails -> the sin q3 dependence of Q_d4 is wrong in
+                            the model or the script: sign or frame convention.
+                            STOP.
+                        (d) fails -> the new script does not compute the same
+                            metric. Fix it before using any map.
+                        If P2-P5 hold: payload/tare separation on the WK-20
+                        cannot rely on quasi-static two-channel separability
+                        near a horizontal handle. It must come from the cycle
+                        phase (empty swing-return tare) or from configuration
+                        diversity. Record this as a design constraint for later
+                        milestones.
+
+Scope:                  Fx = 0 and one force station. Says nothing about payload
+                        versus digging force (two force components and a
+                        migrating centroid) - that needs the two-component
+                        follow-on below. Noise-free; the noise weighting is a
+                        design choice until drive noise is measured.
+
+Repository location:    M2/experiments/05_configuration_sweep/rev2/ (the
+                        2026-11-09 pilot files stay where they are).
 
 ## 06_identifiability
 ### METHOD — frozen 2026-09-02; not yet executed

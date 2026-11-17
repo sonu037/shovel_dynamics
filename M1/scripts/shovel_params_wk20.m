@@ -96,7 +96,7 @@ function [P, geom_table] = shovel_params_wk20(q3_eval, d4_eval)
     P.F_crowd_max    = 745e3;                   % [N]     Maximum crowding force (745 kN) [V]
     P.d4ddot_max     = 0.50;                    % [m/s^2] Crowd acceleration design limit [D: WK-55 prior, Bi et al. 2020]
     P.q3dot_max      = 0.45;                    % [rad/s] Saddle angular rate limit [D]
-    P.q3_dig_min_deg = -45.0;                   % [deg]   Bank toe entry pitch angle (Rasuli 2014 Fig. 6) [D]
+    P.q3_dig_min_deg = -45.0;                   % [deg]   Bank toe entry pitch angle [D: design envelope choice; Rasuli Fig. 7 observed lifting is -21 to -3 deg]
     P.q3_dig_max_deg =  25.0;                   % [deg]   Bank exit / upper pitch limit before boom interference [D]
 
     % Admissible crowd stroke in project datum (d_4 measured to reference datum x_ref = 1.50 m upstream of bail):
