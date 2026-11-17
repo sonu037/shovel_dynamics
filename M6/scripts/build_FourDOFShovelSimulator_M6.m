@@ -32,8 +32,10 @@ function out = build_FourDOFShovelSimulator_M6()
     fprintf(' Destination: %s\n', dst_mdl);
     fprintf('========================================================================================\n\n');
 
-    % Step 1: Copy clean source file to destination
-    copyfile(src_mdl, dst_mdl, 'f');
+    % Step 1: Copy clean source file to destination if not exists
+    if ~isfile(dst_mdl)
+        copyfile(src_mdl, dst_mdl, 'f');
+    end
     mdl_name = 'FourDOFShovelSimulator_M6';
 
     % Load destination model
@@ -45,6 +47,7 @@ function out = build_FourDOFShovelSimulator_M6()
         % ---------------------------------------------------------------------
         fprintf('--- [Step 1] Configuring Solver (ode15s, RelTol 1e-5, MaxStep 1e-3) ---\n');
         set_param(mdl_name, 'Solver', 'ode15s');
+        set_param(mdl_name, 'SimMechanicsOpenEditorOnUpdate', 'off');
         set_param(mdl_name, 'MaxStep', '1e-3');
         set_param(mdl_name, 'RelTol', '1e-5');
         set_param(mdl_name, 'AbsTol', '1e-6');
