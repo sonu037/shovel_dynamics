@@ -2,25 +2,35 @@
 
 ## Status
 
-STATUS DEFINITIONS AND MILESTONE STATE (AUDITED & EXECUTED 2026-11-09):
+STATUS DEFINITIONS AND MILESTONE STATE (AUDITED 2026-11-17):
 
 - MS02P01: CLOSED (Simulation-Verified). Numerical floor: 2.00e-06 N m (q3), 2.91e-10 N (d4).
 - MS02P02: CLOSED (Simulation-Verified). Exact recovery under motion-prescribed trajectory: slope -1.000000, 1-R^2 = 7.67e-24 (q3).
-- MS02P03: CLOSED (Simulation-Verified, 2026-09-02). Amplitude sweep 10-1000 kN linear, absolute error constant at ~2.00e-06 N m.
+- MS02P03: CLOSED (Simulation-Verified, 2026-09-02). Amplitude sweep 10-1000 kN linear (slope -1.000000). Absolute error is approximately 2.00e-06 N m, varying by 0.1% across a 100x amplitude range due to finite-precision round-off; relative error scales as 1/F (2.7e-11 to 2.7e-13). Matches claims.md.
 - MS02P04: CLOSED (Simulation-Verified, 2026-09-04). Frequency sweep: s_in/s_co ratio invariant under common frequency; stroke-dependent identifiability measured across 10 trajectories.
-- MS02P05: CLOSED (Simulation-Verified, 2026-11-09). Configuration sweep across crowd bias 7.75, 8.75, 9.77 m executed in Simscape and verified to machine precision (slopes -1.000000, 1-R^2 ~ 1e-24).
-- MS02P06: CONDITIONAL RESULT (2026-11-09). Formal SVD across 12 trajectories: single-channel saddle collinearity (kappa_2 ~ 497.71, theta_min = 0.23 deg) is mitigated in joint 2-channel estimation (kappa_2 = 3.77, theta_min = 29.70 deg) using an explicit dimensional weighting factor s_bar = 10.0 m. Condition number is NOT scale-invariant; only theta_min is scale-invariant.
-- MS02P07: ANALYTICAL REGRESSION VERIFIED (2026-11-09). 10 parameter perturbation cases evaluated on analytical inverse equations: basis regression recovers mass errors exactly under nominal geometry. Geometric error (+0.10 m in lever arm c) couples into mass, producing +756.6 kg misattribution.
-- MS02P08: CLOSED (Dynamic Torque-Driven & In-Sample Consistency Verified 2026-11-09).
-  - Part A (In-Sample Archive Consistency): 17 motion-prescribed archives show NRMSE_q3 < 4.3e-10%.
-  - Part B (Forward Torque-Driven Dynamic Deflection, build_M2_TorqueDriven.m): Evaluated across 6 calibration and held-out cases (Impact Step, Stochastic, Oblique, Stall) for both P&H 2100BL and Amlohri TZ WK-20. Proves dynamic deflection (max |dq3| = 1.38 deg, max |dd4| = 0.084 m) and verified discrete 30 Hz observer tracking (lag-compensated NRMSE < 0.42%).
+- MS02P05: SPECIFICATION FROZEN (2026-11-17, Commit 2dd61f7). The 9 Nov runs (d4_bias 7.75, 8.75, 9.77 m at q3 = 45 deg) were pilot spot-checks. The complete P05 objective is the full 2D configuration sensitivity and quasi-static determinant map across q3 in [-45, +25] deg and d4 in [4.2, 8.8] m, explicitly investigating the horizontal handle singularity locus at q3 = 0 deg (det = 13.83*sin(2*q3) = 0).
+- MS02P06: RE-EVALUATED SAME-MOTION CONDITIONING (2026-11-17). Formal SVD across 12 trajectories resolves single-channel saddle collinearity (theta = 0.23 deg) via joint 2-channel estimation:
+  - Like-for-Like at Normal Operating Speed (omega_traj = 0.314 rad/s): Single-channel kappa_2 = 497.71 -> Joint 2-channel kappa_2 = 22.45 (a fair, robust 22x reduction).
+  - Fast Trajectory Stress Test (omega_traj = 1.36 rad/s, 4.4x field speed): Single-channel kappa_2 = 153.71 -> Joint 2-channel kappa_2 = 3.77 (41x reduction).
+  - Note on Dimensional Weighting: Both kappa_2 and the joint subspace angle depend on crowd weighting s_bar = 10.0 m (ratio of N m to N); angle theta changes with s_bar (1.1 deg at s_bar=1, 5.1 deg at s_bar=10).
+- MS02P07: FULL PARAMETER LEAKAGE REPORTED (2026-11-17). Basis regression on analytical inverse equations confirms that a +0.10 m error in COG lever arm c leaks severely into all parameters:
+  - Rotational Inertia: +415,995 kg m^2 (+144.5% leakage)
+  - Viscous Friction: +7,294 N m s/rad (+191.9% leakage)
+  - Dipper Mass: +756.6 kg (+1.4% leakage)
+  - Coulomb Friction: -368 N m
+  - Scientific Takeaway: Front-end geometry and COG lever arms must be calibrated accurately before rotational inertia or friction identification can be trusted.
+- MS02P08: AUDITED & RECLASSIFIED (2026-11-17):
+  - Part A (In-Sample Archive Cross-Check): 17 motion-prescribed Simscape archives cross-checked; algebraic recovery holds to numerical precision (NRMSE_q3 < 4.3e-10%).
+  - Part B (Forward Torque-Driven Code Verification): Initial execution in build_M2_TorqueDriven.m used an internal forward ODE solver with identical plant and observer parameters (code verification, not independent Simscape sensor validation). Upgraded for re-run against compliant Simscape Multibody plant.
 
-The excitation-trilemma gate is conditionally resolved via joint 2-channel ([tau3; s_bar*f4]) estimation with s_bar = 10.0 m.
+The excitation-trilemma gate is resolved via joint 2-channel ([tau3; s_bar*f4]) estimation.
 I_zz ambiguity was resolved on 2026-07-23 (claims.md line 13, status V).
 
-## Downstream Milestone Status
-- M3 (Momentum Observer): Native discrete 30 Hz Simulink observer (build_M3_DiscreteObserver_30Hz.m) and 3-state KF-GMO verified across 5 canonical benchmark cases. Exact FOH matrix update achieves CovFricPct = 100.0%, CovKFCompPct = 100.0% (deterministic regimes) and 97.47% (under 3 mrad/s resolver noise, rounded to 97.5%), eliminates harmonic tracking lag (120.8 kNm -> 16.26 kNm), suppresses resolver velocity noise by 81.3% (193.15 kNm -> 36.10 kNm), and reaches zero-load noise floor = 53.47 Nm (BrA) / 1.36 Nm (KF-GMO).
-- M4 (Noise and Uncertainty): Design stage; KF-GMO architecture formulated.
+## Downstream Milestone Status (Current State)
+- M3 (Momentum Observer): Native discrete 30 Hz observer and 3-state KF-GMO verified for both Machine A (P&H 2100BL) and Machine B (TZ WK-20). Eliminates harmonic tracking lag (120.8 -> 16.26 kNm) and suppresses resolver velocity noise by 81.3% (193.15 -> 36.10 kNm).
+- M4 (Noise and Uncertainty): Six stress protocols (MS04P01-P06) verified across parameter drift, 14-bit quantization, and held-out impact profiles.
+- M5 (Electromechanical Twin & Adaptive Gate): Innovation-based adaptive estimation (IAE) verified, collapsing boulder collision phase lag from 250 ms to <33 ms (63.8% error reduction).
+- M6 (4-DOF 3D Coupling & Wire Rope): 3D swing-saddle-crowd Euler-Lagrange equations, sheave kinematics, and hoist rope compliance formulated.
 
 ## Part identification
 
@@ -52,27 +62,30 @@ Results summary:
     MS02P03  03_amplitude_sweep
              Six verified force levels: 10, 50, 100, 200, 500 and 1000 kN.
              Recovery slope was -1.000000 on both generalized-force channels.
-             Relative error decreased approximately as 1/F.
+             Relative error decreased as 1/F; absolute error varies by ~0.1%
+             (finite-precision round-off).
 
     MS02P04  04_frequency_sweep
              10 Simscape trajectories (5 wide, 5 narrow). Dynamic ratio
              follows omega^2 scaling. Demonstrates common-frequency limitations.
 
     MS02P05  05_configuration_sweep
-             Simscape grid runs across d4 bias (7.75, 8.75, 9.77 m).
-             Slopes -1.000000 on both channels, 1-R^2 in [6.20e-24, 9.23e-24].
+             Pilot spot-checks across d4 bias (7.75, 8.75, 9.77 m). Full 2D
+             configuration and singularity map (q3 in [-45, +25] deg) frozen.
 
     MS02P06  06_identifiability
-             Formal SVD suite on 12 trajectories. Single-channel saddle
-             collinearity (kappa_2 = 497.71) resolved by joint 2-channel
-             estimation (kappa_2 = 3.77).
+             Formal SVD suite on 12 trajectories. Like-for-like at 0.314 rad/s:
+             saddle collinearity (kappa_2 = 497.71) resolved by joint 2-channel
+             estimation (kappa_2 = 22.45, 22x reduction). Fast trajectory reaches
+             kappa_2 = 3.77 under 1.36 rad/s (4.4x normal speed).
 
     MS02P07  07_model_perturbation
-             10 parameter perturbation cases. Basis regression achieves exact
-             parameter error attribution (dMd_hat exact to 0.0 kg error).
+             10 parameter perturbation cases. Confirms severe parameter leakage
+             under lever arm error dc = +0.10 m (+144% inertia, +192% viscous).
 
     MS02P08  08_held_out
-             17 independent Simscape archives cross-validated with max NRMSE < 4.3e-10%.
+             Part A: 17 independent Simscape archives cross-validated (NRMSE < 4.3e-10%).
+             Part B: Torque-driven forward ODE code verification.
 
 Scope of these results. Module 02 and P05 verify the force-to-generalized-force
 mapping and the subtraction identity under motion-prescribed joints with exact
