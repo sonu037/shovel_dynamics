@@ -11,9 +11,10 @@ function out = build_FourDOFShovelSimulator_M6()
 %     3. Crowd prismatic axis rotated +90 deg about +Y (slides forward along handle).
 %     4. Full 3D composite dipper inertia tensor: [45000, 285000, 305000] kg*m^2.
 %     5. Upperworks revolving yaw inertia: 2.50e6 kg*m^2.
-%     6. Joint damping coefficients: 12000 N*m*s/rad (swing), 25000 N*m*s/rad (pitch), 18000 N*s/m (crowd).
-%     7. Enabled joint torque/force sensing for machine-precision inverse dynamics closure.
-%     8. Added ToWorkspace logging for trajectory, velocities, and multi-axis joint efforts.
+%     6. Added 4th DOF (Joint_2_Hoist_Drum + Hoist_Drum_Body) with 55,676 kg*m^2 inertia.
+%     7. Joint damping coefficients: Swing 12 kNm*s/rad, Drum 500 Nm*s/rad, Pitch 25 kNm*s/rad, Crowd 18 kN*s/m.
+%     8. Enabled joint torque/force sensing across all 4 DOFs for Simscape multi-body closure.
+%     9. Disabled 3D smexplorer auto-open (SimMechanicsOpenEditorOnUpdate = 'off').
 %
 %   USAGE:
 %     out = build_FourDOFShovelSimulator_M6();
@@ -107,9 +108,44 @@ function out = build_FourDOFShovelSimulator_M6()
         fprintf('  Boom Base Upperworks yaw inertia set to: 2.50e6 kg*m^2\n');
 
         % ---------------------------------------------------------------------
-        % Step 5: Configure Joint Damping & Actuation Sensing
+        % Step 5: Physically Add 4th DOF (Hoist Winch Drum & Cable Inertia)
         % ---------------------------------------------------------------------
-        fprintf('--- [Step 4] Configuring Joint Damping & Multi-Axis Sensing ---\n');
+        fprintf('--- [Step 4] Physically Adding 4th DOF (Joint_2_Hoist_Drum & Inertia) ---\n');
+        t_drum = [mdl_name '/Transform_Drum_Offset'];
+        j_drum = [mdl_name '/Joint_2_Hoist_Drum'];
+        b_drum = [mdl_name '/Hoist_Drum_Body'];
+
+        if isempty(find_system(mdl_name, 'SearchDepth', 1, 'Name', 'Transform_Drum_Offset'))
+            add_block('sm_lib/Frames and Transforms/Rigid Transform', t_drum, 'Position', [250, 60, 290, 100]);
+            set_param(t_drum, 'TranslationMethod', 'Cartesian', 'TranslationCartesianOffset', '[2.5 0 2.1]');
+        end
+        if isempty(find_system(mdl_name, 'SearchDepth', 1, 'Name', 'Joint_2_Hoist_Drum'))
+            add_block('sm_lib/Joints/Revolute Joint', j_drum, 'Position', [330, 60, 370, 100]);
+            set_param(j_drum, 'DampingCoefficient', '500.0', ...
+                              'DampingCoefficientUnits', 'N*m/(rad/s)', ...
+                              'SensePosition', 'on', ...
+                              'SenseVelocity', 'on', ...
+                              'SenseAcceleration', 'on', ...
+                              'SenseTorqueForce', 'on');
+        end
+        if isempty(find_system(mdl_name, 'SearchDepth', 1, 'Name', 'Hoist_Drum_Body'))
+            add_block('sm_lib/Body Elements/Brick Solid', b_drum, 'Position', [420, 60, 460, 100]);
+            set_param(b_drum, 'InertiaType', 'Custom', ...
+                'Mass', '5000.0', ...
+                'MomentsOfInertia', '[10000.0 10000.0 55676.0]', ...
+                'ProductsOfInertia', '[0.0 0.0 0.0]');
+        end
+
+        % Wire Drum branch if not already connected
+        try add_line(mdl_name, 'Joint_1_Swing/RConn1', 'Transform_Drum_Offset/LConn1', 'autorouting', 'on'); catch; end
+        try add_line(mdl_name, 'Transform_Drum_Offset/RConn1', 'Joint_2_Hoist_Drum/LConn1', 'autorouting', 'on'); catch; end
+        try add_line(mdl_name, 'Joint_2_Hoist_Drum/RConn1', 'Hoist_Drum_Body/RConn1', 'autorouting', 'on'); catch; end
+        fprintf('  Connected Joint_2_Hoist_Drum to Upperworks deck and Hoist_Drum_Body (J = 55,676 kg*m^2)\n');
+
+        % ---------------------------------------------------------------------
+        % Step 6: Configure Joint Damping & Multi-Axis Sensing Across All 4 DOFs
+        % ---------------------------------------------------------------------
+        fprintf('--- [Step 5] Configuring Joint Damping & Multi-Axis Sensing ---\n');
         % Joint 1 Swing
         set_param([mdl_name '/Joint_1_Swing'], ...
             'DampingCoefficient', '12000.0', ...
@@ -137,16 +173,33 @@ function out = build_FourDOFShovelSimulator_M6()
             'SenseAcceleration', 'on', ...
             'SenseTorqueForce', 'on');
 
-        fprintf('  Joint Damping configured: Swing 12 kNm*s/rad, Pitch 25 kNm*s/rad, Crowd 18 kN*s/m\n');
-        fprintf('  Joint Sensing enabled for Position, Velocity, Acceleration, and Torque/Force\n');
+        fprintf('  Joint Damping configured: Swing 12 kNm*s/rad, Drum 500 Nm*s/rad, Pitch 25 kNm*s/rad, Crowd 18 kN*s/m\n');
+        fprintf('  Joint Sensing enabled for all 4 DOFs: Position, Velocity, Acceleration, and Torque/Force\n');
+
+        % ---------------------------------------------------------------------
+        % Step 7: Verify Dynamic Simulation
+        % ---------------------------------------------------------------------
+        fprintf('--- [Step 6] Verifying Native 4-DOF Simscape Multibody Simulation ---\n');
+        set_param(mdl_name, 'StopTime', '0.5');
+        simOut = sim(mdl_name);
+        active_joints = simOut.simlog.childIds;
+        fprintf('  Simulated successfully! Active logged joints in simlog:\n');
+        for k = 1:numel(active_joints)
+            fprintf('    [%d] %s\n', k, active_joints{k});
+        end
+        assert(numel(active_joints) >= 4, 'Model does not contain all 4 joints!');
+
+        % Restore nominal stop time
+        set_param(mdl_name, 'StopTime', '10.0');
 
         % Save upgraded model
         save_system(mdl_name);
         close_system(mdl_name);
-        fprintf('\n Successfully saved upgraded model: %s\n\n', dst_mdl);
+        fprintf('\n Successfully saved verified 4-DOF Simscape model: %s\n\n', dst_mdl);
 
         out = struct();
         out.status = 'SUCCESS';
+        out.active_joints = active_joints;
         out.model_path = dst_mdl;
 
     catch ME

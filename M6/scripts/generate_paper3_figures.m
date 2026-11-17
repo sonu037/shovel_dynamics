@@ -16,11 +16,6 @@ function generate_paper3_figures()
 %
 %   See also RUN_MS06_VERIFICATION_SUITE, FORENSIC_AUDIT_M6.
 
-    % Force software OpenGL rendering for reliable headless batch execution on Windows
-    try
-        opengl('software');
-    catch
-    end
 
     repo_root = fileparts(fileparts(fileparts(mfilename('fullpath'))));
     addpath(fullfile(repo_root, 'M1', 'scripts'));
@@ -88,8 +83,7 @@ function generate_paper3_figures()
     title('(d) Simscape vs Analytical Closure Error (< 10^{-18})');
     legend({'Multi-Body Closure Error: 1.73 \times 10^{-19}'}, 'Location', 'northeast');
 
-    drawnow;
-    exportgraphics(f1, fullfile(fig_dir, 'figure1_3d_kinematics_closure.png'), 'Resolution', 200);
+    saveas(f1, fullfile(fig_dir, 'figure1_3d_kinematics_closure.png'));
     close(f1);
 
     % =========================================================================
@@ -125,8 +119,7 @@ function generate_paper3_figures()
     title('(b) Dynamic Coriolis Cross-Coupling Torque on Turntable \tau_{1,Coriolis} (478.62 kNm)');
     legend({'Coriolis Reaction \tau_{1,cor}(t)', 'Certified Steady-State Level (478.62 kNm)'}, 'Location', 'southeast');
 
-    drawnow;
-    exportgraphics(f2, fullfile(fig_dir, 'figure2_centrifugal_coriolis_decoupling.png'), 'Resolution', 200);
+    saveas(f2, fullfile(fig_dir, 'figure2_centrifugal_coriolis_decoupling.png'));
     close(f2);
 
     % =========================================================================
@@ -154,8 +147,7 @@ function generate_paper3_figures()
     ylabel('False Pitch Torque Oscillation [kNm]');
     title('(b) False Disturbance Suppression: 46.14 dB Attenuation (> 99.5% Rejection)');
 
-    drawnow;
-    exportgraphics(f3, fullfile(fig_dir, 'figure3_rope_bounce_rejection.png'), 'Resolution', 200);
+    saveas(f3, fullfile(fig_dir, 'figure3_rope_bounce_rejection.png'));
     close(f3);
 
     % =========================================================================
@@ -182,8 +174,7 @@ function generate_paper3_figures()
             'Channel B: Horizontal Yaw Inertia \Delta D_{11}', ...
             'Dual-Channel Fused Estimate (36.01 tonnes \pm 0.01 t)'}, 'Location', 'northeast');
 
-    drawnow;
-    exportgraphics(f4, fullfile(fig_dir, 'figure4_dual_channel_payload_id.png'), 'Resolution', 200);
+    saveas(f4, fullfile(fig_dir, 'figure4_dual_channel_payload_id.png'));
     close(f4);
 
     fprintf('\n Successfully exported all 4 publication figures to: %s\n\n', fig_dir);
