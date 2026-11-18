@@ -346,6 +346,71 @@ Scope:                  Fx = 0 and one force station. Says nothing about payload
 Repository location:    M2/experiments/05_configuration_sweep/rev2/ (the
                         2026-11-09 pilot files stay where they are).
 
+AMENDMENT 1:            2026-11-18, recorded BEFORE the first run (option B
+                        chosen by Suhail; drafted with Claude). Question,
+                        hypothesis, envelopes, metrics, predictions P1-P6 and
+                        acceptance (a)-(d) above are unchanged; this only
+                        fixes how they are carried out.
+                        (i)   Model. Part 2 runs on
+                              M2/model/M2_LoadInjection_P05.slx, a copy made
+                              by M2/scripts/build_M2_LoadInjection_P05.m, which
+                              writes a build receipt with the source and output
+                              MD5. The only change: Sine Wave (SID 34)
+                              Amplitude 15 -> A_q3, Bias 45 -> B_q3 [deg], with
+                              model-workspace defaults 15 and 45.
+                              M2_LoadInjection.slx itself is NOT edited, so the
+                              MS02P08B build source stays byte-identical.
+                              Read-back (a) is what proves the copy equivalent.
+                        (ii)  Script. M2/scripts/run_MS02P05_configuration.m
+                              runs Part 1 and Part 2. Part 2 calls
+                              M2/scripts/recover_load.m unchanged. A_q3, B_q3
+                              and omega_traj are written to the model workspace
+                              and read back before every run; the model is
+                              closed without saving.
+                        (iii) (a), operational form. Every metric recover_load
+                              prints (slope, intercept, R^2, 1-R^2, NRMSE,
+                              max err / peak ref, peak magnitude error, peak
+                              time error, implied lag; both channels) is
+                              compared with M2_100kN_0p1111Hz_sp1p50.mat in its
+                              printed format and must be identical. The
+                              read-back uses that file's own settings (trim
+                              5 s, stop 30 s, RelTol 1e-10, AbsTol 1e-12).
+                              Control: A_q3 = 10 deg, B_q3 = 45 deg; its q3
+                              1-R^2 must differ from the baseline and both
+                              slopes must print -1.000000.
+                        (iv)  (b), operational form of "1-R^2 at the Module-01
+                              floor". For each channel, max|residual - ref|
+                              divided by max|model effort| (tau3_model or
+                              f4_model over the analysed window) must be
+                              <= 10 x the Module-01 relative floor stored in
+                              01_zero_force/M2_null.mat (q3 7.04e-13,
+                              d4 6.46e-16). For reference, the baseline run
+                              itself sits at 1.0x (q3) and 1.15x (d4) of these
+                              floors; the factor 10 was chosen after seeing
+                              that, and before any P05 run. 1-R^2 is reported.
+                              Spot checks keep the baseline solver settings
+                              (stop 30 s, RelTol 1e-10, AbsTol 1e-12) and use
+                              trim 0 s as specified.
+                        (v)   (d) is checked by recomputing the 12-case table
+                              inside the new script (same archives, same trim,
+                              same columns, s_bar = 10 m) and comparing
+                              cond_joint with
+                              06_identifiability/M2_formal_svd_summary.mat.
+                        (vi)  recover_load.m prints its own per-run git flag.
+                              After the first saved run it reads DIRTY, because
+                              the run's own output files are new. The run-level
+                              check, made before any file is written, is the
+                              authoritative provenance.
+                        (vii) Disclosure. Before this amendment, Part 1 and the
+                              (d) code check were executed offline in GNU
+                              Octave 8.4 (no Simscape, nothing kept) to test
+                              the script: P1-P5 and (c), (d) came out as
+                              predicted, and (d) matched all 12 archived
+                              cond_joint values to < 1e-14. Part 1 is analytic,
+                              so P1-P5 test the arithmetic of the hand
+                              calculations, not the physics. The physical
+                              check is Part 2, which has not been run.
+
 ## 06_identifiability
 ### METHOD — frozen 2026-09-02; not yet executed
 

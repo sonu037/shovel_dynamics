@@ -1,0 +1,8 @@
+MS02P05 model build receipt
+Built:         2026-11-18 14:56:34
+MATLAB:        25.2.0.3177638 (R2025b) Update 5
+Builder:       M2/scripts/build_M2_LoadInjection_P05.m
+Source:        M2/model/M2_LoadInjection.slx  MD5 f17dcb99da107e28bae416fc79d4f5ec
+Output:        M2/model/M2_LoadInjection_P05.slx  MD5 436423ca4790698bf4d334679df6ccc4
+Change:        Sine Wave (SID 34) Amplitude 15 -> A_q3, Bias 45 -> B_q3 [deg];
+               model workspace A_q3 = 15, B_q3 = 45. Nothing else.

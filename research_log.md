@@ -1729,6 +1729,22 @@ not deleted, with the supersession recorded in place.
 
 ---
 
+## 2026-11-18 (afternoon) — MS02P05 prepared: model copy, run script, spec amendment 1 (no run yet)
+
+**What was done:**
+- Found that the frozen MS02P05 spec (commit 2dd61f7) had no script. Wrote `M2/scripts/run_MS02P05_configuration.m` (Part 1 analytic maps, predictions P1-P5, acceptance (c) zero locus and (d) 12-case code check; Part 2 read-back, control and 10 Simscape spot checks through `recover_load.m`, unchanged).
+- Option B chosen by Suhail: Part 2 runs on a copy, `M2/model/M2_LoadInjection_P05.slx`, made by `M2/scripts/build_M2_LoadInjection_P05.m` (handle-angle Sine Wave Amplitude/Bias -> A_q3/B_q3; build receipt with MD5). `M2_LoadInjection.slx` is not edited, so the MS02P08B build source stays byte-identical.
+- Spec amendment 1 recorded before any run: how (a) and (b) are evaluated (printed-digit comparison; 10x the Module-01 relative floor), control at A_q3 = 10 deg, solver settings, the recover_load git-flag caveat, and a disclosure that Part 1 and the (d) code check were pre-executed offline in GNU Octave 8.4 to test the script (nothing kept).
+- Offline pre-check results (Octave, analytic only): P1-P5 come out as predicted; (c) 71 of 71 d4 columns; (d) all 12 cond_joint values match `M2_formal_svd_summary.mat` to < 1e-14. Part 1 tests the hand-calculation arithmetic, not the physics. Helper functions for (a) and (b) were unit-tested against the real baseline and null files.
+
+**Key result:**
+- None yet. The physical check is Part 2 (Simscape), not run.
+
+**Next step:**
+- In MATLAB: `build_M2_LoadInjection_P05`, then `run_MS02P05_configuration('SmokeTest', true)` (must show (a) PASS), then commit builder, run script, model copy, receipt, spec and this log, then `run_MS02P05_configuration()`.
+
+---
+
 ## TEMPLATE — copy for each new session
 
 ## YYYY-MM-DD — <one-line title>
