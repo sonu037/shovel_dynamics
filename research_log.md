@@ -1705,6 +1705,30 @@ not deleted, with the supersession recorded in place.
 
 ---
 
+## 2026-11-18 (afternoon) — Audit corrections: P08B claims row and wording; M5/M6 relabelled
+
+**What was done:**
+- `claims.md` row 'MS02P08-TD' restored as the superseded Rev-1 record. Commit 581d494 had set its status to PASS while its value and evidence columns still described the Rev-1 in-script ODE run (1.38 deg, 0.084 m, 0.42%), which Rev 2 does not confirm. A separate row 'MS02P08B Rev 2' now carries the Rev-2 values, evidence and limits.
+- Corrections to the 581d494 entry above (left as written, per the non-deletion rule):
+  - The mismatch biases matched the pre-registered predictions to within 0.1 kN (E0 +21.90 vs +21.9 kN; E1 +21.32 vs +21.3 kN), not 'exactly'.
+  - Half-ranges were within 0.07% (E0 q3), 0.05% (E0 d4), 0.2% (E1 q3) and 0.0% (E1 d4) of the commanded values; not all within 0.1%.
+  - The run is noise-free simulation. The plant is an independently integrated Simscape model, but it has the same rigid-body structure and friction law as the estimator, so it tests wrong parameter values only (not unmodelled dynamics, noise, 30 Hz sampling, or the motor/transmission).
+- Independent recomputation: the Fy error was recomputed in Python from the signals saved in `MS02P08B_simscape_20261118_130959.mat`, outside the MATLAB script. Same values: control 0.0000 kN; mismatch +21.90 kN (E0), +21.32 kN (E1). Maximum tracking error 0.012 deg / 1.7 mm (E0) and 0.021 deg / 1.2 mm (E1).
+- Real-time replay for the researcher (E0 inputs taken from the .mat, `EnablePacing` on, `PacingRate` 1, nothing saved, model file not modified): 65.0 s of simulated time took 66.0 s and 66.1 s of clock time.
+- M5 and M6 relabelled. Status notices added at the top of both reports and both audit receipts, and warning headers added to `M6/scripts/run_MS06_Verification_Suite.m` and `M6/scripts/generate_paper3_figures.m`. New `claims.md` sections 'M5 — Electromechanical drive model (Audit 2026-11-18)' and 'M6 — 4-DOF model (Audit 2026-11-18)' list each item and why. Main reasons: M5 gates check file sizes only, its energy balance is an identity, its stall pull is circular, its crowd peak exceeds the OEM limit, and its motor speed/poles/inertia and gear ratios are not sourced; M6 Case 4 builds the payload 'estimate' from the true value, Case 3 feeds the true rope tension into the observer, and all four Paper-3 figures are drawn from hand-written formulas.
+
+**Key result:**
+- MS02P08B Rev 2 stands as a noise-free simulation check under parameter mismatch. M5 and M6 have no verified results.
+
+**Decisions & why:**
+- Notices and corrections are added; nothing is deleted, so the history of what was claimed stays visible.
+- No M5/M6 number may be cited (deck, paper, report) until it is re-derived from sources and checked independently.
+
+**Next step:**
+- Researcher reviews `git diff` and commits. Then run the frozen MS02P05 spec to close M2.
+
+---
+
 ## TEMPLATE — copy for each new session
 
 ## YYYY-MM-DD — <one-line title>

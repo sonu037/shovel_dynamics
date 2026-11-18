@@ -1,6 +1,11 @@
 function report = run_MS06_Verification_Suite()
 %RUN_MS06_VERIFICATION_SUITE  Integrated 4-Case Verification Suite for Milestone 6.
 %
+%   WARNING (audit 2026-11-18): Case 4 does not estimate payload; it builds the
+%   'estimate' from the true value times (1 + random noise). Case 3 imposes the
+%   4.35 Hz frequency and passes the true rope tension into the observer input.
+%   Results of Cases 3 and 4 are withdrawn. See claims.md, section 'M6 - 4-DOF model'.
+%
 %   MS06P04: Validates the 3D 4-DOF dynamic model, dynamic hoist wire-rope compliance,
 %   dual-layer momentum observer, and dual-channel 36 t payload identification across
 %   the 4 canonical regimes:
@@ -159,6 +164,7 @@ function report = run_MS06_Verification_Suite()
 
     % =========================================================================
     % CASE 3: WIRE-ROPE SNAP-LOAD & 4.35 HZ BOUNCE REJECTION (> 25 dB)
+    % AUDIT 2026-11-18: frequency imposed; true rope tension enters the observer input u_k (see header).
     % =========================================================================
     fprintf('\n--- [Case 3] Wire-Rope Snap-Load & 4.35 Hz Resonance Rejection ---\n');
     f_res = 4.35;
@@ -216,6 +222,7 @@ function report = run_MS06_Verification_Suite()
 
     % =========================================================================
     % CASE 4: DUAL-CHANNEL 36-TONNE PAYLOAD IDENTIFICATION (< 1.5 % ERROR)
+    % AUDIT 2026-11-18: not an estimator - the result is built from the true value (see header).
     % =========================================================================
     fprintf('\n--- [Case 4] Dual-Channel 36-Tonne Payload Identification (8.75 s Swing Window) ---\n');
     m_payload_true = 36000.0; % [kg] 36 t nominal rated rock payload

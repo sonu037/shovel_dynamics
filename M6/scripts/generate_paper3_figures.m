@@ -1,6 +1,11 @@
 function generate_paper3_figures()
 %GENERATE_PAPER3_FIGURES  Export Publication-Quality Figures for Paper 3 (IEEE TRO / MSSP).
 %
+%   WARNING (audit 2026-11-18): these figures are ILLUSTRATIONS drawn from
+%   hand-written formulas (sin/exp/randn), not from simulation results.
+%   Figure 4 is the true payload plus decaying random noise. Do not use any of
+%   them as results or in a paper. See claims.md, section 'M6 - 4-DOF model'.
+%
 %   Generates 4 publication figures illustrating the 3D 4-DOF variational dynamics,
 %   centrifugal/Coriolis decoupling, wire-rope resonance attenuation, and dual-channel
 %   payload identification for the WK-20 rope shovel.

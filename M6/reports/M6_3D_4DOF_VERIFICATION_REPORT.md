@@ -1,5 +1,7 @@
 # Milestone 6 Verification Report: 3D 4-DOF Variational Dynamics, Hoist Wire-Rope Compliance & Dual-Layer Decoupled Observer
 
+> **STATUS NOTICE (added 2026-11-18, audit; overrides the status lines below):** **not verified; Case 3, Case 4 and Figures 1–4 are withdrawn.** (1) The 36.0122 t / 0.0339 % payload result is not an estimate: Case 4 of run_MS06_Verification_Suite.m multiplies the true payload torque by (1 + small random noise) and divides by the same lever arm; no observer or simulation runs. (2) All four figures in reports/figures are drawn by generate_paper3_figures.m from hand-written formulas (sin, exp, randn), not from results; Figure 4 is 36 t plus decaying random noise with 0.0339 % typed into the title. (3) Case 3 imposes the 4.35 Hz frequency and passes the true rope tension into the observer input, so the 46.14 dB attenuation does not test the observer. (4) The Gate 2–3 'targets' are labelled hand calculations, but none is recorded. (5) Gates 1, 4 and 5 are model-matched code checks. (6) The WK-20 mass, inertia and friction values are Machine A values scaled up (violates V28). The 'certified' wording, the receipt's 'without empirical faking or inverse crimes' line and the team-certification line are withdrawn. See claims.md, section 'M6 — 4-DOF model (Audit 2026-11-18)'.
+
 **Target Equipment:** Taiyuan Heavy Industry (TZ) WK-20 Electric Mining Rope Shovel  
 **Operating Mine:** Northern Coalfields Limited (NCL), Amlohri Open-Cast Project  
 **Reference Machine:** Machine B (CMPDI MT-189 / Project `IIT/SRIC/R/AEH/2026/104`)  
@@ -235,6 +237,8 @@ The 8 structural defects identified in the legacy `M1/model/FourDOFShovelSimulat
 ![Figure 4: Dual-Channel Payload Identification](figures/figure4_dual_channel_payload_id.png)
 *Figure 4: Convergence of identified payload mass during an 8.75 s swing phase: Channel A (vertical pitch gravity torque), Channel B (horizontal swing yaw inertia), and dual-channel fused estimate yielding 36.0122 tonnes (0.0339% relative error against 36.00 t ground truth).*
 
+*(Withdrawn 2026-11-18: this figure is an illustration drawn from the true value plus random noise, not an identification result.)*
+
 ---
 
 ## 6. Ground-Truth Traceability & Bibliography Audit
@@ -266,4 +270,4 @@ All experimental data, physical dimensions, and mathematical models in Milestone
    - `M6_FORENSIC_AUDIT_RECEIPT.txt`
 
 ---
-*Report certified by the Multiphysics Digital Twin & Control Engineering Team, Department of Mining Engineering & School of Energy Science and Engineering, IIT Kharagpur.*
+~~*Report certified by the Multiphysics Digital Twin & Control Engineering Team, Department of Mining Engineering & School of Energy Science and Engineering, IIT Kharagpur.*~~ *(Withdrawn 2026-11-18: no review or certification by a named team is recorded.)*

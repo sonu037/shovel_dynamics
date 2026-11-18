@@ -1,5 +1,7 @@
 # Milestone 5 Verification Report: Electromechanical Drive Dynamics & Inverter Telemetry
 
+> **STATUS NOTICE (added 2026-11-18, audit; overrides the status lines below):** model-only work, **not verified**. The 'verified', 'certified' and 'ground truth' wording in this report is withdrawn. (1) The receipt gates check that files exist, not their values. (2) The 0.00000 % energy-balance error is an identity, because losses are defined as P_elec − P_mech. (3) The 1,540 kN stall pull equals the OEM value by construction (1.65 × rated; factor unsourced). (4) The 755 kN crowd peak exceeds the OEM maximum of 745 kN but is marked PASS. (5) The hoist-motor nameplate photo (IMG20261009104123) shows only 600 kW, 690 V, 628 A, 25.4 Hz, 4,850 kg and 2016-09; the 4-pole / 762 rpm / 7,640 N·m values are assumptions, the rotor inertias are [ESTIMATE] in shovel_params_wk20.m (no datasheet in the repo), and the gear ratios and drum/pinion radii are unsourced and conflict with study_notebook Vol. 2 Ch. 7. (6) MS05P03 is model-matched simulation. Do not cite numbers from this report until these are resolved. See claims.md, section 'M5 — Electromechanical drive model (Audit 2026-11-18)'.
+
 **Target Equipment:** Taiyuan Heavy Industry (TZ) WK-20 Electric Mining Rope Shovel  
 **Operating Mine:** Northern Coalfields Limited (NCL), Amlohri Open-Cast Project  
 **Reference Machine:** Machine B (CMPDI MT-189 / Project `IIT/SRIC/R/AEH/2026/104`)  

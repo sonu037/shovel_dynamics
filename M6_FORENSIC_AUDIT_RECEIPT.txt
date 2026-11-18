@@ -1,4 +1,17 @@
 ==============================================================================
+STATUS NOTICE (added 2026-11-18, audit): WITHDRAWN AS VERIFICATION
+- Gate 7 (payload 36.0122 t): built from the true value x (1 + random noise);
+  no estimator runs (run_MS06_Verification_Suite.m, Case 4).
+- Gate 6 (46.14 dB): the 4.35 Hz frequency is imposed and the true rope
+  tension is passed into the observer input (Case 3).
+- Gates 2-3: 'targets' are not independent calculations.
+- Gates 1, 4, 5: model-matched code checks.
+- The closing 'CERTIFICATION ... without empirical faking or inverse crimes'
+  statement is withdrawn.
+See claims.md, section 'M6 - 4-DOF model (Audit 2026-11-18)'.
+Original receipt follows unchanged.
+==============================================================================
+==============================================================================
                MILESTONE 6: 7-GATE FORENSIC AUDIT RECEIPT
    Machine B: Taiyuan WK-20 Mining Rope Shovel (NCL Amlohri Open-Cast Mine)
    Project: CMPDI MT-189 / IIT/SRIC/R/AEH/2026/104

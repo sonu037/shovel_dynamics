@@ -1,3 +1,10 @@
+==============================================================================
+STATUS NOTICE (added 2026-11-18, audit)
+The gates below check that result files exist and list their sizes and field
+names. They do not check any value. 'PASS' here does not mean that M5 results
+are verified. See claims.md, section 'M5 - Electromechanical drive model
+(Audit 2026-11-18)'. Original receipt follows unchanged.
+==============================================================================
 ========================================================================================
  MILESTONE 5 INDEPENDENT FORENSIC VERIFICATION & FIGURE EXPORT SUITE (GATES 1 - 5)
  Repository Root : C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics
