@@ -1783,6 +1783,27 @@ not deleted, with the supersession recorded in place.
 
 ---
 
+## 2026-11-18 (evening) — MS03-IND1 run: M3 observer on MS02P08B Simscape data; gates pass, P1-P3 hold
+
+**What was done:**
+- Spec and scripts frozen in 6f6ed82 (pushed). First call failed only because M3/scripts was not on the MATLAB path; nothing ran. Then `run_MS03_IND1_on_P08B()` from clean commit 6f6ed82, stamp 20261118_160926.
+
+**Key result:**
+- G1: the observer function reproduces the M3 archive exactly (0 difference, Branch B and KF-GMO). G2: data MD5 5eaa1131... and 30 Hz grid confirmed.
+- Branch B, true parameters: bias -0.129 / -0.107 kN, rms 2.468 / 2.463 kN (E0 / E1), i.e. the 50 ms lag (pure-lag prediction 2.47 kN); 0.044 / 0.033 kN against the lag-filtered truth.
+- Branch B, wrong parameters: bias +21.768 / +21.213 kN vs the MS02P08B inverse-dynamics bias +21.897 / +21.320 kN on the same data; rms 21.922 / 21.363 kN. The observer inherits the calibration error.
+- KF-GMO: bias -0.175 / -0.077 kN (true), +21.710 / +21.238 kN (wrong). Crowd channel with wrong parameters: rms 18.66 kN (E0), 6.33 kN (E1) - the Md g sin q3 error.
+- P1, P2, P3 hold. Independent recomputation of Branch B in Python from the P08B file: same values to 3 decimals.
+
+**Decisions & why:**
+- Recorded the limit plainly: the numbers equal the synthetic model-matched pre-check to ~3 decimals, because plant and observer share the same equations and the Simscape run tracked its reference within 0.02 deg. This run confirms the implementation and the theory on Simscape-integrated data; it does not stress the observer. The stress tests are noise, quantisation and unmodelled dynamics (M4) and field data (M8).
+- Cosmetic: the figure title shows the underscore in the stamp as a subscript (TeX interpreter); no effect on results.
+
+**Next step:**
+- Commit results, claims, M3 README and this entry. Then M4 on the same data: add encoder quantisation and noise at 30 Hz.
+
+---
+
 ## TEMPLATE — copy for each new session
 
 ## YYYY-MM-DD — <one-line title>

@@ -1,0 +1,25 @@
+MS03-IND1  20261118_160926  commit 6f6ed82800218b2aaa16603a57dc3a288582ccde
+   observer: M3 30 Hz momentum observer, k_O = 20 1/s, Ts = 1/30 s; trim 5 s
+G1 code identity vs M3 archive (M3_DISC_SIN_100kN): Branch B 0.00e+00, KF-GMO 0.00e+00 (limit 1e-9) -> PASS
+G2 data: M2\experiments\08_held_out\rev2\MS02P08B_simscape_20261118_130959.mat MD5 5eaa1131f51257e72b24b2596a83598d (expected 5eaa1131f51257e72b24b2596a83598d); 30 Hz grid 0-65 s, 1951 samples: yes -> PASS
+   true      : Md 54300.0 kg, Izz 287900.0 kg m^2, c -1.3200 m
+   mismatch  : Md 57015.0 kg, Izz 316690.0 kg m^2, c -1.2700 m (as MS02P08B)
+
+case params        B bias      B rms   B rms(lag)    KF bias     KF rms  B crowd rms KF crowd rms
+E0   control     -0.129 kN    2.468 kN      0.044 kN   -0.175 kN    2.287 kN      1.804 kN      0.449 kN
+E0   mismatch    21.768 kN   21.922 kN     21.900 kN   21.710 kN   21.855 kN     18.655 kN     18.663 kN
+E1   control     -0.107 kN    2.463 kN      0.033 kN   -0.077 kN    1.704 kN      0.799 kN      0.195 kN
+E1   mismatch    21.213 kN   21.363 kN     21.324 kN   21.238 kN   21.322 kN      6.326 kN      6.283 kN
+
+Predictions (spec; written before the run):
+       E0 control: bias -0.129 kN, rms 2.468 kN, rms vs lag-filtered truth 0.044 kN
+       E1 control: bias -0.107 kN, rms 2.463 kN, rms vs lag-filtered truth 0.033 kN
+   P1  control, Branch B: |bias| < 0.3 kN, rms 2.0-3.0 kN (pure lag 2.47 kN), rms vs lag-filtered truth < 0.2 kN -> HOLDS
+       E0 mismatch: bias 21.768 kN vs MS02P08B 21.897 kN; rms 21.922 kN vs predicted 22.036 kN
+       E1 mismatch: bias 21.213 kN vs MS02P08B 21.320 kN; rms 21.363 kN vs predicted 21.463 kN
+   P2  mismatch, Branch B: bias and rms within 10 % of the MS02P08B bias / sqrt(bias^2 + lag^2) -> HOLDS
+   P3  KF-GMO: control |bias| < 0.5 kN; mismatch bias within 10 % of Branch B -> HOLDS
+
+VALIDITY (G1 and G2): PASS. Predictions may be refuted; a refutation is a result.
+Saved C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M3\experiments\ind1_p08b\MS03_IND1_20261118_160926.mat
+Log   C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M3\experiments\ind1_p08b\MS03_IND1_log_20261118_160926.txt
