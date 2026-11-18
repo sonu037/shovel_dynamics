@@ -1768,6 +1768,21 @@ not deleted, with the supersession recorded in place.
 
 ---
 
+## 2026-11-18 (evening) — MS03-IND1 prepared: M3 observer on MS02P08B Simscape data (no run yet)
+
+**What was done:**
+- Extracted the M3 Branch B and KF-GMO update equations, line for line, from `M3/scripts/build_M3_DiscreteObserver_30Hz.m` into `M3/scripts/m3_observer_30Hz.m`, so the same observer can run on data it did not generate. Offline code check (GNU Octave 8.4) against `M3/06_RESULTS_MAT/M3_discrete_30Hz_verification.mat`: SIN_100kN Branch B 1.3e-14, KF-GMO 1.5e-15 relative; ZERO_LOAD and CONST_REV <= 6e-10.
+- Wrote `M3/scripts/run_MS03_IND1_on_P08B.m` and the spec `M3/experiments/ind1_p08b/MS03_IND1_SPEC.md` (gates G1 code identity, G2 data MD5 and 30 Hz grid; predictions P1-P3 from hand calculation).
+- Tested the run script in Octave on a SYNTHETIC, model-matched stand-in for the data file (not the Simscape data); disclosed in the spec. The Simscape data file has not been run through the observer.
+
+**Key result:**
+- None yet.
+
+**Next step:**
+- Suhail reviews and commits spec + scripts (the freeze), then `run_MS03_IND1_on_P08B()`, then commits the results.
+
+---
+
 ## TEMPLATE — copy for each new session
 
 ## YYYY-MM-DD — <one-line title>
