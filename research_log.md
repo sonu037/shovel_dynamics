@@ -1676,6 +1676,35 @@ not deleted, with the supersession recorded in place.
 
 ---
 
+## 2026-11-18 — MS02P08B Revision 2 Execution: All Gates Passed (Full Simscape Closed-Loop Validation)
+
+**What was done:**
+- Executed `run_MS02P08B_simscape()` in MATLAB R2025b desktop from clean commit `f433c767e26c0eea457f39305cf9be36bb66a0b9` (run stamp `20261118_130959`).
+- Simulated full 65.0 s forward-dynamic runs for both Case E0 and Case E1 with 5.0 s transient trim, yielding 60.0 s of evaluated steady-state data.
+- Tracked results in `M2/experiments/08_held_out/rev2/MS02P08B_simscape_20261118_130959.mat` and `MS02P08B_log_20261118_130959.txt`.
+
+**Key result:**
+- **OVERALL: PASS** across all gates G0–G5 for both Case E0 and Case E1.
+- **G0 (Plant parameter readback):** PASS (all parameters match truth within $10^{-9}$).
+- **G1 (Applied bail force peak):** PASS ($100.0\,\text{kN}$ vs $F_{0,y} = 100.0\,\text{kN}$).
+- **G2 (Trajectory tracking):** PASS ($q_3$ mid within $0.00^\circ$, $d_4$ mid within $0.000\,\text{m}$, half-ranges within $0.1\%$).
+- **G3 (Actuator wiring):** PASS (joint torque matches command minus Coulomb to $0.00 \times 10^0$).
+- **G4 (Control structural identity):** PASS (maximum error $2.73 \times 10^{-12}$ of peak $Q_3$, $3.64 \times 10^{-15}$ of $F_{0,y}$; control $F_y$ error bias $-0.0000\,\text{kN}$, RMS $0.0000\,\text{kN}$). Proves exact algebraic recovery on independently solved multibody plant.
+- **G5 (Parameter mismatch recovery under $+5\% M_d, +10\% I_{zz}, +50\,\text{mm } c$):**
+  - Case E0: Recovered $F_y$ bias **$+21.90\,\text{kN}$** (pre-registered prediction $+21.9\,\text{kN}$), RMS **$21.90\,\text{kN}$** (prediction $21.9\,\text{kN}$) -> PASS.
+  - Case E1: Recovered $F_y$ bias **$+21.32\,\text{kN}$** (pre-registered prediction $+21.3\,\text{kN}$), RMS **$21.32\,\text{kN}$** (prediction $21.3\,\text{kN}$) -> PASS.
+- Exported $30\,\text{Hz}$ decimation structure (`S30`) containing kinematic and drive torque channels.
+
+**Decisions & why:**
+- Closes Audit Finding #4 completely: MS02P08B is no longer a code check; it is verified against an independently compiled and integrated Simscape multibody plant under torque drive and parameter mismatch.
+- Upgraded `claims.md` Row 98 from code check to *"Simulation check under parameter mismatch (independent Simscape plant) — PASS"*.
+- All data, logs, and models permanently tracked in accordance with the Non-Deletion Historical Protocol.
+
+**Next step:**
+- Ingest `S30` signals into M3 discrete observer (`build_M3_DiscreteObserver_30Hz.m`) to validate M3 on independent multi-body simulation data rather than self-generated trajectories.
+
+---
+
 ## TEMPLATE — copy for each new session
 
 ## YYYY-MM-DD — <one-line title>

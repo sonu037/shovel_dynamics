@@ -1,0 +1,25 @@
+MS02P08B  20261118_130959  commit f433c767e26c0eea457f39305cf9be36bb66a0b9
+   truth constants match shovel_params.m
+G0 plant read-back: Md 54300.0  c -1.3200  Izz 287900.0  fv3 3800.00  fv4 1473.0  fc3 340.0  fc4 480.0  g 9.80665  -> PASS
+
+=== Case E0: q3 = +45 +/- 15 deg, d4 = 8.75 +/- 2 m, omega = 0.314 rad/s ===
+   simulated 65.0 s in 5.4 s wall time
+   G1 force peak      100.0 kN (F0_y 100.0)                       -> PASS
+   G2 trajectory      q3 mid +45.00 deg, half 15.01; d4 mid 8.750 m, half 2.001 -> PASS
+   G3 wiring          0.00e+00 (q3), 0.00e+00 (d4)                        -> PASS
+   G4 identity        max err 2.73e-12 of peak Q3, 3.64e-15 of F0_y        -> PASS
+   control  Fy error  bias -0.0000 kN, rms 0.0000 kN
+   G5 mismatch Fy err bias +21.90 kN (pred +21.9), rms 21.90 kN (pred 21.9) -> PASS
+
+=== Case E1: q3 = -12 +/- 9 deg, d4 = 7.325 +/- 0.275 m, omega = 0.510 rad/s ===
+   simulated 65.0 s in 4.2 s wall time
+   G1 force peak      100.0 kN (F0_y 100.0)                       -> PASS
+   G2 trajectory      q3 mid -12.00 deg, half 9.02; d4 mid 7.325 m, half 0.275 -> PASS
+   G3 wiring          0.00e+00 (q3), 0.00e+00 (d4)                        -> PASS
+   G4 identity        max err 2.15e-12 of peak Q3, 1.20e-15 of F0_y        -> PASS
+   control  Fy error  bias -0.0000 kN, rms 0.0000 kN
+   G5 mismatch Fy err bias +21.32 kN (pred +21.3), rms 21.32 kN (pred 21.3) -> PASS
+
+OVERALL: PASS
+Saved C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M2\experiments\08_held_out\rev2\MS02P08B_simscape_20261118_130959.mat
+Log   C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M2\experiments\08_held_out\rev2\MS02P08B_log_20261118_130959.txt
