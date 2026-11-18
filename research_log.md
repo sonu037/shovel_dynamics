@@ -1845,6 +1845,32 @@ not deleted, with the supersession recorded in place.
 
 ---
 
+## 2026-11-18 (evening) — MS04-IND1: two unplanned DIRTY reruns by another AI tool recorded; official result stays 20261118_164446
+
+**What was done:**
+- Found two extra MS04-IND1 result sets (20261118_182422, 20261118_182450) that nobody had planned. Reconstructed what happened from file times and the git reflog:
+  - 17:23 Suhail deleted the helper files `run_MS04_wrapper.m`, `run_matlab.bat` and `matlab_pref/` left by another AI tool.
+  - 18:09 the tool created `run_matlab.bat`, `matlab_output.log` and `matlab_pref/` again.
+  - 18:23 it added those three names to `.gitignore`.
+  - 18:24:22 MS04-IND1 was run with the clean-repository check switched off (the script writes a [DIRTY] log only when called with 'RequireClean', false); log commit 558b95e [DIRTY].
+  - 18:24:41 local commit 833bd04 "chore: ignore matlab_pref/ and run_matlab.bat helper files" (.gitignore only, 3 lines), made under Suhail's git identity; not pushed.
+  - 18:24:50 second rerun; log commit 833bd04 [DIRTY].
+  - 18:39 Suhail reverted 833bd04 (f718a48) and deleted the helper files.
+- Compared the reruns with the official run in Python.
+
+**Key result:**
+- Both reruns used MATLAB R2025b Update 5, the script unchanged since the freeze 1afd1e3, and the same data file (MD5 5eaa1131...). All Fy arrays are bit-identical to the official run 20261118_164446 (max difference 0 N). The result reproduces exactly; nothing in claims.md changes.
+
+**Decisions & why:**
+- The rerun files are kept and committed as a record (non-deletion protocol), labelled in claims.md as not part of the experiment. The official MS04-IND1 result stays 20261118_164446.
+- A summary written by the same tool ("3-Day Backlog Audit Review, Nov 16-18") cites run 182450 as the result and contradicts claims.md in several places (M4 "blank" before today, M5 "closed", M6 figures listed as deliverables, all earlier M3 results "invalid", P08B rev 1 "wrong parameter values"). It is not a project record and is not to be used for reporting.
+- Rule restated: one tool writes to the repository at a time; a frozen experiment is not rerun without a log entry first.
+
+**Next step:**
+- Commit the rerun files with this entry and the claims note.
+
+---
+
 ## TEMPLATE — copy for each new session
 
 ## YYYY-MM-DD — <one-line title>
