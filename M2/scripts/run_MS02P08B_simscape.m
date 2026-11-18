@@ -1,6 +1,10 @@
 function R = run_MS02P08B_simscape(varargin)
 %RUN_MS02P08B_SIMSCAPE  MS02P08B: torque-driven Simscape plant vs. the M2 residual estimator.
 %
+%   AMENDMENT 2 (2026-11-18, before the first full run): the git clean check now runs
+%   before the log file is opened; the refusal message lists the files that are dirty.
+%   Gates, tolerances, cases and predictions are unchanged.
+%
 %   Spec (freeze before the first full run):
 %     M2/experiments/08_held_out/rev2/MS02P08B_SPEC.md
 %
@@ -54,13 +58,9 @@ function R = run_MS02P08B_simscape(varargin)
     end
     doSave = o.Save && ~o.SmokeTest;
     stamp  = datestr(now, 'yyyymmdd_HHMMSS');
-    if doSave
-        if ~isfolder(outDir), mkdir(outDir); end
-        logFile = fullfile(outDir, ['MS02P08B_log_' stamp '.txt']);
-        diary(logFile); cleanupDiary = onCleanup(@() diary('off')); %#ok<NASGU>
-    end
 
-    % ---------------- provenance
+    % ---------------- provenance (amendment 2: checked BEFORE the log file is opened;
+    % diary() creates an empty log at once, which itself made the tree look dirty)
     [s1, commit] = system(sprintf('git -C "%s" rev-parse HEAD', root));
     [s2, st]     = system(sprintf('git -C "%s" status --porcelain', root));
     commit = strtrim(commit); if s1 ~= 0, commit = 'UNKNOWN'; end
@@ -68,7 +68,12 @@ function R = run_MS02P08B_simscape(varargin)
     if dirty && o.RequireClean && ~o.SmokeTest
         error('P08B:dirty', ['Uncommitted changes in the repository. Commit the spec, scripts and ' ...
               'model first (the commit is the freeze), or pass ''RequireClean'', false ' ...
-              '(the run is then recorded as DIRTY).']);
+              '(the run is then recorded as DIRTY).\n%s'], strtrim(st));
+    end
+    if doSave
+        if ~isfolder(outDir), mkdir(outDir); end
+        logFile = fullfile(outDir, ['MS02P08B_log_' stamp '.txt']);
+        diary(logFile); cleanupDiary = onCleanup(@() diary('off')); %#ok<NASGU>
     end
     fprintf('MS02P08B  %s  commit %s%s\n', stamp, commit, ternary(dirty, '  [DIRTY]', ''));
 

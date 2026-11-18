@@ -111,3 +111,13 @@ All simulation runs write timestamped archives:
 **Why:** the model inherited `OutputOption = SpecifiedOutputTimes` with `OutputTimes = 0:0.01:30` from `M2_LoadInjection.slx`. The smoke test (`T_stop = 2 s`) then stops with: *"Output times for the block diagram 'M2_TorqueDriven_Validation' must be within the specified simulation start (0.0) and stop (2.0) times."* (MATLAB console, 2026-11-18 13:04, run stamp 20261118_130401, recorded DIRTY, nothing saved). In the 65 s run the same setting would cap `tout` at 30 s. A hand edit of the model at 12:41 made the same change without a receipt; it was reverted with `git checkout` and is replaced by this logged rebuild.
 
 **What did not change:** plant parameters, controller, cases E0/E1, gates G0–G5, tolerances and the pre-registered predictions (§4–§5). No simulation result had been produced or inspected when this amendment was made.
+
+## Amendment 2 (2026-11-18, recorded before the first full run)
+
+**What changed:** `run_MS02P08B_simscape.m` checks `git status` before opening its log file (previously after). The refusal message now lists the dirty files.
+
+**Why:** `diary()` creates the log file immediately (0 bytes). The new, untracked log therefore made every full run look dirty, so the clean-tree check could never pass. Four empty logs (`MS02P08B_log_20261118_130433/130438/130726/130801.txt`, 0 bytes each, from refused attempts) were deleted; they held no data.
+
+**Smoke test before this amendment** (commit fd17e2c, 2 s, nothing saved): G0, G3 and G4 PASS for E0 and E1. G1, G2 and G5 are not evaluated in a 2 s smoke test. This is a wiring check, not a result.
+
+**What did not change:** plant, controller, model file, cases, gates, tolerances and predictions.

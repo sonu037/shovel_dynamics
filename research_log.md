@@ -1672,6 +1672,8 @@ not deleted, with the supersession recorded in place.
 
 **Next:** commit builder + rebuilt model + receipt + spec + this entry, then `run_MS02P08B_simscape('SmokeTest', true)` and `run_MS02P08B_simscape()`.
 
+**Follow-up (13:08):** committed as fd17e2c. Smoke test (2 s): G0, G3, G4 PASS for E0 and E1. Full run refused as DIRTY: the run script opened its log (diary creates a 0-byte file) before checking `git status`, so its own log made the tree dirty. Amendment 2 moves the check before the log; four empty refused-attempt logs deleted. Spec amendment 2 added. No full-run result exists yet.
+
 ---
 
 ## TEMPLATE — copy for each new session
