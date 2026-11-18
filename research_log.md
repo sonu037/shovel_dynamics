@@ -1804,6 +1804,25 @@ not deleted, with the supersession recorded in place.
 
 ---
 
+## 2026-11-18 (evening) — MS04-IND1 prepared: sensor noise and encoder steps on MS02P08B Simscape data (no run yet)
+
+**What was done:**
+- Wrote `M4/scripts/run_MS04_IND1_noise_on_P08B.m` and the spec `M4/experiments/ind1_p08b_noise/MS04_IND1_SPEC.md`. The M3 observer (`M3/scripts/m3_observer_30Hz.m`, unchanged) runs on the MS02P08B S30 data with true parameters under N0 clean, N1 speed noise 3 mrad/s, N2 torque noise 1 %, N3 12-bit joint encoder, N4 12-bit motor encoder (gear ratios 240 and 109.3 rad/m, M4 design values, unsourced), N5 = N4 + N2; speeds from 30 Hz backward differences in N3-N5.
+- Gates: G1 observer identity with the M3 archive, G2 data MD5 and grid, G3 the clean condition must reproduce the MS03-IND1 result file exactly.
+- Predictions (Branch B noise-induced Fy rms, E0 / E1): N1 27.10 / 13.17 kN, N2 1.915 / 1.829 kN, N3 189.3 / 92.0 kN, N4 0.789 / 0.383 kN, N5 2.071 / 1.869 kN, from exact discrete filter gains (0.8390 white speed noise, 0.9356 differenced quantisation, 0.4942 torque noise) and the commanded trajectories - no data values used. KF-GMO: <= 0.35 x Branch B under N1.
+- Tested in Octave on a SYNTHETIC model-matched stand-in only (disclosed in the spec with its numbers); the Simscape data file has not been run.
+
+**Key result:**
+- None yet.
+
+**Decisions & why:**
+- During preparation the first version of the N3/N4 predictions used the white-noise gain 0.839; differenced quantisation noise has more high-frequency content and the exact gain is 0.936, so the N3/N4 predictions were raised by 11.5 % before any test was run. N2 likewise moved from a simulated gain (0.4921) to the exact 0.4942. Bands were fixed before the synthetic test.
+
+**Next step:**
+- Suhail reviews and commits spec + script (the freeze), then runs it, then commits the results.
+
+---
+
 ## TEMPLATE — copy for each new session
 
 ## YYYY-MM-DD — <one-line title>
