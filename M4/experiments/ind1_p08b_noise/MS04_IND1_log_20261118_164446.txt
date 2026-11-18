@@ -1,0 +1,40 @@
+MS04-IND1  20261118_164446  commit 1afd1e3ca108661f52c84fb84ef4ff3fec554b6e
+G1 observer identity vs M3 archive: Branch B 0.00e+00, KF-GMO 0.00e+00 (limit 1e-9) -> PASS
+G2 data MD5 5eaa1131f51257e72b24b2596a83598d (expected 5eaa1131f51257e72b24b2596a83598d), 30 Hz grid ok: 1 -> PASS
+G3 clean condition reproduces MS03-IND1 (max diff B 0.0e+00 N, KF 0.0e+00 N; limit 1e-6 N) -> PASS
+
+case cond   B noise [kN]  KF noise [kN]         KF/B     B vs truth    KF vs truth
+E0   N0            0.000          0.000        0.000          2.468          2.287
+E0   N1           27.530          4.083        0.148         27.641          4.697
+E0   N2            1.947          1.692        0.869          3.094          2.832
+E0   N3          196.863         11.417        0.058        196.876         11.652
+E0   N4            0.805          0.073        0.090          2.603          2.279
+E0   N5            2.070          1.597        0.772          3.181          2.647
+E1   N0            0.000          0.000        0.000          2.463          1.704
+E1   N1           13.347          2.551        0.191         13.573          3.052
+E1   N2            1.785          1.654        0.926          3.068          2.311
+E1   N3           97.491          7.877        0.081         97.521          8.060
+E1   N4            0.393          0.073        0.186          2.499          1.706
+E1   N5            1.806          1.537        0.851          2.998          2.239
+
+Predictions (spec; Branch B noise-induced rms, kN):
+   N1 E0: 27.530 kN (predicted 27.100, band +/-15 %)
+   N1 E1: 13.347 kN (predicted 13.170, band +/-15 %)
+   P-N1 -> HOLDS
+   N2 E0: 1.947 kN (predicted 1.915, band +/-15 %)
+   N2 E1: 1.785 kN (predicted 1.829, band +/-15 %)
+   P-N2 -> HOLDS
+   N3 E0: 196.863 kN (predicted 189.300, band +/-50 %)
+   N3 E1: 97.491 kN (predicted 92.000, band +/-50 %)
+   P-N3 -> HOLDS
+   N4 E0: 0.805 kN (predicted 0.789, band +/-25 %)
+   N4 E1: 0.393 kN (predicted 0.383, band +/-25 %)
+   P-N4 -> HOLDS
+   N5 E0: 2.070 kN (predicted 2.071, band +/-15 %)
+   N5 E1: 1.806 kN (predicted 1.869, band +/-15 %)
+   P-N5 -> HOLDS
+   P-KF  KF-GMO noise-induced rms <= 0.35 x Branch B under N1 (M3 archive: 0.19) -> HOLDS
+
+VALIDITY (G1, G2, G3): PASS. Predictions may be refuted; a refutation is a result.
+Saved C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M4\experiments\ind1_p08b_noise\MS04_IND1_20261118_164446.mat
+Log   C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M4\experiments\ind1_p08b_noise\MS04_IND1_log_20261118_164446.txt
