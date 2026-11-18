@@ -39,6 +39,8 @@ function generate_paper2_figures(save_png)
     fprintf('========================================================================================\n\n');
 
     %% ------------------------------------------------------------------------
+    % AUDIT 2026-11-18: Figure 1 is drawn from typed constants (a) and typed sine functions (b), not from
+    % results; Figures 2-3 plot model-matched archives. Not for publication (M5 frozen).
     %  FIGURE 1: FOC Torque-Speed Envelope & Full-Cycle Power Balance
     %  ------------------------------------------------------------------------
     fprintf('Generating Figure 1: FOC Envelope & 38 s Cycle Power Flow...\n');

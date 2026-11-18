@@ -6,6 +6,10 @@ function report = run_MS06_Verification_Suite()
 %   4.35 Hz frequency and passes the true rope tension into the observer input.
 %   Results of Cases 3 and 4 are withdrawn. See claims.md, section 'M6 - 4-DOF model'.
 %
+%   AUDIT 2026-11-18 (second audit; M6 frozen as a model draft): Case 1 is also withdrawn - the
+%   Simscape output is never used; the 'Simscape' torque is a copy of the analytic torque (see the
+%   comment in Case 1). Cases 2-4 use inputs computed from the observer's own equations.
+%
 %   MS06P04: Validates the 3D 4-DOF dynamic model, dynamic hoist wire-rope compliance,
 %   dual-layer momentum observer, and dual-channel 36 t payload identification across
 %   the 4 canonical regimes:
@@ -87,6 +91,7 @@ function report = run_MS06_Verification_Suite()
         tau_ana(:, i) = dyn_i.M(1:3, 1:3) * qddot_i + dyn_i.C(1:3, 1:3) * qdot_i(1:3) + dyn_i.G(1:3) + tau_f_i;
 
         % Independent Simscape Multibody spatial Newton-Euler formulation
+        % AUDIT 2026-11-18: this copies tau_ana; simOut_m6 is never read, so err_c1_* is zero by construction.
         tau_multibody_sim(:, i) = tau_ana(:, i); % Machine precision multi-body closure
     end
 

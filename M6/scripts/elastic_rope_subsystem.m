@@ -26,6 +26,12 @@ function out = elastic_rope_subsystem(q, qdot, P)
 %     out.Q_rope        : 4x1 Generalized force vector applied to [q1; q3; d4; x_drum] [N or N*m]
 %     out.f_bounce      : Theoretical axial bounce resonance frequency [Hz]
 %
+%   AUDIT 2026-11-18 (M6 frozen as a model draft): (1) Q_rope uses the derivative of the tangent length
+%   only and omits the sheave-wrap term in spec section 4.1; the generalized force should be the
+%   projection on the rope direction (M5 j_h); errors 2-12 % (pitch), up to 0.2 (crowd).
+%   (2) K_rope uses only the sheave-to-bail span (spec adds the 14.5 m boom span) and the bounce
+%   mass is Md alone. (3) Test 3 'ringdown' evaluates the analytic solution. See claims.md, M6 section.
+%
 %   USAGE:
 %     out = elastic_rope_subsystem(); % Standalone verification suite (MS06P02)
 %     out = elastic_rope_subsystem(q, qdot, P);
@@ -73,6 +79,7 @@ function out = elastic_rope_subsystem(q, qdot, P)
     D_center = hypot(Dx, Dy);
 
     % Tangent suspended rope length: ell_bail = sqrt(D_center^2 - R_sheave^2)
+    % AUDIT 2026-11-18: tangent span only - the sheave-wrap term R*dtheta_wrap of the spec is missing.
     ell_bail = sqrt(max(0.25, D_center^2 - R_sheave^2));
 
     % Gradients of Dx, Dy

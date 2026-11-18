@@ -16,6 +16,11 @@ function out = build_FourDOFShovelSimulator_M6()
 %     8. Enabled joint torque/force sensing across all 4 DOFs for Simscape multi-body closure.
 %     9. Disabled 3D smexplorer auto-open (SimMechanicsOpenEditorOnUpdate = 'off').
 %
+%   AUDIT 2026-11-18 (M6 frozen as a model draft): no committed version of FourDOFShovelSimulator_M6.slx
+%   contains the drum blocks added below; the saved model has three joints (swing torque input,
+%   pitch and crowd motion-prescribed) and no rope. The final assert counts simlog children, not
+%   joints. See claims.md, M6 section.
+%
 %   USAGE:
 %     out = build_FourDOFShovelSimulator_M6();
 %

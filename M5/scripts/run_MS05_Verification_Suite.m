@@ -10,6 +10,11 @@ function report = run_MS05_Verification_Suite(save_results)
 %     [Case 3] Severe Boulder Impact: Step response with adaptive innovation gating (t_rise <= 33.3 ms).
 %     [Case 4] Thermal Detuning Sweep (Delta T = 0 to +95 deg C): Rotor resistance drift and slip divergence.
 %
+%   AUDIT 2026-11-18 (M5 frozen as a model draft): Case 1 uses typed trajectories and forces and
+%   closes its energy balance by definition; Case 2 is arithmetic; Case 3 is the model-matched
+%   MS05P03 self-check; Case 4 follows from R_r(T) = R_r0(1 + alpha dT) (slip read 20 ms after a
+%   motor start). None of these is a test. See claims.md, M5 section.
+%
 %   USAGE:
 %     report = run_MS05_Verification_Suite();
 %     report = run_MS05_Verification_Suite(true); % Save MS05P04_benchmark_summary.mat

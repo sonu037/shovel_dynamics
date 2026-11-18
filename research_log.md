@@ -1871,6 +1871,29 @@ not deleted, with the supersession recorded in place.
 
 ---
 
+## 2026-11-18 (evening) — M5 and M6 second audit; both frozen as model drafts (decision: option A)
+
+**What was done:**
+- Read every file in M5/ and M6/ (specs, scripts, result archives, reports, receipts, figure scripts) and checked them against the code, the archives and the cited photos (IMG20261009104123, 104321, 111026, 111432).
+- Derived the M6 4-DOF equations of motion independently (sympy, from the kinetic and potential energy) and compared them with kinematics_dynamics_4dof.m.
+- Compared the M5 and M6 rope-to-joint force mappings numerically with shovel_params_wk20.m geometry.
+- Unpacked M6/model/FourDOFShovelSimulator_M6.slx (all three committed versions) and listed its blocks and connections.
+
+**Key result:**
+- Correct and worth keeping: M5 momentum observer with reflected rotor inertia and its dT/dq term; M5 rope-to-joint map (projection on the rope direction); directional gearbox efficiency; M6 4x4 M, C, G (match Lagrange's equations exactly); pitch actuated only by the rope; two-layer observer structure; swing-inertia payload idea.
+- Not results: no test in either milestone uses data the model did not generate; no forward simulation of the M6 4-DOF system exists.
+- New defects (recorded in claims.md): M5 motor model draws ~1,010 A per motor at rated torque (nameplate 628 A) at about half the nameplate voltage; stall pull = OEM value by algebra (row corrected: not the 1.65 factor); 33.18 Hz is an oscilloscope reading of an unrecorded signal; photo citations wrong (111026 is a ZLSC-800/6.6 transformer plate, 104116 and 104128-104130 do not exist); innovation gating not implemented; MS05P04 Cases 1, 2, 4 are typed inputs, arithmetic or the thermal formula; M6 Simscape model has three joints and no drum or rope in every committed version; M6 Case 1 'closure' copies the analytic torque (archive = 0, 1.73e-19 in no file); M6 rope forces omit the sheave-wrap term (2-12 % pitch, up to 0.2 crowd); 4.35 Hz bounce uses only the 8 m span and the dipper mass; upper-works swing inertia below the counterweight's own contribution; swing rotor inertia 1.955 kg m^2 has the digits of the motor mass; report inconsistencies.
+
+**Decisions & why:**
+- Suhail chose option A: M5 and M6 are frozen as model drafts and are not cited in papers, theses or CMPDI/NCL reports. Nothing is deleted. Reopen (option B) when TZ/CRRC documents give gearing, rotor and swing inertias and rope data, and a forward simulation with drum and rope exists.
+- Recorded as: 19 new claims.md rows plus a correction note on the stall-pull row; an audit addendum in both reports; comment-only audit notes in nine scripts. No code behaviour changed.
+- The M1-M9 milestone names have drifted (the M5 report calls M6 'digging mechanics'; claims.md puts payload at M7); to be fixed in one place later.
+
+**Next step:**
+- Suhail commits. Then Batch 0 (tools and clean-up) when he says go.
+
+---
+
 ## TEMPLATE — copy for each new session
 
 ## YYYY-MM-DD — <one-line title>

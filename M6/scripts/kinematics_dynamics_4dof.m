@@ -53,6 +53,9 @@ function out = kinematics_dynamics_4dof(q, qdot, P)
 
     % 3D Inertia Tensors
     % Dipper handle principal inertias: Ixx (longitudinal roll), Iyy (transverse pitch), Izz (yaw)
+    % AUDIT 2026-11-18: all values below are unsourced. I_upper_zz (2.5e6) is below the counterweight's own
+    % contribution (~8.6e6); J_m_swing 1.955 has the digits of the motor mass (1,955 kg). The equations
+    % (M, C, G) were checked symbolically and are correct. See claims.md, M6 section.
     I_xx = 45000.0;  % [kg*m^2] Slender handle roll inertia
     I_yy = 285000.0; % [kg*m^2] Pitch plane transverse inertia
     I_zz = P.Izz;    % [kg*m^2] 305,000 kg*m^2 pitch inertia about COM

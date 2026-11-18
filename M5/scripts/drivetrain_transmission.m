@@ -13,6 +13,10 @@ function trans = drivetrain_transmission(q3, d4, F_hoist, F_crowd, w_mh, w_mc)
 %        tau_a3 = s_bail(d4) * sin(alpha3(q3, d4)) * F_hoist
 %        F_a4   = cos(alpha3(q3, d4)) * F_hoist + F_crowd
 %
+%   AUDIT 2026-11-18 (M5 frozen as a model draft): gear ratios and radii are unsourced; the stall pull
+%   equals the OEM value by algebra (lines below); 33.18 Hz is an oscilloscope reading of an
+%   unrecorded signal (photo IMG20261009111432). See claims.md, M5 section.
+%
 %   USAGE:
 %     trans = drivetrain_transmission(); % Runs MS05P02 standalone verification
 %     trans = drivetrain_transmission(q3, d4, F_hoist, F_crowd, w_mh, w_mc);
@@ -133,6 +137,7 @@ function report = run_ms05p02_verification(repo_root)
     F_bail_rated = (P.drivetrain.n_falls * P.drivetrain.G_hoist * P.drivetrain.eta_mot * tau_tot_rated_h) / P.drivetrain.R_drum;
     % Stall limit (1.65x pull-out)
     % Stall limit (1.67x pull-out / breakdown torque ratio)
+    % AUDIT 2026-11-18: stall_ratio * F_bail_rated = P.F_hoist_max exactly - an identity, not a check.
     stall_ratio = P.F_hoist_max / F_bail_rated; % = 1.6738
     F_bail_stall = stall_ratio * F_bail_rated;
 

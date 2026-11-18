@@ -12,6 +12,10 @@ function out = motor_foc_wk20(cmd, load, dt, T_motor, drive_type)
 %     3) Thermal drift of rotor resistance: R_r(T) = R_r0 * (1 + alpha_Cu * Delta_T).
 %     4) Active Line Module (ALM) DC bus energy balance and regenerative power flow.
 %
+%   AUDIT 2026-11-18 (M5 frozen as a model draft): the electrical constants below are unsourced; at
+%   rated torque this model draws ~1,010 A rms per motor (nameplate 628 A) at about half the
+%   nameplate voltage. The MS05P01 checks test the model's own limits. See claims.md, M5 section.
+%
 %   USAGE:
 %     out = motor_foc_wk20(); % Runs standalone verification suite (MS05P01)
 %     out = motor_foc_wk20(cmd, load, dt, T_motor, drive_type);
@@ -168,6 +172,7 @@ function sim = step_foc_simulation(cmd, load, dt, m)
         tau_ref = m.Kp_w * w_err + m.Ki_w * speed_int;
 
         % Clamp torque to field-weakened pull-out capability
+        % AUDIT 2026-11-18: the reported 'peak torque' (18,805 N m) is this clamp, not a measured capability.
         tau_lim = m.tau_peak_tot * min(1.0, m.omega_m_base / abs_w);
         tau_ref = max(-tau_lim, min(tau_lim, tau_ref));
 

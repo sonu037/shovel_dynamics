@@ -16,6 +16,10 @@ function obs = electromechanical_gmo(t_vec, q_mat, qdot_mat, tau_joint_mat, tau_
 %        Suppresses 22,000+ Nm false torque spikes during rope angle rotations down to < 60 Nm (> 99.7% suppression).
 %     4) 30 Hz Discrete FOH Transition + Innovation Gating for boulder impact recovery.
 %
+%   AUDIT 2026-11-18 (M5 frozen as a model draft): the self-check generates joint torques from the
+%   observer's own equations (model-matched); no motor data enters; innovation gating is not
+%   implemented (NIS is computed but unused). The momentum maths is correct. See claims.md, M5 section.
+%
 %   USAGE:
 %     obs = electromechanical_gmo(); % Runs standalone verification suite (MS05P03)
 %     obs = electromechanical_gmo(t_vec, q_mat, qdot_mat, tau_joint_mat, tau_L_true, Fs);
@@ -192,6 +196,7 @@ function res = run_discrete_electromechanical_observer(t, q_mat, qdot_mat, tau_j
 
         % Innovation Gating Metric
         dh = (h_k - h_prev) / Ts;
+        % AUDIT 2026-11-18: nis_val is logged only; nothing adapts to it (no gating).
         nis_val = (dh(1)^2) / (1e12) + (dh(2)^2) / (1e10);
 
         % Memory advance
