@@ -1661,6 +1661,19 @@ not deleted, with the supersession recorded in place.
 
 ---
 
+## 2026-11-18 — MS02P08B amendment 1: output option fixed before the first run
+
+**What happened:**
+- 12:24: the superseded `M2/model/M2_TorqueDriven.slx` (rev 1; joint torque inputs unconnected, StopTime 30 s) was simulated by mistake. With no drive torque the handle falls under gravity. This was not a P08B result. The file was later re-saved without structural change and is restored from git.
+- 12:41: `M2_TorqueDriven_Validation.slx` and its builder were edited by hand (OutputOption -> RefineOutputTimes) after commit 83f29c2, so the model no longer matched its build receipt. Reverted with `git checkout`.
+- 13:04: smoke test failed: *Output times ... must be within the specified simulation start (0.0) and stop (2.0) times.* Cause: OutputTimes 0:0.01:30 inherited from M2_LoadInjection.slx. The builder did not reset it (builder defect, not a plant defect).
+
+**Change:** builder sets `OutputOption = RefineOutputTimes`; model rebuilt with `'Overwrite', true`; spec amendment 1 added (`M2/experiments/08_held_out/rev2/MS02P08B_SPEC.md`). Gates, tolerances, cases and predictions unchanged. No P08B result existed when the change was made.
+
+**Next:** commit builder + rebuilt model + receipt + spec + this entry, then `run_MS02P08B_simscape('SmokeTest', true)` and `run_MS02P08B_simscape()`.
+
+---
+
 ## TEMPLATE — copy for each new session
 
 ## YYYY-MM-DD — <one-line title>

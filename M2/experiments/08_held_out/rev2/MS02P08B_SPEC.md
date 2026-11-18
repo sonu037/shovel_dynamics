@@ -101,3 +101,13 @@ All simulation runs write timestamped archives:
 - Execution Log: `M2/experiments/08_held_out/rev2/MS02P08B_log_<timestamp>.txt`
 - Exported Data: Sub-sampled $30\,\text{Hz}$ signals (`S30`) preserved within the MAT archive for direct consumption by the M3 discrete observer.
 - In accordance with the Non-Deletion Historical Protocol, all previous Revision 1 data and scripts remain permanently preserved.
+
+---
+
+## Amendment 1 (2026-11-18, recorded before the first full run)
+
+**What changed:** the builder now sets the model's output option to `RefineOutputTimes` (`build_M2_TorqueDriven_Validation.m`, solver block). The model is rebuilt with `build_M2_TorqueDriven_Validation('Overwrite', true)` and committed together with its new build receipt.
+
+**Why:** the model inherited `OutputOption = SpecifiedOutputTimes` with `OutputTimes = 0:0.01:30` from `M2_LoadInjection.slx`. The smoke test (`T_stop = 2 s`) then stops with: *"Output times for the block diagram 'M2_TorqueDriven_Validation' must be within the specified simulation start (0.0) and stop (2.0) times."* (MATLAB console, 2026-11-18 13:04, run stamp 20261118_130401, recorded DIRTY, nothing saved). In the 65 s run the same setting would cap `tout` at 30 s. A hand edit of the model at 12:41 made the same change without a receipt; it was reverted with `git checkout` and is replaced by this logged rebuild.
+
+**What did not change:** plant parameters, controller, cases E0/E1, gates G0–G5, tolerances and the pre-registered predictions (§4–§5). No simulation result had been produced or inspected when this amendment was made.

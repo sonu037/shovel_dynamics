@@ -31,6 +31,11 @@ function build_M2_TorqueDriven_Validation(varargin)
 %     6. The model workspace is cleared, so values passed with setVariable cannot
 %        be shadowed (defect of 2026-09-02).
 %     7. Solver: ode15s, RelTol 1e-8, AbsTol 1e-9, MaxStep 1e-3.
+%        Output option: RefineOutputTimes (amendment 1, 2026-11-18, before the first run).
+%        The source model carries 'Produce specified output only' with OutputTimes
+%        0:0.01:30, which makes the 2 s smoke test fail ('Output times ... must be
+%        within ... start (0.0) and stop (2.0)') and stops tout at 30 s in the 65 s run.
+%        Plant, controller, gates, tolerances and predictions are unchanged.
 %   UNCHANGED: body mass / COM / inertia (54,300 kg; COM 2.82 m behind the bail;
 %   Izz 287,900 kg m^2), the 1.5 m datum transform, gravity, and the external
 %   force at the bail frame (Fy, World frame, amplitude F0_y, frequency omega_F).
@@ -151,7 +156,7 @@ function build_M2_TorqueDriven_Validation(varargin)
     hws = get_param(mdl, 'ModelWorkspace');
     hws.clear;
     set_param(mdl, 'Solver','ode15s', 'RelTol','1e-8', 'AbsTol','1e-9', ...
-                   'MaxStep','1e-3', 'StopTime','T_stop');
+                   'MaxStep','1e-3', 'StopTime','T_stop', 'OutputOption','RefineOutputTimes');   % amendment 1
     set_param(mdl, 'Description', sprintf(['MS02P08B torque-driven plant. Built %s by ' ...
         'build_M2_TorqueDriven_Validation.m from M2_LoadInjection.slx (MD5 %s). ' ...
         'Plant parameters: Rasuli 2014 Table II (Machine A). Do not edit by hand; rebuild.'], ...

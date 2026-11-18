@@ -1,9 +1,9 @@
 Build receipt: M2_TorqueDriven_Validation
-Date:          2026-11-18 12:31:18
+Date:          2026-11-18 13:07:02
 MATLAB:        25.2.0.3177638 (R2025b) Update 5
 Builder:       M2/scripts/build_M2_TorqueDriven_Validation.m
 Source:        M2/model/M2_LoadInjection.slx  MD5 f17dcb99da107e28bae416fc79d4f5ec
-Output:        M2/model/M2_TorqueDriven_Validation.slx  MD5 febe5e2c90b67fddd2e91c685219fbdb
+Output:        M2/model/M2_TorqueDriven_Validation.slx  MD5 902455804eb0efb7f6f341e74b52bc7b
 Changes:       joints -> torque/force input; motion inputs removed; PID per joint;
                plant Coulomb 340 N m / 480 N (tanh, eps 1e-3); SI sensor units;
                logging at Ts_log; model workspace cleared; ode15s 1e-8/1e-9, MaxStep 1e-3.
