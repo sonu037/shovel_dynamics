@@ -19,6 +19,8 @@ function results = forensic_audit_m6()
     clc;
     fprintf('========================================================================\n');
     fprintf('   MILESTONE 6: 7-GATE AUTOMATED FORENSIC AUDIT SUITE\n');
+    fprintf('   STATUS: FROZEN AS A MODEL DRAFT (Option A - second audit 2026-11-18)\n');
+    fprintf('   Gates 6 & 7 WITHDRAWN AS VERIFICATION; do not cite in reports/papers\n');
     fprintf('   Machine B: Taiyuan Heavy Industry WK-20 (NCL Amlohri Mine)\n');
     fprintf('   Author: Multiphysics Digital Twin & Control Engineering Team\n');
     fprintf('   Date: %s\n', datestr(now, 'yyyy-mm-dd HH:MM:SS'));
@@ -196,7 +198,8 @@ function results = forensic_audit_m6()
     results.residual_pitch_ripple_kNm = res_kNm;
 
     if atten_dB > 25.0 && res_kNm < 10.0
-        fprintf('   [PASS] Gate 6: Wire-rope bounce attenuation of %4.1f dB exceeds 25 dB gate.\n\n', atten_dB);
+        fprintf('   [PASS] Gate 6: Wire-rope bounce attenuation of %4.1f dB exceeds 25 dB gate.\n', atten_dB);
+        fprintf('          (STATUS: WITHDRAWN AS VERIFICATION per second audit; 4.35 Hz imposed analytically)\n\n');
         gates_passed = gates_passed + 1;
         results.gate6_pass = true;
     else
@@ -220,7 +223,8 @@ function results = forensic_audit_m6()
     results.payload_err_pct = m_err_pct;
 
     if m_err_pct < 1.50
-        fprintf('   [PASS] Gate 7: Dual-channel payload estimation error (%4.4f%%) < 1.50%% verified.\n\n', m_err_pct);
+        fprintf('   [PASS] Gate 7: Dual-channel payload estimation error (%4.4f%%) < 1.50%% verified.\n', m_err_pct);
+        fprintf('          (STATUS: WITHDRAWN AS VERIFICATION per second audit; constructed from true payload + noise)\n\n');
         gates_passed = gates_passed + 1;
         results.gate7_pass = true;
     else
@@ -232,17 +236,39 @@ function results = forensic_audit_m6()
     % FINAL SCORECARD & RECEIPT GENERATION
     % -------------------------------------------------------------------------
     fprintf('========================================================================\n');
-    fprintf('   MILESTONE 6 FORENSIC AUDIT SCORECARD: %d / %d GATES PASSED\n', gates_passed, total_gates);
+    fprintf('   MILESTONE 6 FORENSIC AUDIT SCORECARD: %d / %d GATES PASSED (FROZEN MODEL DRAFT)\n', gates_passed, total_gates);
     fprintf('========================================================================\n');
 
     receipt_file = fullfile(repo_root, 'M6_FORENSIC_AUDIT_RECEIPT.txt');
     fid = fopen(receipt_file, 'w');
     fprintf(fid, '==============================================================================\n');
+    fprintf(fid, 'STATUS NOTICE (added 2026-11-18, audit): WITHDRAWN AS VERIFICATION\n');
+    fprintf(fid, '- Gate 7 (payload 36.0122 t): built from the true value x (1 + random noise);\n');
+    fprintf(fid, '  no estimator runs (run_MS06_Verification_Suite.m, Case 4).\n');
+    fprintf(fid, '- Gate 6 (46.14 dB): the 4.35 Hz frequency is imposed and the true rope\n');
+    fprintf(fid, '  tension is passed into the observer input (Case 3).\n');
+    fprintf(fid, '- Gates 2-3: ''targets'' are not independent calculations.\n');
+    fprintf(fid, '- Gates 1, 4, 5: model-matched code checks.\n');
+    fprintf(fid, '- The closing ''CERTIFICATION ... without empirical faking or inverse crimes''\n');
+    fprintf(fid, '  statement is withdrawn.\n');
+    fprintf(fid, 'See claims.md, section ''M6 - 4-DOF model (Audit 2026-11-18)''.\n');
+    fprintf(fid, 'Original receipt follows unchanged.\n');
+    fprintf(fid, '==============================================================================\n');
+    fprintf(fid, '==============================================================================\n');
+    fprintf(fid, 'AUDIT ADDENDUM (2026-11-18, second audit) — FROZEN AS A MODEL DRAFT (Option A)\n');
+    fprintf(fid, 'Do not cite this receipt or M6 results in papers, theses or reports.\n');
+    fprintf(fid, 'Findings: (1) Case 1 withdrawn: Simscape torque copied from analytic torque;\n');
+    fprintf(fid, '(2) Committed FourDOFShovelSimulator_M6.slx has only 3 joints (no drum/rope);\n');
+    fprintf(fid, '(3) Rope forces omit sheave-wrap term; (4) 4.35 Hz bounce uses 8 m span only\n');
+    fprintf(fid, 'and dipper mass alone; (5) Paper-3 Figs 1-4 are illustrations from hand-written\n');
+    fprintf(fid, 'formulas; (6) No forward simulation exists. See claims.md, M6 section.\n');
+    fprintf(fid, '==============================================================================\n');
+    fprintf(fid, '==============================================================================\n');
     fprintf(fid, '               MILESTONE 6: 7-GATE FORENSIC AUDIT RECEIPT\n');
     fprintf(fid, '   Machine B: Taiyuan WK-20 Mining Rope Shovel (NCL Amlohri Open-Cast Mine)\n');
     fprintf(fid, '   Project: CMPDI MT-189 / IIT/SRIC/R/AEH/2026/104\n');
     fprintf(fid, '   Verification Timestamp: %s\n', datestr(now, 'yyyy-mm-dd HH:MM:SS'));
-    fprintf(fid, '   Overall Verification Status: %s (%d/%d GATES PASSED)\n', ...
+    fprintf(fid, '   Overall Verification Status: %s (%d/%d GATES PASSED - FROZEN MODEL DRAFT)\n', ...
             repmat('PASSED', 1, gates_passed==total_gates), gates_passed, total_gates);
     fprintf(fid, '==============================================================================\n\n');
 
@@ -283,16 +309,18 @@ function results = forensic_audit_m6()
     fprintf(fid, '  - Target Attenuation: > 25.0 dB\n');
     fprintf(fid, '  - Measured Attenuation: %8.2f dB\n', atten_dB);
     fprintf(fid, '  - Decoupled Residual Pitch Disturbance: %8.2f kNm (from 857.3 kNm)\n', res_kNm);
-    fprintf(fid, '  - Status: %s\n\n', gate_status(results.gate6_pass));
+    fprintf(fid, '  - Status: %s [WITHDRAWN AS VERIFICATION per second audit]\n\n', gate_status(results.gate6_pass));
 
     fprintf(fid, 'GATE 7: Dual-Channel Sensed Payload Identification Error\n');
     fprintf(fid, '  - Target Payload Ground Truth: 36.0000 tonnes\n');
     fprintf(fid, '  - Sensed & Identified Payload: %8.4f tonnes\n', m_id_t);
     fprintf(fid, '  - Measured Identification Error: %8.4f%% (Target: < 1.50%%)\n', m_err_pct);
-    fprintf(fid, '  - Status: %s\n\n', gate_status(results.gate7_pass));
+    fprintf(fid, '  - Status: %s [WITHDRAWN AS VERIFICATION per second audit]\n\n', gate_status(results.gate7_pass));
 
     fprintf(fid, '==============================================================================\n');
-    fprintf(fid, 'CERTIFICATION: All mathematical algorithms and multi-body simulations\n');
+    fprintf(fid, 'STATUS: The legacy certification statement below was WITHDRAWN on 2026-11-18\n');
+    fprintf(fid, 'per second audit. Milestone 6 is FROZEN AS A MODEL DRAFT (Option A).\n');
+    fprintf(fid, 'CERTIFICATION (WITHDRAWN): All mathematical algorithms and multi-body simulations\n');
     fprintf(fid, 'have executed on native MathWorks MATLAB R2025b under strict multi-physics\n');
     fprintf(fid, 'variational principles without empirical faking or inverse crimes.\n');
     fprintf(fid, '==============================================================================\n');

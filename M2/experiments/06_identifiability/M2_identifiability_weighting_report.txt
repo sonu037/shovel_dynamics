@@ -1,0 +1,49 @@
+========================================================================================
+  MILESTONE 2 PROTOCOL P06: IDENTIFIABILITY WITH NOISE COVARIANCE WEIGHTING
+  Excitation Trajectory: Narrow Bi (w = 0.314 rad/s) | Matched Frequency Evaluation
+========================================================================================
+
+1. PROBLEM FORMULATION & DEFECT RESOLUTION
+----------------------------------------------------------------------------------------
+In legacy claims (row 97 & 124), the single-channel saddle matrix condition number
+(kappa_saddle = 495.87) was compared against an apples-to-oranges fast frequency run
+(kappa = 3.77 at w = 1.36 rad/s). Furthermore, the joint matrix used an ad-hoc scalar s_bar = 10 m.
+
+RESOLUTION VIA STATISTICALLY OPTIMAL NOISE COVARIANCE WEIGHTING:
+In Gauss-Markov / maximum likelihood parameter identification, rows must be weighted
+by inverse noise standard deviations: W = diag(sigma_tau3^-1, sigma_f4^-1).
+Relative dimensional weighting factor: Ln = sigma_tau3 / sigma_f4 = 2.80 m.
+
+2. QUANTITATIVE RESULTS UNDER MATCHED FREQUENCY (w = 0.314 rad/s)
+----------------------------------------------------------------------------------------
+  - Single-Channel Saddle Matrix:  kappa_saddle = 495.87, theta_saddle = 0.2311 deg
+  - Joint Weighted Matrix (Ln=2.8m): kappa_joint  = 41.42, theta_joint  = 2.77 deg
+  - Conditioning Improvement:       12.0x reduction in condition number!
+
+----------------------------------------------------------------------------------------
+  Ln SENSITIVITY SWEEP (Statistical Noise Weighting Spectrum):
+----------------------------------------------------------------------------------------
+Ln (meters)     | kappa_joint        | theta_joint (deg)    | Conditioning Status 
+------------------------------------------------------------------------------
+0.10            | 449.99             | 0.25                 | DEGRADED            
+0.50            | 197.09             | 0.58                 | DEGRADED            
+1.00            | 105.79             | 1.08                 | DEGRADED            
+2.00            | 55.57              | 2.06                 | IMPROVED            
+2.80            | 41.42              | 2.77                 | OPTIMAL_COVARIANCE  
+3.00            | 39.13              | 2.93                 | IMPROVED            
+5.00            | 27.29              | 4.20                 | IMPROVED            
+10.00           | 22.45              | 5.10                 | IMPROVED            
+30.00           | 37.60              | 3.05                 | IMPROVED            
+100.00          | 88.05              | 1.30                 | IMPROVED            
+------------------------------------------------------------------------------
+
+========================================================================================
+  PHYSICAL VERIFICATION & ACCEPTANCE CRITERIA AUDIT:
+========================================================================================
+  1. Joint Identifiability Improvement (Target > 10x over single channel):
+     - Measured Ratio: 11.97x -> PASSED
+  2. Parameter Subspace Angle (Target theta_joint >= 2.5 deg):
+     - Measured Subspace Angle: 2.77 deg -> PASSED
+  3. Gauss-Markov Scale Invariance:
+     - Weighting Ln = 2.80 m provides scale-invariant, statistically optimal identification.
+========================================================================================

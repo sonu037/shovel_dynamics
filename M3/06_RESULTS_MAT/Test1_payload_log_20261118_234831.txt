@@ -1,0 +1,108 @@
+========================================================================================
+  MILESTONE 2 BATCH 1: TEST 1 DYNAMIC PAYLOAD MASS ESTIMATION
+  Rigid-Body Dipper Teeth Dynamic Payload Estimation under Sensor Noise (30 Hz Observer)
+  Timestamp: 20261118_234831 | Commit: 887fb8b4fb079bce4f89d4f1404efcb735a08533  [DIRTY]
+========================================================================================
+
+--- [GATE G1] M3 Observer Code Identity vs Archive ---
+  Branch B relative error:  0.00e+00 (Limit <= 1e-9)
+  KF-GMO relative error:    0.00e+00 (Limit <= 1e-9)
+  Verdict:                  PASS
+
+--- [GATE G2] Input Dataset Provenance & 30 Hz Grid ---
+  File:            M2\experiments\08_held_out\rev2\MS02P08B_simscape_20261118_130959.mat
+  MD5 Hash:        5eaa1131f51257e72b24b2596a83598d (Expected: 5eaa1131f51257e72b24b2596a83598d)
+  30 Hz Grid:      1951 samples, [0, 65] s: PASS
+  Verdict:         PASS
+
+Observer Model Parameters (Strict Tare Baseline Purity):
+  Md  =     54300.00 kg (Tare dipper mass, zero payload leakage)
+  c   =      -1.3200 m
+  Izz =     287900.0 kg*m^2
+  kO  =        20.00 1/s | Ts = 1/30 s
+
+========================================================================================
+  PROCESSING OPERATIONAL ENVELOPE: CASE E0
+========================================================================================
+--- Single-Channel Pitch Mass Estimation Error [kg] (Case: E0) ---
+  Cond     | Branch   |        0 t |        5 t |       10 t |       15 t | Gate Status (<= 500 kg)
+  ----------------------------------------------------------------------------------
+  N0       | Branch B |   -0.00 kg |   -3.45 kg |   -6.89 kg |  -10.34 kg | PASS
+           | KF-GMO   |   -0.00 kg |   -4.02 kg |   -8.03 kg |  -12.05 kg | PASS
+  N1       | Branch B |   +7.04 kg |   -7.58 kg |   -7.89 kg |  -15.47 kg | PASS
+           | KF-GMO   |   -1.67 kg |   -0.71 kg |  -11.74 kg |  -15.82 kg | PASS
+  N2       | Branch B |   -1.93 kg |  -20.28 kg |   -9.09 kg |  -11.69 kg | PASS
+           | KF-GMO   |   -3.46 kg |  -22.58 kg |  -10.79 kg |  -13.68 kg | PASS
+  N4       | Branch B |   +0.18 kg |   -3.27 kg |   -6.71 kg |  -10.16 kg | PASS
+           | KF-GMO   |   -0.00 kg |   -4.02 kg |   -8.04 kg |  -12.05 kg | PASS
+  N5_all   | Branch B |   -9.85 kg |   -0.16 kg |   +0.56 kg |   -7.65 kg | PASS
+           | KF-GMO   |   -9.95 kg |   +4.36 kg |   -1.75 kg |  -11.10 kg | PASS
+
+  --- 2-DOF Multi-Channel Fused Projection Mass Error [kg] (Case: E0) ---
+  Cond     | Branch   |        0 t |        5 t |       10 t |       15 t | Max Error
+  ----------------------------------------------------------------------------------
+  N0       | Branch B |   -0.11 kg |   -0.22 kg |   -0.34 kg |   -0.46 kg | Max: 0.51 kg
+           | KF-GMO   |   +0.04 kg |   +0.20 kg |   +0.36 kg |   +0.51 kg | Max: 0.51 kg
+  N1       | Branch B |   +1.55 kg |   -1.67 kg |   -0.92 kg |   -2.15 kg | Max: 2.15 kg
+           | KF-GMO   |   -0.68 kg |   +0.65 kg |   -1.06 kg |   -1.00 kg | Max: 2.15 kg
+  N2       | Branch B |  +11.40 kg |   -2.00 kg |   -4.62 kg |   -0.39 kg | Max: 11.40 kg
+           | KF-GMO   |  +10.98 kg |   -2.09 kg |   -3.96 kg |   +0.53 kg | Max: 11.40 kg
+  N4       | Branch B |   -0.03 kg |   -0.15 kg |   -0.27 kg |   -0.39 kg | Max: 0.52 kg
+           | KF-GMO   |   +0.05 kg |   +0.21 kg |   +0.36 kg |   +0.52 kg | Max: 0.52 kg
+  N5_all   | Branch B |  -12.89 kg |   +5.67 kg |   +2.88 kg |   +2.38 kg | Max: 13.24 kg
+           | KF-GMO   |  -13.24 kg |   +7.13 kg |   +3.32 kg |   +2.89 kg | Max: 13.24 kg
+
+========================================================================================
+  PROCESSING OPERATIONAL ENVELOPE: CASE E1
+========================================================================================
+--- Single-Channel Pitch Mass Estimation Error [kg] (Case: E1) ---
+  Cond     | Branch   |        0 t |        5 t |       10 t |       15 t | Gate Status (<= 500 kg)
+  ----------------------------------------------------------------------------------
+  N0       | Branch B |   -0.10 kg |   +8.17 kg |  +16.45 kg |  +24.72 kg | PASS
+           | KF-GMO   |   +0.00 kg |   +8.23 kg |  +16.45 kg |  +24.68 kg | PASS
+  N1       | Branch B |   -1.24 kg |   +8.31 kg |  +17.71 kg |  +25.16 kg | PASS
+           | KF-GMO   |   +0.03 kg |   +6.91 kg |  +17.83 kg |  +24.68 kg | PASS
+  N2       | Branch B |   +7.79 kg |  -11.46 kg |  +22.73 kg |  +26.32 kg | PASS
+           | KF-GMO   |   +7.80 kg |  -11.52 kg |  +22.85 kg |  +27.02 kg | PASS
+  N4       | Branch B |   +0.10 kg |   +8.37 kg |  +16.65 kg |  +24.92 kg | PASS
+           | KF-GMO   |   +0.18 kg |   +8.40 kg |  +16.63 kg |  +24.85 kg | PASS
+  N5_all   | Branch B |  +18.91 kg |   -0.86 kg |   -0.06 kg |  +29.28 kg | PASS
+           | KF-GMO   |  +19.26 kg |   -1.44 kg |   +1.26 kg |  +28.37 kg | PASS
+
+  --- 2-DOF Multi-Channel Fused Projection Mass Error [kg] (Case: E1) ---
+  Cond     | Branch   |        0 t |        5 t |       10 t |       15 t | Max Error
+  ----------------------------------------------------------------------------------
+  N0       | Branch B |   -0.14 kg |   +2.61 kg |   +5.36 kg |   +8.12 kg | Max: 9.33 kg
+           | KF-GMO   |   -0.01 kg |   +3.10 kg |   +6.22 kg |   +9.33 kg | Max: 9.33 kg
+  N1       | Branch B |   -1.17 kg |   +2.83 kg |   +6.70 kg |   +8.65 kg | Max: 9.49 kg
+           | KF-GMO   |   +0.14 kg |   +1.88 kg |   +7.75 kg |   +9.49 kg | Max: 9.49 kg
+  N2       | Branch B |   +7.86 kg |  -16.65 kg |  +12.32 kg |   +9.49 kg | Max: 16.65 kg
+           | KF-GMO   |   +7.91 kg |  -16.31 kg |  +13.26 kg |  +11.44 kg | Max: 16.65 kg
+  N4       | Branch B |   +0.09 kg |   +2.84 kg |   +5.60 kg |   +8.35 kg | Max: 9.58 kg
+           | KF-GMO   |   +0.24 kg |   +3.35 kg |   +6.46 kg |   +9.58 kg | Max: 9.58 kg
+  N5_all   | Branch B |  +18.55 kg |   -6.28 kg |  -10.28 kg |  +12.08 kg | Max: 18.95 kg
+           | KF-GMO   |  +18.95 kg |   -6.36 kg |   -8.16 kg |  +12.45 kg | Max: 18.95 kg
+
+--- [GATE G3] Tare Baseline Recovery Check (m_pay = 0) ---
+  Max Tare Estimation Error: 19.26 kg (Limit <= 50.0 kg)
+  Verdict:                   PASS
+
+--- [GATE G4] Direct Mass Accuracy Gate across All Payloads & Noise ---
+  Max Observed Mass Error:   29.28 kg (Limit <= 500.0 kg / 0.5 t)
+  Margin over Threshold:     17.1 x better than limit
+  Verdict:                   PASS
+
+--- [GATE G5] Monotonicity across Payload Tiers (Step in [4.5, 5.5] t) ---
+  Monotonicity Verified across all 5 noise conditions and 2 operating cases: PASS
+  Verdict:                   PASS
+
+========================================================================================
+  TEST 1 PAYLOAD ESTIMATION OVERALL SCORECARD: PASS
+  Gate G1 (M3 Code Identity):     PASS
+  Gate G2 (Provenance & Grid):    PASS
+  Gate G3 (Tare Zero Baseline):   PASS (Max Error: 19.26 kg <= 50 kg)
+  Gate G4 (Mass Error <= 0.5 t):  PASS (Max Error: 29.28 kg <= 500 kg)
+  Gate G5 (Monotonicity Check):   PASS (Step 5.0 +/- 0.5 t)
+========================================================================================
+Saved Test 1 payload results to: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M3\06_RESULTS_MAT\Test1_payload_results.mat
+Log recorded to: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M3\06_RESULTS_MAT\Test1_payload_log_20261118_234831.txt

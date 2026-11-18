@@ -1,0 +1,99 @@
+========================================================================================
+  MILESTONE 2 BATCH 1: TEST 2 SIMSCAPE PARAMETER CALIBRATION
+  Linear Least-Squares Parameter Identification on P08B rev2 30 Hz Export
+  Timestamp: 20261118_215547 | Commit: 887fb8b4fb079bce4f89d4f1404efcb735a08533  [DIRTY]
+========================================================================================
+
+--- [GATE G1] Input Dataset Provenance & Integrity ---
+  File:     M2\experiments\08_held_out\rev2\MS02P08B_simscape_20261118_130959.mat
+  Expected: 5eaa1131f51257e72b24b2596a83598d
+  Actual:   5eaa1131f51257e72b24b2596a83598d
+  Verdict:  PASS
+
+Ground Truth Parameters (Simscape Model Truth):
+  Md  =     54300.00 kg
+  c   =      -1.3200 m
+  Izz =     287900.0 kg*m^2
+  fv3 =      3800.00 N*m*s/rad
+  fc3 =       340.00 N*m
+  fv4 =      1473.00 N*s/m
+  fc4 =       480.00 N
+  g   =      9.80665 m/s^2
+
+========================================================================================
+  PROCESSING CASE: E0
+========================================================================================
+--- [GATE G2] Time Base & Uniform 30 Hz Grid (Case E0) ---
+  Samples: N = 1951 (Expected: 1951)
+  Duration: [0.0000, 65.0000] s (Expected: [0, 65] s)
+  Max |dt - 1/30|: 1.23e-14 s (Limit: < 1e-12 s)
+  Verdict: PASS
+
+--- Calibration Metrics (Case: E0) ---
+  Regressor Rows: 2N = 7 | Rank = 7 | cond(Y_scaled) = 16.93 (Limit < 100)
+  Model Fit: R^2 = 0.99998528 (Limit > 0.9999) | Residual RMS = 4400.91 N/Nm
+  Algebraic Consistency Error: 0.00e+00 (Limit < 1e-12)
+
+  Param    |      Estimated |          Truth |  Rel Error |    Std Error | Gate Status
+  ----------------------------------------------------------------------------------
+  Md [kg]  |       54226.68 |       54300.00 |   -0.1350 % |      14.7053 | FAIL (G4 < 0.1%)
+  c [m]    |        -1.3105 |        -1.3200 |   +0.7204 % |     0.001967 | FAIL (G4 < 0.1%)
+  Izz      |       236794.6 |       287900.0 |  -17.7511 % |     10016.49 | FAIL (G4 < 1.0%)
+  fv3      |       11391.53 |        3800.00 | +199.7772 % |    4170.4045 | FAIL (G5 < 5.0%)
+  fc3      |        -152.72 |         340.00 | -144.9173 % |     243.5027 | FAIL (G5 < 5.0%)
+  fv4      |        1597.67 |        1473.00 |   +8.4639 % |     539.7977 | FAIL (G5 < 5.0%)
+  fc4      |         418.38 |         480.00 |  -12.8371 % |     240.1395 | FAIL (G5 < 5.0%)
+  ----------------------------------------------------------------------------------
+  CASE E0 VERDICT: FAIL
+
+========================================================================================
+  PROCESSING CASE: E1
+========================================================================================
+--- [GATE G2] Time Base & Uniform 30 Hz Grid (Case E1) ---
+  Samples: N = 1951 (Expected: 1951)
+  Duration: [0.0000, 65.0000] s (Expected: [0, 65] s)
+  Max |dt - 1/30|: 1.23e-14 s (Limit: < 1e-12 s)
+  Verdict: PASS
+
+--- Calibration Metrics (Case: E1) ---
+  Regressor Rows: 2N = 7 | Rank = 7 | cond(Y_scaled) = 61.29 (Limit < 100)
+  Model Fit: R^2 = 0.99999589 (Limit > 0.9999) | Residual RMS = 3268.59 N/Nm
+  Algebraic Consistency Error: 0.00e+00 (Limit < 1e-12)
+
+  Param    |      Estimated |          Truth |  Rel Error |    Std Error | Gate Status
+  ----------------------------------------------------------------------------------
+  Md [kg]  |       54192.64 |       54300.00 |   -0.1977 % |      33.6204 | FAIL (G4 < 0.1%)
+  c [m]    |        -1.3083 |        -1.3200 |   +0.8850 % |     0.003739 | FAIL (G4 < 0.1%)
+  Izz      |       272227.5 |       287900.0 |   -5.4437 % |      4302.56 | FAIL (G4 < 1.0%)
+  fv3      |       -3435.28 |        3800.00 | -190.4020 % |    3163.4864 | FAIL (G5 < 5.0%)
+  fc3      |         821.45 |         340.00 | +141.6017 % |     180.8814 | FAIL (G5 < 5.0%)
+  fv4      |        1339.73 |        1473.00 |   -9.0474 % |    1795.4386 | FAIL (G5 < 5.0%)
+  fc4      |         493.96 |         480.00 |   +2.9092 % |     179.3318 | PASS (G5 < 5.0%)
+  ----------------------------------------------------------------------------------
+  CASE E1 VERDICT: FAIL
+
+========================================================================================
+  PROCESSING COMBINED DATASET (E0 + E1 CONCATENATED)
+========================================================================================
+--- Calibration Metrics (Case: combined (E0+E1)) ---
+  Regressor Rows: 2N = 7 | Rank = 7 | cond(Y_scaled) = 15.95 (Limit < 100)
+  Model Fit: R^2 = 0.99999229 (Limit > 0.9999) | Residual RMS = 3886.59 N/Nm
+  Algebraic Consistency Error: 0.00e+00 (Limit < 1e-12)
+
+  Param    |      Estimated |          Truth |  Rel Error |    Std Error | Gate Status
+  ----------------------------------------------------------------------------------
+  Md [kg]  |       54271.84 |       54300.00 |   -0.0519 % |       8.0000 | PASS (G4 < 0.1%)
+  c [m]    |        -1.3169 |        -1.3200 |   +0.2334 % |     0.000948 | FAIL (G4 < 0.1%)
+  Izz      |       275193.2 |       287900.0 |   -4.4136 % |      3202.29 | FAIL (G4 < 1.0%)
+  fv3      |        4133.29 |        3800.00 |   +8.7709 % |    2629.6425 | FAIL (G5 < 5.0%)
+  fc3      |         326.92 |         340.00 |   -3.8484 % |     151.9534 | PASS (G5 < 5.0%)
+  fv4      |        1496.12 |        1473.00 |   +1.5698 % |     310.7335 | PASS (G5 < 5.0%)
+  fc4      |         470.19 |         480.00 |   -2.0436 % |     100.2272 | PASS (G5 < 5.0%)
+  ----------------------------------------------------------------------------------
+  CASE combined (E0+E1) VERDICT: FAIL
+
+========================================================================================
+  TEST 2 CALIBRATION OVERALL SCORECARD: FAIL
+========================================================================================
+Saved Test 2 calibration results to: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M2\experiments\08_held_out\rev2\Test2_calibration_results.mat
+Log recorded to: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M2\experiments\08_held_out\rev2\Test2_calibration_log_20261118_215547.txt

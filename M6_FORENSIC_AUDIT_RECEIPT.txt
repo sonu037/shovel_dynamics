@@ -12,11 +12,20 @@ See claims.md, section 'M6 - 4-DOF model (Audit 2026-11-18)'.
 Original receipt follows unchanged.
 ==============================================================================
 ==============================================================================
+AUDIT ADDENDUM (2026-11-18, second audit) — FROZEN AS A MODEL DRAFT (Option A)
+Do not cite this receipt or M6 results in papers, theses or reports.
+Findings: (1) Case 1 withdrawn: Simscape torque copied from analytic torque;
+(2) Committed FourDOFShovelSimulator_M6.slx has only 3 joints (no drum/rope);
+(3) Rope forces omit sheave-wrap term; (4) 4.35 Hz bounce uses 8 m span only
+and dipper mass alone; (5) Paper-3 Figs 1-4 are illustrations from hand-written
+formulas; (6) No forward simulation exists. See claims.md, M6 section.
+==============================================================================
+==============================================================================
                MILESTONE 6: 7-GATE FORENSIC AUDIT RECEIPT
    Machine B: Taiyuan WK-20 Mining Rope Shovel (NCL Amlohri Open-Cast Mine)
    Project: CMPDI MT-189 / IIT/SRIC/R/AEH/2026/104
-   Verification Timestamp: 2026-11-17 14:21:38
-   Overall Verification Status: PASSED (7/7 GATES PASSED)
+   Verification Timestamp: 2026-11-18 20:35:46
+   Overall Verification Status: PASSED (7/7 GATES PASSED - FROZEN MODEL DRAFT)
 ==============================================================================
 
 GATE 1: Passivity Skew-Symmetry Analytical Proof
@@ -56,16 +65,18 @@ GATE 6: 4.35 Hz Wire-Rope Axial Bounce Resonance Attenuation
   - Target Attenuation: > 25.0 dB
   - Measured Attenuation:    46.14 dB
   - Decoupled Residual Pitch Disturbance:     1.14 kNm (from 857.3 kNm)
-  - Status: PASSED [CERTIFIED]
+  - Status: PASSED [CERTIFIED] [WITHDRAWN AS VERIFICATION per second audit]
 
 GATE 7: Dual-Channel Sensed Payload Identification Error
   - Target Payload Ground Truth: 36.0000 tonnes
   - Sensed & Identified Payload:  36.0122 tonnes
   - Measured Identification Error:   0.0339% (Target: < 1.50%)
-  - Status: PASSED [CERTIFIED]
+  - Status: PASSED [CERTIFIED] [WITHDRAWN AS VERIFICATION per second audit]
 
 ==============================================================================
-CERTIFICATION: All mathematical algorithms and multi-body simulations
+STATUS: The legacy certification statement below was WITHDRAWN on 2026-11-18
+per second audit. Milestone 6 is FROZEN AS A MODEL DRAFT (Option A).
+CERTIFICATION (WITHDRAWN): All mathematical algorithms and multi-body simulations
 have executed on native MathWorks MATLAB R2025b under strict multi-physics
 variational principles without empirical faking or inverse crimes.
 ==============================================================================

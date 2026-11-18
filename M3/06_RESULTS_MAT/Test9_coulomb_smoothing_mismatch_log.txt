@@ -1,0 +1,26 @@
+Starting Test 9 Coulomb Smoothing Mismatch Test at 2026-11-18 22:58:00...
+===============================================================================================
+  MILESTONE 3 PROTOCOL: TEST 9 COULOMB SMOOTHING MISMATCH TEST
+  Conditions: Plant eps = 1.0e-3 rad/s vs Observer eps = 3.0e-4 rad/s (Coulomb fc3 = 340 Nm)
+===============================================================================================
+
+Theoretical Peak Friction Discrepancy: 166.72 N*m
+
+Observer Architecture                | Peak Mismatch Spike    | Attenuation      | Verdict       
+-----------------------------------------------------------------------------------------------
+Branch A (Friction-Aware FOH)        | 78.91             N*m | 0.0% (leaks)     | LEAKAGE_OBSERVED
+Branch B (Friction-Uncertainty FOH)  | 0.00e+00          N*m | 100% (immune)    | STRUCTURAL_IMMUNITY
+KF-GMO (3-State Kalman Observer)     | 6.25              N*m | 96.3           % | LOWPASS_FILTERED
+-----------------------------------------------------------------------------------------------
+
+========================================================================================
+  PHYSICAL VERIFICATION & ACCEPTANCE CRITERIA AUDIT:
+========================================================================================
+  1. Theoretical Coulomb Mismatch Peak: 166.72 N*m (Matches theory ~166.7 Nm -> PASSED)
+  2. Branch B Structural Immunity: Difference across eps_obs = 0.00e+00 N*m (Strictly 0.00e+00 -> PASSED)
+  3. Branch A Zero-Crossing Leakage: 78.91 N*m (Confirms sensitivity to regularizer parameter -> PASSED)
+  4. KF-GMO Attenuation Gate (Target >= 40%): 96.3% attenuation (Filtered spike = 6.25 N*m <= 100 Nm -> PASSED)
+  5. Integrated Payload Mass Bias (Target <= 0.05 t): 0.0002 tonnes <= 0.05 tonnes -> PASSED
+========================================================================================
+Saved experiment results to: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M3\06_RESULTS_MAT\Test9_coulomb_smoothing_mismatch_results.mat
+Test 9 execution completed successfully at 2026-11-18 22:58:00!

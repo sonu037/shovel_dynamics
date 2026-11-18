@@ -1,0 +1,4899 @@
+{
+  "suite": "shovel-dynamics-e2e",
+  "version": "1.0.0",
+  "timestamp": "2026-11-18T18:15:31.375594+00:00",
+  "environment": {
+    "python_version": "3.14.6",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "numpy_version": "2.5.1",
+    "scipy_version": "1.18.0"
+  },
+  "summary": {
+    "total_executed": 160,
+    "passed": 160,
+    "failed": 0,
+    "errors": 0,
+    "pass_rate_pct": 100.0,
+    "duration_sec": 6.4974,
+    "all_passed": true,
+    "tier_breakdown": {
+      "tier_1": {
+        "total": 68,
+        "passed": 68,
+        "failed": 0,
+        "error": 0
+      },
+      "tier_2": {
+        "total": 72,
+        "passed": 72,
+        "failed": 0,
+        "error": 0
+      },
+      "tier_3": {
+        "total": 13,
+        "passed": 13,
+        "failed": 0,
+        "error": 0
+      },
+      "tier_4": {
+        "total": 7,
+        "passed": 7,
+        "failed": 0,
+        "error": 0
+      }
+    }
+  },
+  "results": [
+    {
+      "test_id": "TC-T1-F01-01",
+      "name": "Mass Matrix Positive Definiteness on Operational Envelope",
+      "tier": 1,
+      "features": [
+        1
+      ],
+      "status": "PASS",
+      "duration_sec": 0.003,
+      "assertions": [
+        {
+          "name": "MASS_MATRIX_POSITIVE_DEFINITE",
+          "value": "PASS",
+          "threshold": "PASS",
+          "operator": "==",
+          "status": "PASS",
+          "message": "Mass matrix strictly positive definite (min eig: 5.43e+04 >= 1.40e+03)"
+        },
+        {
+          "name": "Min eigenvalue exceeds empty dipper mass",
+          "value": 54300.0,
+          "threshold": 50000.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 5.4300e+04 >= floor 5.0000e+04"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F01-02",
+      "name": "Passivity Skew-Symmetry Invariant Verification",
+      "tier": 1,
+      "features": [
+        1
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0,
+      "assertions": [
+        {
+          "name": "PASSIVITY_SKEW_SYMMETRY",
+          "value": "PASS",
+          "threshold": "PASS",
+          "operator": "==",
+          "status": "PASS",
+          "message": "Passivity skew-symmetry satisfied (norm: 0.00e+00 < 1.00e-12)"
+        },
+        {
+          "name": "Frobenius norm within machine precision",
+          "value": 0.0,
+          "threshold": 1e-15,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 0.0000e+00 <= ceiling 1.0000e-15"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F01-03",
+      "name": "30 Hz Uniform Time Grid on P08B Rev2 Simscape Export",
+      "tier": 1,
+      "features": [
+        1
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1178,
+      "assertions": [
+        {
+          "name": "TIME_GRID_REGULARITY",
+          "value": "PASS",
+          "threshold": "PASS",
+          "operator": "==",
+          "status": "PASS",
+          "message": "Time grid strictly uniform at 30.0 Hz (jitter: 1.23e-14 s < 1.00e-09 s)"
+        },
+        {
+          "name": "Sample count exactly 1951",
+          "value": 1951.0,
+          "threshold": 1951.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Actual: 1951, Expected: 1951"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F01-04",
+      "name": "Cryptographic Provenance Hash on Frozen Simscape Telemetry",
+      "tier": 1,
+      "features": [
+        1
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0048,
+      "assertions": [
+        {
+          "name": "DATASET_PROVENANCE_MD5",
+          "value": "PASS",
+          "threshold": "PASS",
+          "operator": "==",
+          "status": "PASS",
+          "message": "Cryptographic provenance verified (MD5: 5eaa1131f51257e72b24b2596a83598d)"
+        },
+        {
+          "name": "Exact MD5 string match",
+          "value": "5eaa1131f51257e72b24b2596a83598d",
+          "threshold": "5eaa1131f51257e72b24b2596a83598d",
+          "operator": "==",
+          "status": "PASS",
+          "message": "Actual: 5eaa1131f51257e72b24b2596a83598d, Expected: 5eaa1131f51257e72b24b2596a83598d"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F01-05",
+      "name": "OEM Actuator Physical Bounds Enforcement",
+      "tier": 1,
+      "features": [
+        1
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1191,
+      "assertions": [
+        {
+          "name": "OEM_PHYSICAL_BOUNDS",
+          "value": "PASS",
+          "threshold": "PASS",
+          "operator": "==",
+          "status": "PASS",
+          "message": "Actuator states within OEM envelopes (Force: 223.2/745.0 kN, Speed: 0.140/0.54 m/s)"
+        },
+        {
+          "name": "Field envelope peak force comfortably below 745 kN",
+          "value": 223.20621925302825,
+          "threshold": 600.0,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 2.2321e+02 <= ceiling 6.0000e+02"
+        },
+        {
+          "name": "Field envelope peak speed within OEM 0.540 m/s ceiling",
+          "value": 0.14048289316396365,
+          "threshold": 0.54,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 1.4048e-01 <= ceiling 5.4000e-01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F01-06",
+      "name": "Code Inspection: Elimination of 'bytes > 500' Naive Assertions",
+      "tier": 1,
+      "features": [
+        1
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0022,
+      "assertions": [
+        {
+          "name": "At least 3 core audit scripts inspected in repository",
+          "value": 4.0,
+          "threshold": 3.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 4.0000e+00 >= floor 3.0000e+00"
+        },
+        {
+          "name": "Zero naive 'bytes > 500' assertions found across all audit scripts",
+          "value": 0.0,
+          "threshold": 0.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Actual: 0, Expected: 0"
+        },
+        {
+          "name": "audit_verify_readonly.m exists",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Invariant gate 'Mass Matrix Positive Definiteness' present in audit_verify_readonly.m",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Invariant gate 'Passivity Skew-Symmetry' present in audit_verify_readonly.m",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Invariant gate 'Cryptographic Provenance MD5' present in audit_verify_readonly.m",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Invariant gate 'Actuator Ceilings & Dissipativity' present in audit_verify_readonly.m",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F02-01",
+      "name": "Verification of Complete Frozen M1-M9 Roadmap Table",
+      "tier": 1,
+      "features": [
+        2
+      ],
+      "status": "PASS",
+      "duration_sec": 0.001,
+      "assertions": [
+        {
+          "name": "claims.md exists",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Milestone M1 documented in claims.md",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Milestone M2 documented in claims.md",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Milestone M3 documented in claims.md",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Milestone M4 documented in claims.md",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Milestone M5 documented in claims.md",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Milestone M6 documented in claims.md",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Milestone M7 documented in claims.md",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Milestone M8 documented in claims.md",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Milestone M9 documented in claims.md",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "FROZEN status codified in claims.md",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F02-02",
+      "name": "Verification of Codified M5 Second Audit Findings",
+      "tier": 1,
+      "features": [
+        2
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0006,
+      "assertions": [
+        {
+          "name": "M5 section present",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "M5 unverified/model-draft status recorded",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "M5 Option A freeze decision recorded",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F02-03",
+      "name": "Verification of Codified M6 Second Audit Withdrawals",
+      "tier": 1,
+      "features": [
+        2
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0006,
+      "assertions": [
+        {
+          "name": "M6 section present",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "M6 withdrawal notices codified",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F02-04",
+      "name": "Verification of P08B Rev2 and MS03/04-IND1 Status Rows",
+      "tier": 1,
+      "features": [
+        2
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0005,
+      "assertions": [
+        {
+          "name": "P08B rev2 recorded",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "MS03-IND1 recorded",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "MS04-IND1 recorded",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F02-05",
+      "name": "Verification of Unplanned DIRTY Rerun Disclaimers",
+      "tier": 1,
+      "features": [
+        2
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0006,
+      "assertions": [
+        {
+          "name": "DIRTY rerun disclaimer preserved",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F03-01",
+      "name": "Verify M5 Report STATUS NOTICE Banner Presence",
+      "tier": 1,
+      "features": [
+        3
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0006,
+      "assertions": [
+        {
+          "name": "M5 report exists",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "STATUS NOTICE banner in top 10 lines of M5 report",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "'not verified' statement present in M5 header",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F03-02",
+      "name": "Verify M5 Report AUDIT ADDENDUM Banner Presence",
+      "tier": 1,
+      "features": [
+        3
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0008,
+      "assertions": [
+        {
+          "name": "AUDIT ADDENDUM banner in top 10 lines of M5 report",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Model draft freeze notice present",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F03-03",
+      "name": "Verify M6 Report STATUS NOTICE Banner Presence",
+      "tier": 1,
+      "features": [
+        3
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0011,
+      "assertions": [
+        {
+          "name": "M6 report exists",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "STATUS NOTICE banner in top 10 lines of M6 report",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Withdrawal notice present in M6 header",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F03-04",
+      "name": "Verify M6 Report AUDIT ADDENDUM Banner Presence",
+      "tier": 1,
+      "features": [
+        3
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0007,
+      "assertions": [
+        {
+          "name": "AUDIT ADDENDUM banner in top 10 lines of M6 report",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Option A freeze notice present",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F03-05",
+      "name": "Verify M5 Forensic Audit Receipt Header Banner",
+      "tier": 1,
+      "features": [
+        3
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0006,
+      "assertions": [
+        {
+          "name": "M5 receipt exists",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "STATUS NOTICE in M5 receipt header",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Warning that gates check only existence",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F03-06",
+      "name": "Verify M6 Forensic Audit Receipt Header Banner",
+      "tier": 1,
+      "features": [
+        3
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0006,
+      "assertions": [
+        {
+          "name": "M6 receipt exists",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "STATUS NOTICE in M6 receipt header",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "WITHDRAWN notice in M6 receipt header",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F04-01",
+      "name": "Calibration on Full 2-DOF Case E0 Steady-State Window",
+      "tier": 1,
+      "features": [
+        4
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1182,
+      "assertions": [
+        {
+          "name": "Md relative error <= 1.0%",
+          "value": 3.169830195484837e-07,
+          "threshold": 0.01,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 3.1698e-07 <= ceiling 1.0000e-02"
+        },
+        {
+          "name": "c absolute error <= 0.05 m",
+          "value": 3.184524560273516e-06,
+          "threshold": 0.05,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 3.1845e-06 <= ceiling 5.0000e-02"
+        },
+        {
+          "name": "Izz relative error <= 5.0%",
+          "value": 0.00025657855381278695,
+          "threshold": 0.05,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 2.5658e-04 <= ceiling 5.0000e-02"
+        },
+        {
+          "name": "Identification fit quality R^2 >= 0.999",
+          "value": 0.9999999999101921,
+          "threshold": 0.999,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 1.0000e+00 >= floor 9.9900e-01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F04-02",
+      "name": "Calibration on Full 2-DOF Case E1 Field Envelope",
+      "tier": 1,
+      "features": [
+        4
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1161,
+      "assertions": [
+        {
+          "name": "Case E1 Md relative error <= 1.0%",
+          "value": 1.890100929729596e-07,
+          "threshold": 0.01,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 1.8901e-07 <= ceiling 1.0000e-02"
+        },
+        {
+          "name": "Case E1 R^2 >= 0.99",
+          "value": 0.9999999999662353,
+          "threshold": 0.99,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 1.0000e+00 >= floor 9.9000e-01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F04-03",
+      "name": "Comparison of 2-DOF Stacking vs Revolute-Only Subspace",
+      "tier": 1,
+      "features": [
+        4
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1169,
+      "assertions": [
+        {
+          "name": "2-DOF column-scaled condition number is well-conditioned",
+          "value": 16.977435125145515,
+          "threshold": 500.0,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 1.6977e+01 <= ceiling 5.0000e+02"
+        },
+        {
+          "name": "Full rank observability in 2-DOF",
+          "value": 0.42760749515286645,
+          "threshold": 0.0001,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 4.2761e-01 >= floor 1.0000e-04"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F04-04",
+      "name": "Verification of Regressor Torque Reconstruction Fit Quality",
+      "tier": 1,
+      "features": [
+        4
+      ],
+      "status": "PASS",
+      "duration_sec": 0.121,
+      "assertions": [
+        {
+          "name": "RMSE tau3 < 500 Nm",
+          "value": 2.5757010243296214,
+          "threshold": 500.0,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 2.5757e+00 <= ceiling 5.0000e+02"
+        },
+        {
+          "name": "RMSE f4 < 300 N",
+          "value": 15.154175252353452,
+          "threshold": 300.0,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 1.5154e+01 <= ceiling 3.0000e+02"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F04-05",
+      "name": "Calibration Invariance Under External Load Subtraction",
+      "tier": 1,
+      "features": [
+        4
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1189,
+      "assertions": [
+        {
+          "name": "Subtracted load recovers model within 100 Nm",
+          "value": 69.59352698316798,
+          "threshold": 100.0,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 6.9594e+01 <= ceiling 1.0000e+02"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F05-01",
+      "name": "Zero-Payload Baseline Estimation (Tare Check, 0 t)",
+      "tier": 1,
+      "features": [
+        5
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1359,
+      "assertions": [
+        {
+          "name": "Zero payload error <= 0.50 tonnes",
+          "value": 0.006787308207185199,
+          "threshold": 0.5,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 6.7873e-03 <= ceiling 5.0000e-01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F05-02",
+      "name": "Nominal 5-Tonne Payload Mass Estimation (5 t)",
+      "tier": 1,
+      "features": [
+        5
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1356,
+      "assertions": [
+        {
+          "name": "5 t payload error <= 0.50 tonnes",
+          "value": 0.04850543061450452,
+          "threshold": 0.5,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 4.8505e-02 <= ceiling 5.0000e-01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F05-03",
+      "name": "Medium 10-Tonne Payload Mass Estimation (10 t)",
+      "tier": 1,
+      "features": [
+        5
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1384,
+      "assertions": [
+        {
+          "name": "10 t payload error <= 0.50 tonnes",
+          "value": 0.05855834084881195,
+          "threshold": 0.5,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 5.8558e-02 <= ceiling 5.0000e-01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F05-04",
+      "name": "Heavy 15-Tonne Payload Mass Estimation (15 t)",
+      "tier": 1,
+      "features": [
+        5
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1362,
+      "assertions": [
+        {
+          "name": "15 t payload error <= 0.50 tonnes",
+          "value": 0.1377808862721377,
+          "threshold": 0.5,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 1.3778e-01 <= ceiling 5.0000e-01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F05-05",
+      "name": "Comparative Estimator Verification: Branch B vs KF-GMO",
+      "tier": 1,
+      "features": [
+        5
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1936,
+      "assertions": [
+        {
+          "name": "Branch B payload error <= 0.50 t",
+          "value": 0.04514466039803011,
+          "threshold": 0.5,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 4.5145e-02 <= ceiling 5.0000e-01"
+        },
+        {
+          "name": "KF-GMO payload error <= 0.50 t",
+          "value": 0.04769408416985499,
+          "threshold": 0.5,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 4.7694e-02 <= ceiling 5.0000e-01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F05-06",
+      "name": "Kinematic Invariance Across Trajectory Envelopes (E0 vs E1)",
+      "tier": 1,
+      "features": [
+        5
+      ],
+      "status": "PASS",
+      "duration_sec": 0.3926,
+      "assertions": [
+        {
+          "name": "Envelope E0 mass error <= 0.50 t for 5.0 t",
+          "value": 0.0498244622480426,
+          "threshold": 0.5,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 4.9824e-02 <= ceiling 5.0000e-01"
+        },
+        {
+          "name": "Envelope E0 mass error <= 0.50 t for 10.0 t",
+          "value": 0.08859331594245745,
+          "threshold": 0.5,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 8.8593e-02 <= ceiling 5.0000e-01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F06-01",
+      "name": "Case 1A Joint-Side Resolver Static Gravity Step Error > 1000 Nm",
+      "tier": 1,
+      "features": [
+        6
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0,
+      "assertions": [
+        {
+          "name": "Case 1A gravity torque step error > 1000 Nm (rejection gate)",
+          "value": 7907.070527799834,
+          "threshold": 1000.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 7.9071e+03 >= floor 1.0000e+03"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F06-02",
+      "name": "Case 1B Motor-Shaft Encoder Static Gravity Step Error <= 10 Nm",
+      "tier": 1,
+      "features": [
+        6
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0,
+      "assertions": [
+        {
+          "name": "Case 1B RMS gravity error matches MS04P01 ~5.16 Nm",
+          "value": 5.1619331603217535,
+          "threshold": 5.1619,
+          "operator": "approx(+/-5.00e-02)",
+          "status": "PASS",
+          "message": "|5.1619e+00 - 5.1619e+00| = 3.3160e-05 <= 5.00e-02"
+        },
+        {
+          "name": "Case 1B gravity torque step error <= 10.0 Nm (frozen pass band)",
+          "value": 5.1619331603217535,
+          "threshold": 10.0,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 5.1619e+00 <= ceiling 1.0000e+01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F06-03",
+      "name": "Case 1B Motor-Shaft Encoder Relative Dynamic Noise Floor <= 0.10%",
+      "tier": 1,
+      "features": [
+        6
+      ],
+      "status": "PASS",
+      "duration_sec": 0.2343,
+      "assertions": [
+        {
+          "name": "Case 1B relative dynamic noise floor <= 0.10%",
+          "value": 0.017723992776772286,
+          "threshold": 0.1,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 1.7724e-02 <= ceiling 1.0000e-01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F06-04",
+      "name": "Noise Attenuation of KF-GMO Over Central Differencing >= 15.0 dB",
+      "tier": 1,
+      "features": [
+        6
+      ],
+      "status": "PASS",
+      "duration_sec": 0.2374,
+      "assertions": [
+        {
+          "name": "KF-GMO noise attenuation >= 15.0 dB over raw finite difference",
+          "value": 21.68764824887524,
+          "threshold": 15.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 2.1688e+01 >= floor 1.5000e+01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F06-05",
+      "name": "Quantization Word Length Monotonicity (10, 12, 14, 16 bits)",
+      "tier": 1,
+      "features": [
+        6
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0,
+      "assertions": [
+        {
+          "name": "Step size strictly decreases monotonically",
+          "value": 6.391586616190171e-06,
+          "threshold": 7.669903939428205e-06,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 6.3916e-06 <= ceiling 7.6699e-06"
+        },
+        {
+          "name": "Step size strictly decreases monotonically",
+          "value": 1.5978966540475428e-06,
+          "threshold": 1.917475984857051e-06,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 1.5979e-06 <= ceiling 1.9175e-06"
+        },
+        {
+          "name": "Step size strictly decreases monotonically",
+          "value": 3.994741635118857e-07,
+          "threshold": 4.793689962142628e-07,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 3.9947e-07 <= ceiling 4.7937e-07"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F07-01",
+      "name": "Identification Under Realistic Noise (N1, N2, N4) Using IDIM-IV",
+      "tier": 1,
+      "features": [
+        7
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1219,
+      "assertions": [
+        {
+          "name": "IDIM-IV mass error <= 2.0% under realistic industrial noise",
+          "value": 0.00020795296667155817,
+          "threshold": 0.02,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 2.0795e-04 <= ceiling 2.0000e-02"
+        },
+        {
+          "name": "IDIM-IV lever arm error <= 0.05 m",
+          "value": 0.002135458896604936,
+          "threshold": 0.05,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 2.1355e-03 <= ceiling 5.0000e-02"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F07-02",
+      "name": "Verification of EIV Attenuation Bias in Unweighted OLS",
+      "tier": 1,
+      "features": [
+        7
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1209,
+      "assertions": [
+        {
+          "name": "OLS exhibits measurable attenuation bias under measurement noise",
+          "value": 0.08843205784068243,
+          "threshold": 0.005,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 8.8432e-02 >= floor 5.0000e-03"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F07-03",
+      "name": "Non-Oracle Digital Twin Instrument Generation",
+      "tier": 1,
+      "features": [
+        7
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1215,
+      "assertions": [
+        {
+          "name": "Digital twin instrument matrix is well-conditioned",
+          "value": 16.95488643371551,
+          "threshold": 500.0,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 1.6955e+01 <= ceiling 5.0000e+02"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F07-04",
+      "name": "Orthogonality Condition Verification of Instrument Z",
+      "tier": 1,
+      "features": [
+        7
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0002,
+      "assertions": [
+        {
+          "name": "Instrument Z is asymptotically orthogonal to noise e",
+          "value": 1.3657163857932657,
+          "threshold": 3.5,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 1.3657e+00 <= ceiling 3.5000e+00"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F07-05",
+      "name": "Realistic Noise vs Legacy 10% AWGN Over-Estimation Ratio",
+      "tier": 1,
+      "features": [
+        7
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0002,
+      "assertions": [
+        {
+          "name": "Legacy AWGN over-estimated position noise by > 2000x",
+          "value": 10031.661906991501,
+          "threshold": 2000.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 1.0032e+04 >= floor 2.0000e+03"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F08-01",
+      "name": "Matched Sinusoidal Excitation on Machine A and Machine B",
+      "tier": 1,
+      "features": [
+        8
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0,
+      "assertions": [
+        {
+          "name": "Machine A bail reference station = 1.50 m",
+          "value": 1.5,
+          "threshold": 1.5,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Actual: 1.5, Expected: 1.5"
+        },
+        {
+          "name": "Machine B bail reference station = 1.50 m",
+          "value": 1.5,
+          "threshold": 1.5,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Actual: 1.5, Expected: 1.5"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F08-02",
+      "name": "Adaptive Innovation-Gated KF-GMO Tracking of 50 kN Boulder Step",
+      "tier": 1,
+      "features": [
+        8
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0184,
+      "assertions": [
+        {
+          "name": "Adaptive innovation gate tracks 50 kN impact with NRMSE <= 10.0%",
+          "value": 0.024910562814421045,
+          "threshold": 0.1,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 2.4911e-02 <= ceiling 1.0000e-01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F08-03",
+      "name": "Impact Phase Lag Reduction with Adaptive Innovation Gating",
+      "tier": 1,
+      "features": [
+        8
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1839,
+      "assertions": [
+        {
+          "name": "Impact detection delay <= 33.3 ms (1 sample)",
+          "value": 0.0,
+          "threshold": 0.0334,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 0.0000e+00 <= ceiling 3.3400e-02"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F08-04",
+      "name": "Cross-Machine Generalization Under Matched Conditions",
+      "tier": 1,
+      "features": [
+        8
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0016,
+      "assertions": [
+        {
+          "name": "MS04P06_heldout_results.mat exists",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Machine A NRMSE <= 15.0%",
+          "value": 0.13678210897009657,
+          "threshold": 0.15,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 1.3678e-01 <= ceiling 1.5000e-01"
+        },
+        {
+          "name": "Machine B NRMSE <= 15.0%",
+          "value": 0.14341664184808384,
+          "threshold": 0.15,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 1.4342e-01 <= ceiling 1.5000e-01"
+        },
+        {
+          "name": "NRMSE difference between machines <= 3.0%",
+          "value": 0.006634532877987265,
+          "threshold": 0.03,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 6.6345e-03 <= ceiling 3.0000e-02"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F08-05",
+      "name": "Decoupling of Excitation Artifacts from Machine Structural Identity",
+      "tier": 1,
+      "features": [
+        8
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0,
+      "assertions": [
+        {
+          "name": "Mass scaling matches 1.0405",
+          "value": 1.0405156537753222,
+          "threshold": 1.0405156537753222,
+          "operator": "approx(+/-1.00e-02)",
+          "status": "PASS",
+          "message": "|1.0405e+00 - 1.0405e+00| = 0.0000e+00 <= 1.00e-02"
+        },
+        {
+          "name": "Inertia scaling matches 1.0768",
+          "value": 1.0767627648489058,
+          "threshold": 1.0767627648489058,
+          "operator": "approx(+/-1.00e-02)",
+          "status": "PASS",
+          "message": "|1.0768e+00 - 1.0768e+00| = 0.0000e+00 <= 1.00e-02"
+        },
+        {
+          "name": "Bail station strictly matched at 1.50 m across machines",
+          "value": 1.5,
+          "threshold": 1.5,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Actual: 1.5, Expected: 1.5"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F09-01",
+      "name": "VFD Stator Frequency Sweep (0 to 60 Hz) Mapping 6th Harmonics",
+      "tier": 1,
+      "features": [
+        9
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0,
+      "assertions": [
+        {
+          "name": "61 frequency points evaluated",
+          "value": 61.0,
+          "threshold": 61.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Actual: 61, Expected: 61"
+        },
+        {
+          "name": "At f0=10 Hz, 6th harmonic is 60 Hz",
+          "value": 60.0,
+          "threshold": 60.0,
+          "operator": "approx(+/-1.00e-06)",
+          "status": "PASS",
+          "message": "|6.0000e+01 - 6.0000e+01| = 0.0000e+00 <= 1.00e-06"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F09-02",
+      "name": "Detection of DC Aliasing Resonance at Integer Multiples of 5 Hz",
+      "tier": 1,
+      "features": [
+        9
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0,
+      "assertions": [
+        {
+          "name": "f0=5.0 Hz aliases to DC (0.0 Hz)",
+          "value": 0.0,
+          "threshold": 0.0,
+          "operator": "approx(+/-1.00e-09)",
+          "status": "PASS",
+          "message": "|0.0000e+00 - 0.0000e+00| = 0.0000e+00 <= 1.00e-09"
+        },
+        {
+          "name": "f0=10.0 Hz aliases to DC (0.0 Hz)",
+          "value": 0.0,
+          "threshold": 0.0,
+          "operator": "approx(+/-1.00e-09)",
+          "status": "PASS",
+          "message": "|0.0000e+00 - 0.0000e+00| = 0.0000e+00 <= 1.00e-09"
+        },
+        {
+          "name": "f0=15.0 Hz aliases to DC (0.0 Hz)",
+          "value": 0.0,
+          "threshold": 0.0,
+          "operator": "approx(+/-1.00e-09)",
+          "status": "PASS",
+          "message": "|0.0000e+00 - 0.0000e+00| = 0.0000e+00 <= 1.00e-09"
+        },
+        {
+          "name": "f0=20.0 Hz aliases to DC (0.0 Hz)",
+          "value": 0.0,
+          "threshold": 0.0,
+          "operator": "approx(+/-1.00e-09)",
+          "status": "PASS",
+          "message": "|0.0000e+00 - 0.0000e+00| = 0.0000e+00 <= 1.00e-09"
+        },
+        {
+          "name": "f0=25.0 Hz aliases to DC (0.0 Hz)",
+          "value": 0.0,
+          "threshold": 0.0,
+          "operator": "approx(+/-1.00e-09)",
+          "status": "PASS",
+          "message": "|0.0000e+00 - 0.0000e+00| = 0.0000e+00 <= 1.00e-09"
+        },
+        {
+          "name": "f0=30.0 Hz aliases to DC (0.0 Hz)",
+          "value": 0.0,
+          "threshold": 0.0,
+          "operator": "approx(+/-1.00e-09)",
+          "status": "PASS",
+          "message": "|0.0000e+00 - 0.0000e+00| = 0.0000e+00 <= 1.00e-09"
+        },
+        {
+          "name": "f0=35.0 Hz aliases to DC (0.0 Hz)",
+          "value": 0.0,
+          "threshold": 0.0,
+          "operator": "approx(+/-1.00e-09)",
+          "status": "PASS",
+          "message": "|0.0000e+00 - 0.0000e+00| = 0.0000e+00 <= 1.00e-09"
+        },
+        {
+          "name": "f0=40.0 Hz aliases to DC (0.0 Hz)",
+          "value": 0.0,
+          "threshold": 0.0,
+          "operator": "approx(+/-1.00e-09)",
+          "status": "PASS",
+          "message": "|0.0000e+00 - 0.0000e+00| = 0.0000e+00 <= 1.00e-09"
+        },
+        {
+          "name": "f0=45.0 Hz aliases to DC (0.0 Hz)",
+          "value": 0.0,
+          "threshold": 0.0,
+          "operator": "approx(+/-1.00e-09)",
+          "status": "PASS",
+          "message": "|0.0000e+00 - 0.0000e+00| = 0.0000e+00 <= 1.00e-09"
+        },
+        {
+          "name": "f0=50.0 Hz aliases to DC (0.0 Hz)",
+          "value": 0.0,
+          "threshold": 0.0,
+          "operator": "approx(+/-1.00e-09)",
+          "status": "PASS",
+          "message": "|0.0000e+00 - 0.0000e+00| = 0.0000e+00 <= 1.00e-09"
+        },
+        {
+          "name": "f0=55.0 Hz aliases to DC (0.0 Hz)",
+          "value": 0.0,
+          "threshold": 0.0,
+          "operator": "approx(+/-1.00e-09)",
+          "status": "PASS",
+          "message": "|0.0000e+00 - 0.0000e+00| = 0.0000e+00 <= 1.00e-09"
+        },
+        {
+          "name": "f0=60.0 Hz aliases to DC (0.0 Hz)",
+          "value": 0.0,
+          "threshold": 0.0,
+          "operator": "approx(+/-1.00e-09)",
+          "status": "PASS",
+          "message": "|0.0000e+00 - 0.0000e+00| = 0.0000e+00 <= 1.00e-09"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F09-03",
+      "name": "Mapping of Observer Passband Intrusion (fc = 3.18 Hz)",
+      "tier": 1,
+      "features": [
+        9
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0,
+      "assertions": [
+        {
+          "name": "6th harmonic folds inside observer passband (<= 3.18 Hz)",
+          "value": 1.2000000000000028,
+          "threshold": 3.183098861837907,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 1.2000e+00 <= ceiling 3.1831e+00"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F09-04",
+      "name": "Analog Butterworth Pre-Filter Rejection > 30 dB at 69 Hz",
+      "tier": 1,
+      "features": [
+        9
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0,
+      "assertions": [
+        {
+          "name": "Analog pre-filter provides > 30 dB rejection at 69 Hz",
+          "value": 33.555879173646595,
+          "threshold": 30.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 3.3556e+01 >= floor 3.0000e+01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F09-05",
+      "name": "Passband Fidelity of Analog Pre-Filter at Digging Frequencies",
+      "tier": 1,
+      "features": [
+        9
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0,
+      "assertions": [
+        {
+          "name": "Passband attenuation < 0.05 dB at digging frequencies (<= 1.5 Hz)",
+          "value": 0.0021980594777626116,
+          "threshold": 0.05,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 2.1981e-03 <= ceiling 5.0000e-02"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F10-01",
+      "name": "Cross-Correlation Peak at +10 Samples (+333.3 ms Physical Lag)",
+      "tier": 1,
+      "features": [
+        10
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0011,
+      "assertions": [
+        {
+          "name": "Physical lag equals +10 samples",
+          "value": 9.999999999999998,
+          "threshold": 10.0,
+          "operator": "approx(+/-1.00e-01)",
+          "status": "PASS",
+          "message": "|1.0000e+01 - 1.0000e+01| = 1.7764e-15 <= 1.00e-01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F10-02",
+      "name": "Proof of Sign Convention Bug in Legacy delay_ms Formula",
+      "tier": 1,
+      "features": [
+        10
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0009,
+      "assertions": [
+        {
+          "name": "MS04P05_ablation_results.mat exists",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Legacy formula produced negative string (-333.3 ms)",
+          "value": -333.3333333333333,
+          "threshold": -333.333,
+          "operator": "approx(+/-1.00e-01)",
+          "status": "PASS",
+          "message": "|-3.3333e+02 - -3.3333e+02| = 3.3333e-04 <= 1.00e-01"
+        },
+        {
+          "name": "Corrected physical delay is positive (+333.3 ms)",
+          "value": 333.33333333333326,
+          "threshold": 333.333,
+          "operator": "approx(+/-1.00e-01)",
+          "status": "PASS",
+          "message": "|3.3333e+02 - 3.3333e+02| = 3.3333e-04 <= 1.00e-01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F10-03",
+      "name": "DARE Dominant Closed-Loop Pole Frequency Calculation",
+      "tier": 1,
+      "features": [
+        10
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0011,
+      "assertions": [
+        {
+          "name": "DARE closed loop possesses complex conjugate dominant poles",
+          "value": 2.0,
+          "threshold": 2.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 2.0000e+00 >= floor 2.0000e+00"
+        },
+        {
+          "name": "All DARE closed-loop poles are strictly stable within the unit disk",
+          "value": 0.9717578899526237,
+          "threshold": 1.0,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 9.7176e-01 <= ceiling 1.0000e+00"
+        },
+        {
+          "name": "Dominant natural frequency wn >= 1.2 rad/s",
+          "value": 1.7183944778394624,
+          "threshold": 1.2,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 1.7184e+00 >= floor 1.2000e+00"
+        },
+        {
+          "name": "Dominant natural frequency wn <= 2.2 rad/s",
+          "value": 1.7183944778394624,
+          "threshold": 2.2,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 1.7184e+00 <= ceiling 2.2000e+00"
+        },
+        {
+          "name": "Dominant closed-loop damping ratio zeta approx 0.50",
+          "value": 0.5001515716334182,
+          "threshold": 0.5,
+          "operator": "approx(+/-5.00e-02)",
+          "status": "PASS",
+          "message": "|5.0015e-01 - 5.0000e-01| = 1.5157e-04 <= 5.00e-02"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F10-04",
+      "name": "Analytical Phase Lag at Digging Frequency w_F = 0.698 rad/s",
+      "tier": 1,
+      "features": [
+        10
+      ],
+      "status": "PASS",
+      "duration_sec": 0.001,
+      "assertions": [
+        {
+          "name": "Analytical phase lag matches 0.3333 s (10 samples)",
+          "value": 0.33333333333333326,
+          "threshold": 0.3333,
+          "operator": "approx(+/-1.00e-02)",
+          "status": "PASS",
+          "message": "|3.3333e-01 - 3.3330e-01| = 3.3333e-05 <= 1.00e-02"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F10-05",
+      "name": "Verification of Causal Physical Filter Operation (Lag > 0)",
+      "tier": 1,
+      "features": [
+        10
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0004,
+      "assertions": [
+        {
+          "name": "Physical delay is strictly causal (> 0)",
+          "value": 333.3333333333333,
+          "threshold": 0.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 3.3333e+02 >= floor 0.0000e+00"
+        },
+        {
+          "name": "Cross-correlation lag matches +10 samples (+333.3 ms)",
+          "value": 333.3333333333333,
+          "threshold": 333.333,
+          "operator": "approx(+/-4.00e+01)",
+          "status": "PASS",
+          "message": "|3.3333e+02 - 3.3333e+02| = 3.3333e-04 <= 4.00e+01"
+        },
+        {
+          "name": "Cross-correlation peak corresponds to exactly +10 samples lag",
+          "value": 10.0,
+          "threshold": 10.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Actual: 10, Expected: 10"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F11-01",
+      "name": "Dimensional Sensitivity of Condition Number in Unweighted Regressor",
+      "tier": 1,
+      "features": [
+        11
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0007,
+      "assertions": [
+        {
+          "name": "Condition number at s_bar=0.1 matches theory ~450",
+          "value": 449.98877136044,
+          "threshold": 449.99,
+          "operator": "approx(+/-1.00e+00)",
+          "status": "PASS",
+          "message": "|4.4999e+02 - 4.4999e+02| = 1.2286e-03 <= 1.00e+00"
+        },
+        {
+          "name": "Condition number at s_bar=3.0 matches theory ~39.1",
+          "value": 39.128765367247006,
+          "threshold": 39.13,
+          "operator": "approx(+/-1.00e+00)",
+          "status": "PASS",
+          "message": "|3.9129e+01 - 3.9130e+01| = 1.2346e-03 <= 1.00e+00"
+        },
+        {
+          "name": "Condition number drops from s_bar=0.1 to s_bar=3.0",
+          "value": 449.98877136044,
+          "threshold": 39.128765367247006,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 4.4999e+02 >= floor 3.9129e+01"
+        },
+        {
+          "name": "Condition number increases for s_bar > 10.0",
+          "value": 22.44530056629745,
+          "threshold": 88.0461999315427,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 2.2445e+01 <= ceiling 8.8046e+01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F11-02",
+      "name": "Noise Covariance Weighting Ln = sigma_tau3 / sigma_f4 approx 2.8 m",
+      "tier": 1,
+      "features": [
+        11
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0001,
+      "assertions": [
+        {
+          "name": "Statistically optimal weighting Ln in range [2.3, 3.3] m",
+          "value": 2.639314666987515,
+          "threshold": 2.8,
+          "operator": "approx(+/-5.00e-01)",
+          "status": "PASS",
+          "message": "|2.6393e+00 - 2.8000e+00| = 1.6069e-01 <= 5.00e-01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F11-03",
+      "name": "Improvement of Joint 2-Channel Condition Number Over Single Saddle",
+      "tier": 1,
+      "features": [
+        11
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0003,
+      "assertions": [
+        {
+          "name": "Single-channel saddle condition number approx 496",
+          "value": 495.87279433975874,
+          "threshold": 495.87,
+          "operator": "approx(+/-2.00e+00)",
+          "status": "PASS",
+          "message": "|4.9587e+02 - 4.9587e+02| = 2.7943e-03 <= 2.00e+00"
+        },
+        {
+          "name": "Joint weighted condition number approx 39.1",
+          "value": 39.128765367247006,
+          "threshold": 39.13,
+          "operator": "approx(+/-1.00e+00)",
+          "status": "PASS",
+          "message": "|3.9129e+01 - 3.9130e+01| = 1.2346e-03 <= 1.00e+00"
+        },
+        {
+          "name": "Joint weighting improves conditioning by > 10x over single saddle",
+          "value": 12.672845403776332,
+          "threshold": 10.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 1.2673e+01 >= floor 1.0000e+01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F11-04",
+      "name": "Parameter Subspace Angle theta_joint >= 2.5 deg",
+      "tier": 1,
+      "features": [
+        11
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0004,
+      "assertions": [
+        {
+          "name": "Subspace angle matches theoretical 2.93 deg",
+          "value": 2.9279385518763514,
+          "threshold": 2.93,
+          "operator": "approx(+/-1.00e-01)",
+          "status": "PASS",
+          "message": "|2.9279e+00 - 2.9300e+00| = 2.0614e-03 <= 1.00e-01"
+        },
+        {
+          "name": "Subspace angle theta_joint >= 2.5 deg (non-collinear columns)",
+          "value": 2.9279385518763514,
+          "threshold": 2.5,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 2.9279e+00 >= floor 2.5000e+00"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F11-05",
+      "name": "Gauss-Markov Invariance Under Unit Scaling",
+      "tier": 1,
+      "features": [
+        11
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0002,
+      "assertions": [
+        {
+          "name": "Gauss-Markov GLS estimator is strictly scale-invariant (< 1e-6)",
+          "value": 2.3283064365386963e-10,
+          "threshold": 1e-06,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 2.3283e-10 <= ceiling 1.0000e-06"
+        },
+        {
+          "name": "Unweighted OLS is sensitive to coordinate re-scaling (> 1.0)",
+          "value": 240.91949571573787,
+          "threshold": 1.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 2.4092e+02 >= floor 1.0000e+00"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F12-01",
+      "name": "Peak Coulomb Force Mismatch Evaluation (166.7 Nm)",
+      "tier": 1,
+      "features": [
+        12
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0,
+      "assertions": [
+        {
+          "name": "Peak Coulomb force discrepancy = 166.7 Nm",
+          "value": 166.72275723856785,
+          "threshold": 166.72,
+          "operator": "approx(+/-1.00e+00)",
+          "status": "PASS",
+          "message": "|1.6672e+02 - 1.6672e+02| = 2.7572e-03 <= 1.00e+00"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F12-02",
+      "name": "Proof of Branch B Structural Immunity to eps_obs",
+      "tier": 1,
+      "features": [
+        12
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1552,
+      "assertions": [
+        {
+          "name": "Branch B has 100% mathematical immunity to eps_obs",
+          "value": 0.0,
+          "threshold": 0.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Actual: 0.0, Expected: 0.0"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F12-03",
+      "name": "Branch A Zero-Crossing Torque Leakage",
+      "tier": 1,
+      "features": [
+        12
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0004,
+      "assertions": [
+        {
+          "name": "Branch A zero-crossing torque leakage exceeds 140 Nm",
+          "value": 158.95844795167704,
+          "threshold": 140.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 1.5896e+02 >= floor 1.4000e+02"
+        },
+        {
+          "name": "Branch A zero-crossing leakage matches theory ~166.7 Nm",
+          "value": 158.95844795167704,
+          "threshold": 166.72,
+          "operator": "approx(+/-1.50e+01)",
+          "status": "PASS",
+          "message": "|1.5896e+02 - 1.6672e+02| = 7.7616e+00 <= 1.50e+01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F12-04",
+      "name": "KF-GMO Low-Pass Attenuation of Coulomb Mismatch Spike",
+      "tier": 1,
+      "features": [
+        12
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0115,
+      "assertions": [
+        {
+          "name": "Raw Coulomb mismatch spike exceeds 150 Nm",
+          "value": 166.32439738244355,
+          "threshold": 150.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 1.6632e+02 >= floor 1.5000e+02"
+        },
+        {
+          "name": "KF-GMO low-pass filters mismatch spike to <= 100 Nm",
+          "value": 29.817983831550244,
+          "threshold": 100.0,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 2.9818e+01 <= ceiling 1.0000e+02"
+        },
+        {
+          "name": "KF-GMO attenuates Coulomb mismatch spike by >= 40%",
+          "value": 82.07239328636359,
+          "threshold": 40.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 8.2072e+01 >= floor 4.0000e+01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F12-05",
+      "name": "Integrated Payload Mass Error Invariance Under Coulomb Mismatch",
+      "tier": 1,
+      "features": [
+        12
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0163,
+      "assertions": [
+        {
+          "name": "Integrated payload mass bias <= 0.05 tonnes under Coulomb mismatch",
+          "value": 6.416015124943825e-07,
+          "threshold": 0.05,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 6.4160e-07 <= ceiling 5.0000e-02"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F13-01",
+      "name": "Twin 52 mm Wire-Rope Axial Stiffness Calculation",
+      "tier": 1,
+      "features": [
+        13
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0001,
+      "assertions": [
+        {
+          "name": "Max rope stiffness = 33.88 MN/m",
+          "value": 33.875,
+          "threshold": 33.875,
+          "operator": "approx(+/-1.00e-01)",
+          "status": "PASS",
+          "message": "|3.3875e+01 - 3.3875e+01| = 0.0000e+00 <= 1.00e-01"
+        },
+        {
+          "name": "Min rope stiffness = 20.07 MN/m",
+          "value": 20.074074074074076,
+          "threshold": 20.074,
+          "operator": "approx(+/-1.00e-01)",
+          "status": "PASS",
+          "message": "|2.0074e+01 - 2.0074e+01| = 7.4074e-05 <= 1.00e-01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F13-02",
+      "name": "Two-Mass Bounce Resonance Frequency Calculation (3.6 to 4.4 Hz)",
+      "tier": 1,
+      "features": [
+        13
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0,
+      "assertions": [
+        {
+          "name": "Bounce resonance frequency approx 3.88 Hz (in 3.6-4.4 Hz band)",
+          "value": 3.885124877269617,
+          "threshold": 3.88,
+          "operator": "approx(+/-2.00e-01)",
+          "status": "PASS",
+          "message": "|3.8851e+00 - 3.8800e+00| = 5.1249e-03 <= 2.00e-01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F13-03",
+      "name": "Rigid Observer Transmission of Bounce Mode (-4.6 dB)",
+      "tier": 1,
+      "features": [
+        13
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0,
+      "assertions": [
+        {
+          "name": "59% of bounce oscillation transmitted into load torque",
+          "value": 0.5905307807566869,
+          "threshold": 0.59,
+          "operator": "approx(+/-5.00e-02)",
+          "status": "PASS",
+          "message": "|5.9053e-01 - 5.9000e-01| = 5.3078e-04 <= 5.00e-02"
+        },
+        {
+          "name": "Bounce attenuation is -4.58 dB",
+          "value": -4.575149206923702,
+          "threshold": -4.58,
+          "operator": "approx(+/-3.00e-01)",
+          "status": "PASS",
+          "message": "|-4.5751e+00 - -4.5800e+00| = 4.8508e-03 <= 3.00e-01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F13-04",
+      "name": "Rack-and-Pinion Backlash Contact Shock Pulse Modeling",
+      "tier": 1,
+      "features": [
+        13
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0025,
+      "assertions": [
+        {
+          "name": "Gear tooth contact engagement occurred dynamically",
+          "value": 1845.0,
+          "threshold": 1.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 1.8450e+03 >= floor 1.0000e+00"
+        },
+        {
+          "name": "Traversed backlash gap matches 3.5 mm deadband",
+          "value": 3.5112000000000028,
+          "threshold": 3.5,
+          "operator": "approx(+/-2.00e-01)",
+          "status": "PASS",
+          "message": "|3.5112e+00 - 3.5000e+00| = 1.1200e-02 <= 2.00e-01"
+        },
+        {
+          "name": "Backlash deadband within OEM range [2, 5] mm",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Contact engagement produces shock pulse >= 50 kN",
+          "value": 79.48451163877394,
+          "threshold": 50.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 7.9485e+01 >= floor 5.0000e+01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T1-F13-05",
+      "name": "Notch Filter Rejection of Bounce Resonance (> 20 dB)",
+      "tier": 1,
+      "features": [
+        13
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0005,
+      "assertions": [
+        {
+          "name": "Bounce resonance frequency approx 3.88 Hz",
+          "value": 3.885124877269617,
+          "threshold": 3.88,
+          "operator": "approx(+/-1.00e-01)",
+          "status": "PASS",
+          "message": "|3.8851e+00 - 3.8800e+00| = 5.1249e-03 <= 1.00e-01"
+        },
+        {
+          "name": "Digital notch filter frequency response attenuates bounce mode by > 20 dB",
+          "value": 54.33450551842965,
+          "threshold": 20.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 5.4335e+01 >= floor 2.0000e+01"
+        },
+        {
+          "name": "Time-domain filtering attenuates bounce ripple by > 20 dB",
+          "value": 33.80851721406623,
+          "threshold": 20.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 3.3809e+01 >= floor 2.0000e+01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F01-01",
+      "name": "Detection and Rejection of Indefinite Mass Matrix (Negative Mass)",
+      "tier": 2,
+      "features": [
+        1
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0034,
+      "assertions": [
+        {
+          "name": "Invariant gate correctly fails on negative mass matrix",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Minimum eigenvalue is negative",
+          "value": -180612.0,
+          "threshold": 0.0,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value -1.8061e+05 <= ceiling 0.0000e+00"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F01-02",
+      "name": "Detection and Rejection of Corrupted Coriolis Passivity",
+      "tier": 2,
+      "features": [
+        1
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0,
+      "assertions": [
+        {
+          "name": "Skew-symmetry violation correctly detected",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Frobenius norm residual is significantly non-zero",
+          "value": 290179.2,
+          "threshold": 0.001,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 2.9018e+05 >= floor 1.0000e-03"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F01-03",
+      "name": "Detection and Rejection of Jittered or Missing 30 Hz Grid Samples",
+      "tier": 2,
+      "features": [
+        1
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0,
+      "assertions": [
+        {
+          "name": "Time grid jitter correctly caught and rejected",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Detected jitter >= 1e-4 s",
+          "value": 0.005000000000000011,
+          "threshold": 0.0001,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 5.0000e-03 >= floor 1.0000e-04"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F01-04",
+      "name": "Detection and Rejection of Altered Provenance Hash",
+      "tier": 2,
+      "features": [
+        1
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0058,
+      "assertions": [
+        {
+          "name": "Hash mismatch correctly flagged",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F01-05",
+      "name": "Detection of OEM Physical Bound Exceedance (Fc = 755 kN)",
+      "tier": 2,
+      "features": [
+        1
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0001,
+      "assertions": [
+        {
+          "name": "755 kN overload correctly marked FAIL",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Peak force detected above 745 kN",
+          "value": 755.0,
+          "threshold": 745.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 7.5500e+02 >= floor 7.4500e+02"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F01-06",
+      "name": "Defeating Trivial File-Size Bypass (Dummy 501-Byte File)",
+      "tier": 2,
+      "features": [
+        1
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0,
+      "assertions": [
+        {
+          "name": "Dummy file is 501 bytes",
+          "value": 501.0,
+          "threshold": 501.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Actual: 501, Expected: 501"
+        },
+        {
+          "name": "Dummy 501-byte file rejected by structural validator",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F01-07",
+      "name": "Detection and Rejection of Non-Finite Values (NaN/Inf) in Signals",
+      "tier": 2,
+      "features": [
+        1
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0,
+      "assertions": [
+        {
+          "name": "NaN/Inf correctly caught and rejected",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Both non-finite fields identified",
+          "value": 2.0,
+          "threshold": 2.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Actual: 2, Expected: 2"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F02-01",
+      "name": "Detection of Missing Milestone Row in Roadmap Table",
+      "tier": 2,
+      "features": [
+        2
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0011,
+      "assertions": [
+        {
+          "name": "Mandatory milestone M1 present in actual claims.md roadmap",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Mandatory milestone M2 present in actual claims.md roadmap",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Mandatory milestone M3 present in actual claims.md roadmap",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Mandatory milestone M4 present in actual claims.md roadmap",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Mandatory milestone M5 present in actual claims.md roadmap",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Mandatory milestone M6 present in actual claims.md roadmap",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Mandatory milestone M7 present in actual claims.md roadmap",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Mandatory milestone M8 present in actual claims.md roadmap",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Mandatory milestone M9 present in actual claims.md roadmap",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Roadmap validator correctly detects missing milestone M7",
+          "value": "['M7']",
+          "threshold": "['M7']",
+          "operator": "==",
+          "status": "PASS",
+          "message": "Actual: ['M7'], Expected: ['M7']"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F02-02",
+      "name": "Detection of Unapproved Status Mutation (Flipping Frozen to Verified)",
+      "tier": 2,
+      "features": [
+        2
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0008,
+      "assertions": [
+        {
+          "name": "Actual M5 status is strictly FROZEN (Model Draft)",
+          "value": "FROZEN (Model Draft)",
+          "threshold": "FROZEN (Model Draft)",
+          "operator": "==",
+          "status": "PASS",
+          "message": "Actual: FROZEN (Model Draft), Expected: FROZEN (Model Draft)"
+        },
+        {
+          "name": "Actual M6 status is strictly FROZEN (Model Draft)",
+          "value": "FROZEN (Model Draft)",
+          "threshold": "FROZEN (Model Draft)",
+          "operator": "==",
+          "status": "PASS",
+          "message": "Actual: FROZEN (Model Draft), Expected: FROZEN (Model Draft)"
+        },
+        {
+          "name": "Actual claims.md has zero status schema violations",
+          "value": 0.0,
+          "threshold": 0.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Actual: 0, Expected: 0"
+        },
+        {
+          "name": "Unauthorized status mutation flagged by schema validator",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 1.0000e+00 >= floor 1.0000e+00"
+        },
+        {
+          "name": "Violation specifically isolates M5 unauthorized flip",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F02-03",
+      "name": "Detection of Omitted M6 Second Audit Withdrawal Caveats",
+      "tier": 2,
+      "features": [
+        2
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0009,
+      "assertions": [
+        {
+          "name": "Mandatory withdrawal caveats present in claims registry",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F02-04",
+      "name": "Markdown Table Delimiter and Column Count Integrity",
+      "tier": 2,
+      "features": [
+        2
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0008,
+      "assertions": [
+        {
+          "name": "At least 20 table lines present in claims.md",
+          "value": 177.0,
+          "threshold": 20.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 1.7700e+02 >= floor 2.0000e+01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F02-05",
+      "name": "Cross-Section Semantic Consistency Check",
+      "tier": 2,
+      "features": [
+        2
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0007,
+      "assertions": [
+        {
+          "name": "Option A consistency confirmed across sections",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F02-06",
+      "name": "Read-Only Registry Non-Mutation Enforcement",
+      "tier": 2,
+      "features": [
+        2
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0009,
+      "assertions": [
+        {
+          "name": "claims.md timestamp completely unaltered by inspection",
+          "value": 1795012816.6187365,
+          "threshold": 1795012816.6187365,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Actual: 1795012816.6187365, Expected: 1795012816.6187365"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F03-01",
+      "name": "Detection of Missing Notice Banner in Report",
+      "tier": 2,
+      "features": [
+        3
+      ],
+      "status": "PASS",
+      "duration_sec": 0.001,
+      "assertions": [
+        {
+          "name": "Actual M5 report contains STATUS NOTICE banner",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Actual M6 report contains STATUS NOTICE banner",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Validator correctly flags absence of STATUS NOTICE",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F03-02",
+      "name": "Detection of Diluted or Tampered Status Language",
+      "tier": 2,
+      "features": [
+        3
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0008,
+      "assertions": [
+        {
+          "name": "M5 contains exact unverified language",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "M6 contains exact withdrawal language",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "M5 contains Option A freeze directive",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "M6 contains Option A freeze directive",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Diluted wording rejected by strict phrase check",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F03-03",
+      "name": "Detection of Banner Relocation (Banner Pushed Below Fold)",
+      "tier": 2,
+      "features": [
+        3
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0009,
+      "assertions": [
+        {
+          "name": "Banner in M5/reports/M5_ELECTROMECHANICAL_VERIFICATION_REPORT.md is prominently positioned at line 3",
+          "value": 2.0,
+          "threshold": 5.0,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 2.0000e+00 <= ceiling 5.0000e+00"
+        },
+        {
+          "name": "Banner in M6/reports/M6_3D_4DOF_VERIFICATION_REPORT.md is prominently positioned at line 3",
+          "value": 2.0,
+          "threshold": 5.0,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 2.0000e+00 <= ceiling 5.0000e+00"
+        },
+        {
+          "name": "Relocated banner below line 15 correctly identified as non-compliant placement",
+          "value": 31.0,
+          "threshold": 15.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 3.1000e+01 >= floor 1.5000e+01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F03-04",
+      "name": "Detection of Truncated Audit Receipt (Missing Header Notice)",
+      "tier": 2,
+      "features": [
+        3
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0007,
+      "assertions": [
+        {
+          "name": "M5 forensic receipt leads with audit notice",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "M6 forensic receipt leads with audit notice",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Truncated receipt missing notice header correctly rejected",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F03-05",
+      "name": "Case Sensitivity and Punctuation Rigidity of Banner Matchers",
+      "tier": 2,
+      "features": [
+        3
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0,
+      "assertions": [
+        {
+          "name": "Lower-case variant rejected by strict matcher",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F03-06",
+      "name": "Preservation of Subordinate Report Text",
+      "tier": 2,
+      "features": [
+        3
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0007,
+      "assertions": [
+        {
+          "name": "Executive summary section intact",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Architecture section intact",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F04-01",
+      "name": "Degenerate Horizontal Posture (q3 = 0 Static Pose)",
+      "tier": 2,
+      "features": [
+        4
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0002,
+      "assertions": [
+        {
+          "name": "Condition number diverges (> 1e6) in static horizontal pose",
+          "value": Infinity,
+          "threshold": 1000000.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value inf >= floor 1.0000e+06"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F04-02",
+      "name": "Zero-Acceleration Maneuver (Inertial Subspace Collapse)",
+      "tier": 2,
+      "features": [
+        4
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0001,
+      "assertions": [
+        {
+          "name": "Inertial column identically zero during constant speed",
+          "value": 0.0,
+          "threshold": 0.0,
+          "operator": "approx(+/-1.00e-12)",
+          "status": "PASS",
+          "message": "|0.0000e+00 - 0.0000e+00| = 0.0000e+00 <= 1.00e-12"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F04-03",
+      "name": "Extreme Velocity Zero-Crossing Behavior (Regularized Coulomb)",
+      "tier": 2,
+      "features": [
+        4
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0,
+      "assertions": [
+        {
+          "name": "Zero-crossing values are completely finite",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Coulomb values strictly bounded within [-1, +1]",
+          "value": 0.09966799462495582,
+          "threshold": 1.0,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 9.9668e-02 <= ceiling 1.0000e+00"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F04-04",
+      "name": "Ill-Conditioned Trajectory Detection (kappa > 1e6)",
+      "tier": 2,
+      "features": [
+        4
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0001,
+      "assertions": [
+        {
+          "name": "Ill-conditioned trajectory condition number > 1e6",
+          "value": 6534089543094.796,
+          "threshold": 1000000.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 6.5341e+12 >= floor 1.0000e+06"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F04-05",
+      "name": "Robustness to Transient Start-Up Inclusion (t in [0, 5] s)",
+      "tier": 2,
+      "features": [
+        4
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1247,
+      "assertions": [
+        {
+          "name": "Untrimmed mass error remains bounded <= 2.0%",
+          "value": 8.753937118966303e-06,
+          "threshold": 0.02,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 8.7539e-06 <= ceiling 2.0000e-02"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F04-06",
+      "name": "Calibration Under Sensed Noise (Errors-in-Variables Attenuation)",
+      "tier": 2,
+      "features": [
+        4
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1213,
+      "assertions": [
+        {
+          "name": "OLS mass error under realistic N1 noise <= 10.0%",
+          "value": 0.07849623171891036,
+          "threshold": 0.1,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 7.8496e-02 <= ceiling 1.0000e-01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F05-01",
+      "name": "Singularity Near Vertical Pitch Posture (cos(q3) -> 0)",
+      "tier": 2,
+      "features": [
+        5
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0001,
+      "assertions": [
+        {
+          "name": "cos(q3) approaches 0 near vertical pose",
+          "value": 0.008726535498373897,
+          "threshold": 0.01,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 8.7265e-03 <= ceiling 1.0000e-02"
+        },
+        {
+          "name": "Near-vertical posture causes raw payload calculation to diverge (> 15 t)",
+          "value": 16.27470107795093,
+          "threshold": 15.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 1.6275e+01 >= floor 1.5000e+01"
+        },
+        {
+          "name": "Payload mass estimator gracefully bounds output at near-vertical posture",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F05-02",
+      "name": "Negative Payload Detection (-2.0 t Tare Drift Alarm)",
+      "tier": 2,
+      "features": [
+        5
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1386,
+      "assertions": [
+        {
+          "name": "Observer dynamically reconstructs -2.0 t negative payload",
+          "value": -2.015179671196502,
+          "threshold": -2.0,
+          "operator": "approx(+/-5.00e-01)",
+          "status": "PASS",
+          "message": "|-2.0152e+00 - -2.0000e+00| = 1.5180e-02 <= 5.00e-01"
+        },
+        {
+          "name": "Negative payload correctly trips UNPHYSICAL_PAYLOAD_ALARM",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F05-03",
+      "name": "Extreme Sensor Noise Stress Test (10x N1 Speed, 10x N2 Torque)",
+      "tier": 2,
+      "features": [
+        5
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1386,
+      "assertions": [
+        {
+          "name": "Observer remains stable and finite under 10x noise stress",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F05-04",
+      "name": "Massive Dipper Overload (45 t > 1.25x Capacity)",
+      "tier": 2,
+      "features": [
+        5
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1421,
+      "assertions": [
+        {
+          "name": "Observer dynamically reconstructs +45.0 t overload",
+          "value": 45.34081462124878,
+          "threshold": 45.0,
+          "operator": "approx(+/-1.00e+00)",
+          "status": "PASS",
+          "message": "|4.5341e+01 - 4.5000e+01| = 3.4081e-01 <= 1.00e+00"
+        },
+        {
+          "name": "45 t payload dynamically trips STRUCTURAL_OVERLOAD_ALARM",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F05-05",
+      "name": "Tooth-Tip Location Offset Sensitivity (+/- 200 mm)",
+      "tier": 2,
+      "features": [
+        5
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1382,
+      "assertions": [
+        {
+          "name": "Empirical tooth wear sensitivity 2.71% matches theoretical ~3.0% lever arm shift",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F05-06",
+      "name": "Observer Cold-Start Transient Rejection Window (t < 5.0 s)",
+      "tier": 2,
+      "features": [
+        5
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0,
+      "assertions": [
+        {
+          "name": "5*tau settle time <= 0.5 s, fully excluded by 5 s trim window",
+          "value": 0.25,
+          "threshold": 0.5,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 2.5000e-01 <= ceiling 5.0000e-01"
+        },
+        {
+          "name": "Transient decays by > 99% within 0.25 s (5*tau)",
+          "value": 99.32620530009146,
+          "threshold": 99.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 9.9326e+01 >= floor 9.9000e+01"
+        },
+        {
+          "name": "Cold-start error identically vanishes (< 1e-12) by t = 5.0 s",
+          "value": 1.8600379880104182e-39,
+          "threshold": 1e-12,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 1.8600e-39 <= ceiling 1.0000e-12"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F05-07",
+      "name": "Joint-Side 12-Bit Encoder Quantization Failure (N3 Noise Breakdown)",
+      "tier": 2,
+      "features": [
+        5
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1236,
+      "assertions": [
+        {
+          "name": "Joint-side 12-bit differencing noise explodes (> 0.03 rad/s, 10x baseline)",
+          "value": 0.044313391406550474,
+          "threshold": 0.03,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 4.4313e-02 >= floor 3.0000e-02"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F06-01",
+      "name": "Low-Resolution 8-Bit Encoder Stress Test",
+      "tier": 2,
+      "features": [
+        6
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0001,
+      "assertions": [
+        {
+          "name": "8-bit resolution step >= 20 mrad",
+          "value": 0.02454369260617026,
+          "threshold": 0.02,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 2.4544e-02 >= floor 2.0000e-02"
+        },
+        {
+          "name": "Differenced 8-bit velocity generates severe peak noise > 0.15 rad/s",
+          "value": 0.4076125421460237,
+          "threshold": 0.15,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 4.0761e-01 >= floor 1.5000e-01"
+        },
+        {
+          "name": "RMS quantization velocity error >= 0.10 rad/s",
+          "value": 0.15192077378837432,
+          "threshold": 0.1,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 1.5192e-01 >= floor 1.0000e-01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F06-02",
+      "name": "High-Resolution 16-Bit Encoder Noise Floor Saturation",
+      "tier": 2,
+      "features": [
+        6
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0,
+      "assertions": [
+        {
+          "name": "16-bit motor step < 1.0 urad",
+          "value": 3.994741635118857e-07,
+          "threshold": 1e-06,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 3.9947e-07 <= ceiling 1.0000e-06"
+        },
+        {
+          "name": "Differenced 16-bit velocity noise floor < 0.1 mrad/s (saturates below N1 resolver noise)",
+          "value": 7.149750284384315e-05,
+          "threshold": 0.0001,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 7.1498e-05 <= ceiling 1.0000e-04"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F06-03",
+      "name": "Zero-Velocity Limit Behavior Under Quantized Steps",
+      "tier": 2,
+      "features": [
+        6
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0,
+      "assertions": [
+        {
+          "name": "Differenced velocity identically zero at standstill",
+          "value": 0.0,
+          "threshold": 0.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Actual: 0.0, Expected: 0.0"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F06-04",
+      "name": "Extreme Gear Ratio Bounds (Ngear = 1 vs Ngear = 500)",
+      "tier": 2,
+      "features": [
+        6
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0001,
+      "assertions": [
+        {
+          "name": "Motor-side gearing reduces joint velocity quantization variance by > 10,000x",
+          "value": 13310.426572416143,
+          "threshold": 10000.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 1.3310e+04 >= floor 1.0000e+04"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F06-05",
+      "name": "Phase Jitter Sensitivity in Discrete Differencing",
+      "tier": 2,
+      "features": [
+        6
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0001,
+      "assertions": [
+        {
+          "name": "Discrete backward differencing group delay matches Ts/2 = 16.67 ms across bandwidth",
+          "value": 16.666666666666,
+          "threshold": 16.6667,
+          "operator": "approx(+/-5.00e-02)",
+          "status": "PASS",
+          "message": "|1.6667e+01 - 1.6667e+01| = 3.3333e-05 <= 5.00e-02"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F07-01",
+      "name": "Parameter Mismatch Stress on Digital Twin Instrument (+30%)",
+      "tier": 2,
+      "features": [
+        7
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1216,
+      "assertions": [
+        {
+          "name": "IDIM-IV identifies Md within 2% error despite noisy regressors",
+          "value": 2.3746403268458875e-05,
+          "threshold": 0.02,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 2.3746e-05 <= ceiling 2.0000e-02"
+        },
+        {
+          "name": "IDIM-IV achieves strictly superior identification accuracy over standard OLS",
+          "value": 0.0790894252329165,
+          "threshold": 2.3746403268458875e-05,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 7.9089e-02 >= floor 2.3746e-05"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F07-02",
+      "name": "Collinear Excitation Trajectory (Rank Deficiency Detection)",
+      "tier": 2,
+      "features": [
+        7
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0002,
+      "assertions": [
+        {
+          "name": "Rank deficiency correctly detected (rank < 7)",
+          "value": "1",
+          "threshold": 6.0,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 1.0000e+00 <= ceiling 6.0000e+00"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F07-03",
+      "name": "High Friction Noise Regime (SNR < -40 dB)",
+      "tier": 2,
+      "features": [
+        7
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1202,
+      "assertions": [
+        {
+          "name": "Dynamic-to-friction power ratio <= -35 dB across operational trajectory",
+          "value": -73.66196893391214,
+          "threshold": -35.0,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value -7.3662e+01 <= ceiling -3.5000e+01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F07-04",
+      "name": "Non-Gaussian Impulsive Noise Injection Stability",
+      "tier": 2,
+      "features": [
+        7
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0055,
+      "assertions": [
+        {
+          "name": "Observer states remain completely finite under impulsive spikes",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Observer disturbance estimate recovers within 500 ms post-spike",
+          "value": 355.3535360195747,
+          "threshold": 5000.0,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 3.5535e+02 <= ceiling 5.0000e+03"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F07-05",
+      "name": "Sample Size Lower Bound (N < 7 Parameters)",
+      "tier": 2,
+      "features": [
+        7
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0002,
+      "assertions": [
+        {
+          "name": "Rank strictly bounded by row count (rank <= 6 < 7)",
+          "value": "4",
+          "threshold": 6.0,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 4.0000e+00 <= ceiling 6.0000e+00"
+        },
+        {
+          "name": "Smallest singular value identically zero in underdetermined regressor",
+          "value": 6.0622817958218275e-18,
+          "threshold": 0.0,
+          "operator": "approx(+/-1.00e-12)",
+          "status": "PASS",
+          "message": "|6.0623e-18 - 0.0000e+00| = 6.0623e-18 <= 1.00e-12"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F08-01",
+      "name": "Discontinuous Multi-Step Boulder Impacts (+100 kN Series)",
+      "tier": 2,
+      "features": [
+        8
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0278,
+      "assertions": [
+        {
+          "name": "First 100 kN boulder shock tracked dynamically",
+          "value": 99852.23638672662,
+          "threshold": 100000.0,
+          "operator": "approx(+/-5.00e+03)",
+          "status": "PASS",
+          "message": "|9.9852e+04 - 1.0000e+05| = 1.4776e+02 <= 5.00e+03"
+        },
+        {
+          "name": "Second 100 kN boulder shock tracked dynamically",
+          "value": 99852.23662348362,
+          "threshold": 100000.0,
+          "operator": "approx(+/-5.00e+03)",
+          "status": "PASS",
+          "message": "|9.9852e+04 - 1.0000e+05| = 1.4776e+02 <= 5.00e+03"
+        },
+        {
+          "name": "Baseline disturbance before shock <= 1.0 kN",
+          "value": 268.476129489522,
+          "threshold": 1000.0,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 2.6848e+02 <= ceiling 1.0000e+03"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F08-02",
+      "name": "Mismatched Bail Station Sensitivity (1.5 m vs 2.2 m)",
+      "tier": 2,
+      "features": [
+        8
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1206,
+      "assertions": [
+        {
+          "name": "Mismatched bail station introduces > 5% mean lever arm artifact across trajectory",
+          "value": 0.06895815196141693,
+          "threshold": 0.05,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 6.8958e-02 >= floor 5.0000e-02"
+        },
+        {
+          "name": "Bail station mismatch introduces > 50 kNm dynamic torque discrepancy",
+          "value": 60375.78399049827,
+          "threshold": 50000.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 6.0376e+04 >= floor 5.0000e+04"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F08-03",
+      "name": "Innovation Threshold Boundary Sensitivity (chi_th in [1, 5])",
+      "tier": 2,
+      "features": [
+        8
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0421,
+      "assertions": [
+        {
+          "name": "Nominal chi_th=3.0 triggers > 2x innovation covariance boost during shock",
+          "value": 3353.1721967106055,
+          "threshold": 2823.2917153583985,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 3.3532e+03 >= floor 2.8233e+03"
+        },
+        {
+          "name": "Insensitive chi_th=50.0 suppresses adaptive boost",
+          "value": 1411.6458576791988,
+          "threshold": 1411.6458576791993,
+          "operator": "approx(+/-1.00e+01)",
+          "status": "PASS",
+          "message": "|1.4116e+03 - 1.4116e+03| = 4.5475e-13 <= 1.00e+01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F08-04",
+      "name": "High Covariance Boost Stability Limit (gamma = 500)",
+      "tier": 2,
+      "features": [
+        8
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0388,
+      "assertions": [
+        {
+          "name": "Larger gamma boost produces monotonically higher estimation covariance",
+          "value": 5426.633707329236,
+          "threshold": 3353.1721967106055,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 5.4266e+03 >= floor 3.3532e+03"
+        },
+        {
+          "name": "Covariance matrix remains strictly positive definite and finite under gamma=500",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F08-05",
+      "name": "Negative Force Shock Step (Sudden Loss of Bank Reaction)",
+      "tier": 2,
+      "features": [
+        8
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0193,
+      "assertions": [
+        {
+          "name": "Pre-drop reaction force holds at 100 kN",
+          "value": 100000.00033192796,
+          "threshold": 100000.0,
+          "operator": "approx(+/-5.00e+03)",
+          "status": "PASS",
+          "message": "|1.0000e+05 - 1.0000e+05| = 3.3193e-04 <= 5.00e+03"
+        },
+        {
+          "name": "Post-drop reaction force recovers cleanly to 0 kN",
+          "value": 2.0095421475787365,
+          "threshold": 0.0,
+          "operator": "approx(+/-5.00e+03)",
+          "status": "PASS",
+          "message": "|2.0095e+00 - 0.0000e+00| = 2.0095e+00 <= 5.00e+03"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F09-01",
+      "name": "Exact Nyquist Boundary Frequency Excitation (15.0 Hz)",
+      "tier": 2,
+      "features": [
+        9
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0001,
+      "assertions": [
+        {
+          "name": "90 Hz harmonic (3x Fs) folds exactly to DC (0.0 Hz)",
+          "value": 0.0,
+          "threshold": 0.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Actual: 0.0, Expected: 0.0"
+        },
+        {
+          "name": "75 Hz harmonic (2.5x Fs) folds exactly to Nyquist boundary (15.0 Hz)",
+          "value": 15.0,
+          "threshold": 15.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Actual: 15.0, Expected: 15.0"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F09-02",
+      "name": "Zero-Stator Frequency DC Limit (f0 -> 0 Hz)",
+      "tier": 2,
+      "features": [
+        9
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0054,
+      "assertions": [
+        {
+          "name": "Quasi-DC stator harmonic (< 0.3 Hz) tracked with < 5% attenuation",
+          "value": 9947.804603722558,
+          "threshold": 10000.0,
+          "operator": "approx(+/-5.00e+02)",
+          "status": "PASS",
+          "message": "|9.9478e+03 - 1.0000e+04| = 5.2195e+01 <= 5.00e+02"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F09-03",
+      "name": "12th Inverter Harmonic Foldover Mapping (12*f0)",
+      "tier": 2,
+      "features": [
+        9
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0,
+      "assertions": [
+        {
+          "name": "138 Hz 12th harmonic dynamically folds to 12.0 Hz in discrete spectrum",
+          "value": 12.0,
+          "threshold": 12.0,
+          "operator": "approx(+/-1.00e-03)",
+          "status": "PASS",
+          "message": "|1.2000e+01 - 1.2000e+01| = 0.0000e+00 <= 1.00e-03"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F09-04",
+      "name": "High-Amplitude Harmonic Ripple Stress (10% Torque Ripple)",
+      "tier": 2,
+      "features": [
+        9
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0108,
+      "assertions": [
+        {
+          "name": "Observer momentum filter attenuates 72 Hz ripple by > 15 dB",
+          "value": 19.19400192702602,
+          "threshold": 15.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 1.9194e+01 >= floor 1.5000e+01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F09-05",
+      "name": "Pre-Filter Group Delay Distortion at Boundary Frequencies",
+      "tier": 2,
+      "features": [
+        9
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0002,
+      "assertions": [
+        {
+          "name": "2nd-order Butterworth analog pre-filter group delay = 22.51 ms",
+          "value": 22.510127240602632,
+          "threshold": 22.51,
+          "operator": "approx(+/-2.00e-01)",
+          "status": "PASS",
+          "message": "|2.2510e+01 - 2.2510e+01| = 1.2724e-04 <= 2.00e-01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F10-01",
+      "name": "Zero-Frequency DC Delay Singularity",
+      "tier": 2,
+      "features": [
+        10
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0001,
+      "assertions": [
+        {
+          "name": "DC group delay limit matches 724.64 ms",
+          "value": 724.6388598157339,
+          "threshold": 724.64,
+          "operator": "approx(+/-5.00e+00)",
+          "status": "PASS",
+          "message": "|7.2464e+02 - 7.2464e+02| = 1.1402e-03 <= 5.00e+00"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F10-02",
+      "name": "High-Frequency Asymptotic Phase Lag Limit (180 deg)",
+      "tier": 2,
+      "features": [
+        10
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0,
+      "assertions": [
+        {
+          "name": "High-frequency phase lag asymptotically approaches -180 deg",
+          "value": 179.92093172388695,
+          "threshold": 180.0,
+          "operator": "approx(+/-1.00e+00)",
+          "status": "PASS",
+          "message": "|1.7992e+02 - 1.8000e+02| = 7.9068e-02 <= 1.00e+00"
+        },
+        {
+          "name": "Resonance phase equals -90 deg",
+          "value": 91.16333428961717,
+          "threshold": 90.0,
+          "operator": "approx(+/-2.00e+00)",
+          "status": "PASS",
+          "message": "|9.1163e+01 - 9.0000e+01| = 1.1633e+00 <= 2.00e+00"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F10-03",
+      "name": "Negative Lag Detection as Invariant Violation (Acausal Alarm)",
+      "tier": 2,
+      "features": [
+        10
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0003,
+      "assertions": [
+        {
+          "name": "Proper correlation yields positive causal lag (+333.3 ms)",
+          "value": 333.3333333333333,
+          "threshold": 333.333,
+          "operator": "approx(+/-1.00e+00)",
+          "status": "PASS",
+          "message": "|3.3333e+02 - 3.3333e+02| = 3.3333e-04 <= 1.00e+00"
+        },
+        {
+          "name": "Inverted correlation reproduces erroneous negative lag (-333.3 ms)",
+          "value": -333.3333333333333,
+          "threshold": -333.333,
+          "operator": "approx(+/-1.00e+00)",
+          "status": "PASS",
+          "message": "|-3.3333e+02 - -3.3333e+02| = 3.3333e-04 <= 1.00e+00"
+        },
+        {
+          "name": "Negative lag correctly detected as an acausal invariant defect",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F10-04",
+      "name": "Cross-Correlation Window Size Lower Bound",
+      "tier": 2,
+      "features": [
+        10
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0006,
+      "assertions": [
+        {
+          "name": "Long window (T >= 2*T_period) correctly converges to 10 samples (333.3 ms)",
+          "value": 10.0,
+          "threshold": 10.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Actual: 10, Expected: 10"
+        },
+        {
+          "name": "Short sub-period window fails to identify true delay under noise",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F10-05",
+      "name": "White Noise Cross-Correlation Spurious Peak Trapping",
+      "tier": 2,
+      "features": [
+        10
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0001,
+      "assertions": [
+        {
+          "name": "Uncorrelated noise peak cross-correlation <= 0.15",
+          "value": 0.08308227039785727,
+          "threshold": 0.15,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 8.3082e-02 <= ceiling 1.5000e-01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F11-01",
+      "name": "Zero Crowd Channel Weight Limit (s_bar -> 0, Saddle Collapse)",
+      "tier": 2,
+      "features": [
+        11
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0002,
+      "assertions": [
+        {
+          "name": "SVD rank strictly drops when crowd weight Ln = 0",
+          "value": 3.0,
+          "threshold": 3.0,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 3.0000e+00 <= ceiling 3.0000e+00"
+        },
+        {
+          "name": "Crowd friction columns identically unobservable without crowd channel",
+          "value": 0.0,
+          "threshold": 0.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Actual: 0.0, Expected: 0.0"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F11-02",
+      "name": "Infinite Crowd Channel Weight Limit (s_bar -> inf)",
+      "tier": 2,
+      "features": [
+        11
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1233,
+      "assertions": [
+        {
+          "name": "Condition number degrades significantly under extreme crowd channel weighting",
+          "value": 24755.883529889725,
+          "threshold": 7805.982982660036,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 2.4756e+04 >= floor 7.8060e+03"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F11-03",
+      "name": "Single-Joint Motion Trajectory (Zero Crowd Speed d4d = 0)",
+      "tier": 2,
+      "features": [
+        11
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0001,
+      "assertions": [
+        {
+          "name": "Prismatic viscous column zero when crowd is locked",
+          "value": 0.0,
+          "threshold": 0.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Actual: 0.0, Expected: 0.0"
+        },
+        {
+          "name": "Prismatic Coulomb column zero when crowd is locked",
+          "value": 0.0,
+          "threshold": 0.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Actual: 0.0, Expected: 0.0"
+        },
+        {
+          "name": "At least 2 singular values collapse to zero during single-joint motion",
+          "value": 4.0,
+          "threshold": 2.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 4.0000e+00 >= floor 2.0000e+00"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F11-04",
+      "name": "Severe Noise Covariance Anisotropy (Ratio > 100)",
+      "tier": 2,
+      "features": [
+        11
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0016,
+      "assertions": [
+        {
+          "name": "Gauss-Markov WLS reduces parameter error by > 3x under 1000:1 noise anisotropy",
+          "value": 27.040200120987954,
+          "threshold": 3.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 2.7040e+01 >= floor 3.0000e+00"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F11-05",
+      "name": "Parameter Sensitivity Under Weight Perturbation (+/- 20%)",
+      "tier": 2,
+      "features": [
+        11
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1277,
+      "assertions": [
+        {
+          "name": "Optimal Ln falls within [2.8, 3.5] m basin (found 3.5 m)",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Condition number change <= 10% within optimal weighting basin",
+          "value": 0.014076620435894815,
+          "threshold": 0.1,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 1.4077e-02 <= ceiling 1.0000e-01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F12-01",
+      "name": "Discontinuous Signum Friction Limit (eps -> 0)",
+      "tier": 2,
+      "features": [
+        12
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0,
+      "assertions": [
+        {
+          "name": "Approaches discontinuous step as eps -> 0",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "approx(+/-1.00e-03)",
+          "status": "PASS",
+          "message": "|1.0000e+00 - 1.0000e+00| = 0.0000e+00 <= 1.00e-03"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F12-02",
+      "name": "High Smoothing Threshold Limit (eps -> 0.1 rad/s)",
+      "tier": 2,
+      "features": [
+        12
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0,
+      "assertions": [
+        {
+          "name": "Over-smoothed Coulomb acts as viscous damping",
+          "value": 0.0996679946249558,
+          "threshold": 0.09999999999999999,
+          "operator": "approx(+/-1.00e-02)",
+          "status": "PASS",
+          "message": "|9.9668e-02 - 1.0000e-01| = 3.3201e-04 <= 1.00e-02"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F12-03",
+      "name": "High-Frequency Chattering Trajectory Across Zero Velocity",
+      "tier": 2,
+      "features": [
+        12
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0001,
+      "assertions": [
+        {
+          "name": "Regularized friction remains stable under 50 Hz chattering",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F12-04",
+      "name": "Inverted Smoothing Mismatch (eps_plant < eps_obs)",
+      "tier": 2,
+      "features": [
+        12
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0001,
+      "assertions": [
+        {
+          "name": "Inverted Coulomb smoothing mismatch generates exactly 166.72 Nm peak torque spike",
+          "value": 166.72275723856782,
+          "threshold": 166.72,
+          "operator": "approx(+/-1.00e+00)",
+          "status": "PASS",
+          "message": "|1.6672e+02 - 1.6672e+02| = 2.7572e-03 <= 1.00e+00"
+        },
+        {
+          "name": "Symmetric Coulomb mismatch integrates to exactly zero net bias",
+          "value": 2.7755575615628914e-17,
+          "threshold": 0.0,
+          "operator": "approx(+/-1.00e-06)",
+          "status": "PASS",
+          "message": "|2.7756e-17 - 0.0000e+00| = 2.7756e-17 <= 1.00e-06"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F12-05",
+      "name": "Asymmetric Joint Smoothing Thresholds (eps3 != eps4)",
+      "tier": 2,
+      "features": [
+        12
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0,
+      "assertions": [
+        {
+          "name": "THERMODYNAMIC_POWER_DISSIPATION",
+          "value": "PASS",
+          "threshold": "PASS",
+          "operator": "==",
+          "status": "PASS",
+          "message": "Thermodynamic dissipation non-negative (min: 1.13e+01 W)"
+        },
+        {
+          "name": "Asymmetric smoothing dissipation power strictly non-negative",
+          "value": 11.29999996042584,
+          "threshold": 0.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 1.1300e+01 >= floor 0.0000e+00"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F13-01",
+      "name": "Complete Wire-Rope Slack Condition (T_rope = 0 for 500 ms)",
+      "tier": 2,
+      "features": [
+        13
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0,
+      "assertions": [
+        {
+          "name": "UNILATERAL_CABLE_TENSION",
+          "value": "PASS",
+          "threshold": "PASS",
+          "operator": "==",
+          "status": "PASS",
+          "message": "Unilateral cable constraint strictly satisfied (min tension: 0.00 N >= 0)"
+        },
+        {
+          "name": "Zero tension slack condition verified non-negative",
+          "value": 0.0,
+          "threshold": 0.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Actual: 0.0, Expected: 0.0"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F13-02",
+      "name": "Snatch Impact Tension Spike Exceeding Safe Limit (T_rope > 800 kN)",
+      "tier": 2,
+      "features": [
+        13
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0002,
+      "assertions": [
+        {
+          "name": "UNILATERAL_CABLE_TENSION",
+          "value": "PASS",
+          "threshold": "PASS",
+          "operator": "==",
+          "status": "PASS",
+          "message": "Unilateral cable constraint strictly satisfied (min tension: 0.00 N >= 0)"
+        },
+        {
+          "name": "Dynamic snatch tension spike (1489.3 kN) exceeds 816 kN safe threshold",
+          "value": 1489259.4114834885,
+          "threshold": 816000.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 1.4893e+06 >= floor 8.1600e+05"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F13-03",
+      "name": "Zero-Damping Cable Resonance (Sustained Bounce Ringing)",
+      "tier": 2,
+      "features": [
+        13
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0,
+      "assertions": [
+        {
+          "name": "Undamped cable oscillator conserves 100% of peak energy",
+          "value": 0.9998223523808089,
+          "threshold": 1.0,
+          "operator": "approx(+/-2.00e-02)",
+          "status": "PASS",
+          "message": "|9.9982e-01 - 1.0000e+00| = 1.7765e-04 <= 2.00e-02"
+        },
+        {
+          "name": "Damped cable oscillator decays by > 90% over 2.0 s (observed 91.9%)",
+          "value": 91.89065656725126,
+          "threshold": 90.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 9.1891e+01 >= floor 9.0000e+01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F13-04",
+      "name": "Infinite Stiffness Rigid Rope Limit (K_rope -> inf)",
+      "tier": 2,
+      "features": [
+        13
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0,
+      "assertions": [
+        {
+          "name": "Compliant cable stretches > 15 mm under 500 kN load",
+          "value": 20.0,
+          "threshold": 15.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 2.0000e+01 >= floor 1.5000e+01"
+        },
+        {
+          "name": "Rigid cable limit suppresses elastic deflection to < 0.01 mm",
+          "value": 0.005,
+          "threshold": 0.01,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 5.0000e-03 <= ceiling 1.0000e-02"
+        },
+        {
+          "name": "Rigid cable limit shifts resonance beyond 100 Hz (outside observer dynamics)",
+          "value": 215.98332207705522,
+          "threshold": 100.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 2.1598e+02 >= floor 1.0000e+02"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T2-F13-05",
+      "name": "Asymmetric Backlash Gap During Bidirectional Flutter",
+      "tier": 2,
+      "features": [
+        13
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0001,
+      "assertions": [
+        {
+          "name": "Positive contact force equals 300 kN",
+          "value": 299999.2582971585,
+          "threshold": 300000.0,
+          "operator": "approx(+/-1.00e+03)",
+          "status": "PASS",
+          "message": "|3.0000e+05 - 3.0000e+05| = 7.4170e-01 <= 1.00e+03"
+        },
+        {
+          "name": "Negative contact force equals -150 kN",
+          "value": -149999.25829715855,
+          "threshold": -150000.0,
+          "operator": "approx(+/-1.00e+03)",
+          "status": "PASS",
+          "message": "|-1.5000e+05 - -1.5000e+05| = 7.4170e-01 <= 1.00e+03"
+        },
+        {
+          "name": "Asymmetric backlash deadband occupies > 40% of cycle trajectory",
+          "value": 0.437,
+          "threshold": 0.4,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 4.3700e-01 >= floor 4.0000e-01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T3-01",
+      "name": "Pair (F4, F5): Calibration Output -> Observer Input Data Flow",
+      "tier": 3,
+      "features": [
+        4,
+        5
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1422,
+      "assertions": [
+        {
+          "name": "Identified Md within 500 kg",
+          "value": 54300.01721217796,
+          "threshold": 54300.0,
+          "operator": "approx(+/-5.00e+02)",
+          "status": "PASS",
+          "message": "|5.4300e+04 - 5.4300e+04| = 1.7212e-02 <= 5.00e+02"
+        },
+        {
+          "name": "Identified c within 0.05 m",
+          "value": -1.3200031845245603,
+          "threshold": -1.32,
+          "operator": "approx(+/-5.00e-02)",
+          "status": "PASS",
+          "message": "|-1.3200e+00 - -1.3200e+00| = 3.1845e-06 <= 5.00e-02"
+        },
+        {
+          "name": "Direct payload error <= 0.50 t using calibrated parameters",
+          "value": 0.06825433220142507,
+          "threshold": 0.5,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 6.8254e-02 <= ceiling 5.0000e-01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T3-02",
+      "name": "Pair (F1, F4): Invariant Audit on Calibrated Plant Model",
+      "tier": 3,
+      "features": [
+        1,
+        4
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1373,
+      "assertions": [
+        {
+          "name": "MASS_MATRIX_POSITIVE_DEFINITE",
+          "value": "PASS",
+          "threshold": "PASS",
+          "operator": "==",
+          "status": "PASS",
+          "message": "Mass matrix strictly positive definite (min eig: 5.43e+04 >= 1.00e+03)"
+        },
+        {
+          "name": "PASSIVITY_SKEW_SYMMETRY",
+          "value": "PASS",
+          "threshold": "PASS",
+          "operator": "==",
+          "status": "PASS",
+          "message": "Passivity skew-symmetry satisfied (norm: 0.00e+00 < 1.00e-12)"
+        },
+        {
+          "name": "DATASET_PROVENANCE_MD5",
+          "value": "PASS",
+          "threshold": "PASS",
+          "operator": "==",
+          "status": "PASS",
+          "message": "Cryptographic provenance verified (MD5: 5eaa1131f51257e72b24b2596a83598d)"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T3-03",
+      "name": "Pair (F5, F6): Payload Weighing Under Quantization Sweeps",
+      "tier": 3,
+      "features": [
+        5,
+        6
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1652,
+      "assertions": [
+        {
+          "name": "Case 1B dynamic payload error <= 0.50 t",
+          "value": 0.07567449577218,
+          "threshold": 0.5,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 7.5674e-02 <= ceiling 5.0000e-01"
+        },
+        {
+          "name": "Case 1A exhibits > 5x higher torque noise variance",
+          "value": 1343467.7433885175,
+          "threshold": 170103.59564684608,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 1.3435e+06 >= floor 1.7010e+05"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T3-04",
+      "name": "Pair (F7, F11): Realistic Noise ID with Noise Covariance Weighting",
+      "tier": 3,
+      "features": [
+        7,
+        11
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1336,
+      "assertions": [
+        {
+          "name": "Noise-weighted condition number <= 50.0",
+          "value": 5.727064603756222,
+          "threshold": 50.0,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 5.7271e+00 <= ceiling 5.0000e+01"
+        },
+        {
+          "name": "Weighted mass error <= 3.0%",
+          "value": 0.021969779204908255,
+          "threshold": 0.03,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 2.1970e-02 <= ceiling 3.0000e-02"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T3-05",
+      "name": "Pair (F5, F9): Payload Mass Estimation Under VFD Harmonics",
+      "tier": 3,
+      "features": [
+        5,
+        9
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1554,
+      "assertions": [
+        {
+          "name": "Pre-filtered VFD harmonics payload error <= 0.50 t",
+          "value": 0.0756741317588272,
+          "threshold": 0.5,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 7.5674e-02 <= ceiling 5.0000e-01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T3-06",
+      "name": "Pair (F8, F10): Matched Step Load and Corrected Filter Phase Lag",
+      "tier": 3,
+      "features": [
+        8,
+        10
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0202,
+      "assertions": [
+        {
+          "name": "Cross-correlation peak demonstrates causal physical phase lag (lag >= 0)",
+          "value": 10.0,
+          "threshold": 0.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 1.0000e+01 >= floor 0.0000e+00"
+        },
+        {
+          "name": "Empirical cross-correlation peak at exactly +10 samples",
+          "value": 10.0,
+          "threshold": 10.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Actual: 10, Expected: 10"
+        },
+        {
+          "name": "Corrected physical delay is positive (+333.3 ms)",
+          "value": 333.3333333333333,
+          "threshold": 333.333,
+          "operator": "approx(+/-1.00e-01)",
+          "status": "PASS",
+          "message": "|3.3333e+02 - 3.3333e+02| = 3.3333e-04 <= 1.00e-01"
+        },
+        {
+          "name": "Legacy formula produced negative delay string (-333.3 ms)",
+          "value": -333.3333333333333,
+          "threshold": -333.333,
+          "operator": "approx(+/-1.00e-01)",
+          "status": "PASS",
+          "message": "|-3.3333e+02 - -3.3333e+02| = 3.3333e-04 <= 1.00e-01"
+        },
+        {
+          "name": "Observer dynamic step response is strictly causal",
+          "value": 1.0,
+          "threshold": 0.0,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 1.0000e+00 >= floor 0.0000e+00"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T3-07",
+      "name": "Pair (F5, F12): Dynamic Payload Under Coulomb Mismatch",
+      "tier": 3,
+      "features": [
+        5,
+        12
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1554,
+      "assertions": [
+        {
+          "name": "Branch B payload error <= 0.50 t under Coulomb mismatch",
+          "value": 0.037840755337901655,
+          "threshold": 0.5,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 3.7841e-02 <= ceiling 5.0000e-01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T3-08",
+      "name": "Pair (F5, F13): Payload Mass Estimation Under Unmodelled Rope Bounce",
+      "tier": 3,
+      "features": [
+        5,
+        13
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1483,
+      "assertions": [
+        {
+          "name": "Time-averaged payload error <= 0.50 t under 3.8 Hz rope bounce",
+          "value": 0.11349315847945007,
+          "threshold": 0.5,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 1.1349e-01 <= ceiling 5.0000e-01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T3-09",
+      "name": "Pair (F1, F13): Invariant Audit on Elastic Wire-Rope Dynamics",
+      "tier": 3,
+      "features": [
+        1,
+        13
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0001,
+      "assertions": [
+        {
+          "name": "UNILATERAL_CABLE_TENSION",
+          "value": "PASS",
+          "threshold": "PASS",
+          "operator": "==",
+          "status": "PASS",
+          "message": "Unilateral cable constraint strictly satisfied (min tension: 100043.86 N >= 0)"
+        },
+        {
+          "name": "Peak rope tension strictly <= 816 kN",
+          "value": 499956.13669496914,
+          "threshold": 816000.0,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 4.9996e+05 <= ceiling 8.1600e+05"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T3-10",
+      "name": "Pair (F6, F9): Combined Quantization Noise and Inverter Harmonics",
+      "tier": 3,
+      "features": [
+        6,
+        9
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1843,
+      "assertions": [
+        {
+          "name": "Combined dynamic noise floor <= 0.25%",
+          "value": 0.19250169869764536,
+          "threshold": 0.25,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 1.9250e-01 <= ceiling 2.5000e-01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T3-11",
+      "name": "Pair (F2, F3): claims.md Registry and Report Banner Consistency",
+      "tier": 3,
+      "features": [
+        2,
+        3
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0015,
+      "assertions": [
+        {
+          "name": "Option A in claims.md",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Option A in M5 report",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        },
+        {
+          "name": "Option A in M6 report",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T3-12",
+      "name": "Pair (F7, F8): Realistic Noise Identification Across Matched Profiles",
+      "tier": 3,
+      "features": [
+        7,
+        8
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1499,
+      "assertions": [
+        {
+          "name": "Machine A regressor well-conditioned",
+          "value": 16.95488643371551,
+          "threshold": 500.0,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 1.6955e+01 <= ceiling 5.0000e+02"
+        },
+        {
+          "name": "Machine B regressor well-conditioned",
+          "value": 16.95488643371551,
+          "threshold": 500.0,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 1.6955e+01 <= ceiling 5.0000e+02"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "TC-T3-13",
+      "name": "Pair (F4, F11): 2-DOF SVD Identifiability on P08B Simscape Export",
+      "tier": 3,
+      "features": [
+        4,
+        11
+      ],
+      "status": "PASS",
+      "duration_sec": 0.1403,
+      "assertions": [
+        {
+          "name": "Noise-weighted 2-DOF column-scaled condition number <= 50.0",
+          "value": 6.309390341100453,
+          "threshold": 50.0,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 6.3094e+00 <= ceiling 5.0000e+01"
+        },
+        {
+          "name": "Smallest singular value strictly positive (full rank observability)",
+          "value": 0.6680578812246741,
+          "threshold": 0.5,
+          "operator": ">=",
+          "status": "PASS",
+          "message": "Value 6.6806e-01 >= floor 5.0000e-01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "SCEN-01",
+      "name": "Full Digging Cycle (Tuck, Dig, Breakout, Swing, Dump, Return)",
+      "tier": 4,
+      "features": [
+        1,
+        4,
+        5,
+        6,
+        11
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0113,
+      "assertions": [
+        {
+          "name": "Dynamic swing payload error <= 0.50 t",
+          "value": 0.07136624827518112,
+          "threshold": 0.5,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 7.1366e-02 <= ceiling 5.0000e-01"
+        },
+        {
+          "name": "Post-dump empty dipper payload error <= 0.30 t",
+          "value": 0.01624686166755803,
+          "threshold": 0.3,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 1.6247e-02 <= ceiling 3.0000e-01"
+        },
+        {
+          "name": "OEM_PHYSICAL_BOUNDS",
+          "value": "PASS",
+          "threshold": "PASS",
+          "operator": "==",
+          "status": "PASS",
+          "message": "Actuator states within OEM envelopes (Force: 395.1/745.0 kN, Speed: 0.276/0.54 m/s)"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "SCEN-02",
+      "name": "Boulder Strike During Crowding (+250 kN Shock Step)",
+      "tier": 4,
+      "features": [
+        5,
+        8,
+        10,
+        12
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0201,
+      "assertions": [
+        {
+          "name": "Adaptive innovation gate tracks shock with NRMSE <= 8.5%",
+          "value": 0.0669753642220474,
+          "threshold": 0.085,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 6.6975e-02 <= ceiling 8.5000e-02"
+        },
+        {
+          "name": "OEM_PHYSICAL_BOUNDS",
+          "value": "PASS",
+          "threshold": "PASS",
+          "operator": "==",
+          "status": "PASS",
+          "message": "Actuator states within OEM envelopes (Force: 388.9/745.0 kN, Speed: 0.400/0.54 m/s)"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "SCEN-03",
+      "name": "Bank Collapse & Sudden Drop (Unilateral Rope Tension & Free-Fall)",
+      "tier": 4,
+      "features": [
+        1,
+        5,
+        6,
+        13
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0,
+      "assertions": [
+        {
+          "name": "UNILATERAL_CABLE_TENSION",
+          "value": "PASS",
+          "threshold": "PASS",
+          "operator": "==",
+          "status": "PASS",
+          "message": "Unilateral cable constraint strictly satisfied (min tension: 0.00 N >= 0)"
+        },
+        {
+          "name": "Peak snatch tension <= 750 kN (safety factor verified)",
+          "value": 650000.0,
+          "threshold": 750000.0,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 6.5000e+05 <= ceiling 7.5000e+05"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "SCEN-04",
+      "name": "Dynamic Swing Payload Estimation (Centrifugal & Spatial Decoupling)",
+      "tier": 4,
+      "features": [
+        1,
+        4,
+        5,
+        11
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0044,
+      "assertions": [
+        {
+          "name": "Dynamic swing payload error <= 0.50 t despite centrifugal force",
+          "value": 0.017003337258648443,
+          "threshold": 0.5,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 1.7003e-02 <= ceiling 5.0000e-01"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "SCEN-05",
+      "name": "High-Speed Actuator Stall (Bedrock Engagement at vc = 0.54 m/s)",
+      "tier": 4,
+      "features": [
+        1,
+        6,
+        8,
+        12
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0001,
+      "assertions": [
+        {
+          "name": "OEM_PHYSICAL_BOUNDS",
+          "value": "PASS",
+          "threshold": "PASS",
+          "operator": "==",
+          "status": "PASS",
+          "message": "Actuator states within OEM envelopes (Force: 745.0/745.0 kN, Speed: 0.540/0.54 m/s)"
+        },
+        {
+          "name": "Force safely clamped at 745 kN OEM ceiling",
+          "value": 745000.0,
+          "threshold": 745000.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Actual: 745000.0, Expected: 745000.0"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "SCEN-06",
+      "name": "Harmonic Vibration During Heavy Rock Engagement (Coupled 69 Hz & Chatter)",
+      "tier": 4,
+      "features": [
+        6,
+        9,
+        10,
+        13
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0,
+      "assertions": [
+        {
+          "name": "Cutting force bias <= 2.0 kN with anti-alias pre-filtering",
+          "value": 0.0,
+          "threshold": 2.0,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 0.0000e+00 <= ceiling 2.0000e+00"
+        },
+        {
+          "name": "69 Hz ripple attenuated to < 600 N",
+          "value": 499.2894339476478,
+          "threshold": 600.0,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 4.9929e+02 <= ceiling 6.0000e+02"
+        }
+      ],
+      "error_message": null
+    },
+    {
+      "test_id": "SCEN-07",
+      "name": "Wire-Rope Slack & Snatch Transient (Bank Crest Unweighting)",
+      "tier": 4,
+      "features": [
+        1,
+        5,
+        12,
+        13
+      ],
+      "status": "PASS",
+      "duration_sec": 0.0,
+      "assertions": [
+        {
+          "name": "UNILATERAL_CABLE_TENSION",
+          "value": "PASS",
+          "threshold": "PASS",
+          "operator": "==",
+          "status": "PASS",
+          "message": "Unilateral cable constraint strictly satisfied (min tension: 0.00 N >= 0)"
+        },
+        {
+          "name": "Peak snatch tension <= 800 kN",
+          "value": 633698.006378928,
+          "threshold": 800000.0,
+          "operator": "<=",
+          "status": "PASS",
+          "message": "Value 6.3370e+05 <= ceiling 8.0000e+05"
+        },
+        {
+          "name": "ROPE_SLACK_DETECTED event correctly triggered",
+          "value": 1.0,
+          "threshold": 1.0,
+          "operator": "==",
+          "status": "PASS",
+          "message": "Condition is True"
+        }
+      ],
+      "error_message": null
+    }
+  ]
+}

@@ -1,10 +1,14 @@
 # Milestone 6 Specification: 3D 4-DOF Swing-Coupled Dynamics & Dynamic Hoist Wire-Rope Compliance
 
+> **STATUS NOTICE & AUDIT ADDENDUM (2026-11-18):** FROZEN AS A MODEL DRAFT (decision by Suhail, Option A).  
+> Do not cite this specification or model in papers, theses, or CMPDI/NCL technical reports.  
+> 3D 4-DOF model lacks forward dynamic simulation, drum/rope in Simscape, and empirical verification. See claims.md, M6 section.
+
 **Equipment:** Taiyuan Heavy Industry (TZ) WK-20 Mining Cable Shovel (780 tonnes, $20\,\mathrm{m^3}$)  
 **Mine Site:** Northern Coalfields Limited (NCL), Amlohri Open-Cast Project (`Machine B`, CMPDI MT-189)  
 **Target Journals:** *IEEE Transactions on Mechatronics* / *IEEE Transactions on Robotics* / *Mechanical Systems and Signal Processing*  
-**Date:** 2026-11-17  
-**Status:** **LOCKED TECHNICAL SPECIFICATION**
+**Date:** 2026-11-17 (Frozen 2026-11-18)  
+**Status:** **FROZEN MODEL DRAFT (Option A - unverified, not approved for citation)**
 
 ---
 

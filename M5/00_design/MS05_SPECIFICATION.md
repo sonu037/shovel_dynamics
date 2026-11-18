@@ -1,12 +1,16 @@
 # Milestone 5 Technical Specification: Electromechanical Drive Dynamics & Inverter-Fed Telemetry
 
+> **STATUS NOTICE & AUDIT ADDENDUM (2026-11-18):** FROZEN AS A MODEL DRAFT (decision by Suhail, Option A).  
+> Do not cite this specification or model in papers, theses, or CMPDI/NCL technical reports.  
+> The electromechanical drive model lacks empirical verification and forward simulation chain. See claims.md, M5 section.
+
 **Project:** AI-Enabled Platform for Diagnosis, Prognosis and Health Management of Mining Electrical Systems  
 **Grant / Code:** CMPDI MT-189 | `IIT/SRIC/R/AEH/2026/104`  
 **Host Institution:** Department of Mining Engineering & Department of Electrical Engineering, IIT Kharagpur  
 **Target Equipment:** Taiyuan Heavy Industry (TZ) WK-20 Electric Rope Shovel (`Machine B`, NCL Amlohri Mine)  
 **Authors:** Sonu Suhail, Prof. Dr. Aurobinda Routray, Prof. Dr. Snehamoy Chatterjee  
-**Status:** Approved for Implementation (MS05P01 – MS05P04)  
-**Date:** November 16, 2026  
+**Status:** FROZEN AS A MODEL DRAFT (Option A - unverified, not approved for citation)  
+**Date:** November 16, 2026 (Frozen 2026-11-18)  
 
 ---
 

@@ -1,0 +1,39 @@
+Starting Test 10 Unmodelled Dynamics Benchmark at 2026-11-18 23:00:00...
+===============================================================================================
+  MILESTONE 6 PROTOCOL: TEST 10 UNMODELLED DYNAMICS BENCHMARK
+  Plant: Twin 52 mm Wire-Rope Axial Compliance & Rack-and-Pinion Backlash vs Rigid 30 Hz Observer
+===============================================================================================
+
+1. WIRE-ROPE ELASTICITY & BOUNCE RESONANCE
+----------------------------------------------------------------------------------------
+  - Twin 52 mm Hoist Cables EA:         271.0 MN
+  - Bail Length Operational Envelope:   8.0 m to 13.5 m
+  - Axial Rope Stiffness Envelope:      20.07 MN/m to 33.88 MN/m (in 20-34 MN/m band)
+  - Empty Dipper Reduced Mass M_red:    45310.0 kg
+  - Bounce Mode Resonance Frequency:    3.89 Hz (envelope: 3.35 to 4.35 Hz)
+  - Rigid Observer Cutoff Frequency fc: 3.18 Hz (kO = 20.0 1/s)
+  - Bounce Mode Transmission at 4.35Hz: 59.1% (-4.58 dB <= -4.0 dB)
+
+2. RACK-AND-PINION MECHANICAL BACKLASH SHOCK DYNAMICS
+----------------------------------------------------------------------------------------
+  - Total Backlash Deadband:            3.51 mm (OEM range [2, 5] mm)
+  - Free-Flight Traverse Time:          13.2 ms
+  - Flank Impact Contact Peak Shock:    79.48 kN (>= 50 kN)
+
+3. DIGITAL NOTCH FILTER REJECTION BENCHMARK
+----------------------------------------------------------------------------------------
+  - Notch Filter Center Frequency:      3.89 Hz (Q = 10.0, Fs = 30 Hz)
+  - Frequency Response Attenuation:     54.33 dB (> 20 dB)
+  - Time-Domain Bounce Suppression:     33.83 dB (> 20 dB)
+
+========================================================================================
+  PHYSICAL VERIFICATION & ACCEPTANCE CRITERIA AUDIT:
+========================================================================================
+  1. Wire-Rope Stiffness Range: [20.07, 33.88] MN/m (Matches [20.07, 33.88] MN/m -> PASSED)
+  2. Bounce Mode Frequency: 3.89 Hz (in [3.6, 4.4] Hz band -> PASSED)
+  3. Rigid Observer Transmission: -4.58 dB <= -4.0 dB -> PASSED
+  4. Backlash Contact Shock: 79.48 kN >= 50.0 kN -> PASSED
+  5. Notch Filter Bounce Mode Rejection: 33.83 dB > 20.0 dB -> PASSED
+========================================================================================
+Saved experiment results to: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M6\experiments\Test10_unmodelled_dynamics_results.mat
+Test 10 execution completed successfully at 2026-11-18 23:00:00!

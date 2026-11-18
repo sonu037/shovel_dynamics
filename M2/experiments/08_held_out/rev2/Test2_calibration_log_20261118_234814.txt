@@ -1,0 +1,99 @@
+========================================================================================
+  MILESTONE 2 BATCH 1: TEST 2 SIMSCAPE PARAMETER CALIBRATION
+  Linear Least-Squares Parameter Identification on P08B rev2 30 Hz Export
+  Timestamp: 20261118_234814 | Commit: 887fb8b4fb079bce4f89d4f1404efcb735a08533  [DIRTY]
+========================================================================================
+
+--- [GATE G1] Input Dataset Provenance & Integrity ---
+  File:     M2\experiments\08_held_out\rev2\MS02P08B_simscape_20261118_130959.mat
+  Expected: 5eaa1131f51257e72b24b2596a83598d
+  Actual:   5eaa1131f51257e72b24b2596a83598d
+  Verdict:  PASS
+
+Ground Truth Parameters (Simscape Model Truth):
+  Md  =     54300.00 kg
+  c   =      -1.3200 m
+  Izz =     287900.0 kg*m^2
+  fv3 =      3800.00 N*m*s/rad
+  fc3 =       340.00 N*m
+  fv4 =      1473.00 N*s/m
+  fc4 =       480.00 N
+  g   =      9.80665 m/s^2
+
+========================================================================================
+  PROCESSING CASE: E0
+========================================================================================
+--- [GATE G2] Time Base & Uniform 30 Hz Grid (Case E0) ---
+  Samples: N = 1951 (Expected: 1951)
+  Duration: [0.0000, 65.0000] s (Expected: [0, 65] s)
+  Max |dt - 1/30|: 1.23e-14 s (Limit: < 1e-12 s)
+  Verdict: PASS
+
+--- Calibration Metrics (Case: E0) ---
+  Regressor Rows: 2N = 7 | Rank = 7 | cond(Y_scaled) = 16.98 (Limit < 100)
+  Model Fit: R^2 = 1.00000000 (Limit > 0.9999) | Residual RMS = 10.96 N/Nm
+  Algebraic Consistency Error: 0.00e+00 (Limit < 1e-12)
+
+  Param    |      Estimated |          Truth |  Rel Error |    Std Error | Gate Status
+  ----------------------------------------------------------------------------------
+  Md [kg]  |       54300.01 |       54300.00 |   +0.0000 % |       0.0367 | PASS (G4 < 0.1%)
+  c [m]    |        -1.3200 |        -1.3200 |   -0.0001 % |     0.000005 | PASS (G4 < 0.1%)
+  Izz      |       287902.3 |       287900.0 |   +0.0008 % |        25.02 | PASS (G4 < 1.0%)
+  fv3      |        3801.37 |        3800.00 |   +0.0362 % |      10.3853 | PASS (G5 < 5.0%)
+  fc3      |         339.91 |         340.00 |   -0.0261 % |       0.6064 | PASS (G5 < 5.0%)
+  fv4      |        1473.14 |        1473.00 |   +0.0093 % |       1.3442 | PASS (G5 < 5.0%)
+  fc4      |         479.94 |         480.00 |   -0.0133 % |       0.5980 | PASS (G5 < 5.0%)
+  ----------------------------------------------------------------------------------
+  CASE E0 VERDICT: PASS
+
+========================================================================================
+  PROCESSING CASE: E1
+========================================================================================
+--- [GATE G2] Time Base & Uniform 30 Hz Grid (Case E1) ---
+  Samples: N = 1951 (Expected: 1951)
+  Duration: [0.0000, 65.0000] s (Expected: [0, 65] s)
+  Max |dt - 1/30|: 1.23e-14 s (Limit: < 1e-12 s)
+  Verdict: PASS
+
+--- Calibration Metrics (Case: E1) ---
+  Regressor Rows: 2N = 7 | Rank = 7 | cond(Y_scaled) = 61.37 (Limit < 100)
+  Model Fit: R^2 = 1.00000000 (Limit > 0.9999) | Residual RMS = 7.13 N/Nm
+  Algebraic Consistency Error: 0.00e+00 (Limit < 1e-12)
+
+  Param    |      Estimated |          Truth |  Rel Error |    Std Error | Gate Status
+  ----------------------------------------------------------------------------------
+  Md [kg]  |       54300.02 |       54300.00 |   +0.0000 % |       0.0734 | PASS (G4 < 0.1%)
+  c [m]    |        -1.3200 |        -1.3200 |   -0.0001 % |     0.000008 | PASS (G4 < 0.1%)
+  Izz      |       287897.7 |       287900.0 |   -0.0008 % |         9.39 | PASS (G4 < 1.0%)
+  fv3      |        3810.13 |        3800.00 |   +0.2666 % |       6.9010 | PASS (G5 < 5.0%)
+  fc3      |         339.33 |         340.00 |   -0.1957 % |       0.3946 | PASS (G5 < 5.0%)
+  fv4      |        1486.52 |        1473.00 |   +0.9178 % |       3.9168 | PASS (G5 < 5.0%)
+  fc4      |         478.50 |         480.00 |   -0.3122 % |       0.3912 | PASS (G5 < 5.0%)
+  ----------------------------------------------------------------------------------
+  CASE E1 VERDICT: PASS
+
+========================================================================================
+  PROCESSING COMBINED DATASET (E0 + E1 CONCATENATED)
+========================================================================================
+--- Calibration Metrics (Case: combined (E0+E1)) ---
+  Regressor Rows: 2N = 7 | Rank = 7 | cond(Y_scaled) = 15.96 (Limit < 100)
+  Model Fit: R^2 = 1.00000000 (Limit > 0.9999) | Residual RMS = 9.25 N/Nm
+  Algebraic Consistency Error: 0.00e+00 (Limit < 1e-12)
+
+  Param    |      Estimated |          Truth |  Rel Error |    Std Error | Gate Status
+  ----------------------------------------------------------------------------------
+  Md [kg]  |       54300.00 |       54300.00 |   +0.0000 % |       0.0191 | PASS (G4 < 0.1%)
+  c [m]    |        -1.3200 |        -1.3200 |   -0.0000 % |     0.000002 | PASS (G4 < 0.1%)
+  Izz      |       287896.9 |       287900.0 |   -0.0011 % |         7.62 | PASS (G4 < 1.0%)
+  fv3      |        3805.70 |        3800.00 |   +0.1501 % |       6.2585 | PASS (G5 < 5.0%)
+  fc3      |         339.62 |         340.00 |   -0.1108 % |       0.3616 | PASS (G5 < 5.0%)
+  fv4      |        1473.83 |        1473.00 |   +0.0562 % |       0.7395 | PASS (G5 < 5.0%)
+  fc4      |         479.65 |         480.00 |   -0.0725 % |       0.2385 | PASS (G5 < 5.0%)
+  ----------------------------------------------------------------------------------
+  CASE combined (E0+E1) VERDICT: PASS
+
+========================================================================================
+  TEST 2 CALIBRATION OVERALL SCORECARD: PASS
+========================================================================================
+Saved Test 2 calibration results to: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M2\experiments\08_held_out\rev2\Test2_calibration_results.mat
+Log recorded to: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M2\experiments\08_held_out\rev2\Test2_calibration_log_20261118_234814.txt
