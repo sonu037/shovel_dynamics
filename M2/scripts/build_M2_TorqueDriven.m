@@ -1,5 +1,22 @@
 function P08_TD = build_M2_TorqueDriven(varargin)
-%BUILD_M2_TORQUEDRIVEN  Programmatically builds M2/model/M2_TorqueDriven.slx and executes P08-TD validation.
+%BUILD_M2_TORQUEDRIVEN  [SUPERSEDED - HISTORICAL RECORD ONLY]
+%
+%   =========================================================================
+%   HISTORICAL SUPERSEDED RECORD (2026-11-18 FORENSIC AUDIT RECONCILIATION):
+%   This script represents Revision 1 of the MS02P08B torque-driven study.
+%   In Revision 1 (2026-11-09 & 2026-11-16), forward dynamics were evaluated via
+%   script-level ODE integration using model-matched parameters; the .slx model
+%   was not simulated with torque inputs under parameter mismatch.
+%
+%   SUPERSEDED BY REVISION 2 (DO NOT DELETE THIS FILE):
+%   - Builder:   M2/scripts/build_M2_TorqueDriven_Validation.m
+%   - Runner:    M2/scripts/run_MS02P08B_simscape.m
+%   - Spec:      M2/experiments/08_held_out/rev2/MS02P08B_SPEC.md
+%   Revision 2 simulates M2_TorqueDriven_Validation.slx in Simscape under closed-
+%   loop computed torque + PID control and tests parameter mismatch against
+%   pre-registered predictions. Preserved in accordance with the Non-Deletion
+%   Historical Protocol.
+%   =========================================================================
 %
 %   PURPOSE (per CODE_EXPLAINABILITY_PROTOCOL.md & EXPERIMENT_DEFENSIBILITY_PROTOCOL.md):
 %     Resolves Audit Finding #4 (MS02P08 Held-Out Validation) and Risk R-01

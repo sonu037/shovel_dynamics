@@ -1631,6 +1631,36 @@ not deleted, with the supersession recorded in place.
 
 ---
 
+## 2026-11-18 — Freeze MS02P08B Revision 2 (Closed-Loop Simscape Plant vs. Estimator under Mismatch)
+
+**What was done:**
+- Reconciled the MS02P08B held-out validation from a code-check script ODE to an independently solved Simscape forward-dynamic simulation under closed-loop torque control (`M2/model/M2_TorqueDriven_Validation.slx`).
+- Built programmatic model generator `M2/scripts/build_M2_TorqueDriven_Validation.m` cloning `M2_LoadInjection.slx`, modifying revolute and prismatic joints to torque/force actuation, adding joint PID position controllers ($\omega_c = 15\,\text{rad/s}$, integrator initialized at static gravity torque), implementing continuous Coulomb friction ($f_c \tanh(\dot{q}/\epsilon_c)$), and setting `ode15s` with $\mathrm{RelTol} = 10^{-8}, \mathrm{AbsTol} = 10^{-9}$.
+- Authored test harness `M2/scripts/run_MS02P08B_simscape.m` executing 65 s simulation with 5 s transient trim (evaluating 60.0 s steady-state window, exactly 1 minute). Sub-samples $30\,\text{Hz}$ signals (`S30`) for downstream M3 discrete observer consumption.
+- Formally froze pre-registration specification `M2/experiments/08_held_out/rev2/MS02P08B_SPEC.md` defining verification gates G0–G5.
+- Implemented and verified pre-run analytical and closed-loop prediction scripts:
+  - `M2/experiments/08_held_out/rev2/ms02p08b_predict.py`
+  - `M2/experiments/08_held_out/rev2/ms02p08b_closedloop_check.py`
+- Annotated historical script `M2/scripts/build_M2_TorqueDriven.m` with deprecation/supersession notice in accordance with the Non-Deletion Historical Protocol.
+- Updated `claims.md` Row 98 to reflect the Revision 2 specification freeze.
+
+**Key result:**
+- Dominant closed-loop poles at $-4.35 \pm 4.55j\,\text{s}^{-1}$ ($\tau = 0.230\,\text{s}$) decay startup transients by $t = 5.0\,\text{s}$ ($21.7\tau$) to $3.58 \times 10^{-10}$, strictly below solver integration tolerance ($\mathrm{AbsTol} = 10^{-9}$).
+- Evaluated across the 60.0 s window:
+  - Case E0 ($\omega = \pi/10$, 3 integer cycles): pre-registered $F_y$ bias $+21.90\,\text{kN}$, RMS $21.90\,\text{kN}$.
+  - Case E1 ($\omega = 0.51$, Rasuli 2014 field envelope): pre-registered $F_y$ bias $+21.32\,\text{kN}$, RMS $21.32\,\text{kN}$.
+
+**Decisions & why:**
+- Retained authentic $\omega = 0.51\,\text{rad/s}$ for E1 rather than forcing an artificial integer-cycle frequency to preserve fidelity to published electric shovel field telemetry (Rasuli 2014 Fig. 7).
+- Established 5.0 s trim based on rigorous closed-loop pole decay ($21.7\tau$) rather than arbitrary heuristics.
+- Preserved all Revision 1 scripts and results permanently per Non-Deletion Protocol.
+
+**Next step:**
+- Execute `build_M2_TorqueDriven_Validation` in MATLAB R2025b desktop to generate the `.slx` model.
+- Execute `run_MS02P08B_simscape('SmokeTest', true)` and full `run_MS02P08B_simscape` to evaluate Gates G0–G5 and generate `S30` data for M3.
+
+---
+
 ## TEMPLATE — copy for each new session
 
 ## YYYY-MM-DD — <one-line title>
