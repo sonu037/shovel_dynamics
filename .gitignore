@@ -29,3 +29,7 @@ reference/*.zip
 reference/Photos_and_Videos/
 reference/Photos_and_Videos/**
 stage1_results.mat
+
+# Working presentation drafts in root
+MT-189_Review_Nov2026_CMPDI_Format*.pptx
+
