@@ -1745,6 +1745,29 @@ not deleted, with the supersession recorded in place.
 
 ---
 
+## 2026-11-18 (afternoon) — MS02P05 run: all acceptance criteria pass; M2 configuration module closed
+
+**What was done:**
+- Built `M2_LoadInjection_P05.slx` (MD5 436423ca4790698bf4d334679df6ccc4; source M2_LoadInjection.slx MD5 f17dcb99..., unchanged). Smoke test passed; froze in commit 15d918e (pushed).
+- Full run `run_MS02P05_configuration()` from clean commit 15d918e, stamp 20261118_145954. Outputs in `M2/experiments/05_configuration_sweep/rev2/`.
+- A second call afterwards was correctly refused as DIRTY (the new results folder was not yet committed); nothing was produced by it.
+
+**Key result:**
+- (a) Read-back at 45 +/- 15 deg identical to `M2_100kN_0p1111Hz_sp1p50` in all 18 printed metrics; control at A_q3 = 10 deg differs (q3 1-R^2 3.221577e-24 vs 7.673389e-24). The copy is equivalent and the new parameter is live.
+- (b) All 10 Simscape centres: slope -1.000000 on both channels; max error / max model effort 1.0e-13 to 2.3e-13 (q3) and 2.2e-16 to 7.8e-16 (d4), under 10x the Module-01 floor. At q3 = 0 the crowd-channel load signal is only 3.49 kN peak but is recovered exactly. Realised handle half-range 1.9988 deg for a commanded 2 deg (second-order input filter, as known).
+- (c) det zero locus on q3 = 0 in 71/71 d4 columns. (d) 12-case code check reproduces all archived cond_joint values exactly.
+- Predictions P1-P6 all hold. P1-P5 are analytic (they confirm the hand calculations); P6 is the Simscape result.
+- Independent recomputation (Python, outside MATLAB) from the saved signals of three centres (-40/7.3, 0/7.3, 0/4.5 m): slope -1.000000000 on both channels.
+
+**Decisions & why:**
+- Recorded the design constraint the spec named in advance: two-channel quasi-static separability of load from a dipper-mass error vanishes for a horizontal handle, which lies inside both Rasuli's field range and the WK-20 envelope, and field-rate dynamics add at most 2.4% of g. So WK-20 tare/payload separation must use the cycle phase (empty swing-return tare) or configuration diversity.
+- Limits stated in claims.md: noise-free, motion-prescribed, Fx = 0, one force station, Machine A parameters; the noise weighting is a design choice until drive noise is measured.
+
+**Next step:**
+- Commit and push the results. Then M3 on the P08B Simscape signals (independent data, wrong parameters).
+
+---
+
 ## TEMPLATE — copy for each new session
 
 ## YYYY-MM-DD — <one-line title>

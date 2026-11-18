@@ -1,0 +1,393 @@
+MS02P05  20261118_145954  commit 15d918ee7311afdbec320b3028e3e96788fa8b9c
+   shovel_params: g 9.80665, x_ref 1.50 m, L_COG 2.82 m, c -1.32 m (s - r = 2.82 m)
+
+=== PART 1: analytic configuration maps ===
+   det from the four columns vs closed form 2.82 g sin q3 cos q3: max rel diff 1.54e-15
+   P1  min |s_F3| in E1 7.9738 m, in E2 4.0305 m (pred >= 4.03 m)        -> HOLDS
+   P2  max |s_F4| on q3 = 0: 0.0e+00; |s_F4| at -3 deg: 0.0523 (pred 0, 0.052) -> HOLDS
+   P3  det on q3 = 0: max 0.0e+00; d4-dependence 2.1e-15; theta_W on q3 = 0: max 0.0e+00 deg;
+       |det|/|det(45)| at -21/-10/-3/0 deg = 0.6691 0.3420 0.1045 0.0000 (pred 0.67 0.34 0.10 0) -> HOLDS
+   P4  E1 lifting (-21 -> -3 deg) runs from 0.6691 to 0.1045 of E0 separability (pred 0.67 -> 0.10) -> HOLDS
+   P5  dynamic bound near q3 = 0: E1 0.2402 m/s^2 (2.45 % g), E2 2.0147 m/s^2 (20.54 % g) (pred 0.24, 2.0) -> HOLDS
+   (c) zero locus of det within 1 deg of q3 = 0: 71 of 71 d4 columns -> PASS
+   (d) code check vs M2_formal_svd_summary.mat (s_bar = 10 m):
+       case               cond_2col cond_joint   archived rel diff
+       Wide_w0.314             3.20      10.74      10.74  0.0e+00
+       Wide_w0.500             5.33      11.41      11.41  0.0e+00
+       Wide_w0.700            10.25       3.40       3.40  0.0e+00
+       Wide_w1.000            23.98       1.19       1.19  0.0e+00
+       Wide_w1.360            51.00       1.26       1.26  0.0e+00
+       Narrow_BI_w0.314      497.71      22.45      22.45  0.0e+00
+       Narrow_BI_w0.500     2110.04      69.52      69.52  0.0e+00
+       Narrow_BI_w0.700      455.98      13.68      13.68  0.0e+00
+       Narrow_BI_w1.000      212.37       5.82       5.82  0.0e+00
+       Narrow_BI_w1.360      153.71       3.77       3.77  0.0e+00
+       Narrow_Centered       289.53      17.47      17.47  0.0e+00
+       Medium_Stroke_1m       24.43      15.03      15.03  0.0e+00
+   (d) all 12 within 1 % -> PASS
+
+=== PART 2: Simscape spot checks (M2_LoadInjection_P05.slx) ===
+   model M2_LoadInjection_P05  MD5 436423ca4790698bf4d334679df6ccc4 (matches build receipt)
+   model-workspace omega_traj (baseline) = 0.314159265359 rad/s
+   Module-01 relative floor (M2_null.mat): q3 7.037e-13, d4 6.461e-16; limit = 10x
+   read-back settings from the baseline file: Amplitude 100000 N, Frequency 0.6981317 rad/s, Fx0 0 N, Station 1.50 m, A_d4 2 m, B_d4 8.75 m, trim 5 s, stop 30 s, RelTol 1e-10, AbsTol 1e-12
+   model workspace: A_q3 15 deg, B_q3 45 deg, omega_traj 0.314159265359 rad/s
+
+============================================================
+  MS02P05_20261118_145954_readback
+============================================================
+Force source     : logged applied force (outF)
+Time base        : time taken from tout
+Station offset   : +1.50 m   (s = d_4 +1.50)
+Solver           : RelTol 1e-10 / AbsTol 1e-12
+Samples          : 3001 total, 2501 after trim at 5.0 s
+Git              : 15d918e (DIRTY - uncommitted changes present)
+
+                           q3 channel     d4 channel
+slope (expect -1)           -1.000000      -1.000000
+intercept                      -0.000          0.000
+R^2                          1.000000       1.000000
+1 - R^2 (direct)         7.673389e-24   1.852886e-30
+NRMSE (%)                      0.0000         0.0000
+max err / peak ref          2.724e-12      3.868e-15
+peak mag err (%)               0.0000         0.0000
+peak time err (s)            0.000000       0.000000
+implied lag (s)              0.000000       0.000000
+============================================================
+Saved: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M2\experiments\05_configuration_sweep\rev2\MS02P05_20261118_145954_readback.mat
+   model workspace: A_q3 10 deg, B_q3 45 deg, omega_traj 0.314159265359 rad/s
+
+============================================================
+  MS02P05_20261118_145954_control_Aq3_10
+============================================================
+Force source     : logged applied force (outF)
+Time base        : time taken from tout
+Station offset   : +1.50 m   (s = d_4 +1.50)
+Solver           : RelTol 1e-10 / AbsTol 1e-12
+Samples          : 3001 total, 2501 after trim at 5.0 s
+Git              : 15d918e (DIRTY - uncommitted changes present)
+
+                           q3 channel     d4 channel
+slope (expect -1)           -1.000000      -1.000000
+intercept                      -0.000          0.000
+R^2                          1.000000       1.000000
+1 - R^2 (direct)         3.221577e-24   1.378933e-30
+NRMSE (%)                      0.0000         0.0000
+max err / peak ref          1.836e-12      3.378e-15
+peak mag err (%)               0.0000         0.0000
+peak time err (s)            0.000000       0.000000
+implied lag (s)              0.000000       0.000000
+============================================================
+Saved: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M2\experiments\05_configuration_sweep\rev2\MS02P05_20261118_145954_control_Aq3_10.mat
+
+   (a) read-back vs M2_100kN_0p1111Hz_sp1p50, printed digits:
+       q3.slope                 base -1.000000        read-back -1.000000        identical
+       q3.intercept             base -0.000           read-back -0.000           identical
+       q3.R2                    base 1.000000         read-back 1.000000         identical
+       q3.oneMinusR2            base 7.673389e-24     read-back 7.673389e-24     identical
+       q3.NRMSE_pct             base 0.0000           read-back 0.0000           identical
+       q3.relMaxErr             base 2.724e-12        read-back 2.724e-12        identical
+       q3.peakMagErr_pct        base 0.0000           read-back 0.0000           identical
+       q3.peakTimeErr_s         base 0.000000         read-back 0.000000         identical
+       q3.impliedLag_s          base 0.000000         read-back 0.000000         identical
+       d4.slope                 base -1.000000        read-back -1.000000        identical
+       d4.intercept             base 0.000            read-back 0.000            identical
+       d4.R2                    base 1.000000         read-back 1.000000         identical
+       d4.oneMinusR2            base 1.852886e-30     read-back 1.852886e-30     identical
+       d4.NRMSE_pct             base 0.0000           read-back 0.0000           identical
+       d4.relMaxErr             base 3.868e-15        read-back 3.868e-15        identical
+       d4.peakMagErr_pct        base 0.0000           read-back 0.0000           identical
+       d4.peakTimeErr_s         base 0.000000         read-back 0.000000         identical
+       d4.impliedLag_s          base 0.000000         read-back 0.000000         identical
+       control A_q3 = 10: 1-R^2 q3 3.221577e-24 (base 7.673389e-24) -> differs; slopes -1.000000 / -1.000000
+   (a) -> PASS
+
+--- spot 1/10: q3 centre -40 deg, d4 centre 7.3 m ---
+   model workspace: A_q3 2 deg, B_q3 -40 deg, omega_traj 0.5 rad/s
+
+============================================================
+  MS02P05_20261118_145954_spot_q3m40_d4_7p3
+============================================================
+Force source     : logged applied force (outF)
+Time base        : time taken from tout
+Station offset   : +1.50 m   (s = d_4 +1.50)
+Solver           : RelTol 1e-10 / AbsTol 1e-12
+Samples          : 3001 total, 3001 after trim at 0.0 s
+Git              : 15d918e (DIRTY - uncommitted changes present)
+
+                           q3 channel     d4 channel
+slope (expect -1)           -1.000000      -1.000000
+intercept                       0.000         -0.000
+R^2                          1.000000       1.000000
+1 - R^2 (direct)         3.674604e-25   1.688805e-30
+NRMSE (%)                      0.0000         0.0000
+max err / peak ref          5.961e-13      4.188e-15
+peak mag err (%)               0.0000         0.0000
+peak time err (s)            0.000000       0.000000
+implied lag (s)              0.000000       0.000000
+============================================================
+Saved: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M2\experiments\05_configuration_sweep\rev2\MS02P05_20261118_145954_spot_q3m40_d4_7p3.mat
+
+--- spot 2/10: q3 centre -20 deg, d4 centre 7.3 m ---
+   model workspace: A_q3 2 deg, B_q3 -20 deg, omega_traj 0.5 rad/s
+
+============================================================
+  MS02P05_20261118_145954_spot_q3m20_d4_7p3
+============================================================
+Force source     : logged applied force (outF)
+Time base        : time taken from tout
+Station offset   : +1.50 m   (s = d_4 +1.50)
+Solver           : RelTol 1e-10 / AbsTol 1e-12
+Samples          : 3001 total, 3001 after trim at 0.0 s
+Git              : 15d918e (DIRTY - uncommitted changes present)
+
+                           q3 channel     d4 channel
+slope (expect -1)           -1.000000      -1.000000
+intercept                       0.000         -0.000
+R^2                          1.000000       1.000000
+1 - R^2 (direct)         2.456156e-25   1.502637e-30
+NRMSE (%)                      0.0000         0.0000
+max err / peak ref          4.940e-13      3.301e-15
+peak mag err (%)               0.0000         0.0000
+peak time err (s)            0.000000       0.000000
+implied lag (s)              0.000000       0.000000
+============================================================
+Saved: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M2\experiments\05_configuration_sweep\rev2\MS02P05_20261118_145954_spot_q3m20_d4_7p3.mat
+
+--- spot 3/10: q3 centre -10 deg, d4 centre 7.3 m ---
+   model workspace: A_q3 2 deg, B_q3 -10 deg, omega_traj 0.5 rad/s
+
+============================================================
+  MS02P05_20261118_145954_spot_q3m10_d4_7p3
+============================================================
+Force source     : logged applied force (outF)
+Time base        : time taken from tout
+Station offset   : +1.50 m   (s = d_4 +1.50)
+Solver           : RelTol 1e-10 / AbsTol 1e-12
+Samples          : 3001 total, 3001 after trim at 0.0 s
+Git              : 15d918e (DIRTY - uncommitted changes present)
+
+                           q3 channel     d4 channel
+slope (expect -1)           -1.000000      -1.000000
+intercept                       0.000         -0.000
+R^2                          1.000000       1.000000
+1 - R^2 (direct)         2.241216e-25   1.665319e-30
+NRMSE (%)                      0.0000         0.0000
+max err / peak ref          4.742e-13      3.328e-15
+peak mag err (%)               0.0000         0.0000
+peak time err (s)            0.000000       0.000000
+implied lag (s)              0.000000       0.000000
+============================================================
+Saved: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M2\experiments\05_configuration_sweep\rev2\MS02P05_20261118_145954_spot_q3m10_d4_7p3.mat
+
+--- spot 4/10: q3 centre -3 deg, d4 centre 7.3 m ---
+   model workspace: A_q3 2 deg, B_q3 -3 deg, omega_traj 0.5 rad/s
+
+============================================================
+  MS02P05_20261118_145954_spot_q3m3_d4_7p3
+============================================================
+Force source     : logged applied force (outF)
+Time base        : time taken from tout
+Station offset   : +1.50 m   (s = d_4 +1.50)
+Solver           : RelTol 1e-10 / AbsTol 1e-12
+Samples          : 3001 total, 3001 after trim at 0.0 s
+Git              : 15d918e (DIRTY - uncommitted changes present)
+
+                           q3 channel     d4 channel
+slope (expect -1)           -1.000000      -1.000000
+intercept                       0.000         -0.000
+R^2                          1.000000       1.000000
+1 - R^2 (direct)         2.182945e-25   1.878710e-30
+NRMSE (%)                      0.0000         0.0000
+max err / peak ref          4.697e-13      3.191e-15
+peak mag err (%)               0.0000         0.0000
+peak time err (s)            0.000000       0.000000
+implied lag (s)              0.000000       0.000000
+============================================================
+Saved: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M2\experiments\05_configuration_sweep\rev2\MS02P05_20261118_145954_spot_q3m3_d4_7p3.mat
+
+--- spot 5/10: q3 centre +0 deg, d4 centre 7.3 m ---
+   model workspace: A_q3 2 deg, B_q3 0 deg, omega_traj 0.5 rad/s
+
+============================================================
+  MS02P05_20261118_145954_spot_q3p0_d4_7p3
+============================================================
+Force source     : logged applied force (outF)
+Time base        : time taken from tout
+Station offset   : +1.50 m   (s = d_4 +1.50)
+Solver           : RelTol 1e-10 / AbsTol 1e-12
+Samples          : 3001 total, 3001 after trim at 0.0 s
+Git              : 15d918e (DIRTY - uncommitted changes present)
+
+                           q3 channel     d4 channel
+slope (expect -1)           -1.000000      -1.000000
+intercept                       0.000          0.000
+R^2                          1.000000       1.000000
+1 - R^2 (direct)         2.178311e-25   2.668934e-30
+NRMSE (%)                      0.0000         0.0000
+max err / peak ref          4.705e-13      3.652e-15
+peak mag err (%)               0.0000         0.0000
+peak time err (s)            0.000000       0.000000
+implied lag (s)              0.000000       0.000000
+============================================================
+Saved: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M2\experiments\05_configuration_sweep\rev2\MS02P05_20261118_145954_spot_q3p0_d4_7p3.mat
+
+--- spot 6/10: q3 centre +10 deg, d4 centre 7.3 m ---
+   model workspace: A_q3 2 deg, B_q3 10 deg, omega_traj 0.5 rad/s
+
+============================================================
+  MS02P05_20261118_145954_spot_q3p10_d4_7p3
+============================================================
+Force source     : logged applied force (outF)
+Time base        : time taken from tout
+Station offset   : +1.50 m   (s = d_4 +1.50)
+Solver           : RelTol 1e-10 / AbsTol 1e-12
+Samples          : 3001 total, 3001 after trim at 0.0 s
+Git              : 15d918e (DIRTY - uncommitted changes present)
+
+                           q3 channel     d4 channel
+slope (expect -1)           -1.000000      -1.000000
+intercept                       0.000          0.000
+R^2                          1.000000       1.000000
+1 - R^2 (direct)         2.250437e-25   1.552276e-30
+NRMSE (%)                      0.0000         0.0000
+max err / peak ref          4.803e-13      3.238e-15
+peak mag err (%)               0.0000         0.0000
+peak time err (s)            0.000000       0.000000
+implied lag (s)              0.000000       0.000000
+============================================================
+Saved: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M2\experiments\05_configuration_sweep\rev2\MS02P05_20261118_145954_spot_q3p10_d4_7p3.mat
+
+--- spot 7/10: q3 centre +20 deg, d4 centre 7.3 m ---
+   model workspace: A_q3 2 deg, B_q3 20 deg, omega_traj 0.5 rad/s
+
+============================================================
+  MS02P05_20261118_145954_spot_q3p20_d4_7p3
+============================================================
+Force source     : logged applied force (outF)
+Time base        : time taken from tout
+Station offset   : +1.50 m   (s = d_4 +1.50)
+Solver           : RelTol 1e-10 / AbsTol 1e-12
+Samples          : 3001 total, 3001 after trim at 0.0 s
+Git              : 15d918e (DIRTY - uncommitted changes present)
+
+                           q3 channel     d4 channel
+slope (expect -1)           -1.000000      -1.000000
+intercept                       0.000          0.000
+R^2                          1.000000       1.000000
+1 - R^2 (direct)         2.477141e-25   1.479288e-30
+NRMSE (%)                      0.0000         0.0000
+max err / peak ref          5.065e-13      3.302e-15
+peak mag err (%)               0.0000         0.0000
+peak time err (s)            0.000000       0.000000
+implied lag (s)              0.000000       0.000000
+============================================================
+Saved: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M2\experiments\05_configuration_sweep\rev2\MS02P05_20261118_145954_spot_q3p20_d4_7p3.mat
+
+--- spot 8/10: q3 centre +45 deg, d4 centre 7.3 m ---
+   model workspace: A_q3 2 deg, B_q3 45 deg, omega_traj 0.5 rad/s
+
+============================================================
+  MS02P05_20261118_145954_spot_q3p45_d4_7p3
+============================================================
+Force source     : logged applied force (outF)
+Time base        : time taken from tout
+Station offset   : +1.50 m   (s = d_4 +1.50)
+Solver           : RelTol 1e-10 / AbsTol 1e-12
+Samples          : 3001 total, 3001 after trim at 0.0 s
+Git              : 15d918e (DIRTY - uncommitted changes present)
+
+                           q3 channel     d4 channel
+slope (expect -1)           -1.000000      -1.000000
+intercept                       0.000          0.000
+R^2                          1.000000       1.000000
+1 - R^2 (direct)         4.405007e-25   1.404048e-30
+NRMSE (%)                      0.0000         0.0000
+max err / peak ref          6.804e-13      3.781e-15
+peak mag err (%)               0.0000         0.0000
+peak time err (s)            0.000000       0.000000
+implied lag (s)              0.000000       0.000000
+============================================================
+Saved: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M2\experiments\05_configuration_sweep\rev2\MS02P05_20261118_145954_spot_q3p45_d4_7p3.mat
+
+--- spot 9/10: q3 centre +0 deg, d4 centre 4.5 m ---
+   model workspace: A_q3 2 deg, B_q3 0 deg, omega_traj 0.5 rad/s
+
+============================================================
+  MS02P05_20261118_145954_spot_q3p0_d4_4p5
+============================================================
+Force source     : logged applied force (outF)
+Time base        : time taken from tout
+Station offset   : +1.50 m   (s = d_4 +1.50)
+Solver           : RelTol 1e-10 / AbsTol 1e-12
+Samples          : 3001 total, 3001 after trim at 0.0 s
+Git              : 15d918e (DIRTY - uncommitted changes present)
+
+                           q3 channel     d4 channel
+slope (expect -1)           -1.000000      -1.000000
+intercept                       0.000          0.000
+R^2                          1.000000       1.000000
+1 - R^2 (direct)         4.666253e-25   2.509104e-30
+NRMSE (%)                      0.0000         0.0000
+max err / peak ref          6.801e-13      4.565e-15
+peak mag err (%)               0.0000         0.0000
+peak time err (s)            0.000000       0.000000
+implied lag (s)              0.000000       0.000000
+============================================================
+Saved: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M2\experiments\05_configuration_sweep\rev2\MS02P05_20261118_145954_spot_q3p0_d4_4p5.mat
+
+--- spot 10/10: q3 centre +0 deg, d4 centre 8.5 m ---
+   model workspace: A_q3 2 deg, B_q3 0 deg, omega_traj 0.5 rad/s
+
+============================================================
+  MS02P05_20261118_145954_spot_q3p0_d4_8p5
+============================================================
+Force source     : logged applied force (outF)
+Time base        : time taken from tout
+Station offset   : +1.50 m   (s = d_4 +1.50)
+Solver           : RelTol 1e-10 / AbsTol 1e-12
+Samples          : 3001 total, 3001 after trim at 0.0 s
+Git              : 15d918e (DIRTY - uncommitted changes present)
+
+                           q3 channel     d4 channel
+slope (expect -1)           -1.000000      -1.000000
+intercept                       0.000          0.000
+R^2                          1.000000       1.000000
+1 - R^2 (direct)         1.688511e-25   2.410405e-30
+NRMSE (%)                      0.0000         0.0000
+max err / peak ref          4.153e-13      3.163e-15
+peak mag err (%)               0.0000         0.0000
+peak time err (s)            0.000000       0.000000
+implied lag (s)              0.000000       0.000000
+============================================================
+Saved: C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M2\experiments\05_configuration_sweep\rev2\MS02P05_20261118_145954_spot_q3p0_d4_8p5.mat
+
+   q3 [deg] d4 [m] slope q3   slope d4   1-R2 q3      1-R2 d4      err/eff q3 err/eff d4 q3 mid    q3 half   result
+        -40    7.3  -1.000000  -1.000000   3.6746e-25   1.6888e-30   1.56e-13   7.83e-16   -40.000    1.9988 PASS 
+        -20    7.3  -1.000000  -1.000000   2.4562e-25   1.5026e-30   1.30e-13   6.12e-16   -20.000    1.9988 PASS 
+        -10    7.3  -1.000000  -1.000000   2.2412e-25   1.6653e-30   1.24e-13   6.10e-16   -10.000    1.9988 PASS 
+         -3    7.3  -1.000000  -1.000000   2.1829e-25   1.8787e-30   1.23e-13   5.71e-16    -3.000    1.9988 PASS 
+         +0    7.3  -1.000000  -1.000000   2.1783e-25   2.6689e-30   1.23e-13   2.55e-16    -0.000    1.9988 PASS 
+        +10    7.3  -1.000000  -1.000000   2.2504e-25   1.5523e-30   1.24e-13   4.72e-16    10.000    1.9988 PASS 
+        +20    7.3  -1.000000  -1.000000   2.4771e-25   1.4793e-30   1.30e-13   5.33e-16    20.000    1.9988 PASS 
+        +45    7.3  -1.000000  -1.000000   4.4050e-25   1.4040e-30   1.67e-13   6.48e-16    45.000    1.9988 PASS 
+         +0    4.5  -1.000000  -1.000000   4.6663e-25   2.5091e-30   2.34e-13   3.18e-16    -0.000    1.9988 PASS 
+         +0    8.5  -1.000000  -1.000000   1.6885e-25   2.4104e-30   1.01e-13   2.20e-16    -0.000    1.9988 PASS 
+   (b) 10 of 10 centres pass -> PASS
+   P6  slope -1.000000 on both channels at every centre, including q3 = 0 -> HOLDS
+
+=== MS02P05 SUMMARY (20261118_145954) ===
+   (a) read-back + control    PASS
+   (b) spot checks            PASS
+   (c) det zero locus         PASS
+   (d) 12-case code check     PASS
+   prediction P1              HOLDS
+   prediction P2              HOLDS
+   prediction P3              HOLDS
+   prediction P4              HOLDS
+   prediction P5              HOLDS
+   prediction P6              HOLDS
+   Validity of the module = acceptance (a)-(d). Predictions may be refuted; a refutation is a result.
+OVERALL acceptance: PASS
+Saved C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M2\experiments\05_configuration_sweep\rev2\MS02P05_20261118_145954.mat
+Log   C:\Users\IIT KGP\MATLAB Drive\shovel-dynamics\M2\experiments\05_configuration_sweep\rev2\MS02P05_log_20261118_145954.txt
