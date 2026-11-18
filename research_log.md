@@ -1823,6 +1823,28 @@ not deleted, with the supersession recorded in place.
 
 ---
 
+## 2026-11-18 (evening) — MS04-IND1 run: sensor noise and encoder steps on MS02P08B Simscape data; gates pass, all predictions hold
+
+**What was done:**
+- Spec and script frozen in 1afd1e3 (16:30); `run_MS04_IND1_noise_on_P08B()` run from clean 1afd1e3, stamp 20261118_164446; results committed in 2fd00f4 and pushed.
+- Independent recomputation in Python (own observer code) of the three conditions without random numbers (N0 clean, N3 joint encoder, N4 motor encoder): matches the saved Fy arrays to 3e-10 N.
+
+**Key result:**
+- G1, G2, G3 pass (G3: the clean condition reproduces MS03-IND1 exactly).
+- Branch B noise-induced Fy rms (E0 / E1): N1 speed noise 27.53 / 13.35 kN (predicted 27.10 / 13.17); N2 torque noise 1.947 / 1.785 (1.915 / 1.829); N3 12-bit joint encoder 196.9 / 97.5 (189.3 / 92.0); N4 12-bit motor encoder 0.805 / 0.393 (0.789 / 0.383); N5 2.070 / 1.806 (2.071 / 1.869). All six predictions hold, all within 6 %.
+- KF-GMO: 4.08 / 2.55 (N1; ratio to Branch B 0.148 / 0.191), 1.69 / 1.65 (N2), 11.42 / 7.88 (N3), 0.073 / 0.073 (N4), 1.60 / 1.54 kN (N5).
+- Practical reading: joint-side 12-bit sensing with 30 Hz differencing is unusable for Branch B; on the motor shaft, quantisation is negligible for KF-GMO and torque noise is the largest sensor term; every sensor error here is about ten times smaller than the +21.8 kN calibration bias of MS03-IND1.
+
+**Decisions & why:**
+- The predictions held because the observer is linear in its inputs and the Simscape motion follows the commanded trajectory closely; the test confirms the noise-propagation analysis, it does not explore noise models other than the assumed white / uniform ones.
+- The noise levels (3 mrad/s, 1 % torque) and the gear ratios (240, 109.3 rad/m) are assumptions; recorded as limits in claims.md, not as machine facts.
+- The paste showed "nothing to commit" for the freeze step because the freeze commit 1afd1e3 had already been made at 16:30; checked that its spec, script and log entry are byte-identical to what was prepared.
+
+**Next step:**
+- Commit claims.md, M4_README.md and this entry. Open: payload as a mass (calibrate empty, weigh during the swing); the data request to NCL / CMPDI for real motor current, encoder and drive signals.
+
+---
+
 ## TEMPLATE — copy for each new session
 
 ## YYYY-MM-DD — <one-line title>
