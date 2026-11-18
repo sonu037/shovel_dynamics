@@ -1591,6 +1591,46 @@ not deleted, with the supersession recorded in place.
 
 ---
 
+## 2026-11-18 (session 5) — Milestones 3 & 4 Reconciliation, Read-Only Audit Tracking & Non-Deletion Compliance
+
+**What was done:**
+
+- Executed complete audit reconciliation of Milestones 3 and 4 in strict adherence to the Non-Deletion Historical Protocol and reviewer directives:
+  1. *Read-Only Audit Tracking & Auto-Repair Deprecation:*
+     - Added `audit_verify_readonly.m` to Git tracking, enforcing Research Integrity Rule 4 (zero file writes, zero model saves, zero archive overwrites).
+     - Formally deprecated `forensic_audit_and_verify_all.m` with a permanent header notice prohibiting its use for audits due to its past file-patching and archive-overwriting behavior.
+  2. *Milestone 3 Claims & Documentation Reconciliation:*
+     - Downgraded M3 claims rows 99, 101, 127, 130, 131, 132, 133, 134, and 135 in `claims.md` from "V" to `Code check (model-matched simulation)` because plant actuator torques were synthesized from the same analytical equations and parameters as the observer (no Simscape simulation run).
+     - Corrected FOH coefficients in Row 130 to exact code formula and archive values: $\beta_1 = 0.013506, \beta_0 = 0.010823$ (reconciling legacy typo $0.012586 / 0.011743$).
+     - Corrected saddle lag coverage in Row 131 to archive value: $75.37\%$ (reconciling legacy claim of $100.00\%$).
+     - Replaced legacy $120.82 \to 16.26\,\mathrm{kNm}$ ($86.5\%$) claim in Row 132 with honest like-for-like comparison within the same archive: plain observer ($16.66\,\mathrm{kNm}$) vs KF-GMO ($16.26\,\mathrm{kNm}$), representing a $2.4\%$ reduction.
+     - Authored `M3/README.md` in the repository documenting observer architectures, difference equations, verified archive metrics, confidence bound separation, and code-check boundaries.
+  3. *Milestone 4 Claims & Documentation Reconciliation:*
+     - Downgraded M4 claims rows 142–153 in `claims.md` and `M4_README.md` to `Code check (model-matched simulation)`.
+     - *P01 Quantization:* Recorded that the original pass target was $<5.0\,\mathrm{N\cdot m}$ RMS, which failed ($2,419.66\,\mathrm{N\cdot m}$ in archive), leading to a post-hoc target revision to $<0.10\%$ full scale ($2,797\,\mathrm{N\cdot m}$). Documented the 14/16-bit inversion hypothesis.
+     - *P02 Noise Sweep:* Documented the true root cause of the Branch B $R^2$ shift ($0.6985 \to 0.3986$): the 16 Nov commit `fc749e2` algorithm modification (exact FOH update on $u = h + k_O p$ amplifying velocity noise into state $z$), NOT random noise seeds.
+     - *P03 EIV:* Documented that position noise was configured at $10\%$ of signal spread ($1.06^\circ$ on $q_3$), which is $\approx 3,000\times$ larger than realistic motor-shaft 12-bit quantization noise ($0.00037^\circ$), and reaffirmed that instrument $Z = Y_{\mathrm{true}}$ is a simulation oracle.
+     - *P05 Filter Ablation:* Formally retracted the claim of "online causal optimality" for KF-GMO, highlighting that Arm 2 (Causal Butterworth, $R^2 = 0.8619$) outperforms Arm 5 (KF-GMO, $R^2 = 0.7213$). Documented the reported $-333\,\mathrm{ms}$ delay as an unexplained phenomenon/hypothesis.
+     - *P06 Held-Out Scalability:* Documented the three confounding factors in Machine A vs B comparison (different load shapes, bail station placement at $d_4 + 2.2\,\mathrm{m}$ vs $1.5\,\mathrm{m}$, and payload $40\,\mathrm{t}$ vs OEM $36\,\mathrm{t}$). Corrected Machine B nominal payload to $36\,\mathrm{t}$ in `M4_README.md`.
+
+**Key result:**
+
+- Full documentation reconciliation achieved across M2, M3, and M4. All claims in `claims.md` strictly match the numerical values stored in saved `.mat` archives.
+- Complete transparency on model-matched code check statuses, target changes, algorithm changes, and simulation oracle assumptions established.
+- Strictly read-only audit harness tracked in Git.
+
+**Decisions & why:**
+
+- Replaced "V" status on M3/M4 with "Code check (model-matched simulation)" to uphold Research Integrity Rule 2 ("A model cannot validate itself").
+- Documented commit `fc749e2` algorithm changes rather than attributing discrepancies to random seeds, upholding Research Integrity Rule 5.
+- Retained deprecated scripts in place with clear deprecation headers to preserve the complete historical audit trail for funding agencies and reviewers.
+
+**Next step:**
+
+- Re-run M3/M4 from clean commits to confirm numerical reproducibility, followed by M2 P05 configuration maps and the unified Phase 3 Simscape model-mismatch simulation run.
+
+---
+
 ## TEMPLATE — copy for each new session
 
 ## YYYY-MM-DD — <one-line title>

@@ -1,5 +1,23 @@
 function report = forensic_audit_and_verify_all(repo_root)
-%FORENSIC_AUDIT_AND_VERIFY_ALL Independent 7-Gate Verification & Auto-Repair Suite (v2.0).
+%FORENSIC_AUDIT_AND_VERIFY_ALL [DEPRECATED / SUPERSEDED per Rule 4, 2026-11-17].
+%
+% CRITICAL INTEGRITY NOTICE:
+%   This script is DEPRECATED and MUST NOT BE USED FOR AUDITING.
+%   In previous revisions, this script violated Rule 4 ("Audits must be read-only")
+%   by attempting programmatic file patches and mutating/overwriting saved .mat
+%   test archives during execution.
+%
+%   PERMANENT REPLACEMENT:
+%     Use audit_verify_readonly.m for all audit and verification tasks.
+%     audit_verify_readonly.m performs 100% read-only inspection of files,
+%     matrices, and archives with ZERO file mutations, ZERO save_system calls,
+%     and ZERO archive overwrites.
+%
+% HISTORICAL RECORD:
+%   Preserved in place under the Non-Deletion Historical Protocol.
+%
+% Original description preserved below:
+% Independent 7-Gate Verification & Auto-Repair Suite (v2.0).
 %
 % PURPOSE:
 %   Deterministic, zero-silent-fallback MATLAB verification and auto-repair suite
